@@ -47,4 +47,6 @@ class CheckersGui(object):
 
 if __name__ == "__main__":
     table = get_move_generator('move-table.json')
-    table.get_black_moves(0)
+
+    for space in range(32):
+        print(table.get_black_moves_at(space))

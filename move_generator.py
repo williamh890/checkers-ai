@@ -21,13 +21,13 @@ class CheckersMoveGenerator:
         self.black = black
         self.red = red
 
-    def get_red_moves(self, space):
+    def get_red_moves_at(self, space):
         return self.red.get_all_moves_at(space)
 
-    def get_black_moves(self, space):
+    def get_black_moves_at(self, space):
         return self.black.get_all_moves_at(space)
 
-    def get_king_moves(self, space):
+    def get_king_moves_at(self, space):
         return self.black.get_jumps_at(space) + \
             self.red.get_jumps_at(space) + \
             self.black.get_moves_at(space) + \
