@@ -1,4 +1,5 @@
 import tkinter as tk
+from move_generator import get_move_generator
 
 BOARD_SIZE = 8
 WINDOW_SIZE = 400
@@ -41,9 +42,9 @@ class CheckersGui(object):
         return lambda: self.space_callback(row, col)
 
     def space_callback(self, row, col):
-        print('button at {row}, {col} clicked!'.format(row, col))
+        print(''.format(row, col))
 
 
 if __name__ == "__main__":
-    app = CheckersGui()
-    app.run()
+    table = get_move_generator('move-table.json')
+    table.get_black_moves(0)
