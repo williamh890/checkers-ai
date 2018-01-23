@@ -30,7 +30,7 @@ class CheckersGui(object):
 
     def add_row(self, row):
         for col in range(BOARD_SIZE):
-            self.set_board_space(row, col)
+            self.make_board_space(row, col)
 
     def make_board_space(self, row, col):
         callback = self.make_space_callback(row, col)
@@ -42,11 +42,16 @@ class CheckersGui(object):
         return lambda: self.space_callback(row, col)
 
     def space_callback(self, row, col):
-        print(''.format(row, col))
+        print('({}, {})'.format(row, col))
 
 
-if __name__ == "__main__":
+def check_table():
     table = get_move_generator('move-table.json')
 
     for space in range(32):
         print(table.get_black_moves_at(space))
+
+
+if __name__ == "__main__":
+    gui = CheckersGui()
+    gui.run()
