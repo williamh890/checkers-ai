@@ -103,4 +103,5 @@ ENV/
 json.hpp
 *.out
 *.obj
+*.o
 *.tar.gz

@@ -61,7 +61,12 @@ void testJson() {
 
     auto redMoveJson = moveTableJson["red"]["moves"];
     auto redMoveTable = toStlContainer(redMoveJson);
-    cout << redMoveTable[5][0];
+
+    cout << "red moves at space 5: ";
+    for (auto & move: redMoveTable[5]) {
+        cout << move << " ";
+    }
+    cout << endl << endl;
 }
 
 int main() {
