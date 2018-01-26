@@ -21,8 +21,8 @@ class Space():
     def __init__(self, id):
         self.id = id
 
-    def precheck_for_move(self): # returns checker color, and maybe empty string if none?
-        pass
+    def get_checker_color(self): # returns checker color, and maybe empty string if none?
+        return checker.color if checker else ""
         # return self.checker_color if checker_color else ""
 
     def checker_to(self, checker):
