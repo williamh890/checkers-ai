@@ -14,12 +14,13 @@ class Spaces():
 
     def place_checkers(self, red_player, black_player):
         for red_checker, black_checker in zip(red_player.checkers, black_player.checkers):
-            self.spaces[red_checker.space].checker_to(black_checker)
+            self.spaces[red_checker.space].checker_to(red_checker)
             self.spaces[black_checker.space].checker_to(black_checker)
 
 class Space():
     def __init__(self, id):
         self.id = id
+        self.checker = None
 
     def get_checker_color(self): # returns checker color, and maybe empty string if none?
         return checker.color if checker else ""

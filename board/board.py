@@ -32,6 +32,8 @@ class Board(object):
         # somewhere in here evaluate for end game condition
         # (all moves lead to last checkers death (cycled state checking too))
         if len(self.jumps)>0:
+            # need to update other players checkers
+            # need to update new space
             self.active_player.make_jump(self.jumps)
         elif(self.moves)>0:
             self.active_player.make_move(self.moves)
@@ -68,10 +70,26 @@ class Board(object):
         self.moves = moves
 
     def draw(self):  # some tklinter stuff, or maybe using separate gui package
-        pass
+        board_str=" "
+        for space in self.board_spaces.spaces:
+            if space.checker:
+                if space.checker.color == RED:
+                    board_str = board_str + "R"
+                else:
+                    board_str = board_str + "B"
+            if (space.id+1)%4 == 0:
+                if(space.id+1)%8 == 0:
+                    board_str = board_str + " \n "
+                else:
+                    board_str = board_str + "\n"
+            else:
+                board_str = board_str + " "
+
+        print(board_str)
 
 def swap(x, y):
     x, y = y, x
 
 if __name__ == "__main__":
     game_board = Board()
+    game_board.draw()
