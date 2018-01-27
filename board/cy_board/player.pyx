@@ -20,8 +20,8 @@ class Player():
         moves = {}
         jumps = {}
         for checker in self.checkers:
-            jumps[str(checker.id)] = move_generator.get_jumps_at(checker.space)
-            moves[str(checker.id)] = move_generator.get_moves_at(checker.space)
+            jumps[str(checker.id)] = self.move_generator.get_jumps_at(checker.space)
+            moves[str(checker.id)] = self.move_generator.get_moves_at(checker.space)
         return {"jumps":jumps, "moves":moves}
 
     def make_move(self, moves):

@@ -11,7 +11,7 @@ RED = "red"
 
 class Board(object):
     def __init__(self):
-        self.move_generator = get_move_generator('../generator/move-table.json')
+        self.move_generator = get_move_generator('../../generator/move-table.json')
         self.make_spaces()
         self.make_checkers()
         self.active_player = self.black_player
@@ -49,7 +49,7 @@ class Board(object):
         for checker, spaces in jumps.items():
             if len(spaces)>0:
                 for space in spaces:
-                    space_checker_color = board_spaces[space].get_checker_color()
+                    space_checker_color = self.board_spaces[space].get_checker_color()
                     if len(space_checker_color)==0 or self.active_player.is_my_color(space_checker_color):
                         spaces.remove(space)
                 if len(spaces) == 0:
@@ -61,7 +61,7 @@ class Board(object):
         for checker, spaces in moves.items():
             if len(spaces)>0:
                 for space in spaces:
-                    space_checker_color = board_spaces[space].get_checker_color()
+                    space_checker_color = self.board_spaces[space].get_checker_color()
                     if len(space_checker_color)>0:
                         spaces.remove(space)
                 if len(spaces) == 0:

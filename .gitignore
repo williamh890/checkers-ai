@@ -3,6 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+
+# cython C code
+./board/cy_board/*.c
+
 # C extensions
 *.so
 

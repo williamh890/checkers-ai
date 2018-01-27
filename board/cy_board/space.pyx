@@ -23,7 +23,7 @@ class Space():
         self.checker = None
 
     def get_checker_color(self): # returns checker color, and maybe empty string if none?
-        return checker.color if checker else ""
+        return self.checker.color if self.checker else ""
         # return self.checker_color if checker_color else ""
 
     def checker_to(self, checker):
