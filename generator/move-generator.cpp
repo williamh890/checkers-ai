@@ -61,6 +61,11 @@ class CheckersGame {
                 MoveGenerator black): redGenerator(red),
                                       blackGenerator(black) {
         }
+
+    private:
+        void initPieces() const {
+
+        }
 };
 
 CheckersGame getCheckersGame() {

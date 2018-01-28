@@ -1,16 +1,16 @@
 CMP=g++ -std=c++14 -Wall
-OFILES=move_generator.o json-to-stl.o
+OFILES=move-generator.o json-to-stl.o
 
-all: move_generator.out
+all: move-generator.out
 
-move_generator.out: $(OFILES)
-	$(CMP) -o move_generator.out $(OFILES)
+move-generator.out: $(OFILES)
+	$(CMP) -o move-generator.out $(OFILES)
 
-move_generator.o: move_generator.cpp
-	$(CMP) -o move_generator.o -c move_generator.cpp
+move-generator.o: move-generator.cpp
+	$(CMP) -o move-generator.o -c move-generator.cpp
 
 json-to-stl.o: json-to-stl.cpp
 	$(CMP) -o json-to-stl.o -c json-to-stl.cpp
 
 clean:
-	rm $(OFILES) move_generator.out
+	rm $(OFILES) move-generator.out
