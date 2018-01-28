@@ -41,31 +41,38 @@ class Board(object):
             # what?
             print("something's wrong, or/and I don't understand checkers")
 
-        swap(self.active_player, self.other_player)
+        swap(self.active_player, self.inactive_player)
 
 
 
     def check_jumps(self, jumps):
-        for checker, spaces in jumps.items():
-            if len(spaces)>0:
-                for space in spaces:
-                    space_checker_color = self.board_spaces[space].get_checker_color()
-                    if len(space_checker_color)==0 or self.active_player.is_my_color(space_checker_color):
-                        spaces.remove(space)
-                if len(spaces) == 0:
-                    del moves[checker]
+        for checker, jump_list in list(jumps.items()):
+            if len(jump_list)>0:
+                for jump in jump_list:
+                    if len(jump)>1:
+                        self.check_jump(jump, jump_list)
+                    else:
+                        self.check_jump(jump, jump_list)
+                if jump_list == []:
+                    del jumps[checker]
 
             self.jumps = jumps
+    def check_jump(self, jump, jumps):
+        jump_spot, over_spot = jump[0], jump[1]
+        jump_checker_color = self.board_spaces.spaces[jump_spot].get_checker_color()
+        over_checker_color = self.board_spaces.spaces[over_spot].get_checker_color()
+        if len(jump_checker_color)==0 or over_checker_color is not self.inactive_player.color:
+            jumps.remove(jump)
 
     def check_moves(self, moves):
-        for checker, spaces in moves.items():
+        for checker, spaces in list(moves.items()):
             if len(spaces)>0:
                 for space in spaces:
-                    space_checker_color = self.board_spaces[space].get_checker_color()
+                    space_checker_color = self.board_spaces.spaces[space].get_checker_color()
                     if len(space_checker_color)>0:
                         spaces.remove(space)
-                if len(spaces) == 0:
-                    del moves[checker]
+                    if spaces == []:
+                        del moves[checker]
 
         self.moves = moves
 
@@ -93,3 +100,4 @@ def swap(x, y):
 if __name__ == "__main__":
     game_board = Board()
     game_board.draw()
+    game_board.turn()

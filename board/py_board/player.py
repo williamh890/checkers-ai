@@ -10,6 +10,7 @@ class Player():
     def __init__(self, color, move_generator):
         self.color = color
         self.make_checkers(*START[color])
+        self.move_generator = move_generator
 
     def make_checkers(self, start_space, end_space):
         self.checkers = []
@@ -25,10 +26,10 @@ class Player():
         return {"jumps":jumps, "moves":moves}
 
     def make_move(self, moves):
-        pass
+        print(moves)
 
     def make_jump(self, jumps):
-        pass
+        print(jumps)
 
     def is_my_color(self, color):
         return self.color == color
