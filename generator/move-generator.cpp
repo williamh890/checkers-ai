@@ -115,6 +115,10 @@ class CheckersGame {
         string boardToString() {
             string board = "";
 
+            string spacerRow = "+---+---+---+---+---+---+---+---+";
+            string oddRow = "| %c |   | %c |   | %c |   | %c |   |";
+            string evenRow = "|   | %c |   | %c |   | %c |   | %c |";
+
             auto spaces = this->getEmptyBoard();
 
             for (auto piece: pieces) {
@@ -122,13 +126,16 @@ class CheckersGame {
                 spaces[pos.row][pos.col] = piece.color;
             }
 
-
             for ( auto row : spaces ) {
+                cout << spacerRow << endl;
+
                 for (auto space : row) {
-                    board += space;
+                    cout << "| " << space << " ";
                 }
-                board += '\n';
+                cout << "|" << endl;
+
             }
+            cout << spacerRow << endl;
 
             return board;
         }
