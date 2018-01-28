@@ -3,7 +3,7 @@ OFILES=move_generator.o
 
 all: move_generator.out
 
-move_generator: $(OFILES)
+move_generator.out: $(OFILES)
 	$(CMP) -o move_generator.out $(OFILES)
 
 move_generator.o: move_generator.cpp

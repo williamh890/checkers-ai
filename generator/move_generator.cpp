@@ -1,6 +1,9 @@
 #include "json.hpp"
 using json = nlohmann::json;
 
+#include "table-types.h"
+#include "jump.h"
+
 #include <fstream>
 using std::ifstream;
 #include <iostream>
@@ -8,65 +11,112 @@ using std::cout;
 using std::endl;
 #include <string>
 using std::string;
-#include <map>
-using std::map;
-#include <vector>
-using std::vector;
 #include <sstream>
 using std::stringstream;
 
-json getMoveTableFromFile(const string & fileName) {
-    ifstream jsonIn(fileName);
-    json moveTable;
-    jsonIn >> moveTable;
 
-    return moveTable;
+
+json loadMoveTableFrom(const string & moveTableFilename) {
+    ifstream jsonIn(moveTableFilename);
+    json moveTableJson;
+    jsonIn >> moveTableJson;
+
+    return moveTableJson;
 }
 
-int strToInt(const string & s) {
-    stringstream ss(s);
-    int key = 0;
-    ss >> key;
+class JsonToStlConverter {
+    private:
+        json moveTable;
 
-    return key;
-}
+    public:
+        JsonToStlConverter(json table): moveTable(table) {
+        }
 
-vector<int> getMovesFromJson(const json & movesJson) {
-    vector<int> moves;
+        MoveTableType getMovesFor(const string & color) {
+            auto movesJson = this->moveTable[color]["moves"];
+            auto moveTableStl = movesToStlContainer(movesJson);
 
-    for (auto & move: movesJson) {
-        moves.push_back(move);
-    }
+            return moveTableStl;
+        }
 
-    return moves;
-}
+        JumpTableType getJumpsFor(const string & color) {
+            auto jumpsJson = this->moveTable[color]["jumps"];
+            auto jumpTableStl = jumpsToStlContainer(jumpsJson);
 
-map<int, vector<int>> toStlContainer(const json & moveTableJson) {
-    map<int, vector<int>> moveTable;
+            return jumpTableStl;
+        }
 
-    auto end = moveTableJson.end();
-    for (auto it = moveTableJson.begin(); it != end; ++it) {
-        auto moves = getMovesFromJson(it.value());
-        auto boardSpace = strToInt(it.key());
+    private:
+        MoveTableType movesToStlContainer(const json & movesJson) {
+            MoveTableType moveTableStl;
 
-        moveTable[boardSpace] = moves;
-    }
+            auto end = movesJson.end();
+            for (auto it = movesJson.begin(); it != end; ++it) {
 
-    return moveTable;
-}
+                auto moves = getMovesFromJson(it.value());
+                auto boardSpace = strToInt(it.key());
 
-void testJson() {
-    auto moveTableFilename = "move-table.json";
-    auto moveTableJson = getMoveTableFromFile(moveTableFilename);
+                moveTableStl[boardSpace] = moves;
+            }
 
-    auto redMoveJson = moveTableJson["red"]["moves"];
-    auto redMoveTable = toStlContainer(redMoveJson);
+            return moveTableStl;
+        }
 
-    cout << "red moves at space 5: ";
-    for (auto & move: redMoveTable[5]) {
-        cout << move << " ";
-    }
-    cout << endl << endl;
+        JumpTableType jumpsToStlContainer(const json & jumpsJson) {
+            JumpTableType jumpTableStl;
+
+            auto end = jumpsJson.end();
+            for (auto it = jumpsJson.begin(); it != end; ++it) {
+
+                auto jumps = getJumpsFromJson(it.value());
+                auto boardSpace = strToInt(it.key());
+
+                jumpTableStl[boardSpace] = jumps;
+            }
+
+            return jumpTableStl;
+        }
+
+        vector<Jump> getJumpsFromJson(const json & jumpsForSpace) {
+            vector<Jump> jumps;
+
+            for (auto & j: jumpsForSpace) {
+                auto jump = Jump(j[0], j[1]);
+                jumps.push_back(jump);
+            }
+
+            return jumps;
+        }
+
+        vector<int> getMovesFromJson(const json & movesForSpace) {
+            vector<int> moves;
+
+            for (auto & move: movesForSpace) {
+                moves.push_back(move);
+            }
+
+            return moves;
+        }
+
+        int strToInt(const string & s) {
+            stringstream ss(s);
+            int key = 0;
+            ss >> key;
+
+            return key;
+        }
+};
+
+auto testJson() {
+    auto table = loadMoveTableFrom("move-table.json");
+    auto converter = JsonToStlConverter{table};
+
+    auto redMoves = converter.getMovesFor("red");
+    auto blackMoves = converter.getMovesFor("black");
+    auto redJumps = converter.getJumpsFor("red");
+
+    cout << redJumps[0][0].to << endl;
+    cout << redJumps[0][0].from << endl;
 }
 
 int main() {
