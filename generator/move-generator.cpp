@@ -9,6 +9,7 @@ using std::string;
 #include <utility>
 using std::pair;
 using std::make_pair;
+#include <stdio.h>
 
 class MoveGenerator {
     private:
@@ -38,14 +39,20 @@ auto getGeneratorFor(const string & color, const JsonToStlConverter & converter)
     return MoveGenerator(moves, jumps);
 }
 
-enum class Color { Red, Black };
 
 struct Piece {
-    Color color;
+    char color;
     int space;
 
-    Piece(Color color, int space): color(color), space(space)  {
+    Piece() = default;
+    Piece(char color, int space): color(color), space(space)  {
     }
+};
+
+struct Position {
+    int row;
+    int col;
+    Position(int r, int c): row(r), col(c) {}
 };
 
 class CheckersGame {
@@ -55,17 +62,98 @@ class CheckersGame {
 
         vector<Piece> pieces;
 
+        const int INIT_NUM_PIECES = 12;
+        const int TOTAL_NUM_PIECES = 32;
+        const int ROWS = 8;
+        const int COLS = 8;
+
     public:
         CheckersGame(
                 MoveGenerator red,
                 MoveGenerator black): redGenerator(red),
                                       blackGenerator(black) {
+            this->initPieces();
         }
 
     private:
-        void initPieces() const {
+        /*
+            +---+---+---+---+---+---+---+---+
+            | X | r |   | r |   | r |   | r |
+            +---+---+---+---+---+---+---+---+
+            | r |   | r |   | r |   | r |   |
+            +---+---+---+---+---+---+---+---+
+            |   | r |   | r |   | r |   | r |
+            +---+---+---+---+---+---+---+---+
+            |   |   |   |   |   |   |   |   |
+            +---+---+---+---+---+---+---+---+
+            |   |   |   |   |   |   |   |   |
+            +---+---+---+---+---+---+---+---+
+            | b |   | b |   | b |   | b |   |
+            +---+---+---+---+---+---+---+---+
+            |   | b |   | b |   | b |   | b |
+            +---+---+---+---+---+---+---+---+
+            | b |   | b |   | b |   | b | X |
+            +---+---+---+---+---+---+---+---+
+        */
 
+        void initPieces() {
+            for (auto space = 0; space < TOTAL_NUM_PIECES; ++space) {
+                Piece newPiece;
+
+                if (space < (INIT_NUM_PIECES)) {
+                    newPiece = Piece('r', space);
+                }
+
+                if (space >= (TOTAL_NUM_PIECES - INIT_NUM_PIECES)) {
+                    newPiece = Piece('b', space);
+                }
+
+                this->pieces.push_back(newPiece);
+            }
         }
+    public:
+        string boardToString() {
+            string board = "";
+
+            auto spaces = this->getEmptyBoard();
+
+            for (auto piece: pieces) {
+                auto pos = spaceToGridSquare(piece.space);
+                spaces[pos.row][pos.col] = piece.color;
+            }
+
+
+            for ( auto row : spaces ) {
+                for (auto space : row) {
+                    board += space;
+                }
+                board += '\n';
+            }
+
+            return board;
+        }
+
+    private:
+        vector<vector<char>> getEmptyBoard() {
+            vector<vector<char>> board;
+
+            for (auto r = 0; r < ROWS; ++r) {
+                auto row = vector<char>(ROWS, ' ');
+                board.push_back(row);
+            }
+
+            return board;
+        }
+
+    Position spaceToGridSquare(int space) {
+        auto row = space / 4;
+        auto col = space % 4;
+
+        auto offset = (row % 2) ? 0 : 1;
+
+        return Position(row, (2 * col) + offset);
+    }
+
 };
 
 CheckersGame getCheckersGame() {
@@ -79,53 +167,28 @@ CheckersGame getCheckersGame() {
 }
 
 /*
-    +---+---+---+---+---+---+---+---+     +---+---+---+---+---+---+---+---+
-    | X | r |   | r |   | r |   | r |     | X | 0 |   | 1 |   | 2 |   | 3 |
-    +---+---+---+---+---+---+---+---+     +---+---+---+---+---+---+---+---+
-    | r |   | r |   | r |   | r |   |     | 4 |   | 5 |   | 6 |   | 7 |   |
-    +---+---+---+---+---+---+---+---+     +---+---+---+---+---+---+---+---+
-    |   | r |   | r |   | r |   |   |     |   | 8 |   | 9 |   | 10|   | 11|
-    +---+---+---+---+---+---+---+---+     +---+---+---+---+---+---+---+---+
-    |   |   |   |   |   |   |   |   |     | 12|   | 13|   | 14|   | 15|   |
-    +---+---+---+---+---+---+---+---+     +---+---+---+---+---+---+---+---+
-    |   |   |   |   |   |   |   |   |     |   | 16|   | 17|   | 18|   | 19|
-    +---+---+---+---+---+---+---+---+     +---+---+---+---+---+---+---+---+
-    | b |   | b |   | b |   | b |   |     | 20|   | 21|   | 22|   | 23|   |
-    +---+---+---+---+---+---+---+---+     +---+---+---+---+---+---+---+---+
-    |   | b |   | b |   | b |   | b |     |   | 24|   | 25|   | 26|   | 27|
-    +---+---+---+---+---+---+---+---+     +---+---+---+---+---+---+---+---+
-    | b |   | b |   | b |   | b | X |     | 28|   | 29|   | 30|   | 31| X |
-    +---+---+---+---+---+---+---+---+     +---+---+---+---+---+---+---+---+
-
-
+         +---+---+---+---+---+---+---+---+
+         | X | 0 |   | 1 |   | 2 |   | 3 |
+         +---+---+---+---+---+---+---+---+
+         | 4 |   | 5 |   | 6 |   | 7 |   |
+         +---+---+---+---+---+---+---+---+
+         |   | 8 |   | 9 |   | 10|   | 11|
+         +---+---+---+---+---+---+---+---+
+         | 12|   | 13|   | 14|   | 15|   |
+         +---+---+---+---+---+---+---+---+
+         |   | 16|   | 17|   | 18|   | 19|
+         +---+---+---+---+---+---+---+---+
+         | 20|   | 21|   | 22|   | 23|   |
+         +---+---+---+---+---+---+---+---+
+         |   | 24|   | 25|   | 26|   | 27|
+         +---+---+---+---+---+---+---+---+
+         | 28|   | 29|   | 30|   | 31| X |
+         +---+---+---+---+---+---+---+---+
 */
-struct Position {
-    int row;
-    int col;
-    Position(int r, int c): row(r), col(c) {}
-};
-
-Position spaceToGridSquare(int space) {
-    auto row = space / 4;
-    auto col = space % 4;
-
-    auto offset = (row % 2) ? 0 : 1;
-
-    return Position(row, (2 * col) + offset);
-}
-
-string boardToString(const vector<Piece> pieces) {
-    return "";
-}
 
 int main() {
-    // auto game = getCheckersGame();
-    for (auto i = 0; i < 32; ++i) {
-        auto space = spaceToGridSquare(i);
-        cout << "Space (" << i << ") = "
-            << "r: " << space.row << ", c: " << space.col
-            << endl;
-    }
+    auto game = getCheckersGame();
+    cout << game.boardToString() << endl;
 
     return 0;
 }
