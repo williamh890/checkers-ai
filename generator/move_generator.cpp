@@ -6,7 +6,7 @@ using std::cout;
 using std::endl;
 #include <string>
 using std::string;
-#include <cstddef>
+#include <utility>
 using std::pair;
 using std::make_pair;
 
@@ -23,11 +23,11 @@ class MoveGenerator {
         }
 
         auto getMoves(int space) {
-            return this->moves.at( space );
+            return this->moves[ space ];
         }
 
         auto getJumps(int space) {
-            return this->jumps.at( space );
+            return this->jumps[ space ];
         }
 };
 

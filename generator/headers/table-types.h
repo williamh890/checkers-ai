@@ -3,12 +3,10 @@
 
 #include "jump.h"
 
-#include <unordered_map>
-using std::unordered_map;
 #include <vector>
 using std::vector;
 
-using MoveTableType = unordered_map<int, vector<int>>;
-using JumpTableType = unordered_map<int, vector<Jump>>;
+using MoveTableType = vector<vector<int>>;
+using JumpTableType = vector<vector<Jump>>;
 
 #endif

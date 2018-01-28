@@ -24,14 +24,15 @@ JsonToStlConverter::JsonToStlConverter(json table): moveTable(table) {
 }
 
 MoveTableType JsonToStlConverter::getMovesFor(const string & color) const {
-    auto movesJson = this->moveTable.at( color ).at( "moves" );
+    auto movesJson = this->moveTable[color]["moves"];
+
     auto moveTableStl = movesToStlContainer(movesJson);
 
     return moveTableStl;
 }
 
 JumpTableType JsonToStlConverter::getJumpsFor(const string & color) const {
-    auto jumpsJson = this->moveTable.at( color ).at( "jumps" );
+    auto jumpsJson = this->moveTable[color]["jumps"];
     auto jumpTableStl = jumpsToStlContainer(jumpsJson);
 
     return jumpTableStl;
@@ -42,11 +43,9 @@ MoveTableType JsonToStlConverter::movesToStlContainer(const json & movesJson) co
 
     auto end = movesJson.end();
     for (auto it = movesJson.begin(); it != end; ++it) {
-
         auto moves = getMovesFromJson(it.value());
-        auto boardSpace = strToInt(it.key());
 
-        moveTableStl[boardSpace] = moves;
+        moveTableStl.push_back(moves);
     }
 
     return moveTableStl;
@@ -59,9 +58,8 @@ JumpTableType JsonToStlConverter::jumpsToStlContainer(const json & jumpsJson) co
     for (auto it = jumpsJson.begin(); it != end; ++it) {
 
         auto jumps = getJumpsFromJson(it.value());
-        auto boardSpace = strToInt(it.key());
 
-        jumpTableStl[boardSpace] = jumps;
+        jumpTableStl.push_back(jumps);
     }
 
     return jumpTableStl;
