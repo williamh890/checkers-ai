@@ -1,6 +1,12 @@
 #include "headers/table-types.h"
+using table_types::MoveTableType;
+using table_types::JumpTableType;
 #include "headers/jump.h"
+using jump::Jump;
+
 #include "headers/json-to-stl.h"
+using json_to_stl::loadMoveTableFrom;
+using json_to_stl::JsonToStlConverter;
 
 #include "headers/json.hpp"
 using json = nlohmann::json;
@@ -12,7 +18,7 @@ using std::string;
 #include <sstream>
 using std::stringstream;
 
-json loadMoveTableFrom(const string & moveTableFilename) {
+json json_to_stl::loadMoveTableFrom(const string & moveTableFilename) {
     ifstream jsonIn(moveTableFilename);
     json moveTableJson;
     jsonIn >> moveTableJson;
@@ -20,10 +26,10 @@ json loadMoveTableFrom(const string & moveTableFilename) {
     return moveTableJson;
 }
 
-JsonToStlConverter::JsonToStlConverter(json table): moveTable(table) {
+json_to_stl::JsonToStlConverter::JsonToStlConverter(json table): moveTable(table) {
 }
 
-MoveTableType JsonToStlConverter::getMovesFor(const string & color) const {
+MoveTableType json_to_stl::JsonToStlConverter::getMovesFor(const string & color) const {
     auto movesJson = this->moveTable[color]["moves"];
 
     auto moveTableStl = movesToStlContainer(movesJson);
@@ -31,14 +37,14 @@ MoveTableType JsonToStlConverter::getMovesFor(const string & color) const {
     return moveTableStl;
 }
 
-JumpTableType JsonToStlConverter::getJumpsFor(const string & color) const {
+JumpTableType json_to_stl::JsonToStlConverter::getJumpsFor(const string & color) const {
     auto jumpsJson = this->moveTable[color]["jumps"];
     auto jumpTableStl = jumpsToStlContainer(jumpsJson);
 
     return jumpTableStl;
 }
 
-MoveTableType JsonToStlConverter::movesToStlContainer(const json & movesJson) const {
+MoveTableType json_to_stl::JsonToStlConverter::movesToStlContainer(const json & movesJson) const {
     MoveTableType moveTableStl;
 
     auto end = movesJson.end();
@@ -51,7 +57,7 @@ MoveTableType JsonToStlConverter::movesToStlContainer(const json & movesJson) co
     return moveTableStl;
 }
 
-JumpTableType JsonToStlConverter::jumpsToStlContainer(const json & jumpsJson) const {
+JumpTableType json_to_stl::JsonToStlConverter::jumpsToStlContainer(const json & jumpsJson) const {
     JumpTableType jumpTableStl;
 
     auto end = jumpsJson.end();
@@ -65,7 +71,7 @@ JumpTableType JsonToStlConverter::jumpsToStlContainer(const json & jumpsJson) co
     return jumpTableStl;
 }
 
-vector<Jump> JsonToStlConverter::getJumpsFromJson(const json & jumpsForSpace) const {
+vector<Jump> json_to_stl::JsonToStlConverter::getJumpsFromJson(const json & jumpsForSpace) const {
     vector<Jump> jumps;
 
     for (auto & j: jumpsForSpace) {
@@ -76,7 +82,7 @@ vector<Jump> JsonToStlConverter::getJumpsFromJson(const json & jumpsForSpace) co
     return jumps;
 }
 
-vector<int> JsonToStlConverter::getMovesFromJson(const json & movesForSpace) const {
+vector<int> json_to_stl::JsonToStlConverter::getMovesFromJson(const json & movesForSpace) const {
     vector<int> moves;
 
     for (auto & move: movesForSpace) {
@@ -86,7 +92,7 @@ vector<int> JsonToStlConverter::getMovesFromJson(const json & movesForSpace) con
     return moves;
 }
 
-int JsonToStlConverter::strToInt(const string & s) const {
+int json_to_stl::JsonToStlConverter::strToInt(const string & s) const {
     stringstream ss(s);
     int key = 0;
     ss >> key;

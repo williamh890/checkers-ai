@@ -1,5 +1,9 @@
 #include "headers/json-to-stl.h"
+using json_to_stl::loadMoveTableFrom;
+using json_to_stl::JsonToStlConverter;
 #include "headers/table-types.h"
+using table_types::MoveTableType;
+using table_types::JumpTableType;
 
 #include <iostream>
 using std::cout;
