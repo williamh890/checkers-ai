@@ -33,4 +33,4 @@ run: all
 	./$(OUT_FILE)
 
 clean:
-	rm $(OBJ_FILES) $(OUT_FILE)
+	rm $(OBJ_FILES) *.out
