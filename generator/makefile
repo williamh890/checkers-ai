@@ -20,5 +20,8 @@ $(CONVERTER).o: $(CONVERTER).cpp
 install:
 	curl https://raw.githubusercontent.com/nlohmann/json/develop/src/json.hpp > headers/json.hpp
 
+run: all
+	./$(OUT_FILE)
+
 clean:
 	rm $(OBJ_FILES) $(OUT_FILE)
