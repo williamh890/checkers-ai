@@ -2,14 +2,19 @@ CMP=g++ -std=c++14 -Wall
 
 GENERATOR=move-generator
 CONVERTER=json-to-stl
+MAIN=main
+
 OUT_FILE=checkers.out
 
-OBJ_FILES=$(GENERATOR).o $(CONVERTER).o
+OBJ_FILES=$(GENERATOR).o $(CONVERTER).o $(MAIN).o
 
 all: $(OUT_FILE)
 
 $(OUT_FILE): $(OBJ_FILES)
 	$(CMP) -o $(OUT_FILE) $(OBJ_FILES)
+
+$(MAIN).o: $(MAIN).cpp
+	$(CMP) -o $(MAIN).o -c $(MAIN).cpp
 
 $(GENERATOR).o: $(GENERATOR).cpp
 	$(CMP) -o $(GENERATOR).o -c $(GENERATOR).cpp
