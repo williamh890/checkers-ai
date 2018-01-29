@@ -1,11 +1,11 @@
 #include "headers/table-types.h"
 using ai::MoveTableType;
 using ai::JumpTableType;
-#include "headers/jump.h"
+
+#include "headers/models.h"
 using ai::Jump;
 
 #include "headers/json-to-stl.h"
-using ai::loadMoveTableFrom;
 using ai::JsonToStlConverter;
 
 #include "headers/json.hpp"
@@ -17,6 +17,8 @@ using std::ifstream;
 using std::string;
 #include <sstream>
 using std::stringstream;
+#include <vector>
+using std::vector;
 
 json ai::loadMoveTableFrom(const string & moveTableFilename) {
     ifstream jsonIn(moveTableFilename);
@@ -26,10 +28,10 @@ json ai::loadMoveTableFrom(const string & moveTableFilename) {
     return moveTableJson;
 }
 
-ai::JsonToStlConverter::JsonToStlConverter(json table): moveTable(table) {
+JsonToStlConverter::JsonToStlConverter(json table): moveTable(table) {
 }
 
-MoveTableType ai::JsonToStlConverter::getMovesFor(const string & color) const {
+MoveTableType JsonToStlConverter::getMovesFor(const string & color) const {
     auto movesJson = this->moveTable[color]["moves"];
 
     auto moveTableStl = movesToStlContainer(movesJson);
@@ -37,14 +39,14 @@ MoveTableType ai::JsonToStlConverter::getMovesFor(const string & color) const {
     return moveTableStl;
 }
 
-JumpTableType ai::JsonToStlConverter::getJumpsFor(const string & color) const {
+JumpTableType JsonToStlConverter::getJumpsFor(const string & color) const {
     auto jumpsJson = this->moveTable[color]["jumps"];
     auto jumpTableStl = jumpsToStlContainer(jumpsJson);
 
     return jumpTableStl;
 }
 
-MoveTableType ai::JsonToStlConverter::movesToStlContainer(const json & movesJson) const {
+MoveTableType JsonToStlConverter::movesToStlContainer(const json & movesJson) const {
     MoveTableType moveTableStl;
 
     auto end = movesJson.end();
@@ -57,7 +59,7 @@ MoveTableType ai::JsonToStlConverter::movesToStlContainer(const json & movesJson
     return moveTableStl;
 }
 
-JumpTableType ai::JsonToStlConverter::jumpsToStlContainer(const json & jumpsJson) const {
+JumpTableType JsonToStlConverter::jumpsToStlContainer(const json & jumpsJson) const {
     JumpTableType jumpTableStl;
 
     auto end = jumpsJson.end();
@@ -71,7 +73,7 @@ JumpTableType ai::JsonToStlConverter::jumpsToStlContainer(const json & jumpsJson
     return jumpTableStl;
 }
 
-vector<Jump> ai::JsonToStlConverter::getJumpsFromJson(const json & jumpsForSpace) const {
+vector<Jump> JsonToStlConverter::getJumpsFromJson(const json & jumpsForSpace) const {
     vector<Jump> jumps;
 
     for (auto & j: jumpsForSpace) {
@@ -82,7 +84,7 @@ vector<Jump> ai::JsonToStlConverter::getJumpsFromJson(const json & jumpsForSpace
     return jumps;
 }
 
-vector<int> ai::JsonToStlConverter::getMovesFromJson(const json & movesForSpace) const {
+vector<int> JsonToStlConverter::getMovesFromJson(const json & movesForSpace) const {
     vector<int> moves;
 
     for (auto & move: movesForSpace) {
@@ -92,7 +94,7 @@ vector<int> ai::JsonToStlConverter::getMovesFromJson(const json & movesForSpace)
     return moves;
 }
 
-int ai::JsonToStlConverter::strToInt(const string & s) const {
+int JsonToStlConverter::strToInt(const string & s) const {
     stringstream ss(s);
     int key = 0;
     ss >> key;

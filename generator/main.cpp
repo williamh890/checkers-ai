@@ -1,4 +1,4 @@
-#include "headers/move-generator.h"
+#include "headers/checkers-game.h"
 using ai::getCheckersGame;
 
 /*

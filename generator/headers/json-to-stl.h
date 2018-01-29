@@ -2,10 +2,10 @@
 #define JSON_TO_STL_H
 
 #include "table-types.h"
-using ai::MoveTableType;
-using ai::JumpTableType;
-#include "jump.h"
-using ai::Jump;
+// ai::MoveTableType
+// ai::JumpTableType
+#include "models.h"
+// ai::Jump
 
 #include "json.hpp"
 #include <string>
