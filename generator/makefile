@@ -1,16 +1,24 @@
 CMP=g++ -std=c++14 -Wall
-OFILES=move-generator.o json-to-stl.o
 
-all: move-generator.out
+GENERATOR=move-generator
+CONVERTER=json-to-stl
+OUT_FILE=checkers.out
 
-move-generator.out: $(OFILES)
-	$(CMP) -o move-generator.out $(OFILES)
+OBJ_FILES=$(GENERATOR).o $(CONVERTER).o
 
-move-generator.o: move-generator.cpp
-	$(CMP) -o move-generator.o -c move-generator.cpp
+all: $(OUT_FILE)
 
-json-to-stl.o: json-to-stl.cpp
-	$(CMP) -o json-to-stl.o -c json-to-stl.cpp
+$(OUT_FILE): $(OBJ_FILES)
+	$(CMP) -o $(OUT_FILE) $(OBJ_FILES)
+
+$(GENERATOR).o: $(GENERATOR).cpp
+	$(CMP) -o $(GENERATOR).o -c $(GENERATOR).cpp
+
+$(CONVERTER).o: $(CONVERTER).cpp
+	$(CMP) -o $(CONVERTER).o -c $(CONVERTER).cpp
+
+install:
+	curl https://raw.githubusercontent.com/nlohmann/json/develop/src/json.hpp > headers/json.hpp
 
 clean:
-	rm $(OFILES) move-generator.out
+	rm $(OBJ_FILES) $(OUT_FILE)
