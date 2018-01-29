@@ -60,7 +60,8 @@ class CheckersGame {
         MoveGenerator redGenerator;
         MoveGenerator blackGenerator;
 
-        vector<Piece> pieces;
+        vector<Piece> redPieces;
+        vector<Piece> blackPieces;
 
         const int INIT_NUM_PIECES = 12;
         const int TOTAL_NUM_PIECES = 32;
@@ -98,34 +99,37 @@ class CheckersGame {
 
         void initPieces() {
             for (auto space = 0; space < TOTAL_NUM_PIECES; ++space) {
-                Piece newPiece;
 
                 if (space < (INIT_NUM_PIECES)) {
-                    newPiece = Piece('r', space);
+                    Piece newPiece = Piece('r', space);
+                    this->redPieces.push_back(newPiece);
                 }
 
                 if (space >= (TOTAL_NUM_PIECES - INIT_NUM_PIECES)) {
-                    newPiece = Piece('b', space);
+                    Piece newPiece = Piece('b', space);
+                    this->blackPieces.push_back(newPiece);
                 }
 
-                this->pieces.push_back(newPiece);
             }
         }
-    public:
-        string boardToString() {
-            string board = "";
 
-            string spacerRow = "+---+---+---+---+---+---+---+---+";
-            string oddRow = "| %c |   | %c |   | %c |   | %c |   |";
-            string evenRow = "|   | %c |   | %c |   | %c |   | %c |";
+    public:
+        string printBoard() {
+            string board = "";
 
             auto spaces = this->getEmptyBoard();
 
-            for (auto piece: pieces) {
+            for (auto piece: blackPieces) {
                 auto pos = spaceToGridSquare(piece.space);
                 spaces[pos.row][pos.col] = piece.color;
             }
 
+            for (auto piece: redPieces) {
+                auto pos = spaceToGridSquare(piece.space);
+                spaces[pos.row][pos.col] = piece.color;
+            }
+
+            string spacerRow = "+---+---+---+---+---+---+---+---+";
             for ( auto row : spaces ) {
                 cout << spacerRow << endl;
 
@@ -195,7 +199,7 @@ CheckersGame getCheckersGame() {
 
 int main() {
     auto game = getCheckersGame();
-    cout << game.boardToString() << endl;
+    game.printBoard();
 
     return 0;
 }
