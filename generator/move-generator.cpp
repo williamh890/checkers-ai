@@ -1,9 +1,9 @@
 #include "headers/json-to-stl.h"
-using json_to_stl::loadMoveTableFrom;
-using json_to_stl::JsonToStlConverter;
+using ai::loadMoveTableFrom;
+using ai::JsonToStlConverter;
 #include "headers/table-types.h"
-using table_types::MoveTableType;
-using table_types::JumpTableType;
+using ai::MoveTableType;
+using ai::JumpTableType;
 
 #include <iostream>
 using std::cout;

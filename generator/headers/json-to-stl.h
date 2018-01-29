@@ -2,16 +2,16 @@
 #define JSON_TO_STL_H
 
 #include "table-types.h"
-using table_types::MoveTableType;
-using table_types::JumpTableType;
+using ai::MoveTableType;
+using ai::JumpTableType;
 #include "jump.h"
-using jump::Jump;
+using ai::Jump;
 
 #include "json.hpp"
 #include <string>
 #include <vector>
 
-namespace json_to_stl {
+namespace ai {
     nlohmann::json loadMoveTableFrom(const std::string & moveTableFilename);
 
     class JsonToStlConverter {

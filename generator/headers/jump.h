@@ -1,7 +1,7 @@
 #ifndef JUMP_H
 #define JUMP_H
 
-namespace jump {
+namespace ai {
     struct Jump {
         int to;
         int from;

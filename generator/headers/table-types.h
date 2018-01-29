@@ -2,12 +2,12 @@
 #define TABLE_TYPES_D
 
 #include "jump.h"
-using jump::Jump;
+using ai::Jump;
 
 #include <vector>
 using std::vector;
 
-namespace table_types {
+namespace ai {
     using MoveTableType = vector<vector<int>>;
     using JumpTableType = vector<vector<Jump>>;
 }
