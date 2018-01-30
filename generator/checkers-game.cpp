@@ -72,16 +72,21 @@ void CheckersGame::printBoard() {
         auto pos = spaceToGridSquare(piece.space);
         spaces[pos.row][pos.col] = piece.color;
     }
+    const string boardNums = "     0   1   2   3   4   5   6   7  ";
+    const string spacerRow = "   +---+---+---+---+---+---+---+---+";
 
-    string spacerRow = "+---+---+---+---+---+---+---+---+";
+    cout << boardNums << endl;
+    auto rowCounter = 0;
     for ( auto row : spaces ) {
         cout << spacerRow << endl;
 
+        cout << " " << rowCounter << " ";
         for (auto space : row) {
             cout << "| " << space << " ";
         }
         cout << "|" << endl;
 
+        ++rowCounter;
     }
     cout << spacerRow << endl;
 }
