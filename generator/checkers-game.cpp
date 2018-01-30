@@ -93,7 +93,10 @@ void CheckersGame::printMoves()
     cout << "Black Moves: ";
     for ( Piece checker : blackPieces)
     {
-        //cout << blackGenerator.getMoves(checker.space);
+        // for (auto move : blackGenerator.getMoves(checker.space))
+        // {
+        //     cout << "[" << move[0] <<","<<move[1]<<"]";
+        // }
         cout << ", ";
     }
     cout << endl;
