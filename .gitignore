@@ -109,3 +109,4 @@ json.hpp
 *.obj
 *.o
 *.tar.gz
+*.c
