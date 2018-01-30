@@ -46,12 +46,13 @@ class CheckersGui(object):
 
 
 def check_table():
-    table = get_move_generator('move-table.json')
+    table = get_move_generator('../generator/move-table.json')
 
     for space in range(32):
         print(table.get_black_moves_at(space))
 
 
 if __name__ == "__main__":
+    check_table()
     gui = CheckersGui()
     gui.run()

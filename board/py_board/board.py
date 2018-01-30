@@ -9,6 +9,7 @@ import player
 BLACK = "black"
 RED = "red"
 
+
 class Board(object):
     def __init__(self):
         self.move_generator = get_move_generator('../../generator/move-table.json')
@@ -31,11 +32,11 @@ class Board(object):
         self.check_moves(moves["moves"])
         # somewhere in here evaluate for end game condition
         # (all moves lead to last checkers death (cycled state checking too))
-        if len(self.jumps)>0:
+        if len(self.jumps) > 0:
             # need to update other players checkers
             # need to update new space
             self.active_player.make_jump(self.jumps)
-        elif(self.moves)>0:
+        elif(self.moves) > 0:
             self.active_player.make_move(self.moves)
         else:
             # what?
@@ -43,13 +44,11 @@ class Board(object):
 
         swap(self.active_player, self.inactive_player)
 
-
-
     def check_jumps(self, jumps):
         for checker, jump_list in list(jumps.items()):
-            if len(jump_list)>0:
+            if len(jump_list) > 0:
                 for jump in jump_list:
-                    if len(jump)>1:
+                    if len(jump) > 1:
                         self.check_jump(jump, jump_list)
                     else:
                         self.check_jump(jump, jump_list)
@@ -57,11 +56,12 @@ class Board(object):
                     del jumps[checker]
 
             self.jumps = jumps
+
     def check_jump(self, jump, jumps):
         jump_spot, over_spot = jump[0], jump[1]
         jump_checker_color = self.board_spaces.spaces[jump_spot].get_checker_color()
         over_checker_color = self.board_spaces.spaces[over_spot].get_checker_color()
-        if len(jump_checker_color)==0 or over_checker_color is not self.inactive_player.color:
+        if len(jump_checker_color) == 0 or over_checker_color is not self.inactive_player.color:
             jumps.remove(jump)
 
     def check_moves(self, moves):
@@ -77,15 +77,15 @@ class Board(object):
         self.moves = moves
 
     def draw(self):  # some tklinter stuff, or maybe using separate gui package
-        board_str=" "
+        board_str = " "
         for space in self.board_spaces.spaces:
             if space.checker:
                 if space.checker.color == RED:
-                    board_str = board_str + "R"
+                    board_str = board_str + "r"
                 else:
-                    board_str = board_str + "B"
-            if (space.id+1)%4 == 0:
-                if(space.id+1)%8 == 0:
+                    board_str = board_str + "b"
+            if (space.id+1) % 4 == 0:
+                if(space.id+1) % 8 == 0:
                     board_str = board_str + " \n "
                 else:
                     board_str = board_str + "\n"
@@ -94,8 +94,10 @@ class Board(object):
 
         print(board_str)
 
+
 def swap(x, y):
     x, y = y, x
+
 
 if __name__ == "__main__":
     game_board = Board()
