@@ -24,6 +24,7 @@ using ai::getCheckersGame;
 int main() {
     auto game = getCheckersGame();
     game.printBoard();
+    game.printMoves();
 
     return 0;
 }

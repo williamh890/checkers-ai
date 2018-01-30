@@ -33,43 +33,43 @@ CheckersGame ai::getCheckersGame() {
 CheckersGame::CheckersGame(
         MoveGenerator red,
         MoveGenerator black): redGenerator(red), blackGenerator(black) {
-    this->initPieces();
+    initPieces();
 }
 
 void CheckersGame::initPieces() {
     for (auto space = 0; space < TOTAL_NUM_PIECES; ++space) {
-        if (this->isInFirst3Rows(space)) {
+        if (isInFirst3Rows(space)) {
             Piece newPiece = Piece('r', space);
-            this->redPieces.push_back(newPiece);
+            redPieces.push_back(newPiece);
         }
 
-        if (this->isInLast3Rows(space)) {
+        if (isInLast3Rows(space)) {
             Piece newPiece = Piece('b', space);
-            this->blackPieces.push_back(newPiece);
+            blackPieces.push_back(newPiece);
         }
     }
 }
 
 bool CheckersGame::isInFirst3Rows(int space) {
-    return space < (this->INIT_NUM_PIECES);
+    return space < (INIT_NUM_PIECES);
 }
 
 bool CheckersGame::isInLast3Rows(int space) {
-    return space >= (this->TOTAL_NUM_PIECES - this->INIT_NUM_PIECES);
+    return space >= (TOTAL_NUM_PIECES - INIT_NUM_PIECES);
 }
 
 string CheckersGame::printBoard() {
     string board = "";
 
-    auto spaces = this->getEmptyBoard();
+    auto spaces = getEmptyBoard();
 
-    for (auto piece: this->blackPieces) {
-        auto pos = this->spaceToGridSquare(piece.space);
+    for (auto piece: blackPieces) {
+        auto pos = spaceToGridSquare(piece.space);
         spaces[pos.row][pos.col] = piece.color;
     }
 
     for (auto piece: redPieces) {
-        auto pos = this->spaceToGridSquare(piece.space);
+        auto pos = spaceToGridSquare(piece.space);
         spaces[pos.row][pos.col] = piece.color;
     }
 
@@ -88,11 +88,44 @@ string CheckersGame::printBoard() {
     return board;
 }
 
+void CheckersGame::printMoves()
+{
+    cout << "Black Moves: ";
+    for ( Piece checker : blackPieces)
+    {
+        //cout << blackGenerator.getMoves(checker.space);
+        cout << ", ";
+    }
+    cout << endl;
+    cout << "Black Jumps: ";
+    for ( Piece checker : blackPieces)
+    {
+        //cout << blackGenerator.getJumps(checker.space);
+        cout << ", ";
+    }
+    cout << endl;
+    cout << "Red Moves: ";
+    for ( Piece checker : redPieces)
+    {
+        //cout << blackGenerator.getMoves(checker.space);
+        cout << ", ";
+    }
+    cout << endl;
+    cout << "Red Jumps: ";
+    for ( Piece checker : redPieces)
+    {
+        //cout << blackGenerator.getJumps(checker.space);
+        cout << ", ";
+    }
+    cout << endl;
+
+}
+
 vector<vector<char>> CheckersGame::getEmptyBoard() {
     vector<vector<char>> board;
 
-    for (auto r = 0; r < this->ROWS; ++r) {
-        auto row = vector<char>(this->ROWS, ' ');
+    for (auto r = 0; r < ROWS; ++r) {
+        auto row = vector<char>(ROWS, ' ');
         board.push_back(row);
     }
 
