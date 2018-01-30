@@ -13,6 +13,7 @@ using ai::JsonToStlConverter;
 #include "headers/models.h"
 using ai::Position;
 using ai::Piece;
+using ai::Jump;
 
 #include "headers/table-types.h"
 using ai::MoveTableType;
@@ -35,11 +36,11 @@ MoveGenerator::MoveGenerator(
         const JumpTableType & jumps): moves(moves), jumps(jumps) {
 }
 
-auto MoveGenerator::getMoves(int space) {
+vector<int> MoveGenerator::getMoves(int space) {
     return this->moves[ space ];
 }
 
-auto MoveGenerator::getJumps(int space) {
+vector<Jump> MoveGenerator::getJumps(int space) {
     return this->jumps[ space ];
 }
 

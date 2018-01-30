@@ -8,6 +8,9 @@
 // ai::JsonToStlConverter
 
 #include <string>
+// std::string
+#include <vector>
+// std::vector
 
 namespace ai {
     class MoveGenerator {
@@ -18,8 +21,8 @@ namespace ai {
         public:
             MoveGenerator(const MoveTableType & moves, const JumpTableType & jumps);
 
-            auto getMoves(int space);
-            auto getJumps(int space);
+            std::vector<int> getMoves(int space);
+            std::vector<Jump> getJumps(int space);
     };
 
     MoveGenerator getGeneratorFor(const std::string & color, const JsonToStlConverter & converter);

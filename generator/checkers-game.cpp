@@ -90,28 +90,30 @@ string CheckersGame::printBoard() {
 
 void CheckersGame::printMoves()
 {
-    cout << "Black Moves: ";
+    cout << "Black Jumps: " << endl;
     for ( Piece checker : blackPieces)
     {
-        // for (auto move : blackGenerator.getMoves(checker.space))
-        // {
-        //     cout << "[" << move[0] <<","<<move[1]<<"]";
-        // }
-        cout << ", ";
+        auto pos = spaceToGridSquare(checker.space);
+        cout << "\t(" <<pos.row << "," << pos.col << "): ";
+
+        for (const auto & jump : blackGenerator.getJumps(checker.space))
+        {
+            cout << "[" << jump.to << "," << jump.from << "] ";
+        }
+        cout << endl;
     }
-    cout << endl;
-    cout << "Black Jumps: ";
-    for ( Piece checker : blackPieces)
-    {
-        //cout << blackGenerator.getJumps(checker.space);
-        cout << ", ";
-    }
-    cout << endl;
+
     cout << "Red Moves: ";
-    for ( Piece checker : redPieces)
+    cout << endl;
+    for ( const auto & checker : redPieces)
     {
-        //cout << blackGenerator.getMoves(checker.space);
-        cout << ", ";
+        auto pos = spaceToGridSquare(checker.space);
+        cout << "\t(" << pos.row << "," << pos.col << "): ";
+
+        for (const auto & move: redGenerator.getMoves(checker.space)) {
+            cout << "[" << move << "] ";
+        }
+        cout << endl;
     }
     cout << endl;
     cout << "Red Jumps: ";
