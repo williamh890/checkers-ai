@@ -13,6 +13,7 @@ namespace ai {
     struct Piece {
         char color;
         int space;
+        bool king = false;
 
         Piece(char color, int space): color(color), space(space) {
         }
