@@ -58,7 +58,7 @@ bool CheckersGame::isInLast3Rows(int space) {
     return space >= (TOTAL_NUM_PIECES - INIT_NUM_PIECES);
 }
 
-string CheckersGame::printBoard() {
+void CheckersGame::printBoard() {
     string board = "";
 
     auto spaces = getEmptyBoard();
@@ -84,8 +84,26 @@ string CheckersGame::printBoard() {
 
     }
     cout << spacerRow << endl;
+}
+
+vector<vector<char>> CheckersGame::getEmptyBoard() {
+    vector<vector<char>> board;
+
+    for (auto r = 0; r < ROWS; ++r) {
+        auto row = vector<char>(ROWS, ' ');
+        board.push_back(row);
+    }
 
     return board;
+}
+
+Position CheckersGame::spaceToGridSquare(int space) {
+    auto row = space / 4;
+    auto col = space % 4;
+
+    auto offset = (row % 2) ? 0 : 1;
+
+    return Position(row, (2 * col) + offset);
 }
 
 void CheckersGame::printMoves()
@@ -126,23 +144,5 @@ void CheckersGame::printMoves()
 
 }
 
-vector<vector<char>> CheckersGame::getEmptyBoard() {
-    vector<vector<char>> board;
 
-    for (auto r = 0; r < ROWS; ++r) {
-        auto row = vector<char>(ROWS, ' ');
-        board.push_back(row);
-    }
-
-    return board;
-}
-
-Position CheckersGame::spaceToGridSquare(int space) {
-    auto row = space / 4;
-    auto col = space % 4;
-
-    auto offset = (row % 2) ? 0 : 1;
-
-    return Position(row, (2 * col) + offset);
-}
 

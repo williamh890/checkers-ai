@@ -28,7 +28,7 @@ namespace ai {
             bool isInLast3Rows(int space);
 
         public:
-            std::string printBoard();
+            void printBoard();
             void printMoves();
         private:
             std::vector<std::vector<char>> getEmptyBoard();
