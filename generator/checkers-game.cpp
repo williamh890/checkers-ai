@@ -38,7 +38,6 @@ using std::shared_ptr;
 using std::move;
 
 Player::Player(char color, MoveGenerator generator): color(color), generator(generator) {
-    initPieces();
 }
 
 void Player::initPieces() {
@@ -66,13 +65,17 @@ vector<Jump> Player::getJumpsFor(Piece piece) const {
     return generator.getJumps(piece.space);
 };
 
-BlackPlayer::BlackPlayer(char color, MoveGenerator generator): Player(color, generator) {}
+BlackPlayer::BlackPlayer(char color, MoveGenerator generator): Player(color, generator) {
+    initPieces();
+}
 
 bool BlackPlayer::isInitialSpace(int space) const {
     return space >= (TOTAL_NUM_PIECES - INIT_NUM_PIECES);
 }
 
-RedPlayer::RedPlayer(char color, MoveGenerator generator): Player(color, generator) {}
+RedPlayer::RedPlayer(char color, MoveGenerator generator): Player(color, generator) {
+    initPieces();
+}
 
 bool RedPlayer::isInitialSpace(int space) const {
     return space < (INIT_NUM_PIECES);
@@ -219,13 +222,14 @@ MoveTableType CheckersGame::getBlackMoves()
 {
     MoveTableType blackMoves;
     bool valid = true;
-    for(const auto & piece : blackPieces)
+
+    for(const auto & piece : black->getPieces())
     {
-        auto moves = blackGenerator.getMoves(piece.space);
+        auto moves = black->getMovesFor(piece);
         vector<int> black_move;
         for(auto & move : moves)
         {
-            for (const auto & other_black: blackPieces)
+            for (const auto & other_black: black->getPieces())
             {
                 if(move == other_black.space)
                 {
@@ -235,7 +239,7 @@ MoveTableType CheckersGame::getBlackMoves()
             }
             if(valid)
             {
-                for (const auto & other_red: redPieces)
+                for (const auto & other_red: red->getPieces())
                 {
                     if(move == other_red.space)
                     {
@@ -255,5 +259,6 @@ MoveTableType CheckersGame::getBlackMoves()
             blackMoves.push_back(black_move);
         }
     }
+
     return blackMoves;
 }

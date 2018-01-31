@@ -31,7 +31,6 @@ using std::pair;
 using std::make_pair;
 #include <stdio.h>
 
-MoveGenerator::MoveGenerator(){};
 MoveGenerator::MoveGenerator(
         const MoveTableType & moves,
         const JumpTableType & jumps): moves(moves), jumps(jumps) {

@@ -19,7 +19,7 @@ namespace ai {
             JumpTableType jumps;
 
         public:
-            MoveGenerator();
+            MoveGenerator() = default;
             MoveGenerator(const MoveTableType & moves, const JumpTableType & jumps);
             // ~MoveGenerator();
 

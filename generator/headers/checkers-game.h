@@ -20,8 +20,9 @@ namespace ai {
 
             std::vector<int> getMovesFor(Piece piece) const;
             std::vector<Jump> getJumpsFor(Piece piece) const;
-        private:
+        protected:
             void initPieces();
+        private:
             virtual bool isInitialSpace(int space) const = 0;
     };
 
