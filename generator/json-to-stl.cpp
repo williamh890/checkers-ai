@@ -65,8 +65,8 @@ JumpTableType JsonToStlConverter::jumpsToStlContainer(const json & jumpsJson) co
     auto end = jumpsJson.end();
     for (auto it = jumpsJson.begin(); it != end; ++it) {
 
-        auto jumps = getJumpsFromJson(it.value());
         auto space = strToInt(it.key());
+        auto jumps = getJumpsFromJson(it.value());
 
         jumpTableStl[space] = jumps;
     }

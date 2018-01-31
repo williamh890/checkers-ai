@@ -78,14 +78,12 @@ void CheckersGame::printBoard() {
 
         for (auto jump: blackGenerator.getJumps(piece.space)) {
             auto to = spaceToGridSquare(jump.to);
-            if (spaces[to.row][to.col] == piece.color || spaces[to.row][to.col] == 'm') {
+            if (spaces[to.row][to.col] == piece.color) {
                 continue;
             }
-            cout << jump.toString() << " ";
             spaces[to.row][to.col] = 'j';
         }
     }
-        cout << endl;
 
     for (auto piece: redPieces) {
         auto pos = spaceToGridSquare(piece.space);

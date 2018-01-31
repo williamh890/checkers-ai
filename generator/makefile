@@ -28,6 +28,7 @@ $(GAME).o: $(GAME).cpp
 
 install:
 	curl https://raw.githubusercontent.com/nlohmann/json/develop/src/json.hpp > headers/json.hpp
+	curl https://github.com/catchorg/Catch2/releases/download/v2.1.1/catch.hpp > tests/catch.hpp -L
 
 run: all
 	./$(OUT_FILE)
