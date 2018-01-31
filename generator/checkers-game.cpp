@@ -27,14 +27,19 @@ CheckersGame ai::getCheckersGame() {
     auto red = getGeneratorFor("black", converter);
     auto black = getGeneratorFor("red", converter);
 
+
     return CheckersGame(red, black);
 }
+
+CheckersGame::CheckersGame(){};
 
 CheckersGame::CheckersGame(
         MoveGenerator red,
         MoveGenerator black): redGenerator(red), blackGenerator(black) {
     initPieces();
 }
+
+//CheckersGame::~CheckersGame(){};
 
 void CheckersGame::initPieces() {
     for (auto space = 0; space < TOTAL_NUM_PIECES; ++space) {
@@ -148,6 +153,3 @@ void CheckersGame::printMoves()
     cout << endl;
 
 }
-
-
-

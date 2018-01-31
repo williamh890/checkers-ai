@@ -8,6 +8,7 @@ include "headers/models.h"
 """
 
 from libcpp.vector cimport vector
+from cython.operator cimport dereference as deref
 
 cdef extern from "headers/json.hpp":
   pass
@@ -31,7 +32,25 @@ cdef extern from "headers/json-to-stl.h" namespace "ai":
 
 cdef extern from "headers/checkers-game.h" namespace "ai":
   cdef cppclass CheckersGame:
+    CheckersGame() except +
     CheckersGame(MoveGenerator, MoveGenerator) except +
+    void printBoard()
+    void printMoves()
+
+  CheckersGame getCheckersGame() except +
+
+cdef class PyCheckersGame:
+  cdef CheckersGame checkers_game
+  def __cinit__(self):
+    self.checkers_game = getCheckersGame()
+
+  def printBoard(self):
+    self.checkers_game.printBoard()
+
+  def printMoves(self):
+    self.checkers.printMoves()
+
 
 if __name__ == "__main__":
+  game = PyCheckersGame()
   print("Hewwo")
