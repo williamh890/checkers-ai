@@ -1,12 +1,20 @@
 #ifndef MODELS_H
 #define MODELS_H
 
+#include <sstream>
+
 namespace ai {
     struct Jump {
         int to;
-        int from;
+        int through;
 
-        Jump(int to, int from): to(to), from(from) {
+        Jump(int to, int through): to(to), through(through) {
+        }
+
+        std::string toString() {
+            std::stringstream s;
+            s << "(" << to << ", " << through << ")";
+            return s.str();
         }
     };
 
@@ -24,6 +32,12 @@ namespace ai {
         int col;
 
         Position(int r, int c): row(r), col(c) {
+        }
+
+        std::string toString() {
+            std::stringstream s;
+            s << "[" << row << ", " << col << "]";
+            return s.str();
         }
     };
 }

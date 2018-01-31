@@ -19,25 +19,15 @@ using ai::getCheckersGame;
          +---+---+---+---+---+---+---+---+
      7   | 28|   | 29|   | 30|   | 31| X |
          +---+---+---+---+---+---+---+---+
-20: 24
-21: 24 25
-22: 25 26
-23: 26 27
-24: 28 29
-25: 29 30
-26: 30 31
-27: 31
-28:
-29:
-30:
-31:
-
+20: to 13, through 16
+21: to 12, through 16 to 14, through 17
+22: to 13, through 17 to 15, through 18
+23: to 14, through 18
 */
 
 int main() {
     auto game = getCheckersGame();
     game.printBoard();
-    game.printMoves();
 
     return 0;
 }
