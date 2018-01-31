@@ -36,10 +36,11 @@ $(PLAYER).o: $(PLAYER).cpp
 TESTING_DIR=tests
 TEST_MAIN=$(TESTING_DIR)/test-main
 TEST_JSON_TO_STL=$(TESTING_DIR)/test-json-to-stl
+TEST_PLAYER=$(TESTING_DIR)/test-player
 
 TEST_OUT_FILE=$(TESTING_DIR)/tests.out
 
-TESTING_OBJ_FILES=$(TEST_MAIN).o $(TEST_JSON_TO_STL).o $(OBJ_FILES)
+TESTING_OBJ_FILES=$(TEST_MAIN).o $(TEST_JSON_TO_STL).o $(TEST_PLAYER).o $(OBJ_FILES)
 
 tests: $(TEST_OUT_FILE)
 
@@ -51,6 +52,9 @@ $(TEST_MAIN).o: $(TEST_MAIN).cpp
 
 $(TEST_JSON_TO_STL).o: $(TEST_JSON_TO_STL).cpp
 	$(CMP) -o $(TEST_JSON_TO_STL).o -c $(TEST_JSON_TO_STL).cpp
+
+$(TEST_PLAYER).o: $(TEST_PLAYER).cpp
+	$(CMP) -o $(TEST_PLAYER).o -c $(TEST_PLAYER).cpp
 
 tests-run: tests
 	./$(TEST_OUT_FILE)
