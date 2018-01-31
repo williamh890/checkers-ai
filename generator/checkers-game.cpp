@@ -21,6 +21,9 @@ using ai::Piece;
 using ai::TOTAL_NUM_PIECES;
 using ai::INIT_NUM_PIECES;
 
+#include "headers/table-types.h"
+using ai::MoveTableType;
+
 #include <string>
 using std::string;
 #include <iostream>
@@ -101,7 +104,6 @@ CheckersGame::CheckersGame(
 }
 
 void CheckersGame::printBoard() {
-    //string board = "";
 
     auto spaces = getEmptyBoard();
 
@@ -189,7 +191,7 @@ void CheckersGame::printMovesForColor(const string & color) {
             // cout << "["  << m.row << "," << m.col << "] ";
             cout << move << " ";
         }
-        cout << endl;
+        cout << "]"<<endl;
     }
 
 }
@@ -213,10 +215,45 @@ void CheckersGame::printJumpsForColor(const string & color) {
 }
 
 
-void CheckersGame::printValidMoves()
+MoveTableType CheckersGame::getBlackMoves()
 {
-
+    MoveTableType blackMoves;
+    bool valid = true;
+    for(const auto & piece : blackPieces)
+    {
+        auto moves = blackGenerator.getMoves(piece.space);
+        vector<int> black_move;
+        for(auto & move : moves)
+        {
+            for (const auto & other_black: blackPieces)
+            {
+                if(move == other_black.space)
+                {
+                    valid = false;
+                    break;
+                }
+            }
+            if(valid)
+            {
+                for (const auto & other_red: redPieces)
+                {
+                    if(move == other_red.space)
+                    {
+                        valid = false;
+                    }
+                }
+                if(valid)
+                {
+                    black_move.push_back(piece.space);
+                    black_move.push_back(move);
+                }
+            }
+            valid = true;
+        }
+        if (black_move.size())
+        {
+            blackMoves.push_back(black_move);
+        }
+    }
+    return blackMoves;
 }
-
-
-

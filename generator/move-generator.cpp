@@ -31,10 +31,12 @@ using std::pair;
 using std::make_pair;
 #include <stdio.h>
 
+MoveGenerator::MoveGenerator(){};
 MoveGenerator::MoveGenerator(
         const MoveTableType & moves,
         const JumpTableType & jumps): moves(moves), jumps(jumps) {
 }
+// MoveGenerator::~MoveGenerator(){};
 
 vector<int> MoveGenerator::getMoves(int space) const {
     return this->moves[ space ];
@@ -50,5 +52,3 @@ MoveGenerator ai::getGeneratorFor(const string & color, const JsonToStlConverter
 
     return MoveGenerator(moves, jumps);
 }
-
-

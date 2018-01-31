@@ -53,8 +53,9 @@ namespace ai {
             void printMovesForColor(const std::string & color);
             void printJumpsForColor(const std::string & color);
 
-            void printValidMoves();
+            // void printValidMoves(); This is not defined in the source yet
         private:
+            MoveTableType getBlackMoves();
             std::vector<std::vector<char>> getEmptyBoard();
             Position spaceToGridSquare(int space);
     };
