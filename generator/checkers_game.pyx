@@ -75,6 +75,3 @@ if __name__ == "__main__":
   gui.get_board(board)
   gui.make_board()
   gui.run()
-  
-  game.printBoard()
-  print("Hewwo")
