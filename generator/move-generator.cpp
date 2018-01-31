@@ -36,11 +36,11 @@ MoveGenerator::MoveGenerator(
         const JumpTableType & jumps): moves(moves), jumps(jumps) {
 }
 
-vector<int> MoveGenerator::getMoves(int space) {
+vector<int> MoveGenerator::getMoves(int space) const {
     return this->moves[ space ];
 }
 
-vector<Jump> MoveGenerator::getJumps(int space) {
+vector<Jump> MoveGenerator::getJumps(int space) const {
     return this->jumps[ space ];
 }
 

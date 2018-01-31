@@ -4,28 +4,48 @@
 #include "move-generator.h"
 // ai::MoveGenerator
 
+#include <memory>
 
 namespace ai {
-    class CheckersGame {
+    class Player {
         private:
-            MoveGenerator redGenerator;
-            MoveGenerator blackGenerator;
-
-            std::vector<Piece> redPieces;
-            std::vector<Piece> blackPieces;
-
-            const int INIT_NUM_PIECES = 12;
-            const int TOTAL_NUM_PIECES = 32;
-            const int ROWS = 8;
-            const int COLS = 8;
+            char color;
+            std::vector<Piece> pieces;
+            MoveGenerator generator;
 
         public:
-            CheckersGame(MoveGenerator red, MoveGenerator black);
+            Player(char color, MoveGenerator generator);
+            std::vector<Piece> getPieces() const;
+            char getColor() const;
+
+            std::vector<int> getMovesFor(Piece piece) const;
+            std::vector<Jump> getJumpsFor(Piece piece) const;
         private:
             void initPieces();
+            virtual bool isInitialSpace(int space) const = 0;
+    };
 
-            bool isInFirst3Rows(int space);
-            bool isInLast3Rows(int space);
+    class RedPlayer: public Player {
+        public:
+            RedPlayer(char color, MoveGenerator generator);
+        private:
+            bool isInitialSpace(int space) const override;
+    };
+
+    class BlackPlayer: public Player {
+        public:
+            BlackPlayer(char color, MoveGenerator generator);
+        private:
+            bool isInitialSpace(int space) const override;
+    };
+
+    class CheckersGame {
+        public:
+            std::shared_ptr<Player> red;
+            std::shared_ptr<Player> black;
+
+        public:
+            CheckersGame(std::shared_ptr<Player> red, std::shared_ptr<Player> black);
 
         public:
             void printBoard();
