@@ -37,11 +37,11 @@ MoveGenerator::MoveGenerator(
 }
 
 vector<int> MoveGenerator::getMoves(int space) {
-    return this->moves[ space ];
+    return moves[ space ];
 }
 
 vector<Jump> MoveGenerator::getJumps(int space) {
-    return this->jumps[ space ];
+    return jumps[ space ];
 }
 
 MoveGenerator ai::getGeneratorFor(const string & color, const JsonToStlConverter & converter) {

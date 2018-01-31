@@ -12,6 +12,9 @@ using ai::getGeneratorFor;
 using ai::Position;
 using ai::Piece;
 
+#include "headers/table-types.h"
+using ai::MoveTableType;
+
 #include <string>
 using std::string;
 #include <iostream>
@@ -59,7 +62,6 @@ bool CheckersGame::isInLast3Rows(int space) {
 }
 
 void CheckersGame::printBoard() {
-    //string board = "";
 
     auto spaces = getEmptyBoard();
 
@@ -114,16 +116,27 @@ Position CheckersGame::spaceToGridSquare(int space) {
 void CheckersGame::printMoves()
 {
     cout << "Black Moves: " << endl;
-    for ( const auto & checker : blackPieces)
+    auto blackMoves = getBlackMoves();
+    for (auto move : blackMoves)
     {
-        auto s = spaceToGridSquare(checker.space);
-        cout << "(" << s.row << ", " << s.col << "): " ;
-        for (const auto & move: blackGenerator.getMoves(checker.space)) {
-            auto m = spaceToGridSquare(move);
-            cout << "["  << m.row << "," << m.col << "] ";
+        cout << move[0] << ": [ ";
+        for(auto i=1;i<move.size();++i)
+        {
+            cout << i << " ";
         }
-        cout << endl;
+        cout << "]"<<endl;
     }
+    // cout << "Black Moves: " << endl;
+    // for ( const auto & checker : blackPieces)
+    // {
+    //     auto s = spaceToGridSquare(checker.space);
+    //     cout << "(" << s.row << ", " << s.col << "): " ;
+    //     for (const auto & move: blackGenerator.getMoves(checker.space)) {
+    //         auto m = spaceToGridSquare(move);
+    //         cout << "["  << m.row << "," << m.col << "] ";
+    //     }
+    //     cout << endl;
+    // }
 
     // cout << "Black Jumps: " << endl;
     // for ( Piece checker : blackPieces)
@@ -137,36 +150,49 @@ void CheckersGame::printMoves()
     //     }
     //     cout << endl;
     // }
-
-    // cout << "Red Moves: " << endl;
-    // for ( const auto & checker : redPieces)
-    // {
-    //     auto pos = spaceToGridSquare(checker.space);
-    //     cout << "\t(" << pos.row << "," << pos.col << "): ";
-
-    //     for (const auto & move: redGenerator.getMoves(checker.space)) {
-    //         cout << "[" << move << "] ";
-    //     }
-    //     cout << endl;
-    // }
-
-    // cout << "Red Jumps: " << endl;
-    // for ( Piece checker : redPieces)
-    // {
-    //     auto pos = spaceToGridSquare(checker.space);
-    //     cout << "\t(" <<pos.row << "," << pos.col << "): ";
-
-    //     for (const auto & jump : redGenerator.getJumps(checker.space))
-    //     {
-    //         cout << "[" << jump.to << "," << jump.from << "] ";
-    //     }
-    //     cout << endl;
-    // }
 }
 
-void CheckersGame::printValidMoves()
+MoveTableType CheckersGame::getBlackMoves()
 {
-
+    MoveTableType blackMoves;
+    bool valid = true;
+    for(const auto & piece : blackPieces)
+    {
+        auto moves = blackGenerator.getMoves(piece.space);
+        vector<int> black_move;
+        for(auto & move : moves)
+        {
+            for (const auto & other_black: blackPieces)
+            {
+                if(move == other_black.space)
+                {
+                    valid = false;
+                    break;
+                }
+            }
+            if(valid)
+            {
+                for (const auto & other_red: redPieces)
+                {
+                    if(move == other_red.space)
+                    {
+                        valid = false;
+                    }
+                }
+                if(valid)
+                {
+                    black_move.push_back(piece.space);
+                    black_move.push_back(move);
+                }
+            }
+            valid = true;
+        }
+        if (black_move.size())
+        {
+            blackMoves.push_back(black_move);
+        }
+    }
+    return blackMoves;
 }
 
 
