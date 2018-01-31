@@ -4,9 +4,11 @@ GENERATOR=move-generator
 CONVERTER=json-to-stl
 GAME=checkers-game
 PLAYER=player
+UTILS=utils
+BOARD=board
 MAIN=main
 
-OBJ_FILES=$(GENERATOR).o $(CONVERTER).o $(GAME).o $(PLAYER).o
+OBJ_FILES=$(GENERATOR).o $(CONVERTER).o $(GAME).o $(PLAYER).o $(UTILS).o $(BOARD).o
 OBJ_FILES_WITH_MAIN=$(OBJ_FILES) $(MAIN).o
 
 OUT_FILE=checkers.out
@@ -30,6 +32,12 @@ $(GAME).o: $(GAME).cpp
 
 $(PLAYER).o: $(PLAYER).cpp
 	$(CMP) -o $(PLAYER).o -c $(PLAYER).cpp
+
+$(BOARD).o: $(BOARD).cpp
+	$(CMP) -o $(BOARD).o -c $(BOARD).cpp
+
+$(UTILS).o: $(UTILS).cpp
+	$(CMP) -o $(UTILS).o -c $(UTILS).cpp
 
 # For making and running tests
 

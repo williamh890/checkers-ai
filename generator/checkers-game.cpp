@@ -1,6 +1,9 @@
 #include "headers/checkers-game.h"
 using ai::CheckersGame;
 
+#include "headers/board.h"
+using ai::Board;
+
 #include "headers/player.h"
 using ai::Player;
 using ai::RedPlayer;
@@ -14,6 +17,9 @@ using ai::JsonToStlConverter;
 #include "headers/move-generator.h"
 using ai::getGeneratorFor;
 using ai::MoveGenerator;
+
+#include "headers/utils.h"
+using ai::spaceToGridSquare;
 
 #include "headers/models.h"
 using ai::Jump;
@@ -47,90 +53,22 @@ CheckersGame ai::getCheckersGame() {
 
     auto red = getPlayer("red", converter);
     auto black = getPlayer("black", converter);
+    auto board = getBoard();
 
-    return CheckersGame(red, black);
+    return CheckersGame(board, red, black);
 }
 
 CheckersGame::CheckersGame(
+        const Board & board,
         shared_ptr<Player> red,
-        shared_ptr<Player> black): board(vector<char>(32, ' ')), red(red), black(black) {
-    addPiecesToBoardFor(red);
-    addPiecesToBoardFor(black);
+        shared_ptr<Player> black
+        ): board(board), red(red), black(black) {
+    this->board.addPiecesFor(red);
+    this->board.addPiecesFor(black);
 }
 
-void CheckersGame::addPiecesToBoardFor(shared_ptr<Player> player) {
-    for (auto piece: player->getPieces()) {
-        board[piece.space] = piece.color;
-    }
-}
-
-void CheckersGame::printBoard() {
-    auto spaces = getEmptyBoard();
-
-    for (auto piece: black->getPieces()) {
-        auto pos = spaceToGridSquare(piece.space);
-
-        spaces[pos.row][pos.col] = piece.color;
-
-        for (auto move: black->getMovesFor(piece)) {
-            auto movePos = spaceToGridSquare(move);
-            if (spaces[movePos.row][movePos.col] == piece.color) {
-                continue;
-            }
-            spaces[movePos.row][movePos.col] = 'm';
-        }
-
-        for (auto jump: black->getJumpsFor(piece)) {
-            auto to = spaceToGridSquare(jump.to);
-            if (spaces[to.row][to.col] == piece.color) {
-                continue;
-            }
-            spaces[to.row][to.col] = 'j';
-        }
-    }
-
-    for (auto piece: red->getPieces()) {
-        auto pos = spaceToGridSquare(piece.space);
-        spaces[pos.row][pos.col] = piece.color;
-    }
-
-    const string boardNums = "     0   1   2   3   4   5   6   7  ";
-    const string spacerRow = "   +---+---+---+---+---+---+---+---+";
-
-    cout << boardNums << endl;
-    auto rowCounter = 0;
-    for ( auto row : spaces ) {
-        cout << spacerRow << endl;
-
-        cout << " " << rowCounter << " ";
-        for (auto space : row) {
-            cout << "| " << space << " ";
-        }
-        cout << "|" << endl;
-
-        ++rowCounter;
-    }
-    cout << spacerRow << endl;
-}
-
-vector<vector<char>> CheckersGame::getEmptyBoard() {
-    vector<vector<char>> board;
-
-    for (auto r = 0; r < ROWS; ++r) {
-        auto row = vector<char>(ROWS, ' ');
-        board.push_back(row);
-    }
-
-    return board;
-}
-
-Position CheckersGame::spaceToGridSquare(int space) {
-    auto row = space / 4;
-    auto col = space % 4;
-
-    auto offset = (row % 2) ? 0 : 1;
-
-    return Position(row, (2 * col) + offset);
+void CheckersGame::print() {
+    board.print();
 }
 
 void CheckersGame::printMoves()
