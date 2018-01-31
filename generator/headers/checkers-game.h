@@ -32,7 +32,12 @@ namespace ai {
         public:
             void printBoard();
             void printMoves();
+            void printMovesForColor(const std::string & color);
+            void printJumpsForColor(const std::string & color);
+
+            void printValidMoves();
         private:
+            MoveTableType getBlackMoves();
             std::vector<std::vector<char>> getEmptyBoard();
             Position spaceToGridSquare(int space);
     };

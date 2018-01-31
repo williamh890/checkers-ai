@@ -105,8 +105,18 @@ ENV/
 .mypy_cache/
 
 json.hpp
+catch.hpp
+
 *.out
 *.obj
 *.o
 *.tar.gz
 *.c
+
+Checkers_Duane.vcxproj
+.vs/
+Checkers_Duane.sln
+Checkers_Duane.vcxproj.filters
+Checkers_Duane.vcxproj.user
+Debug/
+

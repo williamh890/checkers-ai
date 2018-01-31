@@ -47,27 +47,28 @@ JumpTableType JsonToStlConverter::getJumpsFor(const string & color) const {
 }
 
 MoveTableType JsonToStlConverter::movesToStlContainer(const json & movesJson) const {
-    MoveTableType moveTableStl;
+    MoveTableType moveTableStl{32};
 
     auto end = movesJson.end();
     for (auto it = movesJson.begin(); it != end; ++it) {
         auto moves = getMovesFromJson(it.value());
 
-        moveTableStl.push_back(moves);
+        auto space = strToInt(it.key());
+        moveTableStl[space] = moves;
     }
-
     return moveTableStl;
 }
 
 JumpTableType JsonToStlConverter::jumpsToStlContainer(const json & jumpsJson) const {
-    JumpTableType jumpTableStl;
+    JumpTableType jumpTableStl{32};
 
     auto end = jumpsJson.end();
     for (auto it = jumpsJson.begin(); it != end; ++it) {
 
+        auto space = strToInt(it.key());
         auto jumps = getJumpsFromJson(it.value());
 
-        jumpTableStl.push_back(jumps);
+        jumpTableStl[space] = jumps;
     }
 
     return jumpTableStl;
