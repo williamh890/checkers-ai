@@ -23,7 +23,7 @@ class Board_Gui():
                        for y in range(BOARD_SIZE)]
         self.draw_spaces = self.spaces
 
-        self.move = []
+        self.move_buttons = []
 
         self.board.pack()
 
@@ -39,7 +39,7 @@ class Board_Gui():
                 self.make_board_space(row, column)
 
     def make_board_space(self, row, column):
-        callback = self.make_space_callback(row, column)
+        callback = self.make_move_callback(row, column)
         space = tk.Button(
                           self.board,
                           text=str(self.spaces[row][column]),
@@ -54,20 +54,25 @@ class Board_Gui():
     def space_callback(self, row, col):
         print('({}, {})'.format(row, col))
 
+    def make_move_callback(self, row, col):
+        return lambda: self.move_callback(row, col)
+
     def move_callback(self, row, col):
-        self.move.push_back((row, col))
-        if len(self.move) == 2:
+        print('({}, {})'.format(row, col))
+
+        self.move_buttons.append(self.draw_spaces[row][col])
+        if len(self.move_buttons) == 2:
             print("making move")
             self.submit_move()
         else:
             print("select your next move")
 
     def submit_move(self):
-        b_row, b_col = self.move[0][0], self.move[0][1]
-        e_row, e_col = self.move[1][0], self.move[1][1]
-        self.spaces[b_row, b_col],
-        self.spaces[e_row, e_col] = self.spaces[e_row, e_col],
-        self.spaces[b_row, b_col]
+        print("making move")
+        b_space, e_space = self.move_buttons[0], self.move_buttons[1]
+        b_space["text"], e_space["text"] = e_space["text"], b_space["text"]
+        self.move_buttons = []
+        print("buttons should be different")
 
 
 def example_board():
