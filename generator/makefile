@@ -3,9 +3,10 @@ CMP=g++ -std=c++14 -Wall
 GENERATOR=move-generator
 CONVERTER=json-to-stl
 GAME=checkers-game
+PLAYER=player
 MAIN=main
 
-OBJ_FILES=$(GENERATOR).o $(CONVERTER).o $(GAME).o
+OBJ_FILES=$(GENERATOR).o $(CONVERTER).o $(GAME).o $(PLAYER).o
 OBJ_FILES_WITH_MAIN=$(OBJ_FILES) $(MAIN).o
 
 OUT_FILE=checkers.out
@@ -26,6 +27,9 @@ $(CONVERTER).o: $(CONVERTER).cpp
 
 $(GAME).o: $(GAME).cpp
 	$(CMP) -o $(GAME).o -c $(GAME).cpp
+
+$(PLAYER).o: $(PLAYER).cpp
+	$(CMP) -o $(PLAYER).o -c $(PLAYER).cpp
 
 # For making and running tests
 
@@ -59,4 +63,7 @@ install:
 	curl https://github.com/catchorg/Catch2/releases/download/v2.1.1/catch.hpp > tests/catch.hpp -L
 
 clean:
-	rm $(OBJ_FILES) *.out $(TESTING_OBJ_FILES)
+	rm $(OBJ_FILES) *.out
+
+clean-tests:
+	rm $(TESTING_OBJ_FILES)
