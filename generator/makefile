@@ -5,9 +5,9 @@ CONVERTER=json-to-stl
 GAME=checkers-game
 MAIN=main
 
-OUT_FILE=checkers.out
-
 OBJ_FILES=$(GENERATOR).o $(CONVERTER).o $(MAIN).o $(GAME).o
+
+OUT_FILE=checkers.out
 
 all: $(OUT_FILE)
 

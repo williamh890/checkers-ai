@@ -116,11 +116,11 @@ void CheckersGame::printMoves()
     cout << "Black Moves: " << endl;
     for ( const auto & checker : blackPieces)
     {
-        auto pos = spaceToGridSquare(checker.space);
-        cout << "\t(" << pos.row << "," << pos.col << ")" << "{" << checker.space<<"}: ";
-
+        auto s = spaceToGridSquare(checker.space);
+        cout << "(" << s.row << ", " << s.col << "): " ;
         for (const auto & move: blackGenerator.getMoves(checker.space)) {
-            cout << "[" << move << "] ";
+            auto m = spaceToGridSquare(move);
+            cout << "["  << m.row << "," << m.col << "] ";
         }
         cout << endl;
     }
