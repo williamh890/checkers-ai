@@ -6,13 +6,14 @@ GAME=checkers-game
 MAIN=main
 
 OBJ_FILES=$(GENERATOR).o $(CONVERTER).o $(GAME).o
+OBJ_FILES_WITH_MAIN=$(OBJ_FILES) $(MAIN).o
 
 OUT_FILE=checkers.out
 
 all: $(OUT_FILE)
 
-$(OUT_FILE): $(OBJ_FILES) $(MAIN)
-	$(CMP) -o $(OUT_FILE) $(OBJ_FILES)
+$(OUT_FILE): $(OBJ_FILES_WITH_MAIN)
+	$(CMP) -o $(OUT_FILE) $(OBJ_FILES_WITH_MAIN)
 
 $(MAIN).o: $(MAIN).cpp
 	$(CMP) -o $(MAIN).o -c $(MAIN).cpp
@@ -25,7 +26,6 @@ $(CONVERTER).o: $(CONVERTER).cpp
 
 $(GAME).o: $(GAME).cpp
 	$(CMP) -o $(GAME).o -c $(GAME).cpp
-
 
 # For making and running tests
 
