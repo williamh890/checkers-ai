@@ -30,6 +30,7 @@ namespace ai {
         public:
             void printBoard();
             void printMoves();
+            void printValidMoves();
         private:
             std::vector<std::vector<char>> getEmptyBoard();
             Position spaceToGridSquare(int space);

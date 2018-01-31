@@ -59,7 +59,7 @@ bool CheckersGame::isInLast3Rows(int space) {
 }
 
 void CheckersGame::printBoard() {
-    string board = "";
+    //string board = "";
 
     auto spaces = getEmptyBoard();
 
@@ -113,39 +113,59 @@ Position CheckersGame::spaceToGridSquare(int space) {
 
 void CheckersGame::printMoves()
 {
-    cout << "Black Jumps: " << endl;
-    for ( Piece checker : blackPieces)
+    cout << "Black Moves: " << endl;
+    for ( const auto & checker : blackPieces)
     {
         auto pos = spaceToGridSquare(checker.space);
-        cout << "\t(" <<pos.row << "," << pos.col << "): ";
+        cout << "\t(" << pos.row << "," << pos.col << ")" << "{" << checker.space<<"}: ";
 
-        for (const auto & jump : blackGenerator.getJumps(checker.space))
-        {
-            cout << "[" << jump.to << "," << jump.from << "] ";
-        }
-        cout << endl;
-    }
-
-    cout << "Red Moves: ";
-    cout << endl;
-    for ( const auto & checker : redPieces)
-    {
-        auto pos = spaceToGridSquare(checker.space);
-        cout << "\t(" << pos.row << "," << pos.col << "): ";
-
-        for (const auto & move: redGenerator.getMoves(checker.space)) {
+        for (const auto & move: blackGenerator.getMoves(checker.space)) {
             cout << "[" << move << "] ";
         }
         cout << endl;
     }
-    cout << endl;
-    cout << "Red Jumps: ";
-    for ( Piece checker : redPieces)
-    {
-        //cout << blackGenerator.getJumps(checker.space);
-        cout << ", ";
-    }
-    cout << endl;
+
+    // cout << "Black Jumps: " << endl;
+    // for ( Piece checker : blackPieces)
+    // {
+    //     auto pos = spaceToGridSquare(checker.space);
+    //     cout << "\t(" <<pos.row << "," << pos.col << "): ";
+
+    //     for (const auto & jump : blackGenerator.getJumps(checker.space))
+    //     {
+    //         cout << "[" << jump.to << "," << jump.from << "] ";
+    //     }
+    //     cout << endl;
+    // }
+
+    // cout << "Red Moves: " << endl;
+    // for ( const auto & checker : redPieces)
+    // {
+    //     auto pos = spaceToGridSquare(checker.space);
+    //     cout << "\t(" << pos.row << "," << pos.col << "): ";
+
+    //     for (const auto & move: redGenerator.getMoves(checker.space)) {
+    //         cout << "[" << move << "] ";
+    //     }
+    //     cout << endl;
+    // }
+
+    // cout << "Red Jumps: " << endl;
+    // for ( Piece checker : redPieces)
+    // {
+    //     auto pos = spaceToGridSquare(checker.space);
+    //     cout << "\t(" <<pos.row << "," << pos.col << "): ";
+
+    //     for (const auto & jump : redGenerator.getJumps(checker.space))
+    //     {
+    //         cout << "[" << jump.to << "," << jump.from << "] ";
+    //     }
+    //     cout << endl;
+    // }
+}
+
+void CheckersGame::printValidMoves()
+{
 
 }
 
