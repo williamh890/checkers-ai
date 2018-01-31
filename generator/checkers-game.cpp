@@ -53,13 +53,20 @@ CheckersGame ai::getCheckersGame() {
 
 CheckersGame::CheckersGame(
         shared_ptr<Player> red,
-        shared_ptr<Player> black): red(red), black(black) {
+        shared_ptr<Player> black): board(vector<char>(32, ' ')), red(red), black(black) {
+    addPiecesToBoardFor(red);
+    addPiecesToBoardFor(black);
+}
+
+void CheckersGame::addPiecesToBoardFor(shared_ptr<Player> player) {
+    for (auto piece: player->getPieces()) {
+        board[piece.space] = piece.color;
+    }
 }
 
 void CheckersGame::printBoard() {
 
     auto spaces = getEmptyBoard();
-
     for (auto piece: black->getPieces()) {
         auto pos = spaceToGridSquare(piece.space);
 

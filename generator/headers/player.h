@@ -19,11 +19,12 @@ namespace ai {
 
         public:
             Player(char color, MoveGenerator generator);
-            std::vector<Piece> getPieces() const;
-            char getColor() const;
+            const std::vector<Piece> getPieces() const;
+            const char getColor() const;
 
-            std::vector<int> getMovesFor(Piece piece) const;
-            std::vector<Jump> getJumpsFor(Piece piece) const;
+            const std::vector<int> getMovesFor(Piece piece) const;
+            const std::vector<Jump> getJumpsFor(Piece piece) const;
+
         protected:
             void initPieces();
         private:

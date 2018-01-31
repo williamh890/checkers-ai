@@ -40,19 +40,19 @@ void Player::initPieces() {
     }
 }
 
-vector<Piece> Player::getPieces() const {
+const vector<Piece> Player::getPieces() const {
     return pieces;
 }
 
-char Player::getColor() const {
+const char Player::getColor() const {
     return color;
 }
 
-vector<int> Player::getMovesFor(Piece piece) const {
+const vector<int> Player::getMovesFor(Piece piece) const {
     return generator.getMoves(piece.space);
 };
 
-vector<Jump> Player::getJumpsFor(Piece piece) const {
+const vector<Jump> Player::getJumpsFor(Piece piece) const {
     return generator.getJumps(piece.space);
 };
 
