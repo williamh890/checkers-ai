@@ -12,7 +12,6 @@ namespace ai {
     class CheckersGame {
         private:
             std::vector<char> board;
-        public:
             std::shared_ptr<Player> red;
             std::shared_ptr<Player> black;
 

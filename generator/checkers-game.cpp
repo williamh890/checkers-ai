@@ -65,8 +65,8 @@ void CheckersGame::addPiecesToBoardFor(shared_ptr<Player> player) {
 }
 
 void CheckersGame::printBoard() {
-
     auto spaces = getEmptyBoard();
+
     for (auto piece: black->getPieces()) {
         auto pos = spaceToGridSquare(piece.space);
 
@@ -147,8 +147,6 @@ void CheckersGame::printMovesForColor(const string & color) {
         auto s = spaceToGridSquare(checker.space);
         cout << "(" << s.row << ", " << s.col << "): ";
         for (const auto & move: black->getMovesFor(checker)) {
-            auto m = spaceToGridSquare(move);
-            // cout << "["  << m.row << "," << m.col << "] ";
             cout << move << " ";
         }
         cout << "]"<<endl;
@@ -161,13 +159,9 @@ void CheckersGame::printJumpsForColor(const string & color) {
     auto pieces = ((color == "black") ? black: red)->getPieces();
 
     for (const auto & checker: pieces) {
-        auto s = spaceToGridSquare(checker.space);
-        // cout << "(" << s.row << ", " << s.col << "):";;
         cout << checker.space << ": ";
 
         for (const auto & jump: black->getJumpsFor(checker)) {
-            auto to = spaceToGridSquare(jump.to);
-            //cout << "[" <<  to.row << "," << to.col << "] ";
             cout << jump.to << ", " << jump.through << " ";
         }
         cout << endl;
