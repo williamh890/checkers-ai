@@ -29,7 +29,7 @@ void Board::addPiecesFor(const shared_ptr<Player> & player) {
 void Board::print() {
     auto spaces = getEmptyBoard();
 
-    for (auto i = 0; i < boardState.size(); ++i) {
+    for (auto i = 0; i < (int)boardState.size(); ++i) {
         auto pos = spaceToGridSquare(i);
 
         spaces[pos.row][pos.col] = boardState[i];
