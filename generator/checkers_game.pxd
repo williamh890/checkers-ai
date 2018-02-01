@@ -1,12 +1,3 @@
-# checkers-game.pyx
-# Author: Hal Dimarchi
-# .pyx file for checkers game
-"""
-include "headers/checkers-game.h"
-include "headers/json-to-stl.h"
-include "headers/models.h"
-"""
-
 from libcpp.vector cimport vector
 from libcpp.string cimport string
 from cython.operator cimport dereference as deref
@@ -39,35 +30,5 @@ cdef extern from "headers/checkers-game.h" namespace "ai":
     void printMoves()
     void printMovesForColor(const string & color);
     void printJumpsForColor(const string & color);
-    # waiting for this to be defined in source:
-    # void printValidMoves();
 
   CheckersGame getCheckersGame() except +
-
-cdef class PyCheckersGame:
-  cdef CheckersGame checkers_game
-  def __cinit__(self):
-    self.checkers_game = getCheckersGame()
-
-  def printBoard(self):
-    self.checkers_game.printBoard()
-
-  def printMoves(self):
-    self.checkers.printMoves()
-
-  def printMovesForColor(self, color):
-    self.checkers_game.printMovesForColor(color)
-
-  def printJumpsForColor(self, color):
-    self.checkers_game.printJumpsForColor(color)
-
-  def printValidMoves(self):
-    pass
-    # waiting for this to be defined in source
-    # self.checkers_game.printValidMoves()
-
-
-if __name__ == "__main__":
-  game = PyCheckersGame()
-  game.printBoard()
-  print("Hewwo")

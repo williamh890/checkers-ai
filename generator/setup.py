@@ -8,4 +8,4 @@ setup(name="cython_checkers",
                     "json-to-stl.cpp"],  # additional source file(s)
            language="c++",
            extra_compile_args=["-std=c++14"],
-          ), "-a"))
+          )))
