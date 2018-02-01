@@ -84,10 +84,15 @@ void CheckersGame::play() {
     while (true) {
         cout << toString() << endl;
 
-        pair<int, int> move;
+        pair<int, int> move = make_pair(-1, -1);
+        pair<int, Jump> jump = make_pair(-1, Jump(-1, -1));
 
         try {
-            move = getMoveFromActivePlayer();
+            if (getValidJumps().size() > 0) {
+                jump = getJumpFromActivePlayer();
+            } else {
+                move = getMoveFromActivePlayer();
+            }
         }
         catch(length_error & e) {
             cout << "Out of moves" << endl;
@@ -98,14 +103,65 @@ void CheckersGame::play() {
             continue;
         }
 
-        cout << activePlayer->getColor() << ": " << spaceToPosition(move.first).toString() << ", " << spaceToPosition(move.second).toString() << endl;
+        cout << activePlayer->getColor() << ": "
+            << spaceToPosition(move.first).toString() << ", "
+            << spaceToPosition(move.second).toString()
+            << endl;
 
-        auto action = board.make(move);
-        reactTo(action, move);
+        Action action;
+        if (move.first == -1) {
+            action = board.make(jump);
+            reactTo(action, jump);
+
+            if (getValidJumps().size() > 0) {
+                continue;
+            }
+        }
+        else {
+            action = board.make(move);
+            reactTo(action, move);
+        }
+
 
         swap(activePlayer, inactivePlayer);
     }
+}
 
+pair<int, Jump> CheckersGame::getJumpFromActivePlayer() {
+    if (activePlayer->getPlayerType() == PlayerType::Computer) {
+        return getRandomValidJump();
+    }
+
+    return getJumpFromUser();
+}
+
+pair<int, Jump> CheckersGame::getRandomValidJump() {
+    auto jumps = getValidJumps();
+
+    auto numJumps = jumps.size();
+    cout << "number of jumps: " << numJumps << endl;
+
+    return jumps[rand() % numJumps];
+}
+
+pair<int, Jump> CheckersGame::getJumpFromUser() {
+    auto inputJump = parseUserInput();
+
+    return getJumpFrom(inputJump);
+}
+
+pair<int, Jump> CheckersGame::getJumpFrom(const pair<int, int> & inputJump) {
+    auto validJumps = getValidJumps();
+
+    for (const auto & checkJump: validJumps) {
+        if (checkJump.first == inputJump.first and
+            checkJump.second.to == inputJump.second) {
+
+            return checkJump;
+        }
+    }
+
+    throw runtime_error("invalid jump input.");
 }
 
 pair<int, int> CheckersGame::getMoveFromActivePlayer() {
@@ -118,6 +174,7 @@ pair<int, int> CheckersGame::getMoveFromActivePlayer() {
 
 pair<int, int> CheckersGame::getRandomValidMove() {
     auto moves = getValidMoves();
+
     auto numMoves = moves.size();
 
     cout << "number of moves: " << numMoves << endl;
@@ -128,7 +185,7 @@ pair<int, int> CheckersGame::getRandomValidMove() {
     return moves[rand() % numMoves];
 }
 
-pair<int, int> CheckersGame::getMoveFromUser() {
+pair<int, int> CheckersGame::parseUserInput() {
     cout << "Enter move (startRow startCol endRow endCol): ";
 
     string in;
@@ -144,12 +201,15 @@ pair<int, int> CheckersGame::getMoveFromUser() {
     auto start = positionToSpace(startPos);
     auto end = positionToSpace(endPos);
 
-    auto move = make_pair(start, end);
+    return make_pair(start, end);
+}
+
+pair<int, int> CheckersGame::getMoveFromUser() {
+    auto move = parseUserInput();
 
     if (isInvalid(move)) {
         throw runtime_error("move is not valid");
     }
-
     return move;
 }
 
@@ -171,12 +231,28 @@ vector<pair<int, int>> CheckersGame::getValidMoves() {
     return validMoves;
 }
 
+vector<pair<int, Jump>> CheckersGame::getValidJumps() {
+    auto validJumps = board.getValidJumpsFor(activePlayer);
+
+    return validJumps;
+}
+
+// TODO! Want to combine these reactTo functions in the future
+void CheckersGame::reactTo(const Action & action, const pair<int, Jump> & jump) {
+    if (action == Action::Jump) {
+        activePlayer->updatePieces(jump);
+        inactivePlayer->removePieceAt(jump.second.through);
+        cout << "piece was jumped" << endl;
+    }
+}
+
 void CheckersGame::reactTo(const Action & action, const pair<int, int> & move) {
     if (action == Action::Move) {
         activePlayer->updatePieces(move);
         cout << "piece was moved" << endl;
     }
 }
+
 
 string CheckersGame::toString() {
     return board.toString();

@@ -36,9 +36,21 @@ namespace ai {
             std::pair<int, int> getRandomValidMove();
             std::pair<int, int> getMoveFromUser();
 
+            std::pair<int, Jump> getJumpFromActivePlayer();
+            std::pair<int, Jump> getRandomValidJump();
+            std::pair<int, Jump> getJumpFromUser();
+
+            std::pair<int, int> parseUserInput();
+
             bool isInvalid(const std::pair<int, int> & move);
+
+            std::pair<int, Jump> getJumpFrom(const std::pair<int, int> & inputJump);
+
+            std::vector<std::pair<int, Jump>> getValidJumps();
             std::vector<std::pair<int, int>> getValidMoves();
+
             void reactTo(const Action & action, const std::pair<int, int> & move);
+            void reactTo(const Action & action, const std::pair<int, Jump> & jump);
 
             std::string toString();
 

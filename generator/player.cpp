@@ -67,6 +67,17 @@ const PlayerType Player::getPlayerType() const {
     return playerType;
 }
 
+void Player::removePieceAt(int space) {
+    for (auto s = pieces.size() - 1; s > 0; --s) {
+        auto piece = pieces[s];
+
+        if (piece.space == space) {
+            pieces.erase(pieces.begin() + s);
+            break;
+        }
+    }
+}
+
 void Player::updatePieces(const pair<int, int> & move) {
     for (auto & piece : pieces) {
         if (piece.space == move.first) {
@@ -75,6 +86,16 @@ void Player::updatePieces(const pair<int, int> & move) {
         }
     }
 }
+
+void Player::updatePieces(const pair<int, Jump> & jump) {
+    for (auto & piece : pieces) {
+        if (piece.space == jump.first) {
+            piece.space = jump.second.to;
+            break;
+        }
+    }
+}
+
 
 vector<Jump> Player::getJumpsFor(const Piece & piece) const {
     return generator.getJumps( piece.space );
@@ -95,7 +116,7 @@ string Player::movesToString() const {
         for (const auto & move: getMovesFor(checker)) {
             ss << move << " ";
         }
-        ss << "]"<<endl;
+        ss << "]" << endl;
     }
 
     return ss.str();
@@ -141,6 +162,7 @@ shared_ptr<Player> ai::getPlayer(const string & color, JsonToStlConverter conver
         auto redGenerator = getGeneratorFor("red", converter);
         return make_shared<RedPlayer>('r', redGenerator);
     }
+
     auto blackGenerator = getGeneratorFor("black", converter);
 
     return make_shared<BlackPlayer>('b', blackGenerator, PlayerType::Computer);

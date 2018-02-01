@@ -17,7 +17,7 @@
 
 namespace ai {
     enum class Action {
-        Move
+        Move, Jump
     };
 
     class Board {
@@ -29,11 +29,14 @@ namespace ai {
             void addPiecesFor(const std::shared_ptr<Player> & player);
 
             const std::vector<std::pair<int, int>> getValidMovesFor(const std::shared_ptr<Player> & player) const;
+            const std::vector<std::pair<int, Jump>> getValidJumpsFor(const std::shared_ptr<Player> & player) const;
 
+            const Action make(const std::pair<int, Jump> jump);
             const Action make(const std::pair<int, int> move);
 
         private:
             bool hasPieceAt(int space) const;
+            bool hasOpposingPieceAt(const Jump & jump, char color) const;
 
         public:
             std::string toString();

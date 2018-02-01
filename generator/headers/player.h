@@ -31,6 +31,8 @@ namespace ai {
             const PlayerType getPlayerType() const;
 
             void updatePieces(const std::pair<int, int> & move);
+            void updatePieces(const std::pair<int, Jump> & jump);
+            void removePieceAt(int space);
 
             std::vector<Jump> getJumpsFor(const Piece & piece) const;
             std::vector<int> getMovesFor(const Piece & piece) const;

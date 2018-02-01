@@ -12,6 +12,9 @@ using ai::MoveTableType;
 using ai::spaceToPosition;
 using ai::positionToSpace;
 
+#include "headers/models.h"
+using ai::Jump;
+
 #include <vector>
 using std::vector;
 #include <memory>
@@ -40,6 +43,31 @@ bool Board::hasPieceAt(int space) const {
     return boardState[space] != ' ';
 }
 
+const vector<pair<int, Jump>> Board::getValidJumpsFor(const shared_ptr<Player> & player) const {
+    vector<pair<int, Jump>> validJumps;
+
+    for(const auto & piece : player->getPieces()) {
+        auto jumps = player->getJumpsFor(piece);
+
+        for(auto jump : jumps) {
+            if (not hasOpposingPieceAt(jump, player->getColor())) {
+                continue;
+            }
+
+            auto validJump = make_pair(piece.space, jump);
+            validJumps.push_back(validJump);
+        }
+    }
+
+    return validJumps;
+}
+
+bool Board::hasOpposingPieceAt(const Jump & jump, char color) const {
+    return boardState[jump.through] != ' ' and
+        boardState[jump.through] != color;
+}
+
+
 const vector<pair<int, int>> Board::getValidMovesFor(const shared_ptr<Player> & player) const {
     vector<pair<int, int>> validMoves;
 
@@ -65,6 +93,15 @@ const Action Board::make(const pair<int, int> move) {
 
     return Action::Move;
 }
+
+const Action Board::make(const pair<int, Jump> jump) {
+    boardState[jump.second.to] = boardState[jump.first];
+    boardState[jump.second.through] = ' ';
+    boardState[jump.first] = ' ';
+
+    return Action::Jump;
+}
+
 
 string Board::toString() {
     auto spaces = getEmptyBoard();
