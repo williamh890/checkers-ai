@@ -19,12 +19,15 @@ namespace ai {
         private:
             char color;
             std::vector<Piece> pieces;
+
             MoveGenerator generator;
+            MoveGenerator kingGenerator;
+
             PlayerType playerType;
 
         public:
             Player() = default;
-            Player(char color, MoveGenerator generator, PlayerType type);
+            Player(char color, const MoveGenerator & generator, const MoveGenerator & kingGenerator, PlayerType type);
 
             const std::vector<Piece> getPieces() const;
             const char getColor() const;
@@ -44,20 +47,23 @@ namespace ai {
             void initPieces();
         private:
             virtual bool isInitialSpace(int space) const = 0;
+            virtual bool shouldBeCrowned(const Piece & piece) const = 0;
     };
 
     class RedPlayer: public Player {
         public:
-            RedPlayer(char color, MoveGenerator generator, PlayerType type);
+            RedPlayer(char color, const MoveGenerator & generator, const MoveGenerator & kingGenerator, PlayerType type);
         private:
             bool isInitialSpace(int space) const override;
+            bool shouldBeCrowned(const Piece & piece) const override ;
     };
 
     class BlackPlayer: public Player {
         public:
-            BlackPlayer(char color, MoveGenerator generator, PlayerType type);
+            BlackPlayer(char color, const MoveGenerator & generator, const MoveGenerator & kingGenerator, PlayerType type);
         private:
             bool isInitialSpace(int space) const override;
+            bool shouldBeCrowned(const Piece & piece) const override ;
     };
 
     std::shared_ptr<Player> getPlayer(const std::string & color, JsonToStlConverter converter);

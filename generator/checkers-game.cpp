@@ -80,7 +80,7 @@ CheckersGame::CheckersGame(
 }
 
 void CheckersGame::play() {
-    while (true) {
+    while (moveCounter++ < 100) {
         cout << toString() << endl;
 
         pair<int, int> move = make_pair(-1, -1);
@@ -144,7 +144,7 @@ void CheckersGame::play() {
         swap(activePlayer, inactivePlayer);
     }
 
-    cout << "gameover" << endl;
+    cout << "moves in game " << moveCounter << endl;
 }
 
 pair<int, Jump> CheckersGame::getJumpFromActivePlayer() {

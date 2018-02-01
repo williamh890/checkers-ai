@@ -18,6 +18,7 @@
 namespace ai {
     class CheckersGame {
         private:
+            int moveCounter = 0;
             Board board;
             std::shared_ptr<Player> red;
             std::shared_ptr<Player> black;

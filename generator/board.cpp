@@ -67,7 +67,7 @@ const vector<pair<int, Jump>> Board::getValidJumpsFor(const shared_ptr<Player> &
 
 bool Board::hasOpposingPieceAt(const Jump & jump, char color) const {
     return boardState[jump.through] != ' ' and
-        boardState[jump.through] != color;
+        boardState[jump.through] != tolower(color);
 }
 
 bool Board::destinationIsNotEmpty(const Jump & jump) const {

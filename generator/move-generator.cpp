@@ -51,3 +51,34 @@ MoveGenerator ai::getGeneratorFor(const string & color, const JsonToStlConverter
 
     return MoveGenerator(moves, jumps);
 }
+
+MoveGenerator ai::getKingGenerator(const JsonToStlConverter & converter) {
+    auto redMoves = converter.getMovesFor("red");
+    auto blackMoves = converter.getMovesFor("black");
+
+    MoveTableType moves;
+    for (auto i = 0; i < (int)redMoves.size(); ++i) {
+        auto r = redMoves[i];
+        auto b = blackMoves[i];
+
+        r.insert( r.end(), b.begin(), b.end() );
+
+        moves.push_back(r);
+    }
+
+    auto redJumps = converter.getJumpsFor("red");
+    auto blackJumps = converter.getJumpsFor("black");
+
+    JumpTableType jumps;
+    for (auto i = 0; i < (int)redMoves.size(); ++i) {
+        auto r = redJumps[i];
+        auto b = blackJumps[i];
+
+        r.insert( r.end(), b.begin(), b.end() );
+
+        jumps.push_back(r);
+    }
+
+    return MoveGenerator(moves, jumps);
+}
+

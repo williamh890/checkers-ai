@@ -9,6 +9,7 @@ using ai::PlayerType;
 using ai::JsonToStlConverter;
 
 #include "headers/move-generator.h"
+using ai::getKingGenerator;
 using ai::getGeneratorFor;
 
 #include "headers/utils.h"
@@ -24,6 +25,7 @@ using ai::Jump;
 #include "headers/consts.h"
 using ai::TOTAL_NUM_PIECES;
 using ai::INIT_NUM_PIECES;
+using ai::NUM_PIECES_IN_ROW;
 
 #include <vector>
 using std::vector;
@@ -42,8 +44,9 @@ using std::pair;
 
 Player::Player(
         char color,
-        MoveGenerator generator,
-        PlayerType type=PlayerType::Computer) : color(color), generator(generator), playerType(type) {
+        const MoveGenerator & generator,
+        const MoveGenerator & kingGenerator,
+        PlayerType type=PlayerType::Computer) : color(color), generator(generator), kingGenerator(kingGenerator), playerType(type) {
 }
 
 void Player::initPieces() {
@@ -82,6 +85,11 @@ void Player::updatePieces(const pair<int, int> & move) {
     for (auto & piece : pieces) {
         if (piece.space == move.first) {
             piece.space = move.second;
+
+            if(shouldBeCrowned(piece)) {
+                piece.isKing = true;
+            }
+
             break;
         }
     }
@@ -91,16 +99,29 @@ void Player::updatePieces(const pair<int, Jump> & jump) {
     for (auto & piece : pieces) {
         if (piece.space == jump.first) {
             piece.space = jump.second.to;
+
+            if(shouldBeCrowned(piece)) {
+                piece.isKing = true;
+            }
+
             break;
         }
     }
 }
 
 vector<Jump> Player::getJumpsFor(const Piece & piece) const {
+    if (piece.isKing) {
+        return kingGenerator.getJumps(piece.space);
+    }
+
     return generator.getJumps( piece.space );
 }
 
 vector<int> Player::getMovesFor(const Piece & piece) const {
+    if (piece.isKing) {
+        return kingGenerator.getMoves(piece.space);
+    }
+
     return generator.getMoves( piece.space );
 }
 
@@ -138,7 +159,11 @@ string Player::jumpsToString() const {
 }
 
 
-BlackPlayer::BlackPlayer(char color, MoveGenerator generator, PlayerType type=PlayerType::Human): Player(color, generator, type) {
+BlackPlayer::BlackPlayer(
+        char color,
+        const MoveGenerator & generator,
+        const MoveGenerator & kingGenerator,
+        PlayerType type=PlayerType::Human): Player(color, generator, kingGenerator, type) {
     initPieces();
 }
 
@@ -146,9 +171,14 @@ bool BlackPlayer::isInitialSpace(int space) const {
     return space >= (TOTAL_NUM_PIECES - INIT_NUM_PIECES);
 }
 
+bool BlackPlayer::shouldBeCrowned(const Piece & piece) const {
+    return piece.space < NUM_PIECES_IN_ROW;
+}
+
 RedPlayer::RedPlayer(char color,
-                     MoveGenerator generator,
-                     PlayerType type=PlayerType::Computer): Player(color, generator, type) {
+                     const MoveGenerator & generator,
+                     const MoveGenerator & kingGenerator,
+                     PlayerType type=PlayerType::Computer): Player(color, generator, kingGenerator, type) {
     initPieces();
 }
 
@@ -156,14 +186,21 @@ bool RedPlayer::isInitialSpace(int space) const {
     return space < (INIT_NUM_PIECES);
 }
 
+bool RedPlayer::shouldBeCrowned(const Piece & piece) const {
+    return piece.space >= TOTAL_NUM_PIECES - NUM_PIECES_IN_ROW;
+}
+
+
 shared_ptr<Player> ai::getPlayer(const string & color, JsonToStlConverter converter) {
+    auto kingGenerator = getKingGenerator(converter);
+
     if (color == "red") {
         auto redGenerator = getGeneratorFor("red", converter);
-        return make_shared<RedPlayer>('r', redGenerator);
+        return make_shared<RedPlayer>('r', redGenerator, kingGenerator);
     }
     auto blackGenerator = getGeneratorFor("black", converter);
 
-    return make_shared<BlackPlayer>('b', blackGenerator, PlayerType::Human);
+    return make_shared<BlackPlayer>('b', blackGenerator, kingGenerator, PlayerType::Computer);
 }
 
 
