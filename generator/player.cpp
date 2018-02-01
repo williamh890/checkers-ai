@@ -143,7 +143,7 @@ shared_ptr<Player> ai::getPlayer(const string & color, JsonToStlConverter conver
     }
     auto blackGenerator = getGeneratorFor("black", converter);
 
-    return make_shared<BlackPlayer>('b', blackGenerator, PlayerType::Human);
+    return make_shared<BlackPlayer>('b', blackGenerator, PlayerType::Computer);
 }
 
 

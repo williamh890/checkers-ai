@@ -106,7 +106,6 @@ void CheckersGame::play() {
         swap(activePlayer, inactivePlayer);
     }
 
-    cout << "gameover" << endl;
 }
 
 pair<int, int> CheckersGame::getMoveFromActivePlayer() {

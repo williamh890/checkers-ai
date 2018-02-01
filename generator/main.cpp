@@ -33,5 +33,6 @@ int main() {
     auto game = getCheckersGame();
     game.play();
 
+    cout << "gameover" << endl;
     return 0;
 }
