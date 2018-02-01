@@ -1,9 +1,10 @@
-# gui.pyx
+# gui.py
 # Author: Hal Dimarchi
 # board gui
 
 import tkinter as tk
 import tkinter.ttk as ttk
+from time import sleep
 
 BOARD_SIZE = 8
 WINDOW_SIZE = 400
@@ -12,6 +13,8 @@ WINDOW_SIZE = 400
 class Board_Gui():
     def __init__(self):
         self.window = tk.Tk()
+        self.entry = tk.Entry(self.window)
+        self.entry.pack(side=tk.RIGHT)
 
         self.board = tk.Frame(
             self.window,
@@ -71,8 +74,15 @@ class Board_Gui():
         print("making move")
         b_space, e_space = self.move_buttons[0], self.move_buttons[1]
         b_space["text"], e_space["text"] = e_space["text"], b_space["text"]
+
         self.move_buttons = []
         print("buttons should be different")
+
+    def receive_move(self, b_row, b_col, e_row, e_col):
+        self.move_buttons = []
+        self.move_buttons.append(self.draw_spaces[b_row][b_col])
+        self.move_buttons.append(self.draw_spaces[e_row][e_col])
+        self.submit_move()
 
 
 def example_board():
@@ -106,3 +116,4 @@ if __name__ == "__main__":
     board_gui.get_board(board)
     board_gui.make_board()
     board_gui.run()
+    print("hi")

@@ -27,7 +27,7 @@ using std::shared_ptr;
 using std::make_shared;
 
 
-
+Player::Player(){};
 Player::Player(char color, MoveGenerator generator): color(color), generator(generator) {
 }
 
