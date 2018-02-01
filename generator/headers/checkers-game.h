@@ -23,6 +23,7 @@ namespace ai {
             std::shared_ptr<Player> black;
 
             std::shared_ptr<Player> activePlayer;
+            std::shared_ptr<Player> inactivePlayer;
 
         public:
             CheckersGame();
@@ -35,8 +36,9 @@ namespace ai {
             std::pair<int, int> getRandomValidMove();
             std::pair<int, int> getMoveFromUser();
 
+            bool isInvalid(const std::pair<int, int> & move);
             std::vector<std::pair<int, int>> getValidMoves();
-            void reactTo(const Action & action);
+            void reactTo(const Action & action, const std::pair<int, int> & move);
 
             std::string toString();
 

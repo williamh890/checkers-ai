@@ -36,12 +36,14 @@ using std::make_shared;
 using std::stringstream;
 #include <iostream>
 using std::endl;
+#include <utility>
+using std::pair;
 
 
 Player::Player(
         char color,
         MoveGenerator generator,
-        PlayerType type=PlayerType::COMPUTER) : color(color), generator(generator), playerType(type) {
+        PlayerType type=PlayerType::Computer) : color(color), generator(generator), playerType(type) {
 }
 
 void Player::initPieces() {
@@ -65,6 +67,14 @@ const PlayerType Player::getPlayerType() const {
     return playerType;
 }
 
+void Player::updatePieces(const pair<int, int> & move) {
+    for (auto & piece : pieces) {
+        if (piece.space == move.first) {
+            piece.space = move.second;
+            break;
+        }
+    }
+}
 
 vector<Jump> Player::getJumpsFor(const Piece & piece) const {
     return generator.getJumps( piece.space );
@@ -108,7 +118,7 @@ string Player::jumpsToString() const {
 }
 
 
-BlackPlayer::BlackPlayer(char color, MoveGenerator generator): Player(color, generator) {
+BlackPlayer::BlackPlayer(char color, MoveGenerator generator, PlayerType type=PlayerType::Human): Player(color, generator, type) {
     initPieces();
 }
 
@@ -116,7 +126,9 @@ bool BlackPlayer::isInitialSpace(int space) const {
     return space >= (TOTAL_NUM_PIECES - INIT_NUM_PIECES);
 }
 
-RedPlayer::RedPlayer(char color, MoveGenerator generator): Player(color, generator) {
+RedPlayer::RedPlayer(char color,
+                     MoveGenerator generator,
+                     PlayerType type=PlayerType::Computer): Player(color, generator, type) {
     initPieces();
 }
 
@@ -125,13 +137,13 @@ bool RedPlayer::isInitialSpace(int space) const {
 }
 
 shared_ptr<Player> ai::getPlayer(const string & color, JsonToStlConverter converter) {
-    if (color != "black") {
+    if (color == "red") {
         auto redGenerator = getGeneratorFor("red", converter);
         return make_shared<RedPlayer>('r', redGenerator);
     }
-
     auto blackGenerator = getGeneratorFor("black", converter);
-    return make_shared<BlackPlayer>('b', blackGenerator);
+
+    return make_shared<BlackPlayer>('b', blackGenerator, PlayerType::Human);
 }
 
 
