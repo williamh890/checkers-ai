@@ -22,7 +22,7 @@ namespace ai {
 
             char at(const Position & pos) const;
 
-            void print();
+            std::string toString();
         private:
             std::vector<std::vector<char>> getEmptyBoard();
     };

@@ -1,6 +1,10 @@
 #include "headers/checkers-game.h"
 using ai::getCheckersGame;
 
+#include <iostream>
+using std::cout;
+using std::endl;
+
 /*         0   1   2   3   4   5   6   7
          +---+---+---+---+---+---+---+---+
      0   | X | 0 |   | 1 |   | 2 |   | 3 |
@@ -27,7 +31,7 @@ using ai::getCheckersGame;
 
 int main() {
     auto game = getCheckersGame();
-    game.print();
+    cout << game.toString() << endl;
 
     return 0;
 }

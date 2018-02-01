@@ -1,6 +1,6 @@
 #include "../headers/utils.h"
 using ai::spaceToGridSquare;
-using ai::gridToSpace;
+using ai::positionToSpace;
 
 #include "../headers/models.h"
 using ai::Position;

@@ -68,8 +68,8 @@ CheckersGame::CheckersGame(
     this->board.addPiecesFor(black);
 }
 
-void CheckersGame::print() {
-    board.print();
+std::string CheckersGame::toString() {
+    return board.toString();
 }
 
 void CheckersGame::printMoves()

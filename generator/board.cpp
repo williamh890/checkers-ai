@@ -17,6 +17,9 @@ using std::string;
 #include <iostream>
 using std::cout;
 using std::endl;
+#include <sstream>
+using std::stringstream;
+
 
 Board::Board(): boardState(vector<char>(32, ' ')) {};
 
@@ -26,7 +29,7 @@ void Board::addPiecesFor(const shared_ptr<Player> & player) {
     }
 }
 
-void Board::print() {
+string Board::toString() {
     auto spaces = getEmptyBoard();
 
     for (auto i = 0; i < (int)boardState.size(); ++i) {
@@ -38,20 +41,23 @@ void Board::print() {
     const string boardNums = "     0   1   2   3   4   5   6   7  ";
     const string spacerRow = "   +---+---+---+---+---+---+---+---+";
 
-    cout << boardNums << endl;
+    stringstream ss;
+    ss << boardNums << endl;
     auto rowCounter = 0;
     for ( auto row : spaces ) {
-        cout << spacerRow << endl;
+        ss << spacerRow << endl;
 
-        cout << " " << rowCounter << " ";
+        ss << " " << rowCounter << " ";
         for (auto space : row) {
-            cout << "| " << space << " ";
+            ss << "| " << space << " ";
         }
-        cout << "|" << endl;
+        ss << "|" << endl;
 
         ++rowCounter;
     }
-    cout << spacerRow << endl;
+    ss << spacerRow << endl;
+
+    return ss.str();
 }
 
 Board ai::getBoard() {
