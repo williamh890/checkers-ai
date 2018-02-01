@@ -11,17 +11,24 @@
 // std::vector
 
 namespace ai {
+    enum class PlayerType {
+        HUMAN, COMPUTER
+    };
+
     class Player {
         private:
             char color;
             std::vector<Piece> pieces;
             MoveGenerator generator;
+            PlayerType playerType;
 
         public:
-            Player();
-            Player(char color, MoveGenerator generator);
+            Player() = default;
+            Player(char color, MoveGenerator generator, PlayerType type);
+
             const std::vector<Piece> getPieces() const;
             const char getColor() const;
+            const PlayerType getPlayerType() const;
 
             std::vector<Jump> getJumpsFor(const Piece & piece) const;
             std::vector<int> getMovesFor(const Piece & piece) const;

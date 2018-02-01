@@ -31,9 +31,7 @@ using std::endl;
 
 int main() {
     auto game = getCheckersGame();
-    cout << game.toString() << endl;
-
-    auto bMoves = game.getValidMoves();
+    game.play();
 
     return 0;
 }

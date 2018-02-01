@@ -35,6 +35,8 @@ using ai::MoveTableType;
 
 #include <string>
 using std::string;
+#include <sstream>
+using std::istringstream;
 #include <iostream>
 using std::cout;
 using std::endl;
@@ -45,6 +47,7 @@ using std::make_shared;
 using std::shared_ptr;
 #include <utility>
 using std::pair;
+using std::make_pair;
 
 
 CheckersGame ai::getCheckersGame() {
@@ -64,19 +67,65 @@ CheckersGame::CheckersGame(
         const Board & board,
         shared_ptr<Player> red,
         shared_ptr<Player> black
-        ): board(board), red(red), black(black) {
+        ): board(board), red(red), black(black), activePlayer(black) {
     this->board.addPiecesFor(red);
     this->board.addPiecesFor(black);
 }
 
-vector<pair<int, int>> CheckersGame::getValidMoves() {
-    auto validMoves = board.getValidMovesFor(black);
+void CheckersGame::play() {
+    while (true) {
+        cout << toString() << endl;
 
-    for (const auto & move: validMoves) {
+        pair<int, int> move;
+
+        try {
+            move = getMoveFromActivePlayer();
+        } catch(...) {
+            cout << "Invlaid Move" << endl;
+            continue;
+        }
+
         cout << move.first << ", " << move.second << endl;
+
+        auto action = board.make(move);
+        reactTo(action);
+
+        cout << toString() << endl;
+        break;
+    }
+}
+
+pair<int, int> CheckersGame::getMoveFromActivePlayer() {
+    if (activePlayer->getPlayerType() == PlayerType::COMPUTER) {
+        return getRandomValidMove();
     }
 
+    return getMoveFromUser();
+}
+
+pair<int, int> CheckersGame::getRandomValidMove() {
+    auto moves = getValidMoves();
+
+    return moves[0];
+}
+
+pair<int, int> CheckersGame::getMoveFromUser() {
+    auto moves = getValidMoves();
+    cout << "Enter move (startRow startCol endRow endCol): " << endl;
+
+    return moves[0];
+}
+
+vector<pair<int, int>> CheckersGame::getValidMoves() {
+    auto validMoves = board.getValidMovesFor(activePlayer);
+
     return validMoves;
+}
+
+void CheckersGame::reactTo(const Action & action) {
+    if (action == Action::Move) {
+        cout << "piece was moved" << endl;
+    }
 }
 
 string CheckersGame::toString() {

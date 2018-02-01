@@ -3,6 +3,7 @@ using ai::Player;
 using ai::RedPlayer;
 using ai::BlackPlayer;
 using ai::getPlayer;
+using ai::PlayerType;
 
 #include "headers/json-to-stl.h"
 using ai::JsonToStlConverter;
@@ -37,8 +38,10 @@ using std::stringstream;
 using std::endl;
 
 
-Player::Player(){};
-Player::Player(char color, MoveGenerator generator): color(color), generator(generator) {
+Player::Player(
+        char color,
+        MoveGenerator generator,
+        PlayerType type=PlayerType::COMPUTER) : color(color), generator(generator), playerType(type) {
 }
 
 void Player::initPieces() {
@@ -57,6 +60,11 @@ const vector<Piece> Player::getPieces() const {
 const char Player::getColor() const {
     return color;
 }
+
+const PlayerType Player::getPlayerType() const {
+    return playerType;
+}
+
 
 vector<Jump> Player::getJumpsFor(const Piece & piece) const {
     return generator.getJumps( piece.space );

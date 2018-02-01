@@ -1,5 +1,6 @@
 #include "headers/board.h"
 using ai::Board;
+using ai::Action;
 
 #include "headers/player.h"
 using ai::Player;
@@ -56,6 +57,13 @@ const vector<pair<int, int>> Board::getValidMovesFor(const shared_ptr<Player> & 
     }
 
     return validMoves;
+}
+
+const Action Board::make(const pair<int, int> move) {
+    boardState[move.second] = boardState[move.first];
+    boardState[move.first] = ' ';
+
+    return Action::Move;
 }
 
 string Board::toString() {

@@ -22,12 +22,22 @@ namespace ai {
             std::shared_ptr<Player> red;
             std::shared_ptr<Player> black;
 
+            std::shared_ptr<Player> activePlayer;
+
         public:
             CheckersGame();
             CheckersGame(const Board & board, std::shared_ptr<Player> red, std::shared_ptr<Player> black);
 
-        public:
+            void play();
+
+        private:
+            std::pair<int, int> getMoveFromActivePlayer();
+            std::pair<int, int> getRandomValidMove();
+            std::pair<int, int> getMoveFromUser();
+
             std::vector<std::pair<int, int>> getValidMoves();
+            void reactTo(const Action & action);
+
             std::string toString();
 
             // void printValidMoves(); This is not defined in the source yet
