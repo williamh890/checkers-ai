@@ -6,6 +6,7 @@
 
 namespace ai {
     Position spaceToGridSquare(int space);
+    int positionToSpace(const Position & pos);
 }
 
 #endif

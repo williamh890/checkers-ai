@@ -3,6 +3,8 @@
 
 #include "player.h"
 // ai::Player
+#include "models.h"
+// ai::pos
 
 #include <vector>
 // std::vector
@@ -17,8 +19,10 @@ namespace ai {
         public:
             Board();
             void addPiecesFor(const std::shared_ptr<Player> & player);
-            void print();
 
+            char at(const Position & pos) const;
+
+            void print();
         private:
             std::vector<std::vector<char>> getEmptyBoard();
     };

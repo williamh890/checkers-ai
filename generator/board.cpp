@@ -6,6 +6,7 @@ using ai::Player;
 
 #include "headers/utils.h"
 using ai::spaceToGridSquare;
+using ai::positionToSpace;
 
 #include <vector>
 using std::vector;
@@ -28,7 +29,7 @@ void Board::addPiecesFor(const shared_ptr<Player> & player) {
 void Board::print() {
     auto spaces = getEmptyBoard();
 
-    for (auto i = 0; i < boardState.size(); ++i) {
+    for (auto i = 0; i < (int)boardState.size(); ++i) {
         auto pos = spaceToGridSquare(i);
 
         spaces[pos.row][pos.col] = boardState[i];
@@ -55,6 +56,11 @@ void Board::print() {
 
 Board ai::getBoard() {
     return Board();
+}
+
+char Board::at(const Position & pos) const {
+    auto i = positionToSpace(pos);
+    return boardState[i];
 }
 
 vector<vector<char>> Board::getEmptyBoard() {
