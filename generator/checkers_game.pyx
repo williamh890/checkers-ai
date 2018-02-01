@@ -19,8 +19,8 @@ cdef class PyCheckersGame:
   def __cinit__(self):
     self.checkers_game = getCheckersGame()
 
-  def printBoard(self):
-    self.checkers_game.print()
+  def toString(self):
+    self.checkers_game.toString()
 
   def printMoves(self):
     self.checkers.printMoves()
@@ -40,7 +40,7 @@ class PyBoard():
     def __init__(self):
         self.game = PyCheckersGame()
         self.window = tk.Tk()
-        self.entry = tk.Entry(self.window)
+        self.entry = ttk.Entry(self.window)
         self.entry.bind('<Command-a>', self.get_entry_move)
         self.entry.pack(side=tk.RIGHT)
 
@@ -58,9 +58,6 @@ class PyBoard():
 
         self.board.pack()
 
-    def run(self):
-        self.window.mainloop()
-
     def get_board(self, board):  # board should be a 2D array
         self.spaces = board
 
@@ -68,6 +65,12 @@ class PyBoard():
         for row in range(BOARD_SIZE):
             for column in range(BOARD_SIZE):
                 self.make_board_space(row, column)
+
+########### GUI FUNCTIONS ###########
+
+#********** GUI SETUP **********#
+    def run(self):
+        self.window.mainloop()
 
     def make_board_space(self, row, column):
         callback = self.make_move_callback(row, column)
@@ -88,6 +91,7 @@ class PyBoard():
     def make_move_callback(self, row, col):
         return lambda: self.move_callback(row, col)
 
+#********** GUI MOVE FUNCTIONS **********#
     def move_callback(self, row, col):
         print('({}, {})'.format(row, col))
 

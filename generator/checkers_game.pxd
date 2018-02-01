@@ -24,7 +24,9 @@ cdef extern from "headers/board.h" namespace "ai":
   cdef cppclass Board:
     Board()
     void addPiecesFor(const shared_ptr[Player] & player)
-    void print()
+    char at(const Position & pos) const
+
+    string toString()
 
   Board getBoard()
 
@@ -37,7 +39,7 @@ cdef extern from "headers/models.h" namespace "ai":
     pass
 
 cdef extern from "headers/utils.h" namespace "ai":
-  cdef Position spaceToGridSquare(int space)
+  pass
 
 cdef extern from "headers/table-types.h" namespace "ai":
   ctypedef vector[vector[int]] MoveTableType
@@ -58,7 +60,7 @@ cdef extern from "headers/checkers-game.h" namespace "ai":
     CheckersGame(Board & board,
                  shared_ptr[Player] red,
                  shared_ptr[Player] black) except +
-    void print()
+    string toString()
     void printMoves()
     void printMovesForColor(const string & color)
     void printJumpsForColor(const string & color)
