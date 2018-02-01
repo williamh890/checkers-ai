@@ -128,7 +128,7 @@ void CheckersGame::play() {
                     jump = getJumpFromActivePlayer();
                 }
                 catch(runtime_error & e) {
-                    cout << "Invlaid Move..." << endl;
+                    cout << "Invlaid Jump..." << endl;
                     continue;
                 }
 

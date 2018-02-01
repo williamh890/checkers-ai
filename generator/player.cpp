@@ -71,7 +71,7 @@ const PlayerType Player::getPlayerType() const {
 }
 
 void Player::removePieceAt(int space) {
-    for (auto s = pieces.size() - 1; s > 0; --s) {
+    for (auto s = pieces.size() - 1; s >= 0; --s) {
         auto piece = pieces[s];
 
         if (piece.space == space) {
