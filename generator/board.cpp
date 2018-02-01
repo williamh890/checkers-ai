@@ -93,6 +93,11 @@ Board ai::getBoard() {
     return Board();
 }
 
+char Board::operator[](const int & index) const
+{
+    return boardState[index];
+}
+
 vector<vector<char>> Board::getEmptyBoard() {
     vector<vector<char>> board;
 

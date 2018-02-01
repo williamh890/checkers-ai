@@ -30,6 +30,7 @@ namespace ai {
 
         public:
             std::string toString();
+            char operator[](const int & index) const;
         private:
             std::vector<std::vector<char>> getEmptyBoard();
     };

@@ -12,6 +12,8 @@
 // ai::Position
 
 #include <memory>
+#include <vector>
+#include <utility>
 
 namespace ai {
     class CheckersGame {
@@ -25,12 +27,13 @@ namespace ai {
             CheckersGame(const Board & board, std::shared_ptr<Player> red, std::shared_ptr<Player> black);
 
         public:
-            MoveTableType getValidMoves();
+            std::vector<std::pair<int, int>> getValidMoves();
             std::string toString();
 
             // void printValidMoves(); This is not defined in the source yet
         private:
             MoveTableType getBlackMoves();
+            MoveTableType getRedMoves();
     };
 
     CheckersGame getCheckersGame();

@@ -44,7 +44,7 @@ using std::vector;
 using std::make_shared;
 using std::shared_ptr;
 #include <utility>
-using std::move;
+using std::pair;
 
 
 CheckersGame ai::getCheckersGame() {
@@ -69,18 +69,50 @@ CheckersGame::CheckersGame(
     this->board.addPiecesFor(black);
 }
 
-MoveTableType CheckersGame::getValidMoves() {
-    auto possibleMoves = board.getPossibleMovesFor(black);
+vector<pair<int, int>> CheckersGame::getValidMoves() {
+    auto validMoves = board.getValidMovesFor(black);
 
-    for (const auto & move: possibleMoves) {
+    for (const auto & move: validMoves) {
         cout << move.first << ", " << move.second << endl;
     }
 
-    return {};
+    return validMoves;
 }
 
-std::string CheckersGame::toString() {
+string CheckersGame::toString() {
     return board.toString();
 }
 
+//returns vector<vector<int with format {piece space, valid move, valid move}
+MoveTableType CheckersGame::getBlackMoves()
+{
+    MoveTableType blackMoves;
 
+    for(const auto & piece : black->getPieces())
+    {
+        auto moves = black->getMovesFor(piece);
+        cout << "debug: moves size:" <<moves.size() <<endl;//debug
+        vector<int> black_move;
+        black_move.push_back(piece.space);
+        for(const auto & move : moves)
+        {
+            cout << "debug: move" << move <<endl;//debug
+            if(board[move] == ' ')
+            {
+                black_move.push_back(move);
+            }
+        }
+        if (black_move.size()>1)
+        {
+            blackMoves.push_back(black_move);
+        }
+    }
+
+    return blackMoves;
+}
+
+MoveTableType CheckersGame::getRedMoves()
+{
+    MoveTableType redmoves;
+    return redmoves;
+}
