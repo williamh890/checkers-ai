@@ -37,6 +37,7 @@ namespace ai {
         private:
             bool hasPieceAt(int space) const;
             bool hasOpposingPieceAt(const Jump & jump, char color) const;
+            bool destinationIsNotEmpty(const Jump & jump) const;
 
         public:
             std::string toString();

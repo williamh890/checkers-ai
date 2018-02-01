@@ -47,6 +47,8 @@ namespace ai {
             std::pair<int, Jump> getJumpFrom(const std::pair<int, int> & inputJump);
 
             std::vector<std::pair<int, Jump>> getValidJumps();
+            std::vector<std::pair<int, Jump>> getValidJumpsAt(int space);
+
             std::vector<std::pair<int, int>> getValidMoves();
 
             void reactTo(const Action & action, const std::pair<int, int> & move);

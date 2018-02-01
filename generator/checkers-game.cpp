@@ -72,8 +72,7 @@ CheckersGame::CheckersGame(){ };
 CheckersGame::CheckersGame(
         const Board & board,
         shared_ptr<Player> red,
-        shared_ptr<Player> black
-        ): board(board), red(red), black(black), activePlayer(black), inactivePlayer(red) {
+        shared_ptr<Player> black): board(board), red(red), black(black), activePlayer(black), inactivePlayer(red) {
     this->board.addPiecesFor(red);
     this->board.addPiecesFor(black);
 
@@ -96,10 +95,12 @@ void CheckersGame::play() {
         }
         catch(length_error & e) {
             cout << "Out of moves" << endl;
+            cout << e.what() << endl;
             break;
         }
         catch(runtime_error & e) {
             cout << "Invlaid Move..." << endl;
+            cout << e.what() << endl;
             continue;
         }
 
@@ -113,8 +114,26 @@ void CheckersGame::play() {
             action = board.make(jump);
             reactTo(action, jump);
 
-            if (getValidJumps().size() > 0) {
-                continue;
+            auto validJumps = getValidJumpsAt(jump.second.to);
+
+            cout << board.toString() << endl;
+            cout << "jump piece has " << validJumps.size() << " possible jumps." << endl;
+
+            while (validJumps.size() > 0) {
+                auto jump = make_pair(-1, Jump(-1, -1));
+
+                try {
+                    jump = getJumpFromActivePlayer();
+                }
+                catch(runtime_error & e) {
+                    cout << "Invlaid Move..." << endl;
+                    continue;
+                }
+
+                action = board.make(jump);
+                reactTo(action, jump);
+
+                validJumps = getValidJumpsAt(jump.second.to);
             }
         }
         else {
@@ -153,6 +172,7 @@ pair<int, Jump> CheckersGame::getJumpFromUser() {
 
 pair<int, Jump> CheckersGame::getJumpFrom(const pair<int, int> & inputJump) {
     auto validJumps = getValidJumps();
+    cout << "number of jumps: " << validJumps.size() << endl;
 
     for (const auto & checkJump: validJumps) {
         if (checkJump.first == inputJump.first and
@@ -207,6 +227,12 @@ pair<int, int> CheckersGame::parseUserInput() {
 pair<int, int> CheckersGame::getMoveFromUser() {
     auto move = parseUserInput();
 
+    for (auto piece : activePlayer->getPieces()) {
+        if (piece.space == move.second) {
+            throw runtime_error("cannont move over own piece.");
+        }
+    }
+
     return move;
 }
 
@@ -232,6 +258,19 @@ vector<pair<int, Jump>> CheckersGame::getValidJumps() {
     auto validJumps = board.getValidJumpsFor(activePlayer);
 
     return validJumps;
+}
+
+vector<pair<int, Jump>> CheckersGame::getValidJumpsAt(int space) {
+    auto validJumps = board.getValidJumpsFor(activePlayer);
+    auto jumpsAtSpace = vector<pair<int, Jump>>{};
+
+    for (auto & jump: validJumps) {
+        if (jump.first == space) {
+            jumpsAtSpace.push_back(jump);
+        }
+    }
+
+    return jumpsAtSpace;
 }
 
 // TODO! Want to combine these reactTo functions in the future
