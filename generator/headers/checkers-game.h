@@ -12,19 +12,27 @@
 // ai::Position
 
 #include <memory>
+// std::shared_ptr
 #include <vector>
+// std::vector
 #include <utility>
+// std::pair
+#include <random>
+// std::mt19937
 
 namespace ai {
     class CheckersGame {
         private:
             int moveCounter = 0;
+
             Board board;
             std::shared_ptr<Player> red;
             std::shared_ptr<Player> black;
 
             std::shared_ptr<Player> activePlayer;
             std::shared_ptr<Player> inactivePlayer;
+
+            std::mt19937 generator;
 
         public:
             CheckersGame();

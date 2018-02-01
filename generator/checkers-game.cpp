@@ -52,8 +52,9 @@ using std::make_pair;
 #include <exception>
 using std::runtime_error;
 using std::length_error;
-#include <stdlib.h>     // srand, rand
-#include <time.h>       // time
+using std::random_device;
+using std::mt19937;
+using std::uniform_int_distribution;
 
 
 CheckersGame ai::getCheckersGame() {
@@ -73,10 +74,11 @@ CheckersGame::CheckersGame(
         const Board & board,
         shared_ptr<Player> red,
         shared_ptr<Player> black): board(board), red(red), black(black), activePlayer(black), inactivePlayer(red) {
+    random_device device;
+    generator = mt19937(device());
+
     this->board.addPiecesFor(red);
     this->board.addPiecesFor(black);
-
-    srand(time(NULL));
 }
 
 void CheckersGame::play() {
@@ -161,7 +163,10 @@ pair<int, Jump> CheckersGame::getRandomValidJump() {
     auto numJumps = jumps.size();
     cout << "number of jumps: " << numJumps << endl;
 
-    return jumps[rand() % numJumps];
+    uniform_int_distribution<int> distribution(0, numJumps - 1);
+    auto rngVal = distribution(generator);
+    cout << "rngValue: " << rngVal << endl;
+    return jumps[rngVal];
 }
 
 pair<int, Jump> CheckersGame::getJumpFromUser() {
@@ -176,7 +181,7 @@ pair<int, Jump> CheckersGame::getJumpFrom(const pair<int, int> & inputJump) {
 
     for (const auto & checkJump: validJumps) {
         if (checkJump.first == inputJump.first and
-            checkJump.second.to == inputJump.second) {
+                checkJump.second.to == inputJump.second) {
 
             return checkJump;
         }
@@ -202,7 +207,10 @@ pair<int, int> CheckersGame::getRandomValidMove() {
         throw length_error("out of moves");
     }
 
-    return moves[rand() % numMoves];
+    uniform_int_distribution<int> distribution(0, numMoves - 1);
+    auto rngVal = distribution(generator);
+
+    return moves[rngVal];
 }
 
 pair<int, int> CheckersGame::parseUserInput() {
