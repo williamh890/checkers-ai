@@ -4,6 +4,9 @@ using ai::Board;
 #include "headers/player.h"
 using ai::Player;
 
+#include "headers/table-types.h"
+using ai::MoveTableType;
+
 #include "headers/utils.h"
 using ai::spaceToPosition;
 using ai::positionToSpace;
@@ -27,6 +30,29 @@ void Board::addPiecesFor(const shared_ptr<Player> & player) {
     for (const auto & piece: player->getPieces()) {
         boardState[piece.space] = piece.color;
     }
+}
+
+bool Board::hasPieceAt(int space) const {
+    return boardState[space] != ' ';
+}
+
+const MoveTableType Board::getPossibleMovesFor(const shared_ptr<Player> & player) const {
+    MoveTableType possibleMoves;
+
+    for(const auto & piece : player->getPieces()) {
+        auto moves = player->getMovesFor(piece);
+
+        for(auto & move : moves) {
+            if (hasPieceAt(piece.space)) {
+                continue;
+            }
+
+            auto possibleMove = vector<int>{piece.space, move};
+            possibleMoves.push_back(possibleMove);
+        }
+    }
+
+    return possibleMoves;
 }
 
 string Board::toString() {
@@ -62,11 +88,6 @@ string Board::toString() {
 
 Board ai::getBoard() {
     return Board();
-}
-
-char Board::at(const Position & pos) const {
-    auto i = positionToSpace(pos);
-    return boardState[i];
 }
 
 vector<vector<char>> Board::getEmptyBoard() {

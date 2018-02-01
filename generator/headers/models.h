@@ -18,15 +18,6 @@ namespace ai {
         }
     };
 
-    struct Piece {
-        char color;
-        int space;
-        bool king = false;
-
-        Piece(char color, int space): color(color), space(space) {
-        }
-    };
-
     struct Position {
         int row;
         int col;
@@ -38,6 +29,15 @@ namespace ai {
             std::stringstream s;
             s << "[" << row << ", " << col << "]";
             return s.str();
+        }
+    };
+
+    struct Piece {
+        char color;
+        int space;
+        bool king = false;
+
+        Piece(char color, int space): color(color), space(space) {
         }
     };
 }

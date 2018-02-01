@@ -33,5 +33,7 @@ int main() {
     auto game = getCheckersGame();
     cout << game.toString() << endl;
 
+    auto bMoves = game.getValidMoves();
+
     return 0;
 }

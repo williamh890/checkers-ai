@@ -3,6 +3,8 @@
 
 #include "player.h"
 // ai::Player
+#include "table-types.h"
+// ai::MoveTableType
 #include "models.h"
 // ai::pos
 
@@ -20,8 +22,11 @@ namespace ai {
             Board();
             void addPiecesFor(const std::shared_ptr<Player> & player);
 
-            char at(const Position & pos) const;
+            const MoveTableType getPossibleMovesFor(const std::shared_ptr<Player> & player) const;
+        private:
+            bool hasPieceAt(int space) const;
 
+        public:
             std::string toString();
         private:
             std::vector<std::vector<char>> getEmptyBoard();

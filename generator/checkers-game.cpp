@@ -57,6 +57,7 @@ CheckersGame ai::getCheckersGame() {
 
     return CheckersGame(board, red, black);
 }
+
 CheckersGame::CheckersGame(){ };
 
 CheckersGame::CheckersGame(
@@ -68,88 +69,14 @@ CheckersGame::CheckersGame(
     this->board.addPiecesFor(black);
 }
 
+MoveTableType CheckersGame::getValidMoves() {
+    auto possible = board.getPossibleMovesFor(black);
+
+    return {};
+}
+
 std::string CheckersGame::toString() {
     return board.toString();
 }
 
-void CheckersGame::printMoves()
-{
-    printJumpsForColor("black");
-}
 
-void CheckersGame::printMovesForColor(const string & color) {
-    cout << color << " Moves: " << endl;
-    auto pieces = ((color == "black") ? black: red)->getPieces();
-
-    for (const auto & checker : pieces)
-    {
-        auto s = spaceToPosition(checker.space);
-        cout << "(" << s.row << ", " << s.col << "): ";
-        for (const auto & move: black->getMovesFor(checker)) {
-            cout << move << " ";
-        }
-        cout << "]"<<endl;
-    }
-
-}
-
-void CheckersGame::printJumpsForColor(const string & color) {
-    cout << color << " Jumps: " << endl;
-    auto pieces = ((color == "black") ? black: red)->getPieces();
-
-    for (const auto & checker: pieces) {
-        cout << checker.space << ": ";
-
-        for (const auto & jump: black->getJumpsFor(checker)) {
-            cout << jump.to << ", " << jump.through << " ";
-        }
-        cout << endl;
-    }
-}
-
-
-MoveTableType CheckersGame::getBlackMoves()
-{
-    MoveTableType blackMoves;
-    bool valid = true;
-
-    for(const auto & piece : black->getPieces())
-    {
-        auto moves = black->getMovesFor(piece);
-        vector<int> black_move;
-        for(auto & move : moves)
-        {
-
-            for (const auto & other_black: black->getPieces())
-            {
-                if(move == other_black.space)
-                {
-                    valid = false;
-                    break;
-                }
-            }
-            if(valid)
-            {
-                for (const auto & other_red: red->getPieces())
-                {
-                    if(move == other_red.space)
-                    {
-                        valid = false;
-                    }
-                }
-                if(valid)
-                {
-                    black_move.push_back(piece.space);
-                    black_move.push_back(move);
-                }
-            }
-            valid = true;
-        }
-        if (black_move.size())
-        {
-            blackMoves.push_back(black_move);
-        }
-    }
-
-    return blackMoves;
-}

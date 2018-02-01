@@ -23,14 +23,10 @@ namespace ai {
         public:
             CheckersGame();
             CheckersGame(const Board & board, std::shared_ptr<Player> red, std::shared_ptr<Player> black);
-        private:
 
         public:
+            MoveTableType getValidMoves();
             std::string toString();
-            void printMoves();
-
-            void printMovesForColor(const std::string & color);
-            void printJumpsForColor(const std::string & color);
 
             // void printValidMoves(); This is not defined in the source yet
         private:

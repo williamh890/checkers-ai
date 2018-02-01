@@ -23,8 +23,13 @@ namespace ai {
             const std::vector<Piece> getPieces() const;
             const char getColor() const;
 
-            const std::vector<int> getMovesFor(Piece piece) const;
-            const std::vector<Jump> getJumpsFor(Piece piece) const;
+            std::vector<Jump> getJumpsFor(const Piece & piece) const;
+            std::vector<int> getMovesFor(const Piece & piece) const;
+
+            std::string jumpsToString() const;
+            std::string movesToString() const;
+
+        private:
 
         protected:
             void initPieces();
