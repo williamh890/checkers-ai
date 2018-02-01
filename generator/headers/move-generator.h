@@ -19,12 +19,12 @@ namespace ai {
             JumpTableType jumps;
 
         public:
-            MoveGenerator();
+            MoveGenerator() = default;
             MoveGenerator(const MoveTableType & moves, const JumpTableType & jumps);
             // ~MoveGenerator();
 
-            std::vector<int> getMoves(int space);
-            std::vector<Jump> getJumps(int space);
+            std::vector<int> getMoves(int space) const;
+            std::vector<Jump> getJumps(int space) const;
     };
 
     MoveGenerator getGeneratorFor(const std::string & color, const JsonToStlConverter & converter);

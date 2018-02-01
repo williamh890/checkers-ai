@@ -31,19 +31,18 @@ using std::pair;
 using std::make_pair;
 #include <stdio.h>
 
-MoveGenerator::MoveGenerator(){};
 MoveGenerator::MoveGenerator(
         const MoveTableType & moves,
         const JumpTableType & jumps): moves(moves), jumps(jumps) {
 }
 // MoveGenerator::~MoveGenerator(){};
 
-vector<int> MoveGenerator::getMoves(int space) {
-    return moves[ space ];
+vector<int> MoveGenerator::getMoves(int space) const {
+    return this->moves[ space ];
 }
 
-vector<Jump> MoveGenerator::getJumps(int space) {
-    return jumps[ space ];
+vector<Jump> MoveGenerator::getJumps(int space) const {
+    return this->jumps[ space ];
 }
 
 MoveGenerator ai::getGeneratorFor(const string & color, const JsonToStlConverter & converter) {

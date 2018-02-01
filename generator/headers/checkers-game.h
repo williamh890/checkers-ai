@@ -1,46 +1,43 @@
+#ifndef CHECKERS_GAME_H
+#define CHECKERS_GAME_H
+
+#include "board.h"
+// ai::Board
+#include "move-generator.h"
+// ai::MoveGenerator
+#include "player.h"
+// ai::Player
 #include "models.h"
 // ai::Piece
 // ai::Position
-#include "move-generator.h"
-// ai::MoveGenerator
 
+#include <memory>
 
 namespace ai {
     class CheckersGame {
         private:
-            MoveGenerator redGenerator;
-            MoveGenerator blackGenerator;
-
-            std::vector<Piece> redPieces;
-            std::vector<Piece> blackPieces;
-
-            static const int INIT_NUM_PIECES = 12;
-            static const int TOTAL_NUM_PIECES = 32;
-            static const int ROWS = 8;
-            static const int COLS = 8;
+            Board board;
+            std::shared_ptr<Player> red;
+            std::shared_ptr<Player> black;
 
         public:
-            CheckersGame();
-            CheckersGame(MoveGenerator red, MoveGenerator black);
-            //~CheckersGame();
+            CheckersGame() = delete;
+            CheckersGame(const Board & board, std::shared_ptr<Player> red, std::shared_ptr<Player> black);
         private:
-            void initPieces();
-
-            bool isInFirst3Rows(int space);
-            bool isInLast3Rows(int space);
 
         public:
-            void printBoard();
+            void print();
             void printMoves();
+
             void printMovesForColor(const std::string & color);
             void printJumpsForColor(const std::string & color);
 
             // void printValidMoves(); This is not defined in the source yet
         private:
             MoveTableType getBlackMoves();
-            std::vector<std::vector<char>> getEmptyBoard();
-            Position spaceToGridSquare(int space);
     };
 
     CheckersGame getCheckersGame();
 }
+
+#endif
