@@ -12,6 +12,8 @@
 // std::vector
 #include <memory>
 // std::shared_prt
+#include <utility>
+// std::pair
 
 namespace ai {
     class Board {
@@ -22,7 +24,7 @@ namespace ai {
             Board();
             void addPiecesFor(const std::shared_ptr<Player> & player);
 
-            const MoveTableType getPossibleMovesFor(const std::shared_ptr<Player> & player) const;
+            const std::vector<std::pair<int, int>> getValidMovesFor(const std::shared_ptr<Player> & player) const;
         private:
             bool hasPieceAt(int space) const;
 

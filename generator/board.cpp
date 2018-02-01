@@ -22,6 +22,9 @@ using std::cout;
 using std::endl;
 #include <sstream>
 using std::stringstream;
+#include <utility>
+using std::pair;
+using std::make_pair;
 
 
 Board::Board(): boardState(vector<char>(32, ' ')) {};
@@ -36,23 +39,23 @@ bool Board::hasPieceAt(int space) const {
     return boardState[space] != ' ';
 }
 
-const MoveTableType Board::getPossibleMovesFor(const shared_ptr<Player> & player) const {
-    MoveTableType possibleMoves;
+const vector<pair<int, int>> Board::getValidMovesFor(const shared_ptr<Player> & player) const {
+    vector<pair<int, int>> validMoves;
 
     for(const auto & piece : player->getPieces()) {
         auto moves = player->getMovesFor(piece);
 
-        for(auto & move : moves) {
-            if (hasPieceAt(piece.space)) {
+        for(auto  move : moves) {
+            if (hasPieceAt(move)) {
                 continue;
             }
 
-            auto possibleMove = vector<int>{piece.space, move};
-            possibleMoves.push_back(possibleMove);
+            auto validMove = make_pair(piece.space, move);
+            validMoves.push_back(validMove);
         }
     }
 
-    return possibleMoves;
+    return validMoves;
 }
 
 string Board::toString() {

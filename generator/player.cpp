@@ -117,7 +117,7 @@ bool RedPlayer::isInitialSpace(int space) const {
 }
 
 shared_ptr<Player> ai::getPlayer(const string & color, JsonToStlConverter converter) {
-    if (color == "black") {
+    if (color != "black") {
         auto redGenerator = getGeneratorFor("red", converter);
         return make_shared<RedPlayer>('r', redGenerator);
     }

@@ -29,8 +29,6 @@ namespace ai {
             std::string jumpsToString() const;
             std::string movesToString() const;
 
-        private:
-
         protected:
             void initPieces();
         private:

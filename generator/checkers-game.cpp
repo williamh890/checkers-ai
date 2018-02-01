@@ -70,7 +70,11 @@ CheckersGame::CheckersGame(
 }
 
 MoveTableType CheckersGame::getValidMoves() {
-    auto possible = board.getPossibleMovesFor(black);
+    auto possibleMoves = board.getPossibleMovesFor(black);
+
+    for (const auto & move: possibleMoves) {
+        cout << move.first << ", " << move.second << endl;
+    }
 
     return {};
 }
