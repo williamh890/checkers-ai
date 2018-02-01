@@ -39,6 +39,7 @@ using std::string;
 using std::istringstream;
 #include <iostream>
 using std::cout;
+using std::cin;
 using std::endl;
 #include <vector>
 using std::vector;
@@ -48,6 +49,11 @@ using std::shared_ptr;
 #include <utility>
 using std::pair;
 using std::make_pair;
+#include <exception>
+using std::runtime_error;
+using std::length_error;
+#include <stdlib.h>     // srand, rand
+#include <time.h>       // time
 
 
 CheckersGame ai::getCheckersGame() {
@@ -67,9 +73,11 @@ CheckersGame::CheckersGame(
         const Board & board,
         shared_ptr<Player> red,
         shared_ptr<Player> black
-        ): board(board), red(red), black(black), activePlayer(black) {
+        ): board(board), red(red), black(black), activePlayer(black), inactivePlayer(red) {
     this->board.addPiecesFor(red);
     this->board.addPiecesFor(black);
+
+    srand(time(NULL));
 }
 
 void CheckersGame::play() {
@@ -80,23 +88,29 @@ void CheckersGame::play() {
 
         try {
             move = getMoveFromActivePlayer();
-        } catch(...) {
-            cout << "Invlaid Move" << endl;
+        }
+        catch(length_error & e) {
+            cout << "Out of moves" << endl;
+            break;
+        }
+        catch(runtime_error & e) {
+            cout << "Invlaid Move..." << endl;
             continue;
         }
 
-        cout << move.first << ", " << move.second << endl;
+        cout << activePlayer->getColor() << ": " << spaceToPosition(move.first).toString() << ", " << spaceToPosition(move.second).toString() << endl;
 
         auto action = board.make(move);
-        reactTo(action);
+        reactTo(action, move);
 
-        cout << toString() << endl;
-        break;
+        swap(activePlayer, inactivePlayer);
     }
+
+    cout << "gameover" << endl;
 }
 
 pair<int, int> CheckersGame::getMoveFromActivePlayer() {
-    if (activePlayer->getPlayerType() == PlayerType::COMPUTER) {
+    if (activePlayer->getPlayerType() == PlayerType::Computer) {
         return getRandomValidMove();
     }
 
@@ -105,15 +119,51 @@ pair<int, int> CheckersGame::getMoveFromActivePlayer() {
 
 pair<int, int> CheckersGame::getRandomValidMove() {
     auto moves = getValidMoves();
+    auto numMoves = moves.size();
 
-    return moves[0];
+    cout << "number of moves: " << numMoves << endl;
+    if ( numMoves < 1 ) {
+        throw length_error("out of moves");
+    }
+
+    return moves[rand() % numMoves];
 }
 
 pair<int, int> CheckersGame::getMoveFromUser() {
-    auto moves = getValidMoves();
-    cout << "Enter move (startRow startCol endRow endCol): " << endl;
+    cout << "Enter move (startRow startCol endRow endCol): ";
 
-    return moves[0];
+    string in;
+    getline(cin, in);
+    istringstream iss(in);
+
+    int startRow, startCol, endRow, endCol;
+    iss >> startRow >> startCol >> endRow >> endCol;
+
+    auto startPos = Position(startRow, startCol);
+    auto endPos = Position(endRow, endCol);
+
+    auto start = positionToSpace(startPos);
+    auto end = positionToSpace(endPos);
+
+    auto move = make_pair(start, end);
+
+    if (isInvalid(move)) {
+        throw runtime_error("move is not valid");
+    }
+
+    return move;
+}
+
+bool CheckersGame::isInvalid(const pair<int, int> & move) {
+    auto validMoves = getValidMoves();
+
+    for (const auto & validMove : validMoves) {
+        if (validMove == move) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 vector<pair<int, int>> CheckersGame::getValidMoves() {
@@ -122,8 +172,9 @@ vector<pair<int, int>> CheckersGame::getValidMoves() {
     return validMoves;
 }
 
-void CheckersGame::reactTo(const Action & action) {
+void CheckersGame::reactTo(const Action & action, const pair<int, int> & move) {
     if (action == Action::Move) {
+        activePlayer->updatePieces(move);
         cout << "piece was moved" << endl;
     }
 }

@@ -12,7 +12,7 @@
 
 namespace ai {
     enum class PlayerType {
-        HUMAN, COMPUTER
+        Human, Computer
     };
 
     class Player {
@@ -30,6 +30,8 @@ namespace ai {
             const char getColor() const;
             const PlayerType getPlayerType() const;
 
+            void updatePieces(const std::pair<int, int> & move);
+
             std::vector<Jump> getJumpsFor(const Piece & piece) const;
             std::vector<int> getMovesFor(const Piece & piece) const;
 
@@ -44,14 +46,14 @@ namespace ai {
 
     class RedPlayer: public Player {
         public:
-            RedPlayer(char color, MoveGenerator generator);
+            RedPlayer(char color, MoveGenerator generator, PlayerType type);
         private:
             bool isInitialSpace(int space) const override;
     };
 
     class BlackPlayer: public Player {
         public:
-            BlackPlayer(char color, MoveGenerator generator);
+            BlackPlayer(char color, MoveGenerator generator, PlayerType type);
         private:
             bool isInitialSpace(int space) const override;
     };
