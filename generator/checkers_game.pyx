@@ -20,7 +20,7 @@ cdef class PyCheckersGame:
     self.checkers_game = getCheckersGame()
 
   def printBoard(self):
-    self.checkers_game.printBoard()
+    self.checkers_game.print()
 
   def printMoves(self):
     self.checkers.printMoves()
@@ -36,7 +36,7 @@ cdef class PyCheckersGame:
     # waiting for this to be defined in source
     # self.checkers_game.printValidMoves()
 
-class Board():
+class PyBoard():
     def __init__(self):
         self.game = PyCheckersGame()
         self.window = tk.Tk()
@@ -142,7 +142,7 @@ def example_board():
 if __name__ == "__main__":
 
     board = example_board()
-    checkers = Board()
+    checkers = PyBoard()
     checkers.get_board(board)
     checkers.make_board()
     checkers.run()

@@ -21,7 +21,7 @@ namespace ai {
             std::shared_ptr<Player> black;
 
         public:
-            CheckersGame() = delete;
+            CheckersGame();
             CheckersGame(const Board & board, std::shared_ptr<Player> red, std::shared_ptr<Player> black);
         private:
 

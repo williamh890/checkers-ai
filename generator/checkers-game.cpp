@@ -57,6 +57,7 @@ CheckersGame ai::getCheckersGame() {
 
     return CheckersGame(board, red, black);
 }
+CheckersGame::CheckersGame(){ };
 
 CheckersGame::CheckersGame(
         const Board & board,

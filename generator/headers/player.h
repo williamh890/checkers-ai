@@ -18,6 +18,7 @@ namespace ai {
             MoveGenerator generator;
 
         public:
+            Player();
             Player(char color, MoveGenerator generator);
             const std::vector<Piece> getPieces() const;
             const char getColor() const;
