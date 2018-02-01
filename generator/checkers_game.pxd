@@ -37,7 +37,7 @@ cdef extern from "headers/models.h" namespace "ai":
     pass
 
 cdef extern from "headers/utils.h" namespace "ai":
-  cdef Position spaceToGridSquare(int space)
+  pass
 
 cdef extern from "headers/table-types.h" namespace "ai":
   ctypedef vector[vector[int]] MoveTableType
