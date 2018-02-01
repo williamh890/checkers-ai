@@ -101,7 +101,7 @@ void CheckersGame::play() {
             break;
         }
         catch(runtime_error & e) {
-            cout << "Invlaid Move..." << endl;
+            cout << "Invalid Move..." << endl;
             cout << e.what() << endl;
             continue;
         }
@@ -128,7 +128,7 @@ void CheckersGame::play() {
                     jump = getJumpFromActivePlayer();
                 }
                 catch(runtime_error & e) {
-                    cout << "Invlaid Jump..." << endl;
+                    cout << "Invalid Jump..." << endl;
                     continue;
                 }
 
@@ -237,7 +237,7 @@ pair<int, int> CheckersGame::getMoveFromUser() {
 
     for (auto piece : activePlayer->getPieces()) {
         if (piece.space == move.second) {
-            throw runtime_error("cannont move over own piece.");
+            throw runtime_error("cannot move over own piece.");
         }
     }
 

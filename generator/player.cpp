@@ -196,7 +196,7 @@ shared_ptr<Player> ai::getPlayer(const string & color, JsonToStlConverter conver
 
     if (color == "red") {
         auto redGenerator = getGeneratorFor("red", converter);
-        return make_shared<RedPlayer>('r', redGenerator, kingGenerator);
+        return make_shared<RedPlayer>('r', redGenerator, kingGenerator, PlayerType::Computer);
     }
     auto blackGenerator = getGeneratorFor("black", converter);
 
