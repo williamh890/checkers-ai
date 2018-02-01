@@ -60,7 +60,6 @@ namespace ai {
             bool isInitialSpace(int space) const override;
     };
 
-
     std::shared_ptr<Player> getPlayer(const std::string & color, JsonToStlConverter converter);
 }
 

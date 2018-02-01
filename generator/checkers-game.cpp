@@ -122,9 +122,10 @@ void CheckersGame::play() {
             reactTo(action, move);
         }
 
-
         swap(activePlayer, inactivePlayer);
     }
+
+    cout << "gameover" << endl;
 }
 
 pair<int, Jump> CheckersGame::getJumpFromActivePlayer() {
@@ -174,7 +175,6 @@ pair<int, int> CheckersGame::getMoveFromActivePlayer() {
 
 pair<int, int> CheckersGame::getRandomValidMove() {
     auto moves = getValidMoves();
-
     auto numMoves = moves.size();
 
     cout << "number of moves: " << numMoves << endl;
@@ -207,9 +207,6 @@ pair<int, int> CheckersGame::parseUserInput() {
 pair<int, int> CheckersGame::getMoveFromUser() {
     auto move = parseUserInput();
 
-    if (isInvalid(move)) {
-        throw runtime_error("move is not valid");
-    }
     return move;
 }
 
@@ -252,7 +249,6 @@ void CheckersGame::reactTo(const Action & action, const pair<int, int> & move) {
         cout << "piece was moved" << endl;
     }
 }
-
 
 string CheckersGame::toString() {
     return board.toString();

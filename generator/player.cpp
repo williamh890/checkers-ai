@@ -96,7 +96,6 @@ void Player::updatePieces(const pair<int, Jump> & jump) {
     }
 }
 
-
 vector<Jump> Player::getJumpsFor(const Piece & piece) const {
     return generator.getJumps( piece.space );
 }
@@ -162,10 +161,9 @@ shared_ptr<Player> ai::getPlayer(const string & color, JsonToStlConverter conver
         auto redGenerator = getGeneratorFor("red", converter);
         return make_shared<RedPlayer>('r', redGenerator);
     }
-
     auto blackGenerator = getGeneratorFor("black", converter);
 
-    return make_shared<BlackPlayer>('b', blackGenerator, PlayerType::Computer);
+    return make_shared<BlackPlayer>('b', blackGenerator, PlayerType::Human);
 }
 
 
