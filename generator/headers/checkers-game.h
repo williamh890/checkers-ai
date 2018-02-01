@@ -35,6 +35,7 @@ namespace ai {
             // void printValidMoves(); This is not defined in the source yet
         private:
             MoveTableType getBlackMoves();
+            MoveTableType getRedMoves();
     };
 
     CheckersGame getCheckersGame();

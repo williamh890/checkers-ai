@@ -79,18 +79,27 @@ void CheckersGame::printMoves()
 
 void CheckersGame::printMovesForColor(const string & color) {
     cout << color << " Moves: " << endl;
-    auto pieces = ((color == "black") ? black: red)->getPieces();
+    // auto pieces = ((color == "black") ? black: red)->getPieces();
 
-    for (const auto & checker : pieces)
+    // for (const auto & checker : pieces)
+    // {
+    //     auto s = spaceToPosition(checker.space);
+    //     cout << "(" << s.row << ", " << s.col << "): ";
+    //     for (const auto & move: black->getMovesFor(checker)) {
+    //         cout << move << " ";
+    //     }
+    //     cout << "]"<<endl;
+    // }
+    auto moves = (color == "black") ? getBlackMoves() : getRedMoves();
+    for( const auto & piece :moves)
     {
-        auto s = spaceToPosition(checker.space);
-        cout << "(" << s.row << ", " << s.col << "): ";
-        for (const auto & move: black->getMovesFor(checker)) {
-            cout << move << " ";
+        cout << piece[0] <<":[ ";
+        for(auto i=1;i<piece.size() ;++i)
+        {
+            cout << piece[i] << " ";
         }
-        cout << "]"<<endl;
+        cout << "]";
     }
-
 }
 
 void CheckersGame::printJumpsForColor(const string & color) {
@@ -107,49 +116,36 @@ void CheckersGame::printJumpsForColor(const string & color) {
     }
 }
 
-
+//returns vector<vector<int with format {piece space, valid move, valid move}
 MoveTableType CheckersGame::getBlackMoves()
 {
     MoveTableType blackMoves;
-    bool valid = true;
 
     for(const auto & piece : black->getPieces())
     {
         auto moves = black->getMovesFor(piece);
+        cout << "debug: moves size:" <<moves.size() <<endl;//debug
         vector<int> black_move;
-        for(auto & move : moves)
+        black_move.push_back(piece.space);
+        for(const auto & move : moves)
         {
-
-            for (const auto & other_black: black->getPieces())
+            cout << "debug: move" << move <<endl;//debug
+            if(board[move] == ' ')
             {
-                if(move == other_black.space)
-                {
-                    valid = false;
-                    break;
-                }
+                black_move.push_back(move);
             }
-            if(valid)
-            {
-                for (const auto & other_red: red->getPieces())
-                {
-                    if(move == other_red.space)
-                    {
-                        valid = false;
-                    }
-                }
-                if(valid)
-                {
-                    black_move.push_back(piece.space);
-                    black_move.push_back(move);
-                }
-            }
-            valid = true;
         }
-        if (black_move.size())
+        if (black_move.size()>1)
         {
             blackMoves.push_back(black_move);
         }
     }
 
     return blackMoves;
+}
+
+MoveTableType CheckersGame::getRedMoves()
+{
+    MoveTableType redmoves;
+    return redmoves;
 }

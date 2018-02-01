@@ -23,6 +23,7 @@ namespace ai {
             char at(const Position & pos) const;
 
             std::string toString();
+            char operator[](const int & index) const;
         private:
             std::vector<std::vector<char>> getEmptyBoard();
     };

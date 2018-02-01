@@ -32,6 +32,7 @@ using std::endl;
 int main() {
     auto game = getCheckersGame();
     cout << game.toString() << endl;
+    game.printMovesForColor("black");
 
     return 0;
 }

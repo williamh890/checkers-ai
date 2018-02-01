@@ -69,6 +69,11 @@ char Board::at(const Position & pos) const {
     return boardState[i];
 }
 
+char Board::operator[](const int & index) const
+{
+    return boardState[index];
+}
+
 vector<vector<char>> Board::getEmptyBoard() {
     vector<vector<char>> board;
 
