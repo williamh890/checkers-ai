@@ -5,7 +5,7 @@ using ai::Board;
 using ai::Player;
 
 #include "headers/utils.h"
-using ai::spaceToGridSquare;
+using ai::spaceToPosition;
 using ai::positionToSpace;
 
 #include <vector>
@@ -33,7 +33,7 @@ string Board::toString() {
     auto spaces = getEmptyBoard();
 
     for (auto i = 0; i < (int)boardState.size(); ++i) {
-        auto pos = spaceToGridSquare(i);
+        auto pos = spaceToPosition(i);
 
         spaces[pos.row][pos.col] = boardState[i];
     }

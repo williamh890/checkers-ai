@@ -5,7 +5,7 @@
 // ai::Position
 
 namespace ai {
-    Position spaceToGridSquare(int space);
+    Position spaceToPosition(int space);
     int positionToSpace(const Position & pos);
 }
 

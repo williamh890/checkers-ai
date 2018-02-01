@@ -1,5 +1,5 @@
 #include "headers/utils.h"
-using ai::spaceToGridSquare;
+using ai::spaceToPosition;
 
 #include "headers/models.h"
 using ai::Position;
@@ -24,7 +24,7 @@ using ai::Position;
          +---+---+---+---+---+---+---+---+
 */
 
-Position ai::spaceToGridSquare(int space) {
+Position ai::spaceToPosition(int space) {
     auto row = space / 4;
     auto col = space % 4;
 
@@ -36,11 +36,9 @@ Position ai::spaceToGridSquare(int space) {
 
 int ai::positionToSpace(const Position & pos) {
     int space = 0;
-    auto offset = (pos.row % 2) ? 0 : 1;
 
     space += pos.row * 4;
-    space += pos.col;
+    space += (pos.col / 2);
 
-    space -= offset;
     return space;
 }

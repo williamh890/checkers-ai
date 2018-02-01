@@ -19,7 +19,7 @@ using ai::getGeneratorFor;
 using ai::MoveGenerator;
 
 #include "headers/utils.h"
-using ai::spaceToGridSquare;
+using ai::spaceToPosition;
 
 #include "headers/models.h"
 using ai::Jump;
@@ -83,7 +83,7 @@ void CheckersGame::printMovesForColor(const string & color) {
 
     for (const auto & checker : pieces)
     {
-        auto s = spaceToGridSquare(checker.space);
+        auto s = spaceToPosition(checker.space);
         cout << "(" << s.row << ", " << s.col << "): ";
         for (const auto & move: black->getMovesFor(checker)) {
             cout << move << " ";
