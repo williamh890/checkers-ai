@@ -26,7 +26,7 @@ namespace ai {
         private:
 
         public:
-            void print();
+            std::string toString();
             void printMoves();
 
             void printMovesForColor(const std::string & color);
