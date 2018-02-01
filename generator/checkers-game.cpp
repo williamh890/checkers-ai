@@ -118,6 +118,7 @@ MoveTableType CheckersGame::getBlackMoves()
         vector<int> black_move;
         for(auto & move : moves)
         {
+
             for (const auto & other_black: black->getPieces())
             {
                 if(move == other_black.space)

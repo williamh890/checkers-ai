@@ -1,8 +1,12 @@
-#include "headers/utils.h"
+#include "../headers/utils.h"
 using ai::spaceToGridSquare;
+using ai::gridToSpace;
 
-#include "headers/models.h"
+#include "../headers/models.h"
 using ai::Position;
+
+
+#include "catch.hpp"
 
 /*         0   1   2   3   4   5   6   7
          +---+---+---+---+---+---+---+---+
@@ -24,23 +28,22 @@ using ai::Position;
          +---+---+---+---+---+---+---+---+
 */
 
-Position ai::spaceToGridSquare(int space) {
-    auto row = space / 4;
-    auto col = space % 4;
+TEST_CASE("Test util functions") {
+    SECTION("Test space to grid") {
+        auto c1 = spaceToGridSquare(0);
+        auto c2 = spaceToGridSquare(14);
+        auto c3 = spaceToGridSquare(31);
 
-    auto offset = (row % 2) ? 0 : 1;
+        REQUIRE((c1.row == 0 and c1.col == 1));
+        REQUIRE((c2.row == 3 and c2.col == 4));
+        REQUIRE((c3.row == 7 and c3.col == 6));
+    }
 
-    return Position(row, (2 * col) + offset);
-}
+    SECTION("Test gridToSpace") {
 
+    }
 
-int ai::positionToSpace(const Position & pos) {
-    int space = 0;
-    auto offset = (pos.row % 2) ? 0 : 1;
+    SECTION("Test convertions") {
 
-    space += pos.row * 4;
-    space += pos.col;
-
-    space -= offset;
-    return space;
+    }
 }

@@ -6,6 +6,7 @@ using ai::Player;
 
 #include "headers/utils.h"
 using ai::spaceToGridSquare;
+using ai::positionToSpace;
 
 #include <vector>
 using std::vector;
@@ -55,6 +56,11 @@ void Board::print() {
 
 Board ai::getBoard() {
     return Board();
+}
+
+char Board::at(const Position & pos) const {
+    auto i = positionToSpace(pos);
+    return boardState[i];
 }
 
 vector<vector<char>> Board::getEmptyBoard() {
