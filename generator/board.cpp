@@ -163,3 +163,4 @@ vector<vector<char>> Board::getEmptyBoard() {
 
     return board;
 }
+

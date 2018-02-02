@@ -38,11 +38,12 @@ namespace ai {
             bool hasPieceAt(int space) const;
             bool hasOpposingPieceAt(const Jump & jump, char color) const;
             bool destinationIsNotEmpty(const Jump & jump) const;
+            void UpdatePiece(const int & index, const char & newVal);
 
         public:
             std::string toString();
             char operator[](const int & index) const;
-            void UpdatePiece(const int & index, const char & newVal);
+            
         private:
             std::vector<std::vector<char>> getEmptyBoard();
     };
