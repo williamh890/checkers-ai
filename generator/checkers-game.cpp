@@ -89,7 +89,7 @@ void CheckersGame::play() {
         pair<int, Jump> jump = make_pair(-1, Jump(-1, -1));
 
         try {
-            if (getValidJumps().size() > 0) {
+            if (getValidJumps().size()) {
                 jump = getJumpFromActivePlayer();
             } else {
                 move = getMoveFromActivePlayer();
@@ -121,14 +121,14 @@ void CheckersGame::play() {
             cout << board.toString() << endl;
             cout << "jump piece has " << validJumps.size() << " possible jumps." << endl;
 
-            while (validJumps.size() > 0) {
+            while (validJumps.size()) {
                 auto jump = make_pair(-1, Jump(-1, -1));
 
                 try {
                     jump = getJumpFromActivePlayer();
                 }
                 catch(runtime_error & e) {
-                    cout << "Invalid Jump..." << endl;
+                    cout << "Invlaid Jump..." << endl;
                     continue;
                 }
 

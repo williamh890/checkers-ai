@@ -48,6 +48,7 @@ namespace ai {
         private:
             virtual bool isInitialSpace(int space) const = 0;
             virtual bool shouldBeCrowned(const Piece & piece) const = 0;
+            void Crown(Piece & piece);
     };
 
     class RedPlayer: public Player {

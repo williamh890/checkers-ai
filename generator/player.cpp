@@ -37,6 +37,7 @@ using std::make_shared;
 #include <sstream>
 using std::stringstream;
 #include <iostream>
+using std::cout;
 using std::endl;
 #include <utility>
 using std::pair;
@@ -81,15 +82,27 @@ void Player::removePieceAt(int space) {
     }
 }
 
+void Player::Crown(Piece & piece)
+{
+    piece.isKing = true;
+    cout << "crowning piece in space: " << piece.space <<endl;
+    if(piece.color == 'r')
+    {
+        piece.color = 'R';
+    }
+    else
+    {
+        piece.color = 'B';
+    }          
+}
+
 void Player::updatePieces(const pair<int, int> & move) {
     for (auto & piece : pieces) {
         if (piece.space == move.first) {
             piece.space = move.second;
-
             if(shouldBeCrowned(piece)) {
-                piece.isKing = true;
+                Crown(piece);
             }
-
             break;
         }
     }
@@ -99,11 +112,9 @@ void Player::updatePieces(const pair<int, Jump> & jump) {
     for (auto & piece : pieces) {
         if (piece.space == jump.first) {
             piece.space = jump.second.to;
-
             if(shouldBeCrowned(piece)) {
-                piece.isKing = true;
+                Crown(piece);
             }
-
             break;
         }
     }
