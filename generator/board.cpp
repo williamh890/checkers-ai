@@ -143,6 +143,11 @@ Board ai::getBoard() {
     return Board();
 }
 
+std::vector<char> Board::getBoardState()
+{
+    return boardState;
+}
+
 char Board::operator[](const int & index) const
 {
     return boardState[index];

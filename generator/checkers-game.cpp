@@ -255,6 +255,19 @@ bool CheckersGame::isInvalid(const pair<int, int> & move) {
 
     return true;
 }
+bool CheckersGame::isInvalid(const pair<int, Jump> & jump) {
+    auto validJumps = getValidJumps();
+
+    for (const auto & validJump : validJumps) {
+        if (validMove == move) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+
 
 vector<pair<int, int>> CheckersGame::getValidMoves() {
     auto validMoves = board.getValidMovesFor(activePlayer);
