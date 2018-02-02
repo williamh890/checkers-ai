@@ -120,3 +120,4 @@ Checkers_Duane.vcxproj.filters
 Checkers_Duane.vcxproj.user
 Debug/
 tags
+generator/.vscode/c_cpp_properties.json
