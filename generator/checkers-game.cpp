@@ -255,17 +255,17 @@ bool CheckersGame::isInvalid(const pair<int, int> & move) {
 
     return true;
 }
-// bool CheckersGame::isInvalidJump(const pair<int, Jump> & jump) {
-//     auto validJumps = getValidJumps();
+bool CheckersGame::isInvalidJump(const pair<int, Jump> & jump) {
+    auto validJumps = getValidJumps();
 
-//     for (const auto & validJump : validJumps) {
-//         if (validJump == jump) {
-//             return false;
-//         }
-//     }
+    for (const auto & validJump : validJumps) {
+        if (validJump == jump) {
+            return false;
+        }
+    }
 
-//     return true;
-// }
+    return true;
+}
 
 
 
