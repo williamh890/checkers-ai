@@ -29,6 +29,8 @@ using std::stringstream;
 #include <utility>
 using std::pair;
 using std::make_pair;
+#include <algorithm>
+using std::swap;
 
 
 Board::Board(): boardState(vector<char>(32, ' ')) {};
@@ -95,17 +97,13 @@ const vector<pair<int, int>> Board::getValidMovesFor(const shared_ptr<Player> & 
 }
 
 const Action Board::make(const pair<int, int> move) {
-    boardState[move.second] = boardState[move.first];
-    boardState[move.first] = ' ';
-
+    swap(boardState[move.first],boardState[move.second]);
     return Action::Move;
 }
 
 const Action Board::make(const pair<int, Jump> jump) {
-    boardState[jump.second.to] = boardState[jump.first];
+    swap(boardState[jump.second.to],boardState[jump.first]);
     boardState[jump.second.through] = ' ';
-    boardState[jump.first] = ' ';
-
     return Action::Jump;
 }
 
@@ -148,6 +146,11 @@ Board ai::getBoard() {
 char Board::operator[](const int & index) const
 {
     return boardState[index];
+}
+
+void Board::UpdatePiece(const int & index, const char & newVal)
+{
+    boardState[index] = newVal;
 }
 
 vector<vector<char>> Board::getEmptyBoard() {
