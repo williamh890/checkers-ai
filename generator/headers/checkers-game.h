@@ -52,7 +52,7 @@ namespace ai {
             std::pair<int, int> parseUserInput();
 
             bool isInvalid(const std::pair<int, int> & move);
-            bool isInvalid(const std::pair<int, Jump> & jump);
+            bool isInvalidJump(const std::pair<int, Jump> & jump);
 
             std::pair<int, Jump> getJumpFrom(const std::pair<int, int> & inputJump);
 
