@@ -1,5 +1,6 @@
 #include "../headers/move-generator.h"
 using ai::getGeneratorFor;
+using ai::getKingGenerator;
 using ai::MoveGenerator;
 #include "../headers/json-to-stl.h"
 using ai::loadMoveTableFrom;

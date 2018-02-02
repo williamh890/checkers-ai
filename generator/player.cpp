@@ -93,7 +93,7 @@ void Player::Crown(Piece & piece)
     else
     {
         piece.color = 'B';
-    }          
+    }
 }
 
 void Player::updatePieces(const pair<int, int> & move) {
@@ -174,7 +174,7 @@ BlackPlayer::BlackPlayer(
         char color,
         const MoveGenerator & generator,
         const MoveGenerator & kingGenerator,
-        PlayerType type=PlayerType::Human): Player(color, generator, kingGenerator, type) {
+        PlayerType type): Player(color, generator, kingGenerator, type) {
     initPieces();
 }
 
@@ -189,7 +189,7 @@ bool BlackPlayer::shouldBeCrowned(const Piece & piece) const {
 RedPlayer::RedPlayer(char color,
                      const MoveGenerator & generator,
                      const MoveGenerator & kingGenerator,
-                     PlayerType type=PlayerType::Computer): Player(color, generator, kingGenerator, type) {
+                     PlayerType type): Player(color, generator, kingGenerator, type) {
     initPieces();
 }
 

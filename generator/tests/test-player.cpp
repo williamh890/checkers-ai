@@ -21,13 +21,14 @@ TEST_CASE("testing player object"){
     auto converter = JsonToStlConverter{table};
     auto redGenerator = getGeneratorFor("red", converter);
     auto blackGenerator = getGeneratorFor("red", converter);
+    auto kingGenerator = getKingGenerator(converter);
 
     SECTION("player constructor") {
-        auto red =  RedPlayer('r', redGenerator);
+        auto red = RedPlayer('r', redGenerator, kingGenerator);
     }
 
-    auto red = make_shared<RedPlayer>('r', redGenerator);
-    auto black = make_shared<BlackPlayer>('b', blackGenerator);
+    auto red = make_shared<RedPlayer>('r', redGenerator, kingGenerator);
+    auto black = make_shared<BlackPlayer>('b', blackGenerator, kingGenerator);
 
     SECTION("testing getColor") {
         REQUIRE(red->getColor() == 'r');
