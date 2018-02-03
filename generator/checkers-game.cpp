@@ -55,6 +55,7 @@ using std::length_error;
 using std::random_device;
 using std::mt19937;
 using std::uniform_int_distribution;
+#include <chrono>
 
 
 CheckersGame ai::getCheckersGame() {
@@ -75,7 +76,15 @@ CheckersGame::CheckersGame(
         shared_ptr<Player> red,
         shared_ptr<Player> black): board(board), red(red), black(black), activePlayer(black), inactivePlayer(red) {
     random_device device;
-    generator = mt19937(device());
+    if (Settings::SEEDING_METHOD == "random_device") {
+        generator = mt19937(device());
+    }
+    if (Settings::SEEDING_METHOD == "time") {
+        srand(time(NULL));
+        generator = std::mt19937(rand());
+    }
+
+
 
     this->board.addPiecesFor(red);
     this->board.addPiecesFor(black);
