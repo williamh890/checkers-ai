@@ -37,7 +37,19 @@ namespace ai {
         public:
             CheckersGame();
             CheckersGame(const Board & board, std::shared_ptr<Player> red, std::shared_ptr<Player> black);
+            // following are public for use in the gui/cython wrapper
+            bool isInvalid(const std::pair<int, int> & move);
+            bool isInvalid(const std::pair<int, Jump> & jump);
+            std::vector<char> getBoard(); // may not need
+            const char getActivePlayerColor();
+            void swapPlayers(); // may not need
 
+            template <class U>
+            std::vector<std::pair<std::vector<char>, U>> Turn(const std::pair<int, int> & move);
+
+            template <class U>
+            std::vector<std::pair<std::vector<char>, U>> Turn(const std::pair<int, Jump> & jump);
+            // end gui/cython wrapper functions
             void play();
 
         private:
@@ -50,9 +62,6 @@ namespace ai {
             std::pair<int, Jump> getJumpFromUser();
 
             std::pair<int, int> parseUserInput();
-
-            bool isInvalid(const std::pair<int, int> & move);
-            bool isInvalid(const std::pair<int, Jump> & jump);
 
             std::pair<int, Jump> getJumpFrom(const std::pair<int, int> & inputJump);
 

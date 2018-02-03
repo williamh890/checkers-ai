@@ -1,44 +1,43 @@
-# gui.py
+# checkers_game.pyx
 # Author: Hal Dimarchi
-# board gui
+# wrapper of board and gui
 
 import tkinter as tk
 import tkinter.ttk as ttk
 from time import sleep
-from checkers_game cimport CheckersGame, getCheckersGame
+cimport checkers_game
 # from gui import Board_Gui, example_board
 
 BOARD_SIZE = 8
 WINDOW_SIZE = 400
+PIECES:{"RED": "R", "BLACK": "B"}
 
 
 
-
-cdef class PyCheckersGame:
-  cdef CheckersGame checkers_game
-  def __cinit__(self):
-    self.checkers_game = getCheckersGame()
-
-  def toString(self):
-    self.checkers_game.toString()
-
-  def printMoves(self):
-    self.checkers.printMoves()
-
-  def printMovesForColor(self, color):
-    self.checkers_game.printMovesForColor(color)
-
-  def printJumpsForColor(self, color):
-    self.checkers_game.printJumpsForColor(color)
-
-  def printValidMoves(self):
-    pass
+#cdef class PyCheckersGame:
+  # cdef CheckersGame checkers_game
+  #def __cinit__(self):
+    # self.checkers_game = getCheckersGame()
+  #def toString(self):
+  #  self.checkers_game.toString()
+#
+#  def printMoves(self):
+#    self.checkers.printMoves()
+#
+#  def printMovesForColor(self, color):
+#    self.checkers_game.printMovesForColor(color)
+#
+#  def printJumpsForColor(self, color):
+#    self.checkers_game.printJumpsForColor(color)
+#
+#  def printValidMoves(self):
+#    pass
     # waiting for this to be defined in source
     # self.checkers_game.printValidMoves()
 
 class PyBoard():
     def __init__(self):
-        self.game = PyCheckersGame()
+        # self.game = PyCheckersGame()
         self.window = tk.Tk()
         self.entry = ttk.Entry(self.window)
         self.entry.bind('<Command-a>', self.get_entry_move)
@@ -55,6 +54,7 @@ class PyBoard():
         self.draw_spaces = self.spaces
 
         self.move_buttons = []
+        self.mb_info = []
 
         self.board.pack()
 
@@ -96,19 +96,47 @@ class PyBoard():
         print('({}, {})'.format(row, col))
 
         self.move_buttons.append(self.draw_spaces[row][col])
+        print(row)
+        print(col)
+        self.mb_info.append((row, col))
+
         if len(self.move_buttons) == 2:
-            print("making move")
+          print(self.mb_info[0][0])
+          print(self.mb_info[1][0])
+          if abs(self.mb_info[0][0] - self.mb_info[1][0]) == 2:
+            if abs(self.mb_info[0][1] - self.mb_info[1][1]) == 2:
+              print("making jump")
+              self.submit_jump()
+            else:
+              print("making move")
+              self.submit_move()
+          else:
+            print("making move, not close to a jump")
             self.submit_move()
+
         else:
             print("select your next move")
 
     def submit_move(self):
-        print("making move")
         b_space, e_space = self.move_buttons[0], self.move_buttons[1]
-        b_space["text"], e_space["text"] = e_space["text"], b_space["text"]
-
-        self.move_buttons = []
+        if e_space["text"] == " ":
+          b_space["text"], e_space["text"] = e_space["text"], b_space["text"]
+        self.move_buttons, self.mb_info = [], []
         print("buttons should be different")
+
+    def submit_jump(self):
+      b_space, e_space = self.move_buttons[0], self.move_buttons[1]
+      mid_space = (min(self.mb_info[0][0],self.mb_info[1][0]) + 1,
+                   min(self.mb_info[0][1], self.mb_info[1][1]) + 1)
+      mid_space = self.draw_spaces[mid_space[0]][mid_space[1]]
+      if mid_space["text"] != " " and mid_space["text"] != b_space["text"]:
+        mid_space["text"] = " "
+        e_space["text"] = b_space["text"]
+        b_space["text"] = " "
+        print("jumped, buttons should be different")
+      else:
+        print("invalid jump")
+      self.move_buttons, self.mb_info = [], []
 
     def receive_move(self, b_row, b_col, e_row, e_col):
         self.move_buttons = []

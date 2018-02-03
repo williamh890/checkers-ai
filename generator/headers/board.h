@@ -31,6 +31,7 @@ namespace ai {
             const std::vector<std::pair<int, int>> getValidMovesFor(const std::shared_ptr<Player> & player) const;
             const std::vector<std::pair<int, Jump>> getValidJumpsFor(const std::shared_ptr<Player> & player) const;
 
+            std::vector<char> getBoardState();
             const Action make(const std::pair<int, Jump> jump);
             const Action make(const std::pair<int, int> move);
 
@@ -43,7 +44,7 @@ namespace ai {
         public:
             std::string toString();
             char operator[](const int & index) const;
-            
+
         private:
             std::vector<std::vector<char>> getEmptyBoard();
     };
