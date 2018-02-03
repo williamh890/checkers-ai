@@ -53,7 +53,7 @@ namespace ai {
 
     class RedPlayer: public Player {
         public:
-            RedPlayer(char color, const MoveGenerator & generator, const MoveGenerator & kingGenerator, PlayerType type=PlayerType::Computer);
+            RedPlayer(char color, const MoveGenerator & generator, const MoveGenerator & kingGenerator, PlayerType type);
         private:
             bool isInitialSpace(int space) const override;
             bool shouldBeCrowned(const Piece & piece) const override ;
@@ -61,7 +61,7 @@ namespace ai {
 
     class BlackPlayer: public Player {
         public:
-            BlackPlayer(char color, const MoveGenerator & generator, const MoveGenerator & kingGenerator, PlayerType type=PlayerType::Computer);
+            BlackPlayer(char color, const MoveGenerator & generator, const MoveGenerator & kingGenerator, PlayerType type);
         private:
             bool isInitialSpace(int space) const override;
             bool shouldBeCrowned(const Piece & piece) const override ;

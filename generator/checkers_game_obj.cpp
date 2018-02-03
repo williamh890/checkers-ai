@@ -765,8 +765,8 @@ struct __pyx_obj_13checkers_game___pyx_scope_struct__make_space_callback;
 struct __pyx_obj_13checkers_game___pyx_scope_struct_1_make_move_callback;
 
 /* "checkers_game.pyx":17
- * 
- * 
+ *
+ *
  * cdef class PyCheckersGame:             # <<<<<<<<<<<<<<
  *   cdef CheckersGame checkers_game
  *   def __cinit__(self):
@@ -779,10 +779,10 @@ struct __pyx_obj_13checkers_game_PyCheckersGame {
 
 /* "checkers_game.pyx":85
  *         self.draw_spaces[row][column] = space
- * 
+ *
  *     def make_space_callback(self, row, col):             # <<<<<<<<<<<<<<
  *         return lambda: self.space_callback(row, col)
- * 
+ *
  */
 struct __pyx_obj_13checkers_game___pyx_scope_struct__make_space_callback {
   PyObject_HEAD
@@ -794,10 +794,10 @@ struct __pyx_obj_13checkers_game___pyx_scope_struct__make_space_callback {
 
 /* "checkers_game.pyx":91
  *         print('({}, {})'.format(row, col))
- * 
+ *
  *     def make_move_callback(self, row, col):             # <<<<<<<<<<<<<<
  *         return lambda: self.move_callback(row, col)
- * 
+ *
  */
 struct __pyx_obj_13checkers_game___pyx_scope_struct_1_make_move_callback {
   PyObject_HEAD
@@ -1580,7 +1580,7 @@ static PyObject *__pyx_codeobj__35;
  *   cdef CheckersGame checkers_game
  *   def __cinit__(self):             # <<<<<<<<<<<<<<
  *     self.checkers_game = getCheckersGame()
- * 
+ *
  */
 
 /* Python wrapper */
@@ -1609,7 +1609,7 @@ static int __pyx_pf_13checkers_game_14PyCheckersGame___cinit__(struct __pyx_obj_
  *   cdef CheckersGame checkers_game
  *   def __cinit__(self):
  *     self.checkers_game = getCheckersGame()             # <<<<<<<<<<<<<<
- * 
+ *
  *   def toString(self):
  */
   try {
@@ -1625,7 +1625,7 @@ static int __pyx_pf_13checkers_game_14PyCheckersGame___cinit__(struct __pyx_obj_
  *   cdef CheckersGame checkers_game
  *   def __cinit__(self):             # <<<<<<<<<<<<<<
  *     self.checkers_game = getCheckersGame()
- * 
+ *
  */
 
   /* function exit code */
@@ -1641,10 +1641,10 @@ static int __pyx_pf_13checkers_game_14PyCheckersGame___cinit__(struct __pyx_obj_
 
 /* "checkers_game.pyx":22
  *     self.checkers_game = getCheckersGame()
- * 
+ *
  *   def toString(self):             # <<<<<<<<<<<<<<
  *     self.checkers_game.toString()
- * 
+ *
  */
 
 /* Python wrapper */
@@ -1666,20 +1666,20 @@ static PyObject *__pyx_pf_13checkers_game_14PyCheckersGame_2toString(struct __py
   __Pyx_RefNannySetupContext("toString", 0);
 
   /* "checkers_game.pyx":23
- * 
+ *
  *   def toString(self):
  *     self.checkers_game.toString()             # <<<<<<<<<<<<<<
- * 
+ *
  *   def printMoves(self):
  */
   __pyx_v_self->checkers_game.toString();
 
   /* "checkers_game.pyx":22
  *     self.checkers_game = getCheckersGame()
- * 
+ *
  *   def toString(self):             # <<<<<<<<<<<<<<
  *     self.checkers_game.toString()
- * 
+ *
  */
 
   /* function exit code */
@@ -1691,10 +1691,10 @@ static PyObject *__pyx_pf_13checkers_game_14PyCheckersGame_2toString(struct __py
 
 /* "checkers_game.pyx":25
  *     self.checkers_game.toString()
- * 
+ *
  *   def printMoves(self):             # <<<<<<<<<<<<<<
  *     self.checkers.printMoves()
- * 
+ *
  */
 
 /* Python wrapper */
@@ -1719,10 +1719,10 @@ static PyObject *__pyx_pf_13checkers_game_14PyCheckersGame_4printMoves(struct __
   __Pyx_RefNannySetupContext("printMoves", 0);
 
   /* "checkers_game.pyx":26
- * 
+ *
  *   def printMoves(self):
  *     self.checkers.printMoves()             # <<<<<<<<<<<<<<
- * 
+ *
  *   def printMovesForColor(self, color):
  */
   __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_checkers); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 26, __pyx_L1_error)
@@ -1752,10 +1752,10 @@ static PyObject *__pyx_pf_13checkers_game_14PyCheckersGame_4printMoves(struct __
 
   /* "checkers_game.pyx":25
  *     self.checkers_game.toString()
- * 
+ *
  *   def printMoves(self):             # <<<<<<<<<<<<<<
  *     self.checkers.printMoves()
- * 
+ *
  */
 
   /* function exit code */
@@ -1775,10 +1775,10 @@ static PyObject *__pyx_pf_13checkers_game_14PyCheckersGame_4printMoves(struct __
 
 /* "checkers_game.pyx":28
  *     self.checkers.printMoves()
- * 
+ *
  *   def printMovesForColor(self, color):             # <<<<<<<<<<<<<<
  *     self.checkers_game.printMovesForColor(color)
- * 
+ *
  */
 
 /* Python wrapper */
@@ -1801,10 +1801,10 @@ static PyObject *__pyx_pf_13checkers_game_14PyCheckersGame_6printMovesForColor(s
   __Pyx_RefNannySetupContext("printMovesForColor", 0);
 
   /* "checkers_game.pyx":29
- * 
+ *
  *   def printMovesForColor(self, color):
  *     self.checkers_game.printMovesForColor(color)             # <<<<<<<<<<<<<<
- * 
+ *
  *   def printJumpsForColor(self, color):
  */
   __pyx_t_1 = __pyx_convert_string_from_py_std__in_string(__pyx_v_color); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 29, __pyx_L1_error)
@@ -1812,10 +1812,10 @@ static PyObject *__pyx_pf_13checkers_game_14PyCheckersGame_6printMovesForColor(s
 
   /* "checkers_game.pyx":28
  *     self.checkers.printMoves()
- * 
+ *
  *   def printMovesForColor(self, color):             # <<<<<<<<<<<<<<
  *     self.checkers_game.printMovesForColor(color)
- * 
+ *
  */
 
   /* function exit code */
@@ -1832,10 +1832,10 @@ static PyObject *__pyx_pf_13checkers_game_14PyCheckersGame_6printMovesForColor(s
 
 /* "checkers_game.pyx":31
  *     self.checkers_game.printMovesForColor(color)
- * 
+ *
  *   def printJumpsForColor(self, color):             # <<<<<<<<<<<<<<
  *     self.checkers_game.printJumpsForColor(color)
- * 
+ *
  */
 
 /* Python wrapper */
@@ -1858,10 +1858,10 @@ static PyObject *__pyx_pf_13checkers_game_14PyCheckersGame_8printJumpsForColor(s
   __Pyx_RefNannySetupContext("printJumpsForColor", 0);
 
   /* "checkers_game.pyx":32
- * 
+ *
  *   def printJumpsForColor(self, color):
  *     self.checkers_game.printJumpsForColor(color)             # <<<<<<<<<<<<<<
- * 
+ *
  *   def printValidMoves(self):
  */
   __pyx_t_1 = __pyx_convert_string_from_py_std__in_string(__pyx_v_color); if (unlikely(PyErr_Occurred())) __PYX_ERR(1, 32, __pyx_L1_error)
@@ -1869,10 +1869,10 @@ static PyObject *__pyx_pf_13checkers_game_14PyCheckersGame_8printJumpsForColor(s
 
   /* "checkers_game.pyx":31
  *     self.checkers_game.printMovesForColor(color)
- * 
+ *
  *   def printJumpsForColor(self, color):             # <<<<<<<<<<<<<<
  *     self.checkers_game.printJumpsForColor(color)
- * 
+ *
  */
 
   /* function exit code */
@@ -1889,7 +1889,7 @@ static PyObject *__pyx_pf_13checkers_game_14PyCheckersGame_8printJumpsForColor(s
 
 /* "checkers_game.pyx":34
  *     self.checkers_game.printJumpsForColor(color)
- * 
+ *
  *   def printValidMoves(self):             # <<<<<<<<<<<<<<
  *     pass
  *     # waiting for this to be defined in source
@@ -2028,7 +2028,7 @@ static PyObject *__pyx_pf_13checkers_game_14PyCheckersGame_14__setstate_cython__
 }
 
 /* "checkers_game.pyx":40
- * 
+ *
  * class PyBoard():
  *     def __init__(self):             # <<<<<<<<<<<<<<
  *         self.game = PyCheckersGame()
@@ -2179,7 +2179,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard___init__(CYTHON_UNUSED PyObje
  *         self.entry = ttk.Entry(self.window)
  *         self.entry.bind('<Command-a>', self.get_entry_move)             # <<<<<<<<<<<<<<
  *         self.entry.pack(side=tk.RIGHT)
- * 
+ *
  */
   __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_entry); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -2241,7 +2241,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard___init__(CYTHON_UNUSED PyObje
  *         self.entry = ttk.Entry(self.window)
  *         self.entry.bind('<Command-a>', self.get_entry_move)
  *         self.entry.pack(side=tk.RIGHT)             # <<<<<<<<<<<<<<
- * 
+ *
  *         self.board = tk.Frame(
  */
   __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_entry); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 45, __pyx_L1_error)
@@ -2266,7 +2266,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard___init__(CYTHON_UNUSED PyObje
 
   /* "checkers_game.pyx":47
  *         self.entry.pack(side=tk.RIGHT)
- * 
+ *
  *         self.board = tk.Frame(             # <<<<<<<<<<<<<<
  *             self.window,
  *             width=WINDOW_SIZE,
@@ -2278,7 +2278,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard___init__(CYTHON_UNUSED PyObje
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "checkers_game.pyx":48
- * 
+ *
  *         self.board = tk.Frame(
  *             self.window,             # <<<<<<<<<<<<<<
  *             width=WINDOW_SIZE,
@@ -2289,7 +2289,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard___init__(CYTHON_UNUSED PyObje
 
   /* "checkers_game.pyx":47
  *         self.entry.pack(side=tk.RIGHT)
- * 
+ *
  *         self.board = tk.Frame(             # <<<<<<<<<<<<<<
  *             self.window,
  *             width=WINDOW_SIZE,
@@ -2319,7 +2319,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard___init__(CYTHON_UNUSED PyObje
  *             width=WINDOW_SIZE,
  *             height=WINDOW_SIZE             # <<<<<<<<<<<<<<
  *         )
- * 
+ *
  */
   __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_WINDOW_SIZE); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 50, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
@@ -2328,7 +2328,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard___init__(CYTHON_UNUSED PyObje
 
   /* "checkers_game.pyx":47
  *         self.entry.pack(side=tk.RIGHT)
- * 
+ *
  *         self.board = tk.Frame(             # <<<<<<<<<<<<<<
  *             self.window,
  *             width=WINDOW_SIZE,
@@ -2343,7 +2343,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard___init__(CYTHON_UNUSED PyObje
 
   /* "checkers_game.pyx":53
  *         )
- * 
+ *
  *         self.spaces = [[0 for x in range(BOARD_SIZE)]             # <<<<<<<<<<<<<<
  *                        for y in range(BOARD_SIZE)]
  *         self.draw_spaces = self.spaces
@@ -2353,11 +2353,11 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard___init__(CYTHON_UNUSED PyObje
     __Pyx_GOTREF(__pyx_t_4);
 
     /* "checkers_game.pyx":54
- * 
+ *
  *         self.spaces = [[0 for x in range(BOARD_SIZE)]
  *                        for y in range(BOARD_SIZE)]             # <<<<<<<<<<<<<<
  *         self.draw_spaces = self.spaces
- * 
+ *
  */
     __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_BOARD_SIZE); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 54, __pyx_L5_error)
     __Pyx_GOTREF(__pyx_t_2);
@@ -2415,7 +2415,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard___init__(CYTHON_UNUSED PyObje
 
         /* "checkers_game.pyx":53
  *         )
- * 
+ *
  *         self.spaces = [[0 for x in range(BOARD_SIZE)]             # <<<<<<<<<<<<<<
  *                        for y in range(BOARD_SIZE)]
  *         self.draw_spaces = self.spaces
@@ -2488,11 +2488,11 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard___init__(CYTHON_UNUSED PyObje
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
       /* "checkers_game.pyx":54
- * 
+ *
  *         self.spaces = [[0 for x in range(BOARD_SIZE)]
  *                        for y in range(BOARD_SIZE)]             # <<<<<<<<<<<<<<
  *         self.draw_spaces = self.spaces
- * 
+ *
  */
     }
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -2506,7 +2506,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard___init__(CYTHON_UNUSED PyObje
 
   /* "checkers_game.pyx":53
  *         )
- * 
+ *
  *         self.spaces = [[0 for x in range(BOARD_SIZE)]             # <<<<<<<<<<<<<<
  *                        for y in range(BOARD_SIZE)]
  *         self.draw_spaces = self.spaces
@@ -2518,7 +2518,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard___init__(CYTHON_UNUSED PyObje
  *         self.spaces = [[0 for x in range(BOARD_SIZE)]
  *                        for y in range(BOARD_SIZE)]
  *         self.draw_spaces = self.spaces             # <<<<<<<<<<<<<<
- * 
+ *
  *         self.move_buttons = []
  */
   __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_spaces); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 55, __pyx_L1_error)
@@ -2528,9 +2528,9 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard___init__(CYTHON_UNUSED PyObje
 
   /* "checkers_game.pyx":57
  *         self.draw_spaces = self.spaces
- * 
+ *
  *         self.move_buttons = []             # <<<<<<<<<<<<<<
- * 
+ *
  *         self.board.pack()
  */
   __pyx_t_4 = PyList_New(0); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 57, __pyx_L1_error)
@@ -2540,9 +2540,9 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard___init__(CYTHON_UNUSED PyObje
 
   /* "checkers_game.pyx":59
  *         self.move_buttons = []
- * 
+ *
  *         self.board.pack()             # <<<<<<<<<<<<<<
- * 
+ *
  *     def get_board(self, board):  # board should be a 2D array
  */
   __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_board); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 59, __pyx_L1_error)
@@ -2571,7 +2571,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard___init__(CYTHON_UNUSED PyObje
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
   /* "checkers_game.pyx":40
- * 
+ *
  * class PyBoard():
  *     def __init__(self):             # <<<<<<<<<<<<<<
  *         self.game = PyCheckersGame()
@@ -2599,10 +2599,10 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard___init__(CYTHON_UNUSED PyObje
 
 /* "checkers_game.pyx":61
  *         self.board.pack()
- * 
+ *
  *     def get_board(self, board):  # board should be a 2D array             # <<<<<<<<<<<<<<
  *         self.spaces = board
- * 
+ *
  */
 
 /* Python wrapper */
@@ -2673,20 +2673,20 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_2get_board(CYTHON_UNUSED PyOb
   __Pyx_RefNannySetupContext("get_board", 0);
 
   /* "checkers_game.pyx":62
- * 
+ *
  *     def get_board(self, board):  # board should be a 2D array
  *         self.spaces = board             # <<<<<<<<<<<<<<
- * 
+ *
  *     def make_board(self):
  */
   if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_spaces, __pyx_v_board) < 0) __PYX_ERR(1, 62, __pyx_L1_error)
 
   /* "checkers_game.pyx":61
  *         self.board.pack()
- * 
+ *
  *     def get_board(self, board):  # board should be a 2D array             # <<<<<<<<<<<<<<
  *         self.spaces = board
- * 
+ *
  */
 
   /* function exit code */
@@ -2703,7 +2703,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_2get_board(CYTHON_UNUSED PyOb
 
 /* "checkers_game.pyx":64
  *         self.spaces = board
- * 
+ *
  *     def make_board(self):             # <<<<<<<<<<<<<<
  *         for row in range(BOARD_SIZE):
  *             for column in range(BOARD_SIZE):
@@ -2742,7 +2742,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_4make_board(CYTHON_UNUSED PyO
   __Pyx_RefNannySetupContext("make_board", 0);
 
   /* "checkers_game.pyx":65
- * 
+ *
  *     def make_board(self):
  *         for row in range(BOARD_SIZE):             # <<<<<<<<<<<<<<
  *             for column in range(BOARD_SIZE):
@@ -2806,7 +2806,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_4make_board(CYTHON_UNUSED PyO
  *         for row in range(BOARD_SIZE):
  *             for column in range(BOARD_SIZE):             # <<<<<<<<<<<<<<
  *                 self.make_board_space(row, column)
- * 
+ *
  */
     __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_BOARD_SIZE); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 66, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
@@ -2865,7 +2865,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_4make_board(CYTHON_UNUSED PyO
  *         for row in range(BOARD_SIZE):
  *             for column in range(BOARD_SIZE):
  *                 self.make_board_space(row, column)             # <<<<<<<<<<<<<<
- * 
+ *
  * ########### GUI FUNCTIONS ###########
  */
       __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_make_board_space); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 67, __pyx_L1_error)
@@ -2922,13 +2922,13 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_4make_board(CYTHON_UNUSED PyO
  *         for row in range(BOARD_SIZE):
  *             for column in range(BOARD_SIZE):             # <<<<<<<<<<<<<<
  *                 self.make_board_space(row, column)
- * 
+ *
  */
     }
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
     /* "checkers_game.pyx":65
- * 
+ *
  *     def make_board(self):
  *         for row in range(BOARD_SIZE):             # <<<<<<<<<<<<<<
  *             for column in range(BOARD_SIZE):
@@ -2939,7 +2939,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_4make_board(CYTHON_UNUSED PyO
 
   /* "checkers_game.pyx":64
  *         self.spaces = board
- * 
+ *
  *     def make_board(self):             # <<<<<<<<<<<<<<
  *         for row in range(BOARD_SIZE):
  *             for column in range(BOARD_SIZE):
@@ -2966,11 +2966,11 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_4make_board(CYTHON_UNUSED PyO
 }
 
 /* "checkers_game.pyx":72
- * 
+ *
  * #********** GUI SETUP **********#
  *     def run(self):             # <<<<<<<<<<<<<<
  *         self.window.mainloop()
- * 
+ *
  */
 
 /* Python wrapper */
@@ -2999,7 +2999,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_6run(CYTHON_UNUSED PyObject *
  * #********** GUI SETUP **********#
  *     def run(self):
  *         self.window.mainloop()             # <<<<<<<<<<<<<<
- * 
+ *
  *     def make_board_space(self, row, column):
  */
   __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_window); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 73, __pyx_L1_error)
@@ -3028,11 +3028,11 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_6run(CYTHON_UNUSED PyObject *
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "checkers_game.pyx":72
- * 
+ *
  * #********** GUI SETUP **********#
  *     def run(self):             # <<<<<<<<<<<<<<
  *         self.window.mainloop()
- * 
+ *
  */
 
   /* function exit code */
@@ -3052,7 +3052,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_6run(CYTHON_UNUSED PyObject *
 
 /* "checkers_game.pyx":75
  *         self.window.mainloop()
- * 
+ *
  *     def make_board_space(self, row, column):             # <<<<<<<<<<<<<<
  *         callback = self.make_move_callback(row, column)
  *         space = tk.Button(
@@ -3145,7 +3145,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_8make_board_space(CYTHON_UNUS
   __Pyx_RefNannySetupContext("make_board_space", 0);
 
   /* "checkers_game.pyx":76
- * 
+ *
  *     def make_board_space(self, row, column):
  *         callback = self.make_move_callback(row, column)             # <<<<<<<<<<<<<<
  *         space = tk.Button(
@@ -3294,7 +3294,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_8make_board_space(CYTHON_UNUS
  *                     )
  *         space.grid(row=row, column=column)             # <<<<<<<<<<<<<<
  *         self.draw_spaces[row][column] = space
- * 
+ *
  */
   __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_space, __pyx_n_s_grid); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 82, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
@@ -3312,7 +3312,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_8make_board_space(CYTHON_UNUS
  *                     )
  *         space.grid(row=row, column=column)
  *         self.draw_spaces[row][column] = space             # <<<<<<<<<<<<<<
- * 
+ *
  *     def make_space_callback(self, row, col):
  */
   __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_draw_spaces); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 83, __pyx_L1_error)
@@ -3325,7 +3325,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_8make_board_space(CYTHON_UNUS
 
   /* "checkers_game.pyx":75
  *         self.window.mainloop()
- * 
+ *
  *     def make_board_space(self, row, column):             # <<<<<<<<<<<<<<
  *         callback = self.make_move_callback(row, column)
  *         space = tk.Button(
@@ -3352,10 +3352,10 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_8make_board_space(CYTHON_UNUS
 
 /* "checkers_game.pyx":85
  *         self.draw_spaces[row][column] = space
- * 
+ *
  *     def make_space_callback(self, row, col):             # <<<<<<<<<<<<<<
  *         return lambda: self.space_callback(row, col)
- * 
+ *
  */
 
 /* Python wrapper */
@@ -3432,10 +3432,10 @@ static PyObject *__pyx_pw_13checkers_game_7PyBoard_11make_space_callback(PyObjec
 }
 
 /* "checkers_game.pyx":86
- * 
+ *
  *     def make_space_callback(self, row, col):
  *         return lambda: self.space_callback(row, col)             # <<<<<<<<<<<<<<
- * 
+ *
  *     def space_callback(self, row, col):
  */
 
@@ -3537,10 +3537,10 @@ static PyObject *__pyx_lambda_funcdef_lambda(PyObject *__pyx_self) {
 
 /* "checkers_game.pyx":85
  *         self.draw_spaces[row][column] = space
- * 
+ *
  *     def make_space_callback(self, row, col):             # <<<<<<<<<<<<<<
  *         return lambda: self.space_callback(row, col)
- * 
+ *
  */
 
 static PyObject *__pyx_pf_13checkers_game_7PyBoard_10make_space_callback(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_row, PyObject *__pyx_v_col) {
@@ -3568,10 +3568,10 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_10make_space_callback(CYTHON_
   __Pyx_GIVEREF(__pyx_cur_scope->__pyx_v_col);
 
   /* "checkers_game.pyx":86
- * 
+ *
  *     def make_space_callback(self, row, col):
  *         return lambda: self.space_callback(row, col)             # <<<<<<<<<<<<<<
- * 
+ *
  *     def space_callback(self, row, col):
  */
   __Pyx_XDECREF(__pyx_r);
@@ -3583,10 +3583,10 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_10make_space_callback(CYTHON_
 
   /* "checkers_game.pyx":85
  *         self.draw_spaces[row][column] = space
- * 
+ *
  *     def make_space_callback(self, row, col):             # <<<<<<<<<<<<<<
  *         return lambda: self.space_callback(row, col)
- * 
+ *
  */
 
   /* function exit code */
@@ -3603,10 +3603,10 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_10make_space_callback(CYTHON_
 
 /* "checkers_game.pyx":88
  *         return lambda: self.space_callback(row, col)
- * 
+ *
  *     def space_callback(self, row, col):             # <<<<<<<<<<<<<<
  *         print('({}, {})'.format(row, col))
- * 
+ *
  */
 
 /* Python wrapper */
@@ -3693,10 +3693,10 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_12space_callback(CYTHON_UNUSE
   __Pyx_RefNannySetupContext("space_callback", 0);
 
   /* "checkers_game.pyx":89
- * 
+ *
  *     def space_callback(self, row, col):
  *         print('({}, {})'.format(row, col))             # <<<<<<<<<<<<<<
- * 
+ *
  *     def make_move_callback(self, row, col):
  */
   __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u__3, __pyx_n_s_format); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 89, __pyx_L1_error)
@@ -3758,10 +3758,10 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_12space_callback(CYTHON_UNUSE
 
   /* "checkers_game.pyx":88
  *         return lambda: self.space_callback(row, col)
- * 
+ *
  *     def space_callback(self, row, col):             # <<<<<<<<<<<<<<
  *         print('({}, {})'.format(row, col))
- * 
+ *
  */
 
   /* function exit code */
@@ -3782,10 +3782,10 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_12space_callback(CYTHON_UNUSE
 
 /* "checkers_game.pyx":91
  *         print('({}, {})'.format(row, col))
- * 
+ *
  *     def make_move_callback(self, row, col):             # <<<<<<<<<<<<<<
  *         return lambda: self.move_callback(row, col)
- * 
+ *
  */
 
 /* Python wrapper */
@@ -3862,10 +3862,10 @@ static PyObject *__pyx_pw_13checkers_game_7PyBoard_15make_move_callback(PyObject
 }
 
 /* "checkers_game.pyx":92
- * 
+ *
  *     def make_move_callback(self, row, col):
  *         return lambda: self.move_callback(row, col)             # <<<<<<<<<<<<<<
- * 
+ *
  * #********** GUI MOVE FUNCTIONS **********#
  */
 
@@ -3967,10 +3967,10 @@ static PyObject *__pyx_lambda_funcdef_lambda1(PyObject *__pyx_self) {
 
 /* "checkers_game.pyx":91
  *         print('({}, {})'.format(row, col))
- * 
+ *
  *     def make_move_callback(self, row, col):             # <<<<<<<<<<<<<<
  *         return lambda: self.move_callback(row, col)
- * 
+ *
  */
 
 static PyObject *__pyx_pf_13checkers_game_7PyBoard_14make_move_callback(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_row, PyObject *__pyx_v_col) {
@@ -3998,10 +3998,10 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_14make_move_callback(CYTHON_U
   __Pyx_GIVEREF(__pyx_cur_scope->__pyx_v_col);
 
   /* "checkers_game.pyx":92
- * 
+ *
  *     def make_move_callback(self, row, col):
  *         return lambda: self.move_callback(row, col)             # <<<<<<<<<<<<<<
- * 
+ *
  * #********** GUI MOVE FUNCTIONS **********#
  */
   __Pyx_XDECREF(__pyx_r);
@@ -4013,10 +4013,10 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_14make_move_callback(CYTHON_U
 
   /* "checkers_game.pyx":91
  *         print('({}, {})'.format(row, col))
- * 
+ *
  *     def make_move_callback(self, row, col):             # <<<<<<<<<<<<<<
  *         return lambda: self.move_callback(row, col)
- * 
+ *
  */
 
   /* function exit code */
@@ -4032,11 +4032,11 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_14make_move_callback(CYTHON_U
 }
 
 /* "checkers_game.pyx":95
- * 
+ *
  * #********** GUI MOVE FUNCTIONS **********#
  *     def move_callback(self, row, col):             # <<<<<<<<<<<<<<
  *         print('({}, {})'.format(row, col))
- * 
+ *
  */
 
 /* Python wrapper */
@@ -4129,7 +4129,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_16move_callback(CYTHON_UNUSED
  * #********** GUI MOVE FUNCTIONS **********#
  *     def move_callback(self, row, col):
  *         print('({}, {})'.format(row, col))             # <<<<<<<<<<<<<<
- * 
+ *
  *         self.move_buttons.append(self.draw_spaces[row][col])
  */
   __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u__3, __pyx_n_s_format); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 96, __pyx_L1_error)
@@ -4191,7 +4191,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_16move_callback(CYTHON_UNUSED
 
   /* "checkers_game.pyx":98
  *         print('({}, {})'.format(row, col))
- * 
+ *
  *         self.move_buttons.append(self.draw_spaces[row][col])             # <<<<<<<<<<<<<<
  *         if len(self.move_buttons) == 2:
  *             print("making move")
@@ -4211,7 +4211,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_16move_callback(CYTHON_UNUSED
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "checkers_game.pyx":99
- * 
+ *
  *         self.move_buttons.append(self.draw_spaces[row][col])
  *         if len(self.move_buttons) == 2:             # <<<<<<<<<<<<<<
  *             print("making move")
@@ -4265,7 +4265,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_16move_callback(CYTHON_UNUSED
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
     /* "checkers_game.pyx":99
- * 
+ *
  *         self.move_buttons.append(self.draw_spaces[row][col])
  *         if len(self.move_buttons) == 2:             # <<<<<<<<<<<<<<
  *             print("making move")
@@ -4278,7 +4278,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_16move_callback(CYTHON_UNUSED
  *             self.submit_move()
  *         else:
  *             print("select your next move")             # <<<<<<<<<<<<<<
- * 
+ *
  *     def submit_move(self):
  */
   /*else*/ {
@@ -4289,11 +4289,11 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_16move_callback(CYTHON_UNUSED
   __pyx_L3:;
 
   /* "checkers_game.pyx":95
- * 
+ *
  * #********** GUI MOVE FUNCTIONS **********#
  *     def move_callback(self, row, col):             # <<<<<<<<<<<<<<
  *         print('({}, {})'.format(row, col))
- * 
+ *
  */
 
   /* function exit code */
@@ -4314,7 +4314,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_16move_callback(CYTHON_UNUSED
 
 /* "checkers_game.pyx":105
  *             print("select your next move")
- * 
+ *
  *     def submit_move(self):             # <<<<<<<<<<<<<<
  *         print("making move")
  *         b_space, e_space = self.move_buttons[0], self.move_buttons[1]
@@ -4345,7 +4345,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_18submit_move(CYTHON_UNUSED P
   __Pyx_RefNannySetupContext("submit_move", 0);
 
   /* "checkers_game.pyx":106
- * 
+ *
  *     def submit_move(self):
  *         print("making move")             # <<<<<<<<<<<<<<
  *         b_space, e_space = self.move_buttons[0], self.move_buttons[1]
@@ -4360,7 +4360,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_18submit_move(CYTHON_UNUSED P
  *         print("making move")
  *         b_space, e_space = self.move_buttons[0], self.move_buttons[1]             # <<<<<<<<<<<<<<
  *         b_space["text"], e_space["text"] = e_space["text"], b_space["text"]
- * 
+ *
  */
   __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_move_buttons); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 107, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -4381,7 +4381,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_18submit_move(CYTHON_UNUSED P
  *         print("making move")
  *         b_space, e_space = self.move_buttons[0], self.move_buttons[1]
  *         b_space["text"], e_space["text"] = e_space["text"], b_space["text"]             # <<<<<<<<<<<<<<
- * 
+ *
  *         self.move_buttons = []
  */
   __pyx_t_3 = PyObject_GetItem(__pyx_v_e_space, __pyx_n_u_text); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 108, __pyx_L1_error)
@@ -4395,10 +4395,10 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_18submit_move(CYTHON_UNUSED P
 
   /* "checkers_game.pyx":110
  *         b_space["text"], e_space["text"] = e_space["text"], b_space["text"]
- * 
+ *
  *         self.move_buttons = []             # <<<<<<<<<<<<<<
  *         print("buttons should be different")
- * 
+ *
  */
   __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 110, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -4406,10 +4406,10 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_18submit_move(CYTHON_UNUSED P
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "checkers_game.pyx":111
- * 
+ *
  *         self.move_buttons = []
  *         print("buttons should be different")             # <<<<<<<<<<<<<<
- * 
+ *
  *     def receive_move(self, b_row, b_col, e_row, e_col):
  */
   __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_tuple__7, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 111, __pyx_L1_error)
@@ -4418,7 +4418,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_18submit_move(CYTHON_UNUSED P
 
   /* "checkers_game.pyx":105
  *             print("select your next move")
- * 
+ *
  *     def submit_move(self):             # <<<<<<<<<<<<<<
  *         print("making move")
  *         b_space, e_space = self.move_buttons[0], self.move_buttons[1]
@@ -4443,7 +4443,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_18submit_move(CYTHON_UNUSED P
 
 /* "checkers_game.pyx":113
  *         print("buttons should be different")
- * 
+ *
  *     def receive_move(self, b_row, b_col, e_row, e_col):             # <<<<<<<<<<<<<<
  *         self.move_buttons = []
  *         self.move_buttons.append(self.draw_spaces[b_row][b_col])
@@ -4554,7 +4554,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_20receive_move(CYTHON_UNUSED 
   __Pyx_RefNannySetupContext("receive_move", 0);
 
   /* "checkers_game.pyx":114
- * 
+ *
  *     def receive_move(self, b_row, b_col, e_row, e_col):
  *         self.move_buttons = []             # <<<<<<<<<<<<<<
  *         self.move_buttons.append(self.draw_spaces[b_row][b_col])
@@ -4591,7 +4591,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_20receive_move(CYTHON_UNUSED 
  *         self.move_buttons.append(self.draw_spaces[b_row][b_col])
  *         self.move_buttons.append(self.draw_spaces[e_row][e_col])             # <<<<<<<<<<<<<<
  *         self.submit_move()
- * 
+ *
  */
   __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_move_buttons); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 116, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -4611,7 +4611,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_20receive_move(CYTHON_UNUSED 
  *         self.move_buttons.append(self.draw_spaces[b_row][b_col])
  *         self.move_buttons.append(self.draw_spaces[e_row][e_col])
  *         self.submit_move()             # <<<<<<<<<<<<<<
- * 
+ *
  *     def get_entry_move(self, e):
  */
   __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_submit_move); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 117, __pyx_L1_error)
@@ -4638,7 +4638,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_20receive_move(CYTHON_UNUSED 
 
   /* "checkers_game.pyx":113
  *         print("buttons should be different")
- * 
+ *
  *     def receive_move(self, b_row, b_col, e_row, e_col):             # <<<<<<<<<<<<<<
  *         self.move_buttons = []
  *         self.move_buttons.append(self.draw_spaces[b_row][b_col])
@@ -4661,10 +4661,10 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_20receive_move(CYTHON_UNUSED 
 
 /* "checkers_game.pyx":119
  *         self.submit_move()
- * 
+ *
  *     def get_entry_move(self, e):             # <<<<<<<<<<<<<<
  *         print(self.entry.get())
- * 
+ *
  */
 
 /* Python wrapper */
@@ -4738,10 +4738,10 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_22get_entry_move(CYTHON_UNUSE
   __Pyx_RefNannySetupContext("get_entry_move", 0);
 
   /* "checkers_game.pyx":120
- * 
+ *
  *     def get_entry_move(self, e):
  *         print(self.entry.get())             # <<<<<<<<<<<<<<
- * 
+ *
  * def example_board():
  */
   __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_entry); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 120, __pyx_L1_error)
@@ -4779,10 +4779,10 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_22get_entry_move(CYTHON_UNUSE
 
   /* "checkers_game.pyx":119
  *         self.submit_move()
- * 
+ *
  *     def get_entry_move(self, e):             # <<<<<<<<<<<<<<
  *         print(self.entry.get())
- * 
+ *
  */
 
   /* function exit code */
@@ -4802,7 +4802,7 @@ static PyObject *__pyx_pf_13checkers_game_7PyBoard_22get_entry_move(CYTHON_UNUSE
 
 /* "checkers_game.pyx":122
  *         print(self.entry.get())
- * 
+ *
  * def example_board():             # <<<<<<<<<<<<<<
  *     board = [[0 for x in range(BOARD_SIZE)]
  *              for y in range(BOARD_SIZE)]
@@ -4844,11 +4844,11 @@ static PyObject *__pyx_pf_13checkers_game_example_board(CYTHON_UNUSED PyObject *
   __Pyx_RefNannySetupContext("example_board", 0);
 
   /* "checkers_game.pyx":123
- * 
+ *
  * def example_board():
  *     board = [[0 for x in range(BOARD_SIZE)]             # <<<<<<<<<<<<<<
  *              for y in range(BOARD_SIZE)]
- * 
+ *
  */
   { /* enter inner scope */
     __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 123, __pyx_L5_error)
@@ -4858,7 +4858,7 @@ static PyObject *__pyx_pf_13checkers_game_example_board(CYTHON_UNUSED PyObject *
  * def example_board():
  *     board = [[0 for x in range(BOARD_SIZE)]
  *              for y in range(BOARD_SIZE)]             # <<<<<<<<<<<<<<
- * 
+ *
  *     for row in range(BOARD_SIZE):
  */
     __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_BOARD_SIZE); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 124, __pyx_L5_error)
@@ -4916,11 +4916,11 @@ static PyObject *__pyx_pf_13checkers_game_example_board(CYTHON_UNUSED PyObject *
       { /* enter inner scope */
 
         /* "checkers_game.pyx":123
- * 
+ *
  * def example_board():
  *     board = [[0 for x in range(BOARD_SIZE)]             # <<<<<<<<<<<<<<
  *              for y in range(BOARD_SIZE)]
- * 
+ *
  */
         __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 123, __pyx_L10_error)
         __Pyx_GOTREF(__pyx_t_2);
@@ -4993,7 +4993,7 @@ static PyObject *__pyx_pf_13checkers_game_example_board(CYTHON_UNUSED PyObject *
  * def example_board():
  *     board = [[0 for x in range(BOARD_SIZE)]
  *              for y in range(BOARD_SIZE)]             # <<<<<<<<<<<<<<
- * 
+ *
  *     for row in range(BOARD_SIZE):
  */
     }
@@ -5010,7 +5010,7 @@ static PyObject *__pyx_pf_13checkers_game_example_board(CYTHON_UNUSED PyObject *
 
   /* "checkers_game.pyx":126
  *              for y in range(BOARD_SIZE)]
- * 
+ *
  *     for row in range(BOARD_SIZE):             # <<<<<<<<<<<<<<
  *         for column in range(BOARD_SIZE):
  *             if row > 2 and row < 5:
@@ -5069,7 +5069,7 @@ static PyObject *__pyx_pf_13checkers_game_example_board(CYTHON_UNUSED PyObject *
     __pyx_t_1 = 0;
 
     /* "checkers_game.pyx":127
- * 
+ *
  *     for row in range(BOARD_SIZE):
  *         for column in range(BOARD_SIZE):             # <<<<<<<<<<<<<<
  *             if row > 2 and row < 5:
@@ -5354,7 +5354,7 @@ static PyObject *__pyx_pf_13checkers_game_example_board(CYTHON_UNUSED PyObject *
  *                 else:
  *                     board[row][column] = " "             # <<<<<<<<<<<<<<
  *     return board
- * 
+ *
  */
         /*else*/ {
           __pyx_t_1 = PyObject_GetItem(__pyx_v_board, __pyx_v_row); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 142, __pyx_L1_error)
@@ -5367,7 +5367,7 @@ static PyObject *__pyx_pf_13checkers_game_example_board(CYTHON_UNUSED PyObject *
       __pyx_L19:;
 
       /* "checkers_game.pyx":127
- * 
+ *
  *     for row in range(BOARD_SIZE):
  *         for column in range(BOARD_SIZE):             # <<<<<<<<<<<<<<
  *             if row > 2 and row < 5:
@@ -5378,7 +5378,7 @@ static PyObject *__pyx_pf_13checkers_game_example_board(CYTHON_UNUSED PyObject *
 
     /* "checkers_game.pyx":126
  *              for y in range(BOARD_SIZE)]
- * 
+ *
  *     for row in range(BOARD_SIZE):             # <<<<<<<<<<<<<<
  *         for column in range(BOARD_SIZE):
  *             if row > 2 and row < 5:
@@ -5390,8 +5390,8 @@ static PyObject *__pyx_pf_13checkers_game_example_board(CYTHON_UNUSED PyObject *
  *                 else:
  *                     board[row][column] = " "
  *     return board             # <<<<<<<<<<<<<<
- * 
- * 
+ *
+ *
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v_board);
@@ -5400,7 +5400,7 @@ static PyObject *__pyx_pf_13checkers_game_example_board(CYTHON_UNUSED PyObject *
 
   /* "checkers_game.pyx":122
  *         print(self.entry.get())
- * 
+ *
  * def example_board():             # <<<<<<<<<<<<<<
  *     board = [[0 for x in range(BOARD_SIZE)]
  *              for y in range(BOARD_SIZE)]
@@ -5427,7 +5427,7 @@ static PyObject *__pyx_pf_13checkers_game_example_board(CYTHON_UNUSED PyObject *
 }
 
 /* "string.from_py":13
- * 
+ *
  * @cname("__pyx_convert_string_from_py_std__in_string")
  * cdef string __pyx_convert_string_from_py_std__in_string(object o) except *:             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t length
@@ -5447,7 +5447,7 @@ static std::string __pyx_convert_string_from_py_std__in_string(PyObject *__pyx_v
  *     cdef Py_ssize_t length
  *     cdef const char* data = __Pyx_PyObject_AsStringAndSize(o, &length)             # <<<<<<<<<<<<<<
  *     return string(data, length)
- * 
+ *
  */
   __pyx_t_1 = __Pyx_PyObject_AsStringAndSize(__pyx_v_o, (&__pyx_v_length)); if (unlikely(__pyx_t_1 == ((char const *)NULL))) __PYX_ERR(0, 15, __pyx_L1_error)
   __pyx_v_data = __pyx_t_1;
@@ -5456,14 +5456,14 @@ static std::string __pyx_convert_string_from_py_std__in_string(PyObject *__pyx_v
  *     cdef Py_ssize_t length
  *     cdef const char* data = __Pyx_PyObject_AsStringAndSize(o, &length)
  *     return string(data, length)             # <<<<<<<<<<<<<<
- * 
- * 
+ *
+ *
  */
   __pyx_r = std::string(__pyx_v_data, __pyx_v_length);
   goto __pyx_L0;
 
   /* "string.from_py":13
- * 
+ *
  * @cname("__pyx_convert_string_from_py_std__in_string")
  * cdef string __pyx_convert_string_from_py_std__in_string(object o) except *:             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t length
@@ -6009,7 +6009,7 @@ static int __Pyx_InitCachedConstants(void) {
  *             self.submit_move()
  *         else:
  *             print("select your next move")             # <<<<<<<<<<<<<<
- * 
+ *
  *     def submit_move(self):
  */
   __pyx_tuple__5 = PyTuple_Pack(1, __pyx_kp_u_select_your_next_move); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(1, 103, __pyx_L1_error)
@@ -6017,7 +6017,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__5);
 
   /* "checkers_game.pyx":106
- * 
+ *
  *     def submit_move(self):
  *         print("making move")             # <<<<<<<<<<<<<<
  *         b_space, e_space = self.move_buttons[0], self.move_buttons[1]
@@ -6028,10 +6028,10 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__6);
 
   /* "checkers_game.pyx":111
- * 
+ *
  *         self.move_buttons = []
  *         print("buttons should be different")             # <<<<<<<<<<<<<<
- * 
+ *
  *     def receive_move(self, b_row, b_col, e_row, e_col):
  */
   __pyx_tuple__7 = PyTuple_Pack(1, __pyx_kp_u_buttons_should_be_different); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(1, 111, __pyx_L1_error)
@@ -6039,7 +6039,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__7);
 
   /* "checkers_game.pyx":40
- * 
+ *
  * class PyBoard():
  *     def __init__(self):             # <<<<<<<<<<<<<<
  *         self.game = PyCheckersGame()
@@ -6052,10 +6052,10 @@ static int __Pyx_InitCachedConstants(void) {
 
   /* "checkers_game.pyx":61
  *         self.board.pack()
- * 
+ *
  *     def get_board(self, board):  # board should be a 2D array             # <<<<<<<<<<<<<<
  *         self.spaces = board
- * 
+ *
  */
   __pyx_tuple__12 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_board); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(1, 61, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__12);
@@ -6064,7 +6064,7 @@ static int __Pyx_InitCachedConstants(void) {
 
   /* "checkers_game.pyx":64
  *         self.spaces = board
- * 
+ *
  *     def make_board(self):             # <<<<<<<<<<<<<<
  *         for row in range(BOARD_SIZE):
  *             for column in range(BOARD_SIZE):
@@ -6075,11 +6075,11 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_codeobj__15 = (PyObject*)__Pyx_PyCode_New(1, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__14, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_checkers_game_pyx, __pyx_n_s_make_board, 64, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__15)) __PYX_ERR(1, 64, __pyx_L1_error)
 
   /* "checkers_game.pyx":72
- * 
+ *
  * #********** GUI SETUP **********#
  *     def run(self):             # <<<<<<<<<<<<<<
  *         self.window.mainloop()
- * 
+ *
  */
   __pyx_tuple__16 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__16)) __PYX_ERR(1, 72, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__16);
@@ -6088,7 +6088,7 @@ static int __Pyx_InitCachedConstants(void) {
 
   /* "checkers_game.pyx":75
  *         self.window.mainloop()
- * 
+ *
  *     def make_board_space(self, row, column):             # <<<<<<<<<<<<<<
  *         callback = self.make_move_callback(row, column)
  *         space = tk.Button(
@@ -6100,10 +6100,10 @@ static int __Pyx_InitCachedConstants(void) {
 
   /* "checkers_game.pyx":85
  *         self.draw_spaces[row][column] = space
- * 
+ *
  *     def make_space_callback(self, row, col):             # <<<<<<<<<<<<<<
  *         return lambda: self.space_callback(row, col)
- * 
+ *
  */
   __pyx_tuple__20 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_row, __pyx_n_s_col); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(1, 85, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__20);
@@ -6112,10 +6112,10 @@ static int __Pyx_InitCachedConstants(void) {
 
   /* "checkers_game.pyx":88
  *         return lambda: self.space_callback(row, col)
- * 
+ *
  *     def space_callback(self, row, col):             # <<<<<<<<<<<<<<
  *         print('({}, {})'.format(row, col))
- * 
+ *
  */
   __pyx_tuple__22 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_row, __pyx_n_s_col); if (unlikely(!__pyx_tuple__22)) __PYX_ERR(1, 88, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__22);
@@ -6124,10 +6124,10 @@ static int __Pyx_InitCachedConstants(void) {
 
   /* "checkers_game.pyx":91
  *         print('({}, {})'.format(row, col))
- * 
+ *
  *     def make_move_callback(self, row, col):             # <<<<<<<<<<<<<<
  *         return lambda: self.move_callback(row, col)
- * 
+ *
  */
   __pyx_tuple__24 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_row, __pyx_n_s_col); if (unlikely(!__pyx_tuple__24)) __PYX_ERR(1, 91, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__24);
@@ -6135,11 +6135,11 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_codeobj__25 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__24, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_checkers_game_pyx, __pyx_n_s_make_move_callback, 91, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__25)) __PYX_ERR(1, 91, __pyx_L1_error)
 
   /* "checkers_game.pyx":95
- * 
+ *
  * #********** GUI MOVE FUNCTIONS **********#
  *     def move_callback(self, row, col):             # <<<<<<<<<<<<<<
  *         print('({}, {})'.format(row, col))
- * 
+ *
  */
   __pyx_tuple__26 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_row, __pyx_n_s_col); if (unlikely(!__pyx_tuple__26)) __PYX_ERR(1, 95, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__26);
@@ -6148,7 +6148,7 @@ static int __Pyx_InitCachedConstants(void) {
 
   /* "checkers_game.pyx":105
  *             print("select your next move")
- * 
+ *
  *     def submit_move(self):             # <<<<<<<<<<<<<<
  *         print("making move")
  *         b_space, e_space = self.move_buttons[0], self.move_buttons[1]
@@ -6160,7 +6160,7 @@ static int __Pyx_InitCachedConstants(void) {
 
   /* "checkers_game.pyx":113
  *         print("buttons should be different")
- * 
+ *
  *     def receive_move(self, b_row, b_col, e_row, e_col):             # <<<<<<<<<<<<<<
  *         self.move_buttons = []
  *         self.move_buttons.append(self.draw_spaces[b_row][b_col])
@@ -6172,10 +6172,10 @@ static int __Pyx_InitCachedConstants(void) {
 
   /* "checkers_game.pyx":119
  *         self.submit_move()
- * 
+ *
  *     def get_entry_move(self, e):             # <<<<<<<<<<<<<<
  *         print(self.entry.get())
- * 
+ *
  */
   __pyx_tuple__32 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_e); if (unlikely(!__pyx_tuple__32)) __PYX_ERR(1, 119, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__32);
@@ -6184,7 +6184,7 @@ static int __Pyx_InitCachedConstants(void) {
 
   /* "checkers_game.pyx":122
  *         print(self.entry.get())
- * 
+ *
  * def example_board():             # <<<<<<<<<<<<<<
  *     board = [[0 for x in range(BOARD_SIZE)]
  *              for y in range(BOARD_SIZE)]
@@ -6375,7 +6375,7 @@ static int __pyx_pymod_exec_checkers_game(PyObject *__pyx_pyinit_module)
 
   /* "checkers_game.pyx":5
  * # board gui
- * 
+ *
  * import tkinter as tk             # <<<<<<<<<<<<<<
  * import tkinter.ttk as ttk
  * from time import sleep
@@ -6386,7 +6386,7 @@ static int __pyx_pymod_exec_checkers_game(PyObject *__pyx_pyinit_module)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "checkers_game.pyx":6
- * 
+ *
  * import tkinter as tk
  * import tkinter.ttk as ttk             # <<<<<<<<<<<<<<
  * from time import sleep
@@ -6426,25 +6426,25 @@ static int __pyx_pymod_exec_checkers_game(PyObject *__pyx_pyinit_module)
 
   /* "checkers_game.pyx":11
  * # from gui import Board_Gui, example_board
- * 
+ *
  * BOARD_SIZE = 8             # <<<<<<<<<<<<<<
  * WINDOW_SIZE = 400
- * 
+ *
  */
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_BOARD_SIZE, __pyx_int_8) < 0) __PYX_ERR(1, 11, __pyx_L1_error)
 
   /* "checkers_game.pyx":12
- * 
+ *
  * BOARD_SIZE = 8
  * WINDOW_SIZE = 400             # <<<<<<<<<<<<<<
- * 
- * 
+ *
+ *
  */
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_WINDOW_SIZE, __pyx_int_400) < 0) __PYX_ERR(1, 12, __pyx_L1_error)
 
   /* "checkers_game.pyx":39
  *     # self.checkers_game.printValidMoves()
- * 
+ *
  * class PyBoard():             # <<<<<<<<<<<<<<
  *     def __init__(self):
  *         self.game = PyCheckersGame()
@@ -6453,7 +6453,7 @@ static int __pyx_pymod_exec_checkers_game(PyObject *__pyx_pyinit_module)
   __Pyx_GOTREF(__pyx_t_1);
 
   /* "checkers_game.pyx":40
- * 
+ *
  * class PyBoard():
  *     def __init__(self):             # <<<<<<<<<<<<<<
  *         self.game = PyCheckersGame()
@@ -6466,10 +6466,10 @@ static int __pyx_pymod_exec_checkers_game(PyObject *__pyx_pyinit_module)
 
   /* "checkers_game.pyx":61
  *         self.board.pack()
- * 
+ *
  *     def get_board(self, board):  # board should be a 2D array             # <<<<<<<<<<<<<<
  *         self.spaces = board
- * 
+ *
  */
   __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_13checkers_game_7PyBoard_3get_board, 0, __pyx_n_s_PyBoard_get_board, NULL, __pyx_n_s_checkers_game, __pyx_d, ((PyObject *)__pyx_codeobj__13)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 61, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -6478,7 +6478,7 @@ static int __pyx_pymod_exec_checkers_game(PyObject *__pyx_pyinit_module)
 
   /* "checkers_game.pyx":64
  *         self.spaces = board
- * 
+ *
  *     def make_board(self):             # <<<<<<<<<<<<<<
  *         for row in range(BOARD_SIZE):
  *             for column in range(BOARD_SIZE):
@@ -6489,11 +6489,11 @@ static int __pyx_pymod_exec_checkers_game(PyObject *__pyx_pyinit_module)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "checkers_game.pyx":72
- * 
+ *
  * #********** GUI SETUP **********#
  *     def run(self):             # <<<<<<<<<<<<<<
  *         self.window.mainloop()
- * 
+ *
  */
   __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_13checkers_game_7PyBoard_7run, 0, __pyx_n_s_PyBoard_run, NULL, __pyx_n_s_checkers_game, __pyx_d, ((PyObject *)__pyx_codeobj__17)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 72, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -6502,7 +6502,7 @@ static int __pyx_pymod_exec_checkers_game(PyObject *__pyx_pyinit_module)
 
   /* "checkers_game.pyx":75
  *         self.window.mainloop()
- * 
+ *
  *     def make_board_space(self, row, column):             # <<<<<<<<<<<<<<
  *         callback = self.make_move_callback(row, column)
  *         space = tk.Button(
@@ -6514,10 +6514,10 @@ static int __pyx_pymod_exec_checkers_game(PyObject *__pyx_pyinit_module)
 
   /* "checkers_game.pyx":85
  *         self.draw_spaces[row][column] = space
- * 
+ *
  *     def make_space_callback(self, row, col):             # <<<<<<<<<<<<<<
  *         return lambda: self.space_callback(row, col)
- * 
+ *
  */
   __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_13checkers_game_7PyBoard_11make_space_callback, 0, __pyx_n_s_PyBoard_make_space_callback, NULL, __pyx_n_s_checkers_game, __pyx_d, ((PyObject *)__pyx_codeobj__21)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 85, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -6526,10 +6526,10 @@ static int __pyx_pymod_exec_checkers_game(PyObject *__pyx_pyinit_module)
 
   /* "checkers_game.pyx":88
  *         return lambda: self.space_callback(row, col)
- * 
+ *
  *     def space_callback(self, row, col):             # <<<<<<<<<<<<<<
  *         print('({}, {})'.format(row, col))
- * 
+ *
  */
   __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_13checkers_game_7PyBoard_13space_callback, 0, __pyx_n_s_PyBoard_space_callback, NULL, __pyx_n_s_checkers_game, __pyx_d, ((PyObject *)__pyx_codeobj__23)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 88, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -6538,10 +6538,10 @@ static int __pyx_pymod_exec_checkers_game(PyObject *__pyx_pyinit_module)
 
   /* "checkers_game.pyx":91
  *         print('({}, {})'.format(row, col))
- * 
+ *
  *     def make_move_callback(self, row, col):             # <<<<<<<<<<<<<<
  *         return lambda: self.move_callback(row, col)
- * 
+ *
  */
   __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_13checkers_game_7PyBoard_15make_move_callback, 0, __pyx_n_s_PyBoard_make_move_callback, NULL, __pyx_n_s_checkers_game, __pyx_d, ((PyObject *)__pyx_codeobj__25)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 91, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -6549,11 +6549,11 @@ static int __pyx_pymod_exec_checkers_game(PyObject *__pyx_pyinit_module)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "checkers_game.pyx":95
- * 
+ *
  * #********** GUI MOVE FUNCTIONS **********#
  *     def move_callback(self, row, col):             # <<<<<<<<<<<<<<
  *         print('({}, {})'.format(row, col))
- * 
+ *
  */
   __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_13checkers_game_7PyBoard_17move_callback, 0, __pyx_n_s_PyBoard_move_callback, NULL, __pyx_n_s_checkers_game, __pyx_d, ((PyObject *)__pyx_codeobj__27)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 95, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -6562,7 +6562,7 @@ static int __pyx_pymod_exec_checkers_game(PyObject *__pyx_pyinit_module)
 
   /* "checkers_game.pyx":105
  *             print("select your next move")
- * 
+ *
  *     def submit_move(self):             # <<<<<<<<<<<<<<
  *         print("making move")
  *         b_space, e_space = self.move_buttons[0], self.move_buttons[1]
@@ -6574,7 +6574,7 @@ static int __pyx_pymod_exec_checkers_game(PyObject *__pyx_pyinit_module)
 
   /* "checkers_game.pyx":113
  *         print("buttons should be different")
- * 
+ *
  *     def receive_move(self, b_row, b_col, e_row, e_col):             # <<<<<<<<<<<<<<
  *         self.move_buttons = []
  *         self.move_buttons.append(self.draw_spaces[b_row][b_col])
@@ -6586,10 +6586,10 @@ static int __pyx_pymod_exec_checkers_game(PyObject *__pyx_pyinit_module)
 
   /* "checkers_game.pyx":119
  *         self.submit_move()
- * 
+ *
  *     def get_entry_move(self, e):             # <<<<<<<<<<<<<<
  *         print(self.entry.get())
- * 
+ *
  */
   __pyx_t_2 = __Pyx_CyFunction_NewEx(&__pyx_mdef_13checkers_game_7PyBoard_23get_entry_move, 0, __pyx_n_s_PyBoard_get_entry_move, NULL, __pyx_n_s_checkers_game, __pyx_d, ((PyObject *)__pyx_codeobj__33)); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 119, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -6598,7 +6598,7 @@ static int __pyx_pymod_exec_checkers_game(PyObject *__pyx_pyinit_module)
 
   /* "checkers_game.pyx":39
  *     # self.checkers_game.printValidMoves()
- * 
+ *
  * class PyBoard():             # <<<<<<<<<<<<<<
  *     def __init__(self):
  *         self.game = PyCheckersGame()
@@ -6611,7 +6611,7 @@ static int __pyx_pymod_exec_checkers_game(PyObject *__pyx_pyinit_module)
 
   /* "checkers_game.pyx":122
  *         print(self.entry.get())
- * 
+ *
  * def example_board():             # <<<<<<<<<<<<<<
  *     board = [[0 for x in range(BOARD_SIZE)]
  *              for y in range(BOARD_SIZE)]
@@ -6622,10 +6622,10 @@ static int __pyx_pymod_exec_checkers_game(PyObject *__pyx_pyinit_module)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "checkers_game.pyx":146
- * 
- * 
+ *
+ *
  * if __name__ == "__main__":             # <<<<<<<<<<<<<<
- * 
+ *
  *     board = example_board()
  */
   __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_name); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 146, __pyx_L1_error)
@@ -6636,7 +6636,7 @@ static int __pyx_pymod_exec_checkers_game(PyObject *__pyx_pyinit_module)
 
     /* "checkers_game.pyx":148
  * if __name__ == "__main__":
- * 
+ *
  *     board = example_board()             # <<<<<<<<<<<<<<
  *     checkers = PyBoard()
  *     checkers.get_board(board)
@@ -6665,7 +6665,7 @@ static int __pyx_pymod_exec_checkers_game(PyObject *__pyx_pyinit_module)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
     /* "checkers_game.pyx":149
- * 
+ *
  *     board = example_board()
  *     checkers = PyBoard()             # <<<<<<<<<<<<<<
  *     checkers.get_board(board)
@@ -6818,10 +6818,10 @@ static int __pyx_pymod_exec_checkers_game(PyObject *__pyx_pyinit_module)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
     /* "checkers_game.pyx":146
- * 
- * 
+ *
+ *
  * if __name__ == "__main__":             # <<<<<<<<<<<<<<
- * 
+ *
  *     board = example_board()
  */
   }
@@ -6837,7 +6837,7 @@ static int __pyx_pymod_exec_checkers_game(PyObject *__pyx_pyinit_module)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "string.from_py":13
- * 
+ *
  * @cname("__pyx_convert_string_from_py_std__in_string")
  * cdef string __pyx_convert_string_from_py_std__in_string(object o) except *:             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t length
@@ -8505,8 +8505,8 @@ static PyObject* __Pyx_PyInt_RemainderObjC(PyObject *op1, PyObject *op2, CYTHON_
                 llx += ((llx != 0) & ((llx ^ llb) < 0)) * llb;
             return PyLong_FromLongLong(llx);
 #endif
-        
-        
+
+
     }
     #endif
     return (inplace ? PyNumber_InPlaceRemainder : PyNumber_Remainder)(op1, op2);

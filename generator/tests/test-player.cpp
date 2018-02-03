@@ -2,13 +2,14 @@
 using ai::getPlayer;
 using ai::RedPlayer;
 using ai::BlackPlayer;
+using ai::PlayerType;
 
 #include "../headers/json-to-stl.h"
 using ai::loadMoveTableFrom;
 using ai::JsonToStlConverter;
 
 #include "../headers/consts.h"
-using ai::TOTAL_NUM_PIECES;
+using ai::TOTAL_NUM_SPACES;
 using ai::INIT_NUM_PIECES;
 
 #include <memory>
@@ -24,11 +25,11 @@ TEST_CASE("testing player object"){
     auto kingGenerator = getKingGenerator(converter);
 
     SECTION("player constructor") {
-        auto red = RedPlayer('r', redGenerator, kingGenerator);
+        auto red = RedPlayer('r', redGenerator, kingGenerator, PlayerType::Computer);
     }
 
-    auto red = make_shared<RedPlayer>('r', redGenerator, kingGenerator);
-    auto black = make_shared<BlackPlayer>('b', blackGenerator, kingGenerator);
+    auto red = make_shared<RedPlayer>('r', redGenerator, kingGenerator, PlayerType::Computer);
+    auto black = make_shared<BlackPlayer>('b', blackGenerator, kingGenerator, PlayerType::Computer);
 
     SECTION("testing getColor") {
         REQUIRE(red->getColor() == 'r');
@@ -42,13 +43,13 @@ TEST_CASE("testing player object"){
 
     SECTION("testing if pieces are in correct spaces for red") {
         for (auto piece: red->getPieces()) {
-            REQUIRE(piece.space < TOTAL_NUM_PIECES);
+            REQUIRE(piece.space < TOTAL_NUM_SPACES);
         }
     }
 
     SECTION("testing if pieces are in correct spaces for red") {
         for (auto piece: black->getPieces()) {
-            REQUIRE(piece.space >= TOTAL_NUM_PIECES - INIT_NUM_PIECES);
+            REQUIRE(piece.space >= TOTAL_NUM_SPACES - INIT_NUM_PIECES);
         }
     }
 }

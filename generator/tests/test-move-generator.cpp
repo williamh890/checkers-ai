@@ -8,7 +8,7 @@ using ai::JsonToStlConverter;
 #include "../headers/models.h"
 using ai::Jump;
 #include "../headers/consts.h"
-using ai::TOTAL_NUM_PIECES;
+using ai::TOTAL_NUM_SPACES;
 
 #include "catch.hpp"
 
@@ -30,7 +30,7 @@ TEST_CASE("testing move generator class") {
     auto redGenerator = MoveGenerator(rMoves, rJumps);
 
     SECTION("Testing if moves are correctly loaded") {
-        for (auto space = 0; space < TOTAL_NUM_PIECES; ++space) {
+        for (auto space = 0; space < TOTAL_NUM_SPACES; ++space) {
             auto moves = blackGenerator.getMoves(space);
 
             REQUIRE((moves.size() < 3 and moves.size() >= 0));
@@ -38,7 +38,7 @@ TEST_CASE("testing move generator class") {
     }
 
     SECTION("Test if jumps are correctly loaded") {
-        for (auto space = 0; space < TOTAL_NUM_PIECES; ++space) {
+        for (auto space = 0; space < TOTAL_NUM_SPACES; ++space) {
             auto jumps = blackGenerator.getJumps(space);
 
             REQUIRE((jumps.size() < 3 and jumps.size() >= 0));

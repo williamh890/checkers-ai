@@ -27,7 +27,7 @@ using ai::Position;
 using ai::Piece;
 
 #include "headers/consts.h"
-using ai::TOTAL_NUM_PIECES;
+using ai::TOTAL_NUM_SPACES;
 using ai::INIT_NUM_PIECES;
 
 #include "headers/table-types.h"
