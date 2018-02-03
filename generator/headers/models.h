@@ -16,9 +16,9 @@ namespace ai {
             s << "(" << to << ", " << through << ")";
             return s.str();
         }
-        bool operator==(const Jump & other) const
-        {
-            return (this->to == other.to && this->through == other.through);
+
+        bool operator==(const Jump & other) const {
+            return (this->to == other.to and this->through == other.through);
         }
     };
 
