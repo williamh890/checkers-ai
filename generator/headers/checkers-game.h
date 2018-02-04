@@ -44,15 +44,19 @@ namespace ai {
             const char getActivePlayerColor();
             void swapPlayers(); // may not need
 
-            template <class U>
+            template <typename U>
             std::vector<std::pair<std::vector<char>, U>> Turn(const std::pair<int, int> & move);
 
-            template <class U>
+            template <typename U>
             std::vector<std::pair<std::vector<char>, U>> Turn(const std::pair<int, Jump> & jump);
             // end gui/cython wrapper functions
             void play();
 
         private:
+            //helper functions for exposing to cython
+            template <typename U>
+            std::vector<std::pair<std::vector<char>, U>> getAction();
+            // end
             std::pair<int, int> getMoveFromActivePlayer();
             std::pair<int, int> getRandomValidMove();
             std::pair<int, int> getMoveFromUser();

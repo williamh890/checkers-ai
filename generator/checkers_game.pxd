@@ -17,43 +17,26 @@ cdef extern from "headers/player.h" namespace "ai":
     Player()
 
 cdef extern from "headers/board.h" namespace "ai":
-  pass
-  # cdef enum Action:
-  #  pass
+  cdef cppclass Board:
+    Board() except +
 
-  #cdef cppclass Board:
-  #  pass
-  #  Board()
-  #  void addPiecesFor(const shared_ptr[Player] & player)
-  #  char at(const Position & pos) const
-#
-  #  string toString()
-
-#  Board getBoard()
+  Board getBoard()
 
 cdef extern from "headers/models.h" namespace "ai":
-  pass
-#  cdef struct Jump:
-  #  pass
-  #cdef struct Position:
-  #  pass
-  #cdef struct Piece:
-  #  pass
+  cdef struct Jump:
+    Jump(int to, int through) except +
+
+  cdef struct Position:
+    pass
+
+  cdef struct Piece:
+    pass
 
 cdef extern from "headers/utils.h" namespace "ai":
   pass
 
 cdef extern from "headers/table-types.h" namespace "ai":
   pass
-  # ctypedef vector[vector[int]] MoveTableType
-  # ctypedef vector[vector[Jump]] JumpTableType
-
-cdef extern from "headers/move-generator.h" namespace "ai":
-  pass
-  #cdef cppclass MoveGenerator:
-    #MoveGenerator(const MoveTableType & moves, const JumpTableType & jumps) except +
-    #vector[int] getMoves(int space)
-    #vector[Jump] getJumps(int space)
 
 cdef extern from "headers/json-to-stl.h" namespace "ai":
   pass
@@ -69,7 +52,8 @@ cdef extern from "headers/checkers-game.h" namespace "ai":
     vector[char] getBoard()
     const char getActivePlayerColor()
     void swapPlayers()
-    void printMovesForColor(const string & color)
-    void printJumpsForColor(const string & color)
+
+    vector[pair[vector[char], U]] Turn(const pair[int, int] & move)
+    vector[pair[vector[char], U]] Turn(const pair[int, Jump] & jump)
 
   CheckersGame getCheckersGame() except +
