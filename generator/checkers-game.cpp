@@ -297,7 +297,7 @@ vector<pair<int, Jump>> CheckersGame::getValidJumpsAt(int space) {
 // TODO! Want to combine these reactTo functions in the future
 void CheckersGame::reactTo(const Action & action, const pair<int, Jump> & jump) {
     if (action == Action::Jump) {
-        activePlayer->updatePieces(jump);
+        activePlayer->updatePieces(jump, board);
         inactivePlayer->removePieceAt(jump.second.through);
         cout << "piece was jumped" << endl;
     }
@@ -305,7 +305,7 @@ void CheckersGame::reactTo(const Action & action, const pair<int, Jump> & jump) 
 
 void CheckersGame::reactTo(const Action & action, const pair<int, int> & move) {
     if (action == Action::Move) {
-        activePlayer->updatePieces(move);
+        activePlayer->updatePieces(move, board);
         cout << "piece was moved" << endl;
     }
 }
