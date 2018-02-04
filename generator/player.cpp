@@ -23,7 +23,7 @@ using ai::Piece;
 using ai::Jump;
 
 #include "headers/consts.h"
-using ai::TOTAL_NUM_PIECES;
+using ai::TOTAL_NUM_SPACES;
 using ai::INIT_NUM_PIECES;
 using ai::NUM_PIECES_IN_ROW;
 
@@ -51,7 +51,7 @@ Player::Player(
 }
 
 void Player::initPieces() {
-    for (auto space = 0; space < TOTAL_NUM_PIECES; ++space) {
+    for (auto space = 0; space < TOTAL_NUM_SPACES; ++space) {
         if (isInitialSpace(space)) {
             Piece newPiece = Piece(color, space);
             pieces.push_back(newPiece);
@@ -93,18 +93,20 @@ void Player::Crown(Piece & piece)
     else
     {
         piece.color = 'B';
-    }          
+    }
 }
 
 void Player::updatePieces(const pair<int, int> & move, Board & board) {
     for (auto & piece : pieces) {
         if (piece.space == move.first) {
             piece.space = move.second;
+
             if(shouldBeCrowned(piece)) {
                 Crown(piece);
                 board.updatePiece(piece.space, piece.color);
             }
-            break;
+
+            return;
         }
     }
 }
@@ -113,11 +115,13 @@ void Player::updatePieces(const pair<int, Jump> & jump, Board & board) {
     for (auto & piece : pieces) {
         if (piece.space == jump.first) {
             piece.space = jump.second.to;
+
             if(shouldBeCrowned(piece)) {
                 Crown(piece);
                 board.updatePiece(piece.space, piece.color);
             }
-            break;
+
+            return;
         }
     }
 }
@@ -176,12 +180,12 @@ BlackPlayer::BlackPlayer(
         char color,
         const MoveGenerator & generator,
         const MoveGenerator & kingGenerator,
-        PlayerType type=PlayerType::Human): Player(color, generator, kingGenerator, type) {
+        PlayerType type): Player(color, generator, kingGenerator, type) {
     initPieces();
 }
 
 bool BlackPlayer::isInitialSpace(int space) const {
-    return space >= (TOTAL_NUM_PIECES - INIT_NUM_PIECES);
+    return space >= (TOTAL_NUM_SPACES - INIT_NUM_PIECES);
 }
 
 bool BlackPlayer::shouldBeCrowned(const Piece & piece) const {
@@ -191,7 +195,7 @@ bool BlackPlayer::shouldBeCrowned(const Piece & piece) const {
 RedPlayer::RedPlayer(char color,
                      const MoveGenerator & generator,
                      const MoveGenerator & kingGenerator,
-                     PlayerType type=PlayerType::Computer): Player(color, generator, kingGenerator, type) {
+                     PlayerType type): Player(color, generator, kingGenerator, type) {
     initPieces();
 }
 
@@ -200,7 +204,7 @@ bool RedPlayer::isInitialSpace(int space) const {
 }
 
 bool RedPlayer::shouldBeCrowned(const Piece & piece) const {
-    return piece.space >= TOTAL_NUM_PIECES - NUM_PIECES_IN_ROW;
+    return piece.space >= TOTAL_NUM_SPACES - NUM_PIECES_IN_ROW;
 }
 
 
@@ -209,11 +213,12 @@ shared_ptr<Player> ai::getPlayer(const string & color, JsonToStlConverter conver
 
     if (color == "red") {
         auto redGenerator = getGeneratorFor("red", converter);
-        return make_shared<RedPlayer>('r', redGenerator, kingGenerator, PlayerType::Computer);
+        return make_shared<RedPlayer>('r', redGenerator, kingGenerator, Settings::RED_PLAYER_TYPE);
     }
+
     auto blackGenerator = getGeneratorFor("black", converter);
 
-    return make_shared<BlackPlayer>('b', blackGenerator, kingGenerator, PlayerType::Computer);
+    return make_shared<BlackPlayer>('b', blackGenerator, kingGenerator, Settings::BLACK_PLAYER_TYPE);
 }
 
 
