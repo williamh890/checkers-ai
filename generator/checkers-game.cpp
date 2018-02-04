@@ -149,54 +149,8 @@ void CheckersGame::play() {
     cout << "moves in game " << moveCounter << endl;
 }
 
-template <class U>
-vector<pair<vector<char>, U>> CheckersGame::Turn(const std::pair<int, int> & move){
-  if (not isInvalid(move)){
-    auto action = board.make(move);
-    reactTo(action, move);
-    swapPlayers();
-    auto validJumps = getValidJumps();
-    if (validJumps.size()){
-      cout<<activePlayer->getColor()<< " has a jump"<<endl;
-      return make_pair(getBoard(), validJumps);
-    }
-    auto validMoves = getValidMoves();
-    if (validMoves.size()){
-    cout<<activePlayer->getColor()<<" has a move"<<endl;
-    return make_pair(getBoard(), getValidMoves());
-    }
-    else{
-      cout<<inactivePlayer->getColor()<<" wins"<<endl;
-    }
-  }
-  cout<<"invalid move"<<endl;
-  return make_pair(getBoard(), getValidMoves());
-}
-
-template <class U>
-vector<pair<vector<char>, U>> CheckersGame::Turn(const std::pair<int, Jump> & jump){
-  if (not isInvalid(jump)){
-    auto action = board.make(jump);
-    reactTo(action, jump);
-    vector<pair<int, Jump>> validJumps = getValidJumpsAt(jump.second.to);
-    if (validJumps.size()){
-      cout<<activePlayer->getColor()<<" has another jump" <<endl;
-      return make_pair(getBoard(), validJumps);
-    }
-    swapPlayers();
-    validJumps = getValidJumps();
-    if (validJumps.size()){
-      cout<<activePlayer->getColor()<<" has a jump" <<endl;
-      return make_pair(getBoard(), validJumps);
-    }
-    return make_pair(getBoard(), getValidMoves());
-}
-  cout<<activePlayer->getColor()<<" made an invalid jump "<<endl;
-  return make_pair(getBoard(), getValidJumps());
-}
-
 void CheckersGame::swapPlayers(){
-  swap(activePlayer, inactivePlayer);
+    swap(activePlayer, inactivePlayer);
 }
 
 pair<int, Jump> CheckersGame::getJumpFromActivePlayer() {
@@ -345,11 +299,11 @@ vector<pair<int, Jump>> CheckersGame::getValidJumpsAt(int space) {
 }
 // Accessor functions for gui/cython wrapper
 vector<char> CheckersGame::getBoard(){
-  return board.getBoardState();
+    return board.getBoardState();
 }
 
 const char CheckersGame::getActivePlayerColor(){
-  return activePlayer->getColor();
+    return activePlayer->getColor();
 }
 
 // TODO! Want to combine these reactTo functions in the future
