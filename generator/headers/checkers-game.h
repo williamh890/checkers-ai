@@ -11,6 +11,9 @@
 // ai::Piece
 // ai::Position
 
+#include <iostream>
+// std::cout;
+// std::endl;
 #include <memory>
 // std::shared_ptr
 #include <vector>
@@ -84,6 +87,67 @@ namespace ai {
             MoveTableType getBlackMoves();
             MoveTableType getRedMoves();
     };
+
+    template <class U>
+        std::vector<std::pair<std::vector<char>, U>>
+        CheckersGame::Turn(const std::pair<int, int> & move) {
+
+            if (isInvalid(move)){
+                std::cout << "invalid move" << std::endl;
+                return make_pair(getBoard(), getValidMoves());
+            }
+
+            auto action = board.make(move);
+            reactTo(action, move);
+            swapPlayers();
+
+            auto validJumps = getValidJumps();
+
+            if (validJumps.size()) {
+                std::cout << activePlayer->getColor() << " has a jump" << std::endl;
+                return make_pair(getBoard(), validJumps);
+            }
+
+            auto validMoves = getValidMoves();
+            if (validMoves.size()) {
+                std::cout << activePlayer->getColor() << " has a move" << std::endl;
+                return make_pair(getBoard(), getValidMoves());
+            }
+
+            std::cout << inactivePlayer->getColor() << " wins" << std::endl;
+        }
+
+    template <class U>
+        std::vector<std::pair<std::vector<char>, U>>
+        CheckersGame::Turn(const std::pair<int, Jump> & jump) {
+
+            if (isInvalid(jump)){
+                std::cout << activePlayer->getColor() << " made an invalid jump" << std::endl;
+
+                return make_pair(getBoard(), getValidJumps());
+            }
+
+            auto action = board.make(jump);
+            reactTo(action, jump);
+
+            auto validJumps = getValidJumpsAt(jump.second.to);
+
+            if (validJumps.size()){
+                std::cout << activePlayer->getColor() << " has another jump" << std::endl;
+                return make_pair(getBoard(), validJumps);
+            }
+
+            swapPlayers();
+            validJumps = getValidJumps();
+
+            if (validJumps.size()){
+                std::cout << activePlayer->getColor() << " has a jump" << std::endl;
+                return make_pair(getBoard(), validJumps);
+            }
+
+            return make_pair(getBoard(), getValidMoves());
+        }
+
 
     CheckersGame getCheckersGame();
 }
