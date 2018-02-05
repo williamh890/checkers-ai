@@ -2,6 +2,7 @@ from libcpp.vector cimport vector
 from libcpp.string cimport string
 from libcpp.memory cimport shared_ptr
 from libcpp.pair cimport pair
+from libcpp cimport bool
 
 from cython.operator cimport dereference as deref
 
@@ -53,7 +54,7 @@ cdef extern from "headers/checkers-game.h" namespace "ai":
     const char getActivePlayerColor()
     void swapPlayers()
 
-    vector[pair[vector[char], U]] Turn(const pair[int, int] & move)
-    vector[pair[vector[char], U]] Turn(const pair[int, Jump] & jump)
+    pair[vector[char], U] Turn[U](const pair[int, int] & move)
+    pair[vector[char], U] Turn[U](const pair[int, Jump] & jump)
 
   CheckersGame getCheckersGame() except +

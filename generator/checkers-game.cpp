@@ -149,53 +149,6 @@ void CheckersGame::play() {
     cout << "moves in game " << moveCounter << endl;
 }
 
-template <typename U>
-vector<pair<vector<char>, U>> CheckersGame::Turn(const std::pair<int, int> & move){
-  if (isInvalid(move)){
-    cout<<"invalid move"<<endl;
-    return make_pair(getBoard(), getValidMoves());
-  }
-
-  auto action = board.make(move);
-  reactTo(action, move);
-  swapPlayers();
-  return getAction()
-}
-
-template <typename U>
-vector<pair<vector<char>, U>> CheckersGame::Turn(const std::pair<int, Jump> & jump){
-  if (isInvalid(jump)){
-    cout<<activePlayer->getColor()<<" made an invalid jump "<<endl;
-    return make_pair(getBoard(), getValidJumps());
-  }
-  auto action = board.make(jump);
-  reactTo(action, jump);
-
-  auto validJumps = getValidJumpsAt(jump.second.to);
-  if (validJumps.size()){
-    cout<<activePlayer->getColor()<<" has another jump" <<endl;
-    return make_pair(getBoard(), validJumps);
-  }
-
-  swapPlayers();
-  return getAction();
-}
-
-template <typename U>
-vector<pair<vector<char>, U>> CheckersGame::getAction(){
-  vector<pair<int, Jump>> validJumps = getValidJumps();
-  if (validJumps.size()){
-    cout<<activePlayer->getColor()<<" has a jump" <<endl;
-    return make_pair(getBoard(), validJumps);
-  }
-  vector<pair<int, int>> validMoves = getValidMoves();
-  if (validMoves.size()){
-    return make_pair(getBoard(), validMoves);
-  }
-    cout << inactivePlayer->getColor() << " wins" << endl;
-    return make_pair(getBoard(), validMoves);
-}
-
 void CheckersGame::swapPlayers(){
     swap(activePlayer, inactivePlayer);
 }
