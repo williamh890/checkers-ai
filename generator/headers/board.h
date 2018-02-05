@@ -11,7 +11,7 @@
 #include <vector>
 // std::vector
 #include <memory>
-// std::shared_prt
+// std::shared_ptr
 #include <utility>
 // std::pair
 

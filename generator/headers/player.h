@@ -38,8 +38,8 @@ namespace ai {
             const char getColor() const;
             const PlayerType getPlayerType() const;
 
-            void updatePieces(const std::pair<int, int> & move, Board & board);
-            void updatePieces(const std::pair<int, Jump> & jump, Board & board);
+            void updatePieces(const std::pair<int, int> & move, ai::Board & board);
+            void updatePieces(const std::pair<int, Jump> & jump, ai::Board & board);
             void removePieceAt(int space);
 
             std::vector<Jump> getJumpsFor(const Piece & piece) const;
