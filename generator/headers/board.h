@@ -19,7 +19,7 @@ namespace ai {
     enum class Action {
         Move, Jump
     };
-
+    class Player;//forward declaration
     class Board {
         private:
             std::vector<char> boardState;

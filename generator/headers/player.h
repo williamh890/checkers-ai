@@ -6,7 +6,7 @@
 // ai::Jump
 
 #include "board.h"
-using ai::Board;
+//using ai::Board;
 
 #include "move-generator.h"
 // ai::MoveGenerator
@@ -19,6 +19,7 @@ namespace ai {
         Human, Computer
     };
 
+    class Board;//forward declaration
     class Player {
         private:
             char color;
