@@ -359,3 +359,21 @@ MoveTableType CheckersGame::getRedMoves()
     MoveTableType redmoves;
     return redmoves;
 }
+
+// helpers for Turn
+pair<vector<char>, vector<pair<int, int>>> CheckersGame::findMoves(){
+  auto validMoves = getValidMoves();
+  if (validMoves.size()){
+    return make_pair(getBoard(), validMoves);
+  }
+    cout << inactivePlayer->getColor() << " wins" << endl;
+    return make_pair(getBoard(), validMoves);
+}
+
+pair<vector<char>, vector<pair<int, Jump>>> CheckersGame::findJumps(){
+    auto validJumps = getValidJumps();
+    if (validJumps.size()){
+      cout<<activePlayer->getColor()<<" has a jump" <<endl;
+    }
+    return make_pair(getBoard(), validJumps);
+  }

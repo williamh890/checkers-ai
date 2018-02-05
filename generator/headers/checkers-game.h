@@ -51,12 +51,15 @@ namespace ai {
             template<typename U>
             std::pair<std::vector<char>, U> Turn(const std::pair<int, Jump> & jump);
             // end gui/cython wrapper functions
+
+            std::pair<std::vector<char>, std::vector<std::pair<int, int>>>
+            findMoves();
+            std::pair<std::vector<char>, std::vector<std::pair<int, Jump>>>
+            findJumps();
             void play();
 
         private:
             //helper functions for exposing to cython
-            std::pair<std::vector<char>, std::vector<std::pair<int, int>>> getMoves();
-            std::pair<std::vector<char>, std::vector<std::pair<int, Jump>>> getJumps();
             // end
             std::pair<int, int> getMoveFromActivePlayer();
             std::pair<int, int> getRandomValidMove();
@@ -92,23 +95,6 @@ using std::make_pair;
 using std::cout;
 using std::endl;
 
-  pair<vector<char>, vector<pair<int, int>>> CheckersGame::getMoves(){
-    auto validMoves = getValidMoves();
-    if (validMoves.size()){
-      return make_pair(getBoard(), validMoves);
-    }
-      cout << inactivePlayer->getColor() << " wins" << endl;
-      return make_pair(getBoard(), validMoves);
-  }
-
-  pair<vector<char>, vector<pair<int, Jump>>> CheckersGame::getJumps(){
-      auto validJumps = getValidJumps();
-      if (validJumps.size()){
-        cout<<activePlayer->getColor()<<" has a jump" <<endl;
-      }
-      return make_pair(getBoard(), validJumps);
-    }
-
     template <typename U>
       pair<vector<char>, U> CheckersGame::Turn(const pair<int, int> & move){
         if (isInvalid(move)){
@@ -119,10 +105,10 @@ using std::endl;
         auto action = board.make(move);
         reactTo(action, move);
         swapPlayers();
-        auto jump_pair = getJumps();
+        auto jump_pair = findJumps();
           if (jump_pair.second.size())
             return jump_pair;
-          return getMoves();
+          return findMoves();
       }
 
     template <typename U>
@@ -141,10 +127,10 @@ using std::endl;
         }
 
         swapPlayers();
-        auto jump_pair = getJumps();
+        auto jump_pair = findJumps();
           if (jump_pair.second.size())
             return jump_pair;
-          return getMoves();
+          return findMoves();
       }
 
 

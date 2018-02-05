@@ -17,8 +17,8 @@ namespace ai {
             return s.str();
         }
         bool operator == (const Jump &rhs) const{
-          return (to == rhs.to && through == rhs.through);
-        }
+         return (to == rhs.to && through == rhs.through);
+       }
     };
 
     struct Position {
