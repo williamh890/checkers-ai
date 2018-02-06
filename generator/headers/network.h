@@ -5,29 +5,29 @@ using std::vector;
 
 class AI_Network {
 public:
-	using weightsInLayer = vector<double>;
+	using weightsInLayer = std::vector<double>;
 
 	AI_Network(int);
-	AI_Network(const vector<int>&);
+	AI_Network(const std::vector<int>&);
 	~AI_Network();
 
 	void setupNetwork();
-	void setupNetwork(const vector<int> &);
+	void setupNetwork(const std::vector<int> &);
 
 	void loadWeightsFromFile(); // *** TODO ***
 	void saveWeightsToFile();	// *** TODO ***
 	
-	double evaluateBoard(vector<char>) const; // *** TODO ***
+	double evaluateBoard(std::vector<char>) const; // *** TODO ***
 	void adjustPerformance(int result);
 	int getPerformance() const;
 	void resetPerformance();
 
-	vector<weightsInLayer> & evolve() const; // *** TODO ***
-	void replaceWithEvolution(vector<weightsInLayer> &);
+	std::vector<weightsInLayer> & evolve() const; // *** TODO ***
+	void replaceWithEvolution(std::vector<weightsInLayer> &);
 
 private:
 	int _ID;
-	vector<weightsInLayer> _layers;
+	std::vector<weightsInLayer> _layers;
 	int _performance;
 	bool _gameCompleted = false;
 }; // end class AI_Network
