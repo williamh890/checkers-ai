@@ -46,6 +46,7 @@ namespace ai {
             // following are public for use in the gui/cython wrapper
             bool isInvalid(const std::pair<int, int> & move);
             bool isInvalid(const std::pair<int, Jump> & jump);
+
             std::vector<char> getBoard(); // may not need
             const char getActivePlayerColor();
             void makeJump(const std::pair<int, Jump> & jump);
@@ -84,8 +85,6 @@ namespace ai {
             MoveTableType getBlackMoves();
             MoveTableType getRedMoves();
     };
-
-
 
     CheckersGame getCheckersGame();
 }

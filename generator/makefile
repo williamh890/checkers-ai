@@ -83,7 +83,7 @@ install:
 	curl https://github.com/catchorg/Catch2/releases/download/v2.1.1/catch.hpp > tests/catch.hpp -L
 
 clean:
-	rm $(OBJ_FILES) *.out
+	rm $(OBJ_FILES) $(MAIN).o *.out
 
 clean-tests:
 	rm $(TESTING_OBJ_FILES)
