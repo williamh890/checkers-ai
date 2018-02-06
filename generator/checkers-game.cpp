@@ -362,3 +362,17 @@ MoveTableType CheckersGame::getRedMoves()
     MoveTableType redmoves;
     return redmoves;
 }
+
+void CheckersGame::makeJump(const pair<int, Jump> & jump){
+  auto action = board.make(jump);
+  reactTo(action, jump);
+  if (not areJumps()){
+    swapPlayers();
+  }
+}
+
+void CheckersGame::makeMove(const pair<int, int> & move){
+  auto action = board.make(move);
+  reactTo(action, move);
+  swapPlayers();
+  }

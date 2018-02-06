@@ -48,6 +48,8 @@ namespace ai {
             bool isInvalid(const std::pair<int, Jump> & jump);
             std::vector<char> getBoard(); // may not need
             const char getActivePlayerColor();
+            void makeJump(const std::pair<int, Jump> & jump);
+            void makeMove(const std::pair<int, int> & move);
             void swapPlayers(); // may not need
             bool areJumps();
             // end gui/cython wrapper functions

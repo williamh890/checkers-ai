@@ -54,4 +54,6 @@ cdef extern from "headers/checkers-game.h" namespace "ai":
     bool isInvalid(const pair[int, Jump] & jump)
     vector[char] getBoard()
     bool areJumps()
+    void makeMove(const pair[int, int] & move)
+    void makeJump(const pair[int, Jump] & jump)
   CheckersGame getCheckersGame() except +
