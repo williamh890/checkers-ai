@@ -114,13 +114,14 @@ class PyBoard():
         if len(self.move_buttons) == 2:
           self.b_space = self.move_buttons[0]
           self.e_space = self.move_buttons[1]
-          if self.game.are_jumps():
-            print("making jump")
-            self.submit_jump()
-          else:
-              print("making move")
-              self.submit_move()
-          print("select your next move")
+          if self.is_diagonal():
+            if self.game.are_jumps():
+              print("making jump")
+              self.submit_jump()
+            else:
+                print("making move")
+                self.submit_move()
+            print("select your next move")
 
     def submit_move(self):
         move = convert_row_col_to_number(self.mb_info)
@@ -153,6 +154,17 @@ class PyBoard():
         self.move_buttons.append(self.draw_spaces[b_row][b_col])
         self.move_buttons.append(self.draw_spaces[e_row][e_col])
         self.submit_move()
+
+    def is_diagonal(self):
+      if self.mb_info[0][0] == self.mb_info[1][0]:
+        print("not in play space")
+        self.move_buttons, self.mb_info = [], []
+        return False
+      if self.mb_info[0][1] == self.mb_info[1][1]:
+        print("not in play space")
+        self.move_buttons, self.mb_info = [], []
+        return False
+      return True
 
     def get_entry_move(self, e):
         print(self.entry.get())
