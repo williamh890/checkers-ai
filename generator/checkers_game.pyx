@@ -6,38 +6,41 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from time import sleep
 cimport checkers_game
+from libcpp.pair cimport pair
+from libcpp.vector cimport vector
+from cython.operator cimport dereference as deref
 # from gui import Board_Gui, example_board
 
 BOARD_SIZE = 8
 WINDOW_SIZE = 400
 PIECES:{"RED": "R", "BLACK": "B"}
 
+ctypedef pair[int, int] move_type
+ctypedef pair[int, Jump] jump_type
 
+cdef class PyCheckersGame:
+  cdef CheckersGame checkers_game
+  def __cinit__(self):
+    self.checkers_game = getCheckersGame()
 
-#cdef class PyCheckersGame:
-  # cdef CheckersGame checkers_game
-  #def __cinit__(self):
-    # self.checkers_game = getCheckersGame()
-  #def toString(self):
-  #  self.checkers_game.toString()
-#
-#  def printMoves(self):
-#    self.checkers.printMoves()
-#
-#  def printMovesForColor(self, color):
-#    self.checkers_game.printMovesForColor(color)
-#
-#  def printJumpsForColor(self, color):
-#    self.checkers_game.printJumpsForColor(color)
-#
-#  def printValidMoves(self):
-#    pass
-    # waiting for this to be defined in source
-    # self.checkers_game.printValidMoves()
+  def is_jump_invalid(self, int start, int to, int through):
+    cdef Jump jump
+    jump.to = to
+    jump.through = through
+    cdef jump_type full_jump = jump_type(start, jump)
+    return self.checkers_game.isInvalid(full_jump)
+
+  def is_move_invalid(self, int start, int to):
+    cdef move_type move = move_type(start, to)
+    return self.checkers_game.isInvalid(move)
+
+  def are_jumps(self):
+    return self.checkers_game.areJumps()
+
 
 class PyBoard():
     def __init__(self):
-        # self.game = PyCheckersGame()
+        self.game = PyCheckersGame()
         self.window = tk.Tk()
         self.entry = ttk.Entry(self.window)
         self.entry.bind('<Command-a>', self.get_entry_move)
@@ -101,8 +104,6 @@ class PyBoard():
         self.mb_info.append((row, col))
 
         if len(self.move_buttons) == 2:
-          print(self.mb_info[0][0])
-          print(self.mb_info[1][0])
           if abs(self.mb_info[0][0] - self.mb_info[1][0]) == 2:
             if abs(self.mb_info[0][1] - self.mb_info[1][1]) == 2:
               print("making jump")

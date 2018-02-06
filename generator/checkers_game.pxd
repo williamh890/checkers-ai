@@ -3,8 +3,8 @@ from libcpp.string cimport string
 from libcpp.memory cimport shared_ptr
 from libcpp.pair cimport pair
 from libcpp cimport bool
-
 from cython.operator cimport dereference as deref
+cimport cython
 
 
 cdef extern from "headers/json.hpp":
@@ -24,8 +24,10 @@ cdef extern from "headers/board.h" namespace "ai":
   Board getBoard()
 
 cdef extern from "headers/models.h" namespace "ai":
-  cdef struct Jump:
+  struct Jump:
     Jump(int to, int through) except +
+    int to;
+    int through;
 
   cdef struct Position:
     pass
@@ -51,10 +53,5 @@ cdef extern from "headers/checkers-game.h" namespace "ai":
     bool isInvalid(const pair[int, int] & move)
     bool isInvalid(const pair[int, Jump] & jump)
     vector[char] getBoard()
-    const char getActivePlayerColor()
-    void swapPlayers()
-
-    pair[vector[char], U] Turn[U](const pair[int, int] & move)
-    pair[vector[char], U] Turn[U](const pair[int, Jump] & jump)
-
+    bool areJumps()
   CheckersGame getCheckersGame() except +

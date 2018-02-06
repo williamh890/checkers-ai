@@ -7,7 +7,7 @@ namespace ai {
     struct Jump {
         int to;
         int through;
-
+        Jump(){}
         Jump(int to, int through): to(to), through(through) {
         }
 
