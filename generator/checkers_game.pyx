@@ -117,7 +117,6 @@ class PyBoard():
           if self.game.are_jumps():
             print("making jump")
             self.submit_jump()
-            self.move_buttons, self.mb_info = [], []
           else:
               print("making move")
               self.submit_move()
@@ -126,8 +125,6 @@ class PyBoard():
     def submit_move(self):
         move = convert_row_col_to_number(self.mb_info)
         if self.game.is_move_invalid(move[0], move[1]):
-          print(move[0])
-          print(move[1])
           print("bad move")
         else:
           self.game.make_move(move[0], move[1])
@@ -138,8 +135,6 @@ class PyBoard():
     def submit_jump(self):
       mid_space = (min(self.mb_info[0][0],self.mb_info[1][0]) + 1,
                    min(self.mb_info[0][1], self.mb_info[1][1]) + 1)
-      print(mid_space[0])
-      print(mid_space[1])
       self.mb_info.append(mid_space)
       mid_space = self.draw_spaces[mid_space[0]][mid_space[1]]
 
@@ -165,11 +160,7 @@ class PyBoard():
 def convert_row_col_to_number(spaces):
   space_nums = []
   for space in spaces:
-    print(space[0])
-    print(space[1])
     number = (space[0]) * BOARD_SIZE + space[1]
-    print(number)
-    print(number//2)
     space_nums.append(number//2)
   return space_nums
 
