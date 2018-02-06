@@ -9,9 +9,21 @@ BOARD=board
 MAIN=main
 
 OBJ_FILES=$(GENERATOR).o $(CONVERTER).o $(GAME).o $(PLAYER).o $(UTILS).o $(BOARD).o
+CPP_FILES=$(GENERATOR).cpp $(CONVERTER).cpp $(GAME).cpp $(PLAYER).cpp $(UTILS).cpp $(BOARD).cpp
 OBJ_FILES_WITH_MAIN=$(OBJ_FILES) $(MAIN).o
 
 OUT_FILE=checkers.out
+
+PYVERSION=python3.6m
+PYPATH=/usr/include/$(PYVERSION)
+GUI_OUT=gui.out
+
+gui: gui.out
+
+gui.out:
+	python3 setup.py build_ext --inplace
+	cython3 --embed checkers_game.pyx -o checkers_game_obj.cpp -3 --cplus -f
+	$(CMP) -I$(PYPATH) -o $(GUI_OUT) checkers_game_obj.cpp $(CPP_FILES) -l$(PYVERSION)
 
 all: $(OUT_FILE)
 
@@ -81,6 +93,16 @@ run: all
 install:
 	curl https://raw.githubusercontent.com/nlohmann/json/develop/src/json.hpp > headers/json.hpp
 	curl https://github.com/catchorg/Catch2/releases/download/v2.1.1/catch.hpp > tests/catch.hpp -L
+
+VERSION=3.5.5
+PYTHON_SRC_DIR=Python-$(VERSION)
+PYDIR=python
+
+install-gui:
+	find $(PYTHON_SRC_DIR) -type d | xargs chmod 0755
+	$(PYTHON_SRC_DIR)/configure --prefix=$(shell pwd)
+	cd $(PYTHON_SRC_DIR)
+	make && make install
 
 clean:
 	rm $(OBJ_FILES) $(MAIN).o *.out
