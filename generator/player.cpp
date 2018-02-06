@@ -96,13 +96,14 @@ void Player::Crown(Piece & piece)
     }
 }
 
-void Player::updatePieces(const pair<int, int> & move) {
+void Player::updatePieces(const pair<int, int> & move, Board & board) {
     for (auto & piece : pieces) {
         if (piece.space == move.first) {
             piece.space = move.second;
 
             if(shouldBeCrowned(piece)) {
                 Crown(piece);
+                board.updatePiece(piece.space, piece.color);
             }
 
             return;
@@ -110,13 +111,14 @@ void Player::updatePieces(const pair<int, int> & move) {
     }
 }
 
-void Player::updatePieces(const pair<int, Jump> & jump) {
+void Player::updatePieces(const pair<int, Jump> & jump, Board & board) {
     for (auto & piece : pieces) {
         if (piece.space == jump.first) {
             piece.space = jump.second.to;
 
             if(shouldBeCrowned(piece)) {
                 Crown(piece);
+                board.updatePiece(piece.space, piece.color);
             }
 
             return;

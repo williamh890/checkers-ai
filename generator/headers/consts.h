@@ -14,7 +14,7 @@ namespace ai {
     static const int COLS = 8;
 
     namespace Settings {
-        static const std::string SEEDING_METHOD = "random_device";
+        static const std::string SEEDING_METHOD = "random_device"; // Options are random_device and time
 
         static const PlayerType RED_PLAYER_TYPE = PlayerType::Computer;
         static const PlayerType BLACK_PLAYER_TYPE = PlayerType::Computer;
