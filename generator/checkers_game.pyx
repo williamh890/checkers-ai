@@ -14,7 +14,7 @@ from cython.operator cimport dereference as deref
 BOARD_SIZE = 8
 PLAY_SIZE = 4
 WINDOW_SIZE = 400
-PIECES:{"RED": "R", "BLACK": "B"}
+PIECES = {"RED": "R", "BLACK": "B"}
 
 ctypedef pair[int, int] move_type
 ctypedef pair[int, Jump] jump_type
