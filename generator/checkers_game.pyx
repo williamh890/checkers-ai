@@ -114,19 +114,14 @@ class PyBoard():
         if len(self.move_buttons) == 2:
           self.b_space = self.move_buttons[0]
           self.e_space = self.move_buttons[1]
-          if abs(self.mb_info[0][0] - self.mb_info[1][0]) == 2:
-            if abs(self.mb_info[0][1] - self.mb_info[1][1]) == 2:
-              print("making jump")
-              self.submit_jump()
-            else:
+          if self.game.are_jumps():
+            print("making jump")
+            self.submit_jump()
+            self.move_buttons, self.mb_info = [], []
+          else:
               print("making move")
               self.submit_move()
-          else:
-            print("making move, not close to a jump")
-            self.submit_move()
-
-        else:
-            print("select your next move")
+          print("select your next move")
 
     def submit_move(self):
         move = convert_row_col_to_number(self.mb_info)
