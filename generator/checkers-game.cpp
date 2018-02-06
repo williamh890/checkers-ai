@@ -27,7 +27,7 @@ using ai::Position;
 using ai::Piece;
 
 #include "headers/consts.h"
-using ai::TOTAL_NUM_PIECES;
+using ai::TOTAL_NUM_SPACES;
 using ai::INIT_NUM_PIECES;
 
 #include "headers/table-types.h"
@@ -55,6 +55,7 @@ using std::length_error;
 using std::random_device;
 using std::mt19937;
 using std::uniform_int_distribution;
+#include <chrono>
 
 
 CheckersGame ai::getCheckersGame() {
@@ -75,7 +76,15 @@ CheckersGame::CheckersGame(
         shared_ptr<Player> red,
         shared_ptr<Player> black): board(board), red(red), black(black), activePlayer(black), inactivePlayer(red) {
     random_device device;
-    generator = mt19937(device());
+    if (Settings::SEEDING_METHOD == "random_device") {
+        generator = mt19937(device());
+    }
+    if (Settings::SEEDING_METHOD == "time") {
+        srand(time(NULL));
+        generator = std::mt19937(rand());
+    }
+
+
 
     this->board.addPiecesFor(red);
     this->board.addPiecesFor(black);
@@ -262,7 +271,7 @@ bool CheckersGame::isInvalid(const pair<int, int> & move) {
 
     return true;
 }
-bool CheckersGame::isInvalid(const pair<int, Jump> & jump) {
+bool CheckersGame::isInvalidJump(const pair<int, Jump> & jump) {
     auto validJumps = getValidJumps();
 
     for (const auto & validJump : validJumps) {
@@ -312,7 +321,7 @@ const char CheckersGame::getActivePlayerColor(){
 // TODO! Want to combine these reactTo functions in the future
 void CheckersGame::reactTo(const Action & action, const pair<int, Jump> & jump) {
     if (action == Action::Jump) {
-        activePlayer->updatePieces(jump);
+        activePlayer->updatePieces(jump, board);
         inactivePlayer->removePieceAt(jump.second.through);
         cout << "piece was jumped" << endl;
     }
@@ -320,7 +329,7 @@ void CheckersGame::reactTo(const Action & action, const pair<int, Jump> & jump) 
 
 void CheckersGame::reactTo(const Action & action, const pair<int, int> & move) {
     if (action == Action::Move) {
-        activePlayer->updatePieces(move);
+        activePlayer->updatePieces(move, board);
         cout << "piece was moved" << endl;
     }
 }

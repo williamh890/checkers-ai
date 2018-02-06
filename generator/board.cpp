@@ -153,7 +153,7 @@ char Board::operator[](const int & index) const
     return boardState[index];
 }
 
-void Board::UpdatePiece(const int & index, const char & newVal)
+void Board::updatePiece(const int & index, const char & newVal)
 {
     boardState[index] = newVal;
 }

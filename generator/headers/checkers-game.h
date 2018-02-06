@@ -66,6 +66,8 @@ namespace ai {
 
             std::pair<int, int> parseUserInput();
 
+            bool isInvalidJump(const std::pair<int, Jump> & jump);
+
             std::pair<int, Jump> getJumpFrom(const std::pair<int, int> & inputJump);
 
             std::vector<std::pair<int, Jump>> getValidJumpsAt(int space);
