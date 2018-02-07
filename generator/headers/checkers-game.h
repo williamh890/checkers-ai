@@ -64,6 +64,8 @@ namespace ai {
             std::pair<int, Jump> getRandomValidJump();
             std::pair<int, Jump> getJumpFromUser();
 
+            void makeRandomValidAction();
+
             std::pair<int, int> parseUserInput();
 
             std::pair<int, Jump> getJumpFrom(const std::pair<int, int> & inputJump);

@@ -24,6 +24,13 @@ cdef class PyCheckersGame:
   def __cinit__(self):
     self.checkers_game = getCheckersGame()
 
+  def get_board(self):
+    board = self.checkers_game.getBoard()
+    char_board = []
+    for space in board:
+      char_board.append(chr(space))
+    return char_board
+
   def is_jump_invalid(self, int start, int to, int through):
     cdef Jump jump
     jump.to, jump.through = to, through
@@ -51,6 +58,7 @@ cdef class PyCheckersGame:
 class PyBoard():
     def __init__(self):
         self.game = PyCheckersGame()
+        self.board = self.game.get_board()
         self.window = tk.Tk()
         self.entry = ttk.Entry(self.window)
         self.entry.bind('<Command-a>', self.get_entry_move)
@@ -83,7 +91,11 @@ class PyBoard():
 
 #********** GUI SETUP **********#
     def run(self):
-        self.window.mainloop()
+      while True:
+        board = self.game.get_board()
+        self.compare_and_update_board(board)
+        self.window.update_idletasks()
+        self.window.update()
 
     def make_board_space(self, row, column):
         callback = self.make_move_callback(row, column)
@@ -128,8 +140,8 @@ class PyBoard():
         if self.game.is_move_invalid(move[0], move[1]):
           print("bad move")
         else:
-          self.game.make_move(move[0], move[1])
           self.b_space["text"], self.e_space["text"] = self.e_space["text"], self.b_space["text"]
+          self.game.make_move(move[0], move[1])
           print("buttons should be different")
         self.move_buttons, self.mb_info = [], []
 
@@ -143,17 +155,11 @@ class PyBoard():
       if self.game.is_jump_invalid(jump[0], jump[1], jump[2]):
         print("bad jump")
       else:
-        self.game.make_jump(jump[0], jump[1], jump[2])
         self.e_space["text"] = self.b_space["text"]
         self.b_space["text"] = " "
         mid_space["text"] = " "
+        self.game.make_jump(jump[0], jump[1], jump[2])
       self.move_buttons, self.mb_info = [], []
-
-    def receive_move(self, b_row, b_col, e_row, e_col):
-        self.move_buttons = []
-        self.move_buttons.append(self.draw_spaces[b_row][b_col])
-        self.move_buttons.append(self.draw_spaces[e_row][e_col])
-        self.submit_move()
 
     def is_diagonal(self):
       if self.mb_info[0][0] == self.mb_info[1][0]:
@@ -165,6 +171,11 @@ class PyBoard():
         self.move_buttons, self.mb_info = [], []
         return False
       return True
+
+    def compare_and_update_board(self, board):
+      if (board != self.board):
+        self.board = board
+        print(board)
 
     def get_entry_move(self, e):
         print(self.entry.get())
@@ -187,14 +198,14 @@ def example_board():
             else:
                 if row % 2 == 0 and column % 2 != 0:
                     if row <= 2:
-                        board[row][column] = "B"
+                        board[row][column] = "b"
                     else:
-                        board[row][column] = "R"
+                        board[row][column] = "r"
                 elif row % 2 != 0 and column % 2 == 0:
                     if row <= 2:
-                        board[row][column] = "B"
+                        board[row][column] = "b"
                     else:
-                        board[row][column] = "R"
+                        board[row][column] = "r"
                 else:
                     board[row][column] = " "
     return board
