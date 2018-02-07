@@ -1,5 +1,6 @@
 CMP=g++ -std=c++14 -Wall
 
+BUILD_DIR=build
 GENERATOR=move-generator
 CONVERTER=json-to-stl
 GAME=checkers-game
@@ -8,39 +9,45 @@ UTILS=utils
 BOARD=board
 MAIN=main
 
-OBJ_FILES=$(GENERATOR).o $(CONVERTER).o $(GAME).o $(PLAYER).o $(UTILS).o $(BOARD).o
+GENERATOR_OBJ=$(BUILD_DIR)/$(GENERATOR).o
+CONVERTER_OBJ=$(BUILD_DIR)/$(CONVERTER).o
+GAME_OBJ=$(BUILD_DIR)/$(GAME).o
+PLAYER_OBJ=$(BUILD_DIR)/$(PLAYER).o
+UTILS_OBJ=$(BUILD_DIR)/$(UTILS).o
+BOARD_OBJ=$(BUILD_DIR)/$(BOARD).o
+MAIN_OBJ=$(BUILD_DIR)/$(MAIN).o
+
+OBJ_FILES=$(GENERATOR_OBJ) $(CONVERTER_OBJ) $(GAME_OBJ) $(PLAYER_OBJ) $(UTILS_OBJ) $(BOARD_OBJ)
 CPP_FILES=$(GENERATOR).cpp $(CONVERTER).cpp $(GAME).cpp $(PLAYER).cpp $(UTILS).cpp $(BOARD).cpp
 OBJ_FILES_WITH_MAIN=$(OBJ_FILES) $(MAIN).o
 
 OUT_FILE=checkers.out
-
-
 
 all: $(OUT_FILE)
 
 $(OUT_FILE): $(OBJ_FILES_WITH_MAIN)
 	$(CMP) -o $(OUT_FILE) $(OBJ_FILES_WITH_MAIN)
 
-$(MAIN).o: $(MAIN).cpp
-	$(CMP) -o $(MAIN).o -c $(MAIN).cpp
+$(MAIN_OBJ): $(MAIN).cpp
+	$(CMP) -o $(MAIN_OBJ) -c $(MAIN).cpp
 
-$(GENERATOR).o: $(GENERATOR).cpp
-	$(CMP) -o $(GENERATOR).o -c $(GENERATOR).cpp
+$(GENERATOR_OBJ): $(GENERATOR).cpp
+	$(CMP) -o $(GENERATOR_OBJ) -c $(GENERATOR).cpp
 
-$(CONVERTER).o: $(CONVERTER).cpp
-	$(CMP) -o $(CONVERTER).o -c $(CONVERTER).cpp
+$(CONVERTER_OBJ): $(CONVERTER).cpp
+	$(CMP) -o $(CONVERTER_OBJ) -c $(CONVERTER).cpp
 
-$(GAME).o: $(GAME).cpp
-	$(CMP) -o $(GAME).o -c $(GAME).cpp
+$(GAME_OBJ): $(GAME).cpp
+	$(CMP) -o $(GAME_OBJ) -c $(GAME).cpp
 
-$(PLAYER).o: $(PLAYER).cpp
-	$(CMP) -o $(PLAYER).o -c $(PLAYER).cpp
+$(PLAYER_OBJ): $(PLAYER).cpp
+	$(CMP) -o $(PLAYER_OBJ) -c $(PLAYER).cpp
 
-$(BOARD).o: $(BOARD).cpp
-	$(CMP) -o $(BOARD).o -c $(BOARD).cpp
+$(BOARD_OBJ): $(BOARD).cpp
+	$(CMP) -o $(BOARD_OBJ) -c $(BOARD).cpp
 
-$(UTILS).o: $(UTILS).cpp
-	$(CMP) -o $(UTILS).o -c $(UTILS).cpp
+$(UTILS_OBJ): $(UTILS).cpp
+	$(CMP) -o $(UTILS_OBJ) -c $(UTILS).cpp
 
 PYVERSION=python3.6m
 PYPATH=/usr/include/$(PYVERSION)
@@ -91,7 +98,8 @@ run: all
 	./$(OUT_FILE)
 
 install:
-	curl https://raw.githubusercontent.com/nlohmann/json/develop/src/json.hpp > headers/json.hpp
+	mkdir -p $(BUILD_DIR)
+	curl https://github.com/nlohmann/json/releases/download/v3.1.0/json.hpp > headers/json.hpp -L
 	curl https://github.com/catchorg/Catch2/releases/download/v2.1.1/catch.hpp > tests/catch.hpp -L
 
 VERSION=3.5.5
