@@ -33,8 +33,8 @@ namespace ai {
             const std::vector<std::pair<int, int>> getValidMovesFor(const std::shared_ptr<Player> & player) const;
             const std::vector<std::pair<int, Jump>> getValidJumpsFor(const std::shared_ptr<Player> & player) const;
 
-            const Action make(const std::pair<int, Jump> jump);
-            const Action make(const std::pair<int, int> move);
+            void make(const std::pair<int, Jump> jump);
+            void make(const std::pair<int, int> move);
 
         private:
             bool hasPieceAt(int space) const;

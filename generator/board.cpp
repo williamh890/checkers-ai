@@ -96,15 +96,13 @@ const vector<pair<int, int>> Board::getValidMovesFor(const shared_ptr<Player> & 
     return validMoves;
 }
 
-const Action Board::make(const pair<int, int> move) {
+void Board::make(const pair<int, int> move) {
     swap(boardState[move.first],boardState[move.second]);
-    return Action::Move;
 }
 
-const Action Board::make(const pair<int, Jump> jump) {
+void Board::make(const pair<int, Jump> jump) {
     swap(boardState[jump.second.to],boardState[jump.first]);
     boardState[jump.second.through] = ' ';
-    return Action::Jump;
 }
 
 
