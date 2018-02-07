@@ -14,16 +14,7 @@ OBJ_FILES_WITH_MAIN=$(OBJ_FILES) $(MAIN).o
 
 OUT_FILE=checkers.out
 
-PYVERSION=python3.6m
-PYPATH=/usr/include/$(PYVERSION)
-GUI_OUT=gui.out
 
-gui: gui.out
-
-gui.out:
-	python3 setup.py build_ext --inplace
-	cython3 --embed checkers_game.pyx -o checkers_game_obj.cpp -3 --cplus -f
-	$(CMP) -I$(PYPATH) -o $(GUI_OUT) checkers_game_obj.cpp $(CPP_FILES) -l$(PYVERSION)
 
 all: $(OUT_FILE)
 
@@ -50,6 +41,16 @@ $(BOARD).o: $(BOARD).cpp
 
 $(UTILS).o: $(UTILS).cpp
 	$(CMP) -o $(UTILS).o -c $(UTILS).cpp
+
+PYVERSION=python3.6m
+PYPATH=/usr/include/$(PYVERSION)
+GUI_OUT=gui.out
+
+gui:
+	python3 setup.py build_ext --inplace
+	cython3 --embed checkers_game.pyx -o checkers_game_obj.cpp -3 --cplus -f
+	$(CMP) -I$(PYPATH) -o $(GUI_OUT) checkers_game_obj.cpp $(CPP_FILES) -l$(PYVERSION)
+
 
 # For making and running tests
 
