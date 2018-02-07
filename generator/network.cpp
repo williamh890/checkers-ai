@@ -82,7 +82,7 @@ void AI::setupNetwork(const vector<int>& dimensions) {
 };
 
 string AI::idToFilename(int ID) {
-	string filename = to_string(ID) + ".network";
+	string filename = ".\\networks\\" + to_string(ID) + ".network";
 	return filename;
 }
 
