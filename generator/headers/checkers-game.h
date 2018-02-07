@@ -26,9 +26,12 @@
 namespace ai {
     class CheckersGame {
         // So readable.
-        using turn_type = std::pair<std::vector<char>, std::pair<std::vector<std::pair<int, int>>, std::vector<std::pair<int,Jump>>>>;
+        public:
+            using MovePackage = std::pair<int, int>;
+            using JumpPackage = std::pair<int, Jump>;
+            using PlayerPtr = std::shared_ptr<Player>;
 
-        using PlayerPtr = std::shared_ptr<Player>;
+            using turn_type = std::pair<std::vector<char>, std::pair<std::vector<MovePackage>, std::vector<std::pair<int,Jump>>>>;
 
         private:
             int moveCounter = 0;
@@ -45,14 +48,15 @@ namespace ai {
         public:
             CheckersGame();
             CheckersGame(const Board & board, PlayerPtr red, PlayerPtr black);
+
             // following are public for use in the gui/cython wrapper
-            bool isInvalid(const std::pair<int, int> & move);
-            bool isInvalid(const std::pair<int, Jump> & jump);
+            bool isInvalid(const MovePackage & move);
+            bool isInvalid(const JumpPackage & jump);
 
             std::vector<char> getBoard(); // may not need
             const char getActivePlayerColor();
-            void makeJump(const std::pair<int, Jump> & jump);
-            void makeMove(const std::pair<int, int> & move);
+            void makeJump(const JumpPackage & jump);
+            void makeMove(const MovePackage & move);
             void swapPlayers(); // may not need
             bool areJumps();
             // end gui/cython wrapper functions
@@ -60,24 +64,24 @@ namespace ai {
             void play();
 
         private:
-            std::pair<int, int> getMoveFromActivePlayer();
-            std::pair<int, int> getRandomValidMove();
-            std::pair<int, int> getMoveFromUser();
-            std::vector<std::pair<int, Jump>> getValidJumps();
-            std::pair<int, Jump> getJumpFromActivePlayer();
-            std::pair<int, Jump> getRandomValidJump();
-            std::pair<int, Jump> getJumpFromUser();
+            MovePackage getMoveFromActivePlayer();
+            MovePackage getRandomValidMove();
+            MovePackage getMoveFromUser();
+            std::vector<JumpPackage> getValidJumps();
+            JumpPackage getJumpFromActivePlayer();
+            JumpPackage getRandomValidJump();
+            JumpPackage getJumpFromUser();
 
-            std::pair<int, int> parseUserInput();
+            MovePackage parseUserInput();
 
-            std::pair<int, Jump> getJumpFrom(const std::pair<int, int> & inputJump);
+            JumpPackage getJumpFrom(const MovePackage & inputJump);
 
-            std::vector<std::pair<int, Jump>> getValidJumpsAt(int space);
+            std::vector<JumpPackage> getValidJumpsAt(int space);
 
-            std::vector<std::pair<int, int>> getValidMoves();
+            std::vector<MovePackage> getValidMoves();
 
-            void reactTo(const std::pair<int, int> & move);
-            void reactTo(const std::pair<int, Jump> & jump);
+            void reactTo(const MovePackage & move);
+            void reactTo(const JumpPackage & jump);
 
             std::string toString();
     };
