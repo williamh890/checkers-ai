@@ -1,40 +1,52 @@
-# gui.py
+# checkers_game.pyx
 # Author: Hal Dimarchi
-# board gui
+# wrapper of board and gui
 
 import tkinter as tk
 import tkinter.ttk as ttk
 from time import sleep
-from checkers_game cimport CheckersGame, getCheckersGame
+cimport checkers_game
+from libcpp.pair cimport pair
+from libcpp.vector cimport vector
+from cython.operator cimport dereference as deref
 # from gui import Board_Gui, example_board
 
 BOARD_SIZE = 8
+PLAY_SIZE = 4
 WINDOW_SIZE = 400
+PIECES = {"RED": "R", "BLACK": "B"}
 
-
-
+ctypedef pair[int, int] move_type
+ctypedef pair[int, Jump] jump_type
 
 cdef class PyCheckersGame:
   cdef CheckersGame checkers_game
   def __cinit__(self):
     self.checkers_game = getCheckersGame()
 
-  def toString(self):
-    self.checkers_game.toString()
+  def is_jump_invalid(self, int start, int to, int through):
+    cdef Jump jump
+    jump.to, jump.through = to, through
+    cdef jump_type full_jump = jump_type(start, jump)
+    return self.checkers_game.isInvalid(full_jump)
 
-  def printMoves(self):
-    self.checkers.printMoves()
+  def is_move_invalid(self, int start, int to):
+    cdef move_type move = move_type(start, to)
+    return self.checkers_game.isInvalid(move)
 
-  def printMovesForColor(self, color):
-    self.checkers_game.printMovesForColor(color)
+  def are_jumps(self):
+    return self.checkers_game.areJumps()
 
-  def printJumpsForColor(self, color):
-    self.checkers_game.printJumpsForColor(color)
+  def make_move(self, int start, int to):
+    cdef move_type move = move_type(start, to)
+    self.checkers_game.makeMove(move)
 
-  def printValidMoves(self):
-    pass
-    # waiting for this to be defined in source
-    # self.checkers_game.printValidMoves()
+  def make_jump(self, int start, int to, int through):
+    cdef Jump jump
+    jump.to, jump.through = to, through
+    cdef jump_type full_jump = jump_type(start, jump)
+    self.checkers_game.makeJump(full_jump)
+
 
 class PyBoard():
     def __init__(self):
@@ -55,6 +67,7 @@ class PyBoard():
         self.draw_spaces = self.spaces
 
         self.move_buttons = []
+        self.mb_info = []
 
         self.board.pack()
 
@@ -96,19 +109,54 @@ class PyBoard():
         print('({}, {})'.format(row, col))
 
         self.move_buttons.append(self.draw_spaces[row][col])
+        self.mb_info.append((row, col))
+
         if len(self.move_buttons) == 2:
-            print("making move")
+          self.b_space = self.move_buttons[0]
+          self.e_space = self.move_buttons[1]
+          if abs(self.mb_info[0][0] - self.mb_info[1][0]) == 2:
+            if abs(self.mb_info[0][1] - self.mb_info[1][1]) == 2:
+              print("making jump")
+              self.submit_jump()
+            else:
+              print("making move")
+              self.submit_move()
+          else:
+            print("making move, not close to a jump")
             self.submit_move()
+
         else:
             print("select your next move")
 
     def submit_move(self):
-        print("making move")
-        b_space, e_space = self.move_buttons[0], self.move_buttons[1]
-        b_space["text"], e_space["text"] = e_space["text"], b_space["text"]
+        move = convert_row_col_to_number(self.mb_info)
+        if self.game.is_move_invalid(move[0], move[1]):
+          print(move[0])
+          print(move[1])
+          print("bad move")
+        else:
+          self.game.make_move(move[0], move[1])
+          self.b_space["text"], self.e_space["text"] = self.e_space["text"], self.b_space["text"]
+          print("buttons should be different")
+        self.move_buttons, self.mb_info = [], []
 
-        self.move_buttons = []
-        print("buttons should be different")
+    def submit_jump(self):
+      mid_space = (min(self.mb_info[0][0],self.mb_info[1][0]) + 1,
+                   min(self.mb_info[0][1], self.mb_info[1][1]) + 1)
+      print(mid_space[0])
+      print(mid_space[1])
+      self.mb_info.append(mid_space)
+      mid_space = self.draw_spaces[mid_space[0]][mid_space[1]]
+
+      jump = convert_row_col_to_number(self.mb_info)
+      if self.game.is_jump_invalid(jump[0], jump[1], jump[2]):
+        print("bad jump")
+      else:
+        self.game.make_jump(jump[0], jump[1], jump[2])
+        self.e_space["text"] = self.b_space["text"]
+        self.b_space["text"] = " "
+        mid_space["text"] = " "
+      self.move_buttons, self.mb_info = [], []
 
     def receive_move(self, b_row, b_col, e_row, e_col):
         self.move_buttons = []
@@ -118,6 +166,17 @@ class PyBoard():
 
     def get_entry_move(self, e):
         print(self.entry.get())
+
+def convert_row_col_to_number(spaces):
+  space_nums = []
+  for space in spaces:
+    print(space[0])
+    print(space[1])
+    number = (space[0]) * BOARD_SIZE + space[1]
+    print(number)
+    print(number//2)
+    space_nums.append(number//2)
+  return space_nums
 
 def example_board():
     board = [[0 for x in range(BOARD_SIZE)]

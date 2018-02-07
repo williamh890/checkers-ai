@@ -3,7 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-
+# h.gch file
+*.h.gch
 # cython C code
 cy_board/*.c
 

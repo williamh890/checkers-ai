@@ -1,7 +1,10 @@
 from libcpp.vector cimport vector
 from libcpp.string cimport string
 from libcpp.memory cimport shared_ptr
+from libcpp.pair cimport pair
+from libcpp cimport bool
 from cython.operator cimport dereference as deref
+cimport cython
 
 
 cdef extern from "headers/json.hpp":
@@ -13,28 +16,22 @@ cdef extern from "headers/consts.h" namespace "ai":
 cdef extern from "headers/player.h" namespace "ai":
   cdef cppclass Player:
     Player()
-    Player(char color, MoveGenerator generator)
-    const vector[Piece] getPieces() const
-    const char getColor() const
-
-    const vector[int] getMovesFor(Piece piece) const
-    const vector[Jump] getJumpsFor(Piece piece) const
 
 cdef extern from "headers/board.h" namespace "ai":
   cdef cppclass Board:
-    Board()
-    void addPiecesFor(const shared_ptr[Player] & player)
-    char at(const Position & pos) const
-
-    string toString()
+    Board() except +
 
   Board getBoard()
 
 cdef extern from "headers/models.h" namespace "ai":
-  cdef struct Jump:
-    pass
+  struct Jump:
+    Jump(int to, int through) except +
+    int to;
+    int through;
+
   cdef struct Position:
     pass
+
   cdef struct Piece:
     pass
 
@@ -42,14 +39,7 @@ cdef extern from "headers/utils.h" namespace "ai":
   pass
 
 cdef extern from "headers/table-types.h" namespace "ai":
-  ctypedef vector[vector[int]] MoveTableType
-  ctypedef vector[vector[Jump]] JumpTableType
-
-cdef extern from "headers/move-generator.h" namespace "ai":
-  cdef cppclass MoveGenerator:
-    MoveGenerator(const MoveTableType & moves, const JumpTableType & jumps) except +
-    vector[int] getMoves(int space)
-    vector[Jump] getJumps(int space)
+  pass
 
 cdef extern from "headers/json-to-stl.h" namespace "ai":
   pass
@@ -58,11 +48,12 @@ cdef extern from "headers/checkers-game.h" namespace "ai":
   cdef cppclass CheckersGame:
     CheckersGame() except +
     CheckersGame(Board & board,
-                 shared_ptr[Player] red,
-                 shared_ptr[Player] black) except +
-    string toString()
-    void printMoves()
-    void printMovesForColor(const string & color)
-    void printJumpsForColor(const string & color)
-
+                shared_ptr[Player] red,
+                shared_ptr[Player] black) except +
+    bool isInvalid(const pair[int, int] & move)
+    bool isInvalid(const pair[int, Jump] & jump)
+    vector[char] getBoard()
+    bool areJumps()
+    void makeMove(const pair[int, int] & move)
+    void makeJump(const pair[int, Jump] & jump)
   CheckersGame getCheckersGame() except +

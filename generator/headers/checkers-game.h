@@ -11,6 +11,9 @@
 // ai::Piece
 // ai::Position
 
+#include <iostream>
+// std::cout;
+// std::endl;
 #include <memory>
 // std::shared_ptr
 #include <vector>
@@ -22,6 +25,9 @@
 
 namespace ai {
     class CheckersGame {
+        typedef std::pair<std::vector<char>, std::pair<std::vector<std::pair<int, int>>, std::vector<std::pair<int,Jump>>>>
+        turn_type;
+
         private:
             int moveCounter = 0;
 
@@ -37,26 +43,34 @@ namespace ai {
         public:
             CheckersGame();
             CheckersGame(const Board & board, std::shared_ptr<Player> red, std::shared_ptr<Player> black);
+            // following are public for use in the gui/cython wrapper
+            bool isInvalid(const std::pair<int, int> & move);
+            bool isInvalid(const std::pair<int, Jump> & jump);
 
+            std::vector<char> getBoard(); // may not need
+            const char getActivePlayerColor();
+            void makeJump(const std::pair<int, Jump> & jump);
+            void makeMove(const std::pair<int, int> & move);
+            void swapPlayers(); // may not need
+            bool areJumps();
+            // end gui/cython wrapper functions
             void play();
 
         private:
             std::pair<int, int> getMoveFromActivePlayer();
             std::pair<int, int> getRandomValidMove();
             std::pair<int, int> getMoveFromUser();
-
+            std::vector<std::pair<int, Jump>> getValidJumps();
             std::pair<int, Jump> getJumpFromActivePlayer();
             std::pair<int, Jump> getRandomValidJump();
             std::pair<int, Jump> getJumpFromUser();
 
             std::pair<int, int> parseUserInput();
 
-            bool isInvalid(const std::pair<int, int> & move);
             bool isInvalidJump(const std::pair<int, Jump> & jump);
 
             std::pair<int, Jump> getJumpFrom(const std::pair<int, int> & inputJump);
 
-            std::vector<std::pair<int, Jump>> getValidJumps();
             std::vector<std::pair<int, Jump>> getValidJumpsAt(int space);
 
             std::vector<std::pair<int, int>> getValidMoves();

@@ -105,7 +105,7 @@ install-gui:
 	make && make install
 
 clean:
-	rm $(OBJ_FILES) *.out
+	rm $(OBJ_FILES) $(MAIN).o *.out
 
 clean-tests:
 	rm $(TESTING_OBJ_FILES)

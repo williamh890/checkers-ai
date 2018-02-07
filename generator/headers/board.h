@@ -19,7 +19,8 @@ namespace ai {
     enum class Action {
         Move, Jump
     };
-    class Player;//forward declaration
+
+    class Player; //forward declaration
     class Board {
         private:
             std::vector<char> boardState;
@@ -39,13 +40,13 @@ namespace ai {
             bool hasPieceAt(int space) const;
             bool hasOpposingPieceAt(const Jump & jump, char color) const;
             bool destinationIsNotEmpty(const Jump & jump) const;
-            
+
 
         public:
             std::string toString();
             char operator[](const int & index) const;
             std::vector<char> getBoardState();
-            
+
         private:
             std::vector<std::vector<char>> getEmptyBoard();
     };

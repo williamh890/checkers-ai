@@ -152,12 +152,19 @@ void CheckersGame::play() {
             reactTo(action, move);
         }
 
-        swap(activePlayer, inactivePlayer);
+        swapPlayers();
     }
 
     cout << "moves in game " << moveCounter << endl;
 }
 
+void CheckersGame::swapPlayers(){
+    swap(activePlayer, inactivePlayer);
+}
+
+bool CheckersGame::areJumps(){
+  return getValidJumps().size();
+}
 pair<int, Jump> CheckersGame::getJumpFromActivePlayer() {
     if (activePlayer->getPlayerType() == PlayerType::Computer) {
         return getRandomValidJump();
@@ -302,6 +309,14 @@ vector<pair<int, Jump>> CheckersGame::getValidJumpsAt(int space) {
 
     return jumpsAtSpace;
 }
+// Accessor functions for gui/cython wrapper
+vector<char> CheckersGame::getBoard(){
+    return board.getBoardState();
+}
+
+const char CheckersGame::getActivePlayerColor(){
+    return activePlayer->getColor();
+}
 
 // TODO! Want to combine these reactTo functions in the future
 void CheckersGame::reactTo(const Action & action, const pair<int, Jump> & jump) {
@@ -356,3 +371,17 @@ MoveTableType CheckersGame::getRedMoves()
     MoveTableType redmoves;
     return redmoves;
 }
+
+void CheckersGame::makeJump(const pair<int, Jump> & jump){
+  auto action = board.make(jump);
+  reactTo(action, jump);
+  if (not areJumps()){
+    swapPlayers();
+  }
+}
+
+void CheckersGame::makeMove(const pair<int, int> & move){
+  auto action = board.make(move);
+  reactTo(action, move);
+  swapPlayers();
+  }

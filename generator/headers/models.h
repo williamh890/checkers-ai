@@ -7,7 +7,7 @@ namespace ai {
     struct Jump {
         int to;
         int through;
-
+        Jump(){}
         Jump(int to, int through): to(to), through(through) {
         }
 
@@ -16,10 +16,9 @@ namespace ai {
             s << "(" << to << ", " << through << ")";
             return s.str();
         }
-
-        bool operator==(const Jump & other) const {
-            return (this->to == other.to && this->through == other.through);
-        }
+        bool operator == (const Jump &rhs) const{
+         return (to == rhs.to && through == rhs.through);
+       }
     };
 
     struct Position {
