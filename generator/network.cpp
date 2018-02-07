@@ -73,11 +73,7 @@ bool AI::operator>=(const Network & lhs, const Network & rhs) {
 	return !(lhs < rhs);
 }
 
-void AI::setupNetwork() {
-
-}
-
-void AI::setupNetwork(const vector<int>& dimensions) {
+void AI::setupNetworks(const vector<int>& dimensions) {
 
 };
 

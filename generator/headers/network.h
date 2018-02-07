@@ -26,7 +26,7 @@ namespace AI {
 		void replaceWithEvolution(const Network &);
 
 	private:
-		int _ID; // Might not be needed
+		int _ID;
 		std::vector<weightsInLayer> _layers;
 		int _performance;
 		bool _gameCompleted = true;
@@ -48,9 +48,7 @@ namespace AI {
 	bool operator<= (const Network &lhs, const Network &rhs);
 	bool operator>= (const Network &lhs, const Network &rhs);
 
-
-	void setupNetwork();
-	void setupNetwork(const std::vector<int> &);
+	void setupNetworks(const std::vector<int> &);
 
 	// Functions to handle saving and loading of networks utilizing boost serialization
 	std::string idToFilename(int);
