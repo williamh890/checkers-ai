@@ -120,10 +120,9 @@ void CheckersGame::play() {
             << spaceToPosition(move.second).toString()
             << endl;
 
-        Action action;
         if (move.first == -1) {
-            action = board.make(jump);
-            reactTo(action, jump);
+            board.make(jump);
+            reactTo(jump);
 
             auto validJumps = getValidJumpsAt(jump.second.to);
 
@@ -141,15 +140,15 @@ void CheckersGame::play() {
                     continue;
                 }
 
-                action = board.make(jump);
-                reactTo(action, jump);
+                board.make(jump);
+                reactTo(jump);
 
                 validJumps = getValidJumpsAt(jump.second.to);
             }
         }
         else {
-            action = board.make(move);
-            reactTo(action, move);
+            board.make(move);
+            reactTo(move);
         }
 
         swapPlayers();
@@ -271,19 +270,6 @@ bool CheckersGame::isInvalid(const pair<int, int> & move) {
 
     return true;
 }
-bool CheckersGame::isInvalidJump(const pair<int, Jump> & jump) {
-    auto validJumps = getValidJumps();
-
-    for (const auto & validJump : validJumps) {
-        if (validJump == jump) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-
 
 vector<pair<int, int>> CheckersGame::getValidMoves() {
     auto validMoves = board.getValidMovesFor(activePlayer);
@@ -319,69 +305,34 @@ const char CheckersGame::getActivePlayerColor(){
 }
 
 // TODO! Want to combine these reactTo functions in the future
-void CheckersGame::reactTo(const Action & action, const pair<int, Jump> & jump) {
-    if (action == Action::Jump) {
-        activePlayer->updatePieces(jump, board);
-        inactivePlayer->removePieceAt(jump.second.through);
-        cout << "piece was jumped" << endl;
-    }
+void CheckersGame::reactTo(const pair<int, Jump> & jump) {
+    activePlayer->updatePieces(jump, board);
+    inactivePlayer->removePieceAt(jump.second.through);
+    cout << "piece was jumped" << endl;
 }
 
-void CheckersGame::reactTo(const Action & action, const pair<int, int> & move) {
-    if (action == Action::Move) {
-        activePlayer->updatePieces(move, board);
-        cout << "piece was moved" << endl;
-    }
+void CheckersGame::reactTo(const pair<int, int> & move) {
+    activePlayer->updatePieces(move, board);
+    cout << "piece was moved" << endl;
 }
 
 string CheckersGame::toString() {
     return board.toString();
 }
 
-//returns vector<vector<int with format {piece space, valid move, valid move}
-MoveTableType CheckersGame::getBlackMoves()
-{
-    MoveTableType blackMoves;
-
-    for(const auto & piece : black->getPieces())
-    {
-        auto moves = black->getMovesFor(piece);
-        cout << "debug: moves size:" <<moves.size() <<endl;//debug
-        vector<int> black_move;
-        black_move.push_back(piece.space);
-        for(const auto & move : moves)
-        {
-            cout << "debug: move" << move <<endl;//debug
-            if(board[move] == ' ')
-            {
-                black_move.push_back(move);
-            }
-        }
-        if (black_move.size()>1)
-        {
-            blackMoves.push_back(black_move);
-        }
-    }
-
-    return blackMoves;
-}
-
-MoveTableType CheckersGame::getRedMoves()
-{
-    MoveTableType redmoves;
-    return redmoves;
-}
-
 void CheckersGame::makeJump(const pair<int, Jump> & jump){
-  auto action = board.make(jump);
-  reactTo(action, jump);
+  board.make(jump);
+  reactTo(jump);
+
   if (not areJumps()){
     swapPlayers();
   }
 }
 
 void CheckersGame::makeMove(const pair<int, int> & move){
-  auto action = board.make(move);
-  reactTo(action, move);
+  board.make(move);
+  reactTo(move);
+
   swapPlayers();
-  }
+}
+

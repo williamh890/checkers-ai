@@ -25,24 +25,26 @@
 
 namespace ai {
     class CheckersGame {
-        typedef std::pair<std::vector<char>, std::pair<std::vector<std::pair<int, int>>, std::vector<std::pair<int,Jump>>>>
-        turn_type;
+        // So readable.
+        using turn_type = std::pair<std::vector<char>, std::pair<std::vector<std::pair<int, int>>, std::vector<std::pair<int,Jump>>>>;
+
+        using PlayerPtr = std::shared_ptr<Player>;
 
         private:
             int moveCounter = 0;
 
             Board board;
-            std::shared_ptr<Player> red;
-            std::shared_ptr<Player> black;
+            PlayerPtr red;
+            PlayerPtr black;
 
-            std::shared_ptr<Player> activePlayer;
-            std::shared_ptr<Player> inactivePlayer;
+            PlayerPtr activePlayer;
+            PlayerPtr inactivePlayer;
 
             std::mt19937 generator;
 
         public:
             CheckersGame();
-            CheckersGame(const Board & board, std::shared_ptr<Player> red, std::shared_ptr<Player> black);
+            CheckersGame(const Board & board, PlayerPtr red, PlayerPtr black);
             // following are public for use in the gui/cython wrapper
             bool isInvalid(const std::pair<int, int> & move);
             bool isInvalid(const std::pair<int, Jump> & jump);
@@ -54,6 +56,7 @@ namespace ai {
             void swapPlayers(); // may not need
             bool areJumps();
             // end gui/cython wrapper functions
+
             void play();
 
         private:
@@ -67,23 +70,16 @@ namespace ai {
 
             std::pair<int, int> parseUserInput();
 
-            bool isInvalidJump(const std::pair<int, Jump> & jump);
-
             std::pair<int, Jump> getJumpFrom(const std::pair<int, int> & inputJump);
 
             std::vector<std::pair<int, Jump>> getValidJumpsAt(int space);
 
             std::vector<std::pair<int, int>> getValidMoves();
 
-            void reactTo(const Action & action, const std::pair<int, int> & move);
-            void reactTo(const Action & action, const std::pair<int, Jump> & jump);
+            void reactTo(const std::pair<int, int> & move);
+            void reactTo(const std::pair<int, Jump> & jump);
 
             std::string toString();
-
-            // void printValidMoves(); This is not defined in the source yet
-        private:
-            MoveTableType getBlackMoves();
-            MoveTableType getRedMoves();
     };
 
     CheckersGame getCheckersGame();

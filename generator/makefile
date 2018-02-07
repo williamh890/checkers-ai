@@ -51,7 +51,6 @@ gui:
 	cython3 --embed checkers_game.pyx -o checkers_game_obj.cpp -3 --cplus -f
 	$(CMP) -I$(PYPATH) -o $(GUI_OUT) checkers_game_obj.cpp $(CPP_FILES) -l$(PYVERSION)
 
-
 # For making and running tests
 
 TESTING_DIR=tests
