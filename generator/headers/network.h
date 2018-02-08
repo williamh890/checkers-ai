@@ -2,40 +2,46 @@
 #define NETWORK_H_INCLUDED
 #include <vector>
 
-#include "boost\archive\basic_text_iarchive.hpp"
-#include "boost\archive\basic_text_oarchive.hpp"
-#include "boost\serialization\vector.hpp"
+// You need to tell your system how to find the boost library
+#include <boost\archive\basic_text_iarchive.hpp>
+#include <boost\archive\basic_text_oarchive.hpp>
+#include <boost\serialization\vector.hpp>
 #include <fstream>
 #include <iostream>
 #include <string>
 namespace AI {
 	class Network {
 	public:
-		using weightsInLayer = std::vector<double>;
+		using layersContainingNodes = std::vector<double>;
+		using networkWeights = std::vector<double>;
 
-		Network(int);
-		Network(const std::vector<int>&);
+		Network(unsigned int);
+		Network(const std::vector<unsigned int>&, unsigned int); // This should probably be made private
 		~Network();
 
-		double evaluateBoard(std::vector<char>) const; // *** TODO ***
+		double evaluateBoard (const std::vector<char> &) const; // *** TODO ***
 		void adjustPerformance(int result);
 		int getPerformance() const;
 		void resetPerformance();
 
-		std::vector<weightsInLayer> evolve() const; // *** TODO *** Not required for Project 2
+		std::vector<networkWeights> evolve() const; // *** TODO *** Not required for Project 2
 		void replaceWithEvolution(const Network &);
 
+		void outputDebug();
+
 	private:
-		int _ID;
-		std::vector<weightsInLayer> _layers;
+		unsigned int _ID;
+		std::vector<layersContainingNodes> _layers;
+		std::vector<networkWeights> _weights;
 		int _performance;
-		bool _gameCompleted = true;
+		bool _gameCompleted = false;
 
 		friend class boost::serialization::access;
 		template <typename Archive>
 		void serialize(Archive &ar, const unsigned int version) {
 			ar & _ID;
 			ar & _layers;
+			ar & _weights;
 			ar & _performance;
 		}
 
@@ -48,7 +54,7 @@ namespace AI {
 	bool operator<= (const Network &lhs, const Network &rhs);
 	bool operator>= (const Network &lhs, const Network &rhs);
 
-	void setupNetworks(const std::vector<int> &);
+	void setupNetworks (const std::vector<unsigned int> &, int num = 100);
 
 	// Functions to handle saving and loading of networks utilizing boost serialization
 	std::string idToFilename(int);
