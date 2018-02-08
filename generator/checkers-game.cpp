@@ -364,13 +364,19 @@ MoveTableType CheckersGame::getRedMoves()
 }
 
 void CheckersGame::makeJump(const pair<int, Jump> & jump){
-  auto action = board.make(jump);
-  reactTo(action, jump);
-  if (not areJumps()){
-    swapPlayers();
-    makeRandomValidAction();
-
+  try {
+    auto action = board.make(jump);
+    reactTo(action, jump);
+    if (not areJumps()){
+      swapPlayers();
+      makeRandomValidAction();
+    }
   }
+  catch(length_error & e) {
+      cout << "Out of moves" << endl;
+      cout << e.what() << endl;
+  }
+
 }
 
 void CheckersGame::makeMove(const pair<int, int> & move){

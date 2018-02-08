@@ -80,7 +80,7 @@ class PyBoard():
         self.board.pack()
 
     def get_board(self, board):  # board should be a 2D array
-        self.spaces = board
+        one_to_two_dimensions(board, self.spaces, BOARD_SIZE)
 
     def make_board(self):
         for row in range(BOARD_SIZE):
@@ -136,7 +136,7 @@ class PyBoard():
             print("select your next move")
 
     def submit_move(self):
-        move = convert_row_col_to_number(self.mb_info)
+        move = convert_spaces_to_indices(self.mb_info)
         if self.game.is_move_invalid(move[0], move[1]):
           print("bad move")
         else:
@@ -151,7 +151,7 @@ class PyBoard():
       self.mb_info.append(mid_space)
       mid_space = self.draw_spaces[mid_space[0]][mid_space[1]]
 
-      jump = convert_row_col_to_number(self.mb_info)
+      jump = convert_spaces_to_indices(self.mb_info)
       if self.game.is_jump_invalid(jump[0], jump[1], jump[2]):
         print("bad jump")
       else:
@@ -175,17 +175,45 @@ class PyBoard():
     def compare_and_update_board(self, board):
       if (board != self.board):
         self.board = board
+        self.update_buttons()
         print(board)
+
+    def update_buttons(self):
+      for row in range(BOARD_SIZE):
+        for col in range(BOARD_SIZE):
+          if check_space(row, col):
+            index = convert_row_col_to_index((row, col))
+            if self.board[index] != self.draw_spaces[row][col]["text"]:
+              self.draw_spaces[row][col]["text"] = self.board[index]
 
     def get_entry_move(self, e):
         print(self.entry.get())
 
-def convert_row_col_to_number(spaces):
+def one_to_two_dimensions(one_board, two_board, dimension):
+  for row in range(dimension):
+    for col in range(dimension):
+      if check_space(row, col):
+        two_board[row][col] = one_board[convert_row_col_to_index((row, col))]
+      else:
+        two_board[row][col] = " "
+
+def check_space(row, column):
+  if row % 2 == 0 and column % 2 != 0:
+    return True
+  elif row % 2 != 0 and column % 2 == 0:
+    return True
+  return False
+
+
+def convert_spaces_to_indices(spaces):
   space_nums = []
   for space in spaces:
-    number = (space[0]) * BOARD_SIZE + space[1]
-    space_nums.append(number//2)
+    space_nums.append(convert_row_col_to_index(space))
   return space_nums
+
+def convert_row_col_to_index(row_col):
+  index = ((row_col[0]) * BOARD_SIZE + row_col[1])//2
+  return index
 
 def example_board():
     board = [[0 for x in range(BOARD_SIZE)]
@@ -215,6 +243,6 @@ if __name__ == "__main__":
 
     board = example_board()
     checkers = PyBoard()
-    checkers.get_board(board)
+    checkers.get_board(checkers.game.get_board())
     checkers.make_board()
     checkers.run()
