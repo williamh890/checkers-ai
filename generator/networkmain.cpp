@@ -17,7 +17,10 @@ double get_time() {
 
 int main() {
 		vector <unsigned int> networkCreationInput = { 4, 32, 40, 10, 1 };
-		AI::setupNetworks(networkCreationInput);
+
+
+		// Create only one network so that you dont have 100 files running around. Leave off the second parameter defaults to 100
+		AI::setupNetworks(networkCreationInput, 1);
 
 
 		AI::Network player(1);
