@@ -44,6 +44,12 @@ cdef extern from "headers/table-types.h" namespace "ai":
 cdef extern from "headers/json-to-stl.h" namespace "ai":
   pass
 
+cdef extern from "headers/seeder.h" namespace "ai":
+  pass
+
+cdef extern from "headers/network.h" namespace "ai":
+  pass
+
 cdef extern from "headers/checkers-game.h" namespace "ai":
   ctypedef pair[int, int] MovePackage
   ctypedef pair[int, Jump] JumpPackage
@@ -59,4 +65,4 @@ cdef extern from "headers/checkers-game.h" namespace "ai":
     bool areJumps()
     void makeMove(MovePackage & move)
     void makeJump(JumpPackage & jump)
-  CheckersGame getCheckersGame() except +
+  CheckersGame getSeedlessCheckersGame() except +

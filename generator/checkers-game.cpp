@@ -85,7 +85,23 @@ CheckersGame ai::getCheckersGame() {
     return CheckersGame(board, red, black, seeder);
 }
 
+CheckersGame ai::getSeedlessCheckersGame() {
+    auto table = loadMoveTableFrom("move-table.json");
+    auto converter = JsonToStlConverter{table};
+
+    auto red = getPlayer("red", converter);
+    auto black = getPlayer("black", converter);
+    auto board = getBoard();
+
+    return CheckersGame(board, red, black);
+  }
+
 CheckersGame::CheckersGame() { };
+
+CheckersGame::CheckersGame(
+        const Board & board,
+        PlayerPtr red,
+        PlayerPtr black):board(board), red(red), black(black){ }
 
 CheckersGame::CheckersGame(
         const Board & board,

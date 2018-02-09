@@ -22,7 +22,7 @@ ctypedef pair[int, Jump] jump_type
 cdef class PyCheckersGame:
   cdef CheckersGame checkers_game
   def __cinit__(self):
-    self.checkers_game = getCheckersGame()
+    self.checkers_game = getSeedlessCheckersGame()
 
   def get_board(self):
     board = self.checkers_game.getBoard()
