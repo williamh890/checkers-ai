@@ -11,11 +11,11 @@ using std::endl;
 using std::mt19937;
 using std::uniform_real_distribution;
 
-#include "boost\archive\text_iarchive.hpp"
-#include "boost\archive\text_oarchive.hpp"
+#include <boost\archive\text_iarchive.hpp>
+#include <boost\archive\text_oarchive.hpp>
 using boost::archive::text_iarchive;
 using boost::archive::text_oarchive;
-#include "boost\serialization\vector.hpp"
+#include <boost\serialization\vector.hpp>
 #include <fstream>
 using std::ofstream;
 using std::ifstream;
@@ -57,8 +57,6 @@ Network::Network(const vector<unsigned int> & inputdimensions, unsigned int inpu
 			_weights[i][j] = distribution(randomNumGenerator);
 		}
 	}
-	
-	// fill the _weights vector of networkWeights with random values -1 < x < 1
 	saveNetwork(_ID, *this);
 }
 
