@@ -5,6 +5,8 @@
 // ai::Board
 #include "move-generator.h"
 // ai::MoveGenerator
+#include "seeder.h"
+// ai::Seeder
 #include "player.h"
 // ai::Player
 #include "models.h"
@@ -37,6 +39,7 @@ namespace ai {
             int moveCounter = 0;
 
             Board board;
+
             PlayerPtr red;
             PlayerPtr black;
 
@@ -47,7 +50,12 @@ namespace ai {
 
         public:
             CheckersGame();
-            CheckersGame(const Board & board, PlayerPtr red, PlayerPtr black);
+            CheckersGame(
+                    const Board & board,
+                    PlayerPtr red,
+                    PlayerPtr black,
+                    const std::shared_ptr<Seeder> & seeder
+                    );
 
             // following are public for use in the gui/cython wrapper
             bool isInvalid(const MovePackage & move);

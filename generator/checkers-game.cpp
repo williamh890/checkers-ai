@@ -4,6 +4,11 @@ using PlayerPtr = CheckersGame::PlayerPtr;
 using MovePackage = CheckersGame::MovePackage;
 using JumpPackage = CheckersGame::JumpPackage;
 
+#include "headers/seeder.h"
+using ai::RandomDeviceSeeder;
+using ai::Seeder;
+using ai::SRandSeeder;
+
 #include "headers/board.h"
 using ai::Board;
 
@@ -49,9 +54,13 @@ using std::vector;
 #include <utility>
 using std::pair;
 using std::make_pair;
+#include <memory>
+using std::shared_ptr;
+using std::make_shared;
 #include <exception>
 using std::runtime_error;
 using std::length_error;
+#include <random>
 using std::random_device;
 using std::mt19937;
 using std::uniform_int_distribution;
@@ -65,25 +74,26 @@ CheckersGame ai::getCheckersGame() {
     auto black = getPlayer("black", converter);
     auto board = getBoard();
 
-    return CheckersGame(board, red, black);
+    shared_ptr<Seeder> seeder;
+    if (Settings::SEEDING_METHOD == "random_device") {
+        seeder = make_shared<RandomDeviceSeeder>();
+    }
+    if (Settings::SEEDING_METHOD == "time") {
+        seeder = make_shared<SRandSeeder>();
+    }
+
+    return CheckersGame(board, red, black, seeder);
 }
 
-CheckersGame::CheckersGame(){ };
+CheckersGame::CheckersGame() { };
 
 CheckersGame::CheckersGame(
         const Board & board,
         PlayerPtr red,
-        PlayerPtr black): board(board), red(red), black(black), activePlayer(black), inactivePlayer(red) {
+        PlayerPtr black,
+        const shared_ptr<Seeder> & seeder): board(board), red(red), black(black), activePlayer(black), inactivePlayer(red) {
 
-    random_device device;
-
-    if (Settings::SEEDING_METHOD == "random_device") {
-        generator = mt19937(device());
-    }
-    if (Settings::SEEDING_METHOD == "time") {
-        srand(time(NULL));
-        generator = mt19937(rand());
-    }
+    generator = mt19937(seeder->get());
 
     this->board.addPiecesFor(red);
     this->board.addPiecesFor(black);
