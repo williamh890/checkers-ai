@@ -32,10 +32,19 @@ Network::Network(unsigned int inputID): _ID(inputID) {
 
 Network::Network(const vector<unsigned int> & inputdimensions, unsigned int inputID) : _ID(inputID), _performance(0) {
 	_layers.resize(inputdimensions.at(0));
+	// Sizing each layer containing nodes within the _layers vector
 	for (unsigned int index = 1; index <= inputdimensions.at(0); ++index) {
 		_layers[index-1].resize(inputdimensions.at(index));
 	}
+	
+	_weights.resize(inputdimensions.at(0));
+	// Sizing each network weights vector contained in _weights
+	_weights[0].resize(inputdimensions.at(1));
+	for (unsigned int i = 1; i < _weights.size(); ++i) {
+		_weights[i].resize(inputdimensions.at(i) * inputdimensions.at(i + 1));
+	}
 
+	// Initialization of the network weights
 	std::random_device device;
 	mt19937 randomNumGenerator;
 	if (ai::Settings::SEEDING_METHOD == "random_device") {
@@ -47,16 +56,12 @@ Network::Network(const vector<unsigned int> & inputdimensions, unsigned int inpu
 	}
 	uniform_real_distribution<double> distribution(-1, 1);
 
-	_weights.resize(inputdimensions.at(0));
-	_weights[0].resize(inputdimensions.at(1));
-	for (unsigned int i = 1; i < _weights.size(); ++i) {
-		_weights[i].resize(inputdimensions.at(i) * inputdimensions.at(i + 1));
-	}
 	for (std::vector<std::vector<int>>::size_type i = 0; i < _weights.size(); i++) {
 		for (std::vector<int>::size_type j = 0; j < _weights[i].size(); j++) {
 			_weights[i][j] = distribution(randomNumGenerator);
 		}
 	}
+
 	saveNetwork(_ID, *this);
 }
 
