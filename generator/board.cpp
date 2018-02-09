@@ -69,7 +69,7 @@ const vector<pair<int, Jump>> Board::getValidJumpsFor(const shared_ptr<Player> &
 
 bool Board::hasOpposingPieceAt(const Jump & jump, char color) const {
     return boardState[jump.through] != ' ' and
-        boardState[jump.through] != tolower(color);
+        tolower(boardState[jump.through]) != tolower(color);
 }
 
 bool Board::destinationIsNotEmpty(const Jump & jump) const {
@@ -96,15 +96,13 @@ const vector<pair<int, int>> Board::getValidMovesFor(const shared_ptr<Player> & 
     return validMoves;
 }
 
-const Action Board::make(const pair<int, int> move) {
+void Board::make(const pair<int, int> move) {
     swap(boardState[move.first],boardState[move.second]);
-    return Action::Move;
 }
 
-const Action Board::make(const pair<int, Jump> jump) {
+void Board::make(const pair<int, Jump> jump) {
     swap(boardState[jump.second.to],boardState[jump.first]);
     boardState[jump.second.through] = ' ';
-    return Action::Jump;
 }
 
 
@@ -153,7 +151,7 @@ char Board::operator[](const int & index) const
     return boardState[index];
 }
 
-void Board::UpdatePiece(const int & index, const char & newVal)
+void Board::updatePiece(const int & index, const char & newVal)
 {
     boardState[index] = newVal;
 }
@@ -168,4 +166,3 @@ vector<vector<char>> Board::getEmptyBoard() {
 
     return board;
 }
-

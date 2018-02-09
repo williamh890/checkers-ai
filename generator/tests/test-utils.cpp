@@ -6,7 +6,7 @@ using ai::positionToSpace;
 using ai::Position;
 
 #include "../headers/consts.h"
-using ai::TOTAL_NUM_PIECES;
+using ai::TOTAL_NUM_SPACES;
 
 #include "catch.hpp"
 
@@ -52,7 +52,7 @@ TEST_CASE("Test util functions") {
     }
 
     SECTION("Test convertions") {
-        for (auto space = 0; space < TOTAL_NUM_PIECES; ++space) {
+        for (auto space = 0; space < TOTAL_NUM_SPACES; ++space) {
             auto pos = spaceToPosition(space);
             auto converted = positionToSpace(pos);
 
