@@ -80,6 +80,8 @@ namespace ai {
             JumpPackage getRandomValidJump();
             JumpPackage getJumpFromUser();
 
+            void makeRandomValidAction();
+
             MovePackage parseUserInput();
 
             JumpPackage getJumpFrom(const MovePackage & inputJump);

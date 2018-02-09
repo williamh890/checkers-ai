@@ -24,6 +24,13 @@ cdef class PyCheckersGame:
   def __cinit__(self):
     self.checkers_game = getCheckersGame()
 
+  def get_board(self):
+    board = self.checkers_game.getBoard()
+    char_board = []
+    for space in board:
+      char_board.append(chr(space))
+    return char_board
+
   def is_jump_invalid(self, int start, int to, int through):
     cdef Jump jump
     jump.to, jump.through = to, through
@@ -51,6 +58,7 @@ cdef class PyCheckersGame:
 class PyBoard():
     def __init__(self):
         self.game = PyCheckersGame()
+        self.board = self.game.get_board()
         self.window = tk.Tk()
         self.entry = ttk.Entry(self.window)
         self.entry.bind('<Command-a>', self.get_entry_move)
@@ -72,7 +80,7 @@ class PyBoard():
         self.board.pack()
 
     def get_board(self, board):  # board should be a 2D array
-        self.spaces = board
+        one_to_two_dimensions(board, self.spaces, BOARD_SIZE)
 
     def make_board(self):
         for row in range(BOARD_SIZE):
@@ -83,7 +91,11 @@ class PyBoard():
 
 #********** GUI SETUP **********#
     def run(self):
-        self.window.mainloop()
+      while True:
+        board = self.game.get_board()
+        self.compare_and_update_board(board)
+        self.window.update_idletasks()
+        self.window.update()
 
     def make_board_space(self, row, column):
         callback = self.make_move_callback(row, column)
@@ -114,69 +126,94 @@ class PyBoard():
         if len(self.move_buttons) == 2:
           self.b_space = self.move_buttons[0]
           self.e_space = self.move_buttons[1]
-          if abs(self.mb_info[0][0] - self.mb_info[1][0]) == 2:
-            if abs(self.mb_info[0][1] - self.mb_info[1][1]) == 2:
+          if self.is_diagonal():
+            if self.game.are_jumps():
               print("making jump")
               self.submit_jump()
             else:
-              print("making move")
-              self.submit_move()
-          else:
-            print("making move, not close to a jump")
-            self.submit_move()
-
-        else:
+                print("making move")
+                self.submit_move()
             print("select your next move")
 
     def submit_move(self):
-        move = convert_row_col_to_number(self.mb_info)
+        move = convert_spaces_to_indices(self.mb_info)
         if self.game.is_move_invalid(move[0], move[1]):
-          print(move[0])
-          print(move[1])
           print("bad move")
         else:
-          self.game.make_move(move[0], move[1])
           self.b_space["text"], self.e_space["text"] = self.e_space["text"], self.b_space["text"]
+          self.game.make_move(move[0], move[1])
           print("buttons should be different")
         self.move_buttons, self.mb_info = [], []
 
     def submit_jump(self):
       mid_space = (min(self.mb_info[0][0],self.mb_info[1][0]) + 1,
                    min(self.mb_info[0][1], self.mb_info[1][1]) + 1)
-      print(mid_space[0])
-      print(mid_space[1])
       self.mb_info.append(mid_space)
       mid_space = self.draw_spaces[mid_space[0]][mid_space[1]]
 
-      jump = convert_row_col_to_number(self.mb_info)
+      jump = convert_spaces_to_indices(self.mb_info)
       if self.game.is_jump_invalid(jump[0], jump[1], jump[2]):
         print("bad jump")
       else:
-        self.game.make_jump(jump[0], jump[1], jump[2])
         self.e_space["text"] = self.b_space["text"]
         self.b_space["text"] = " "
         mid_space["text"] = " "
+        self.game.make_jump(jump[0], jump[1], jump[2])
       self.move_buttons, self.mb_info = [], []
 
-    def receive_move(self, b_row, b_col, e_row, e_col):
-        self.move_buttons = []
-        self.move_buttons.append(self.draw_spaces[b_row][b_col])
-        self.move_buttons.append(self.draw_spaces[e_row][e_col])
-        self.submit_move()
+    def is_diagonal(self):
+      if self.mb_info[0][0] == self.mb_info[1][0]:
+        print("not in play space")
+        self.move_buttons, self.mb_info = [], []
+        return False
+      if self.mb_info[0][1] == self.mb_info[1][1]:
+        print("not in play space")
+        self.move_buttons, self.mb_info = [], []
+        return False
+      return True
+
+    def compare_and_update_board(self, board):
+      if (board != self.board):
+        self.board = board
+        self.update_buttons()
+        print(board)
+
+    def update_buttons(self):
+      for row in range(BOARD_SIZE):
+        for col in range(BOARD_SIZE):
+          if check_space(row, col):
+            index = convert_row_col_to_index((row, col))
+            if self.board[index] != self.draw_spaces[row][col]["text"]:
+              self.draw_spaces[row][col]["text"] = self.board[index]
 
     def get_entry_move(self, e):
         print(self.entry.get())
 
-def convert_row_col_to_number(spaces):
+def one_to_two_dimensions(one_board, two_board, dimension):
+  for row in range(dimension):
+    for col in range(dimension):
+      if check_space(row, col):
+        two_board[row][col] = one_board[convert_row_col_to_index((row, col))]
+      else:
+        two_board[row][col] = " "
+
+def check_space(row, column):
+  if row % 2 == 0 and column % 2 != 0:
+    return True
+  elif row % 2 != 0 and column % 2 == 0:
+    return True
+  return False
+
+
+def convert_spaces_to_indices(spaces):
   space_nums = []
   for space in spaces:
-    print(space[0])
-    print(space[1])
-    number = (space[0]) * BOARD_SIZE + space[1]
-    print(number)
-    print(number//2)
-    space_nums.append(number//2)
+    space_nums.append(convert_row_col_to_index(space))
   return space_nums
+
+def convert_row_col_to_index(row_col):
+  index = ((row_col[0]) * BOARD_SIZE + row_col[1])//2
+  return index
 
 def example_board():
     board = [[0 for x in range(BOARD_SIZE)]
@@ -189,14 +226,14 @@ def example_board():
             else:
                 if row % 2 == 0 and column % 2 != 0:
                     if row <= 2:
-                        board[row][column] = "B"
+                        board[row][column] = "b"
                     else:
-                        board[row][column] = "R"
+                        board[row][column] = "r"
                 elif row % 2 != 0 and column % 2 == 0:
                     if row <= 2:
-                        board[row][column] = "B"
+                        board[row][column] = "b"
                     else:
-                        board[row][column] = "R"
+                        board[row][column] = "r"
                 else:
                     board[row][column] = " "
     return board
@@ -206,6 +243,6 @@ if __name__ == "__main__":
 
     board = example_board()
     checkers = PyBoard()
-    checkers.get_board(board)
+    checkers.get_board(checkers.game.get_board())
     checkers.make_board()
     checkers.run()

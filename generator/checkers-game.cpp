@@ -329,19 +329,45 @@ string CheckersGame::toString() {
     return board.toString();
 }
 
-void CheckersGame::makeJump(const JumpPackage & jump){
-  board.make(jump);
-  reactTo(jump);
 
-  if (not areJumps()){
-    swapPlayers();
-  }
+void CheckersGame::makeJump(const JumpPackage & jump){
+    try {
+        board.make(jump);
+        reactTo(jump);
+        if (not areJumps()){
+            swapPlayers();
+            makeRandomValidAction();
+        }
+    } catch(length_error & e) {
+        cout << "Out of moves" << endl;
+        cout << e.what() << endl;
+    }
+
 }
 
 void CheckersGame::makeMove(const MovePackage & move){
-  board.make(move);
-  reactTo(move);
+    board.make(move);
+    reactTo(move);
 
-  swapPlayers();
+    swapPlayers();
 }
 
+void CheckersGame::makeRandomValidAction(){
+    if (areJumps()){
+        auto jump = getRandomValidJump();
+        board.make(jump);
+        reactTo(jump);
+
+        if (areJumps()){
+            makeRandomValidAction();
+        }
+
+        swapPlayers();
+        return;
+    }
+
+    auto move = getRandomValidMove();
+    board.make(move);
+    reactTo(move);
+    swapPlayers();
+}
