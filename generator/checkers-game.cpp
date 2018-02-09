@@ -280,6 +280,18 @@ bool CheckersGame::isInvalid(const MovePackage & move) {
     return true;
 }
 
+bool CheckersGame::isInvalid(const JumpPackage & jump) {
+    auto validJumps = getValidJumps();
+
+    for (const auto & validJump : validJumps) {
+        if (validJump == jump) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 vector<MovePackage> CheckersGame::getValidMoves() {
     auto validMoves = board.getValidMovesFor(activePlayer);
 

@@ -3,9 +3,14 @@ using ai::Seeder;
 using ai::SRandSeeder;
 using ai::RandomDeviceSeeder;
 
+Seeder::Seeder() {
+}
 
-SRandSeeder::SRandSeeder() {
+SRandSeeder::SRandSeeder(): Seeder() {
     srand(time(NULL));
+}
+
+RandomDeviceSeeder::RandomDeviceSeeder(): Seeder(){
 }
 
 unsigned int SRandSeeder::get() {

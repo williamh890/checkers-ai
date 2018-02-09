@@ -13,6 +13,10 @@ cdef extern from "headers/json.hpp":
 cdef extern from "headers/consts.h" namespace "ai":
   pass
 
+cdef extern from "headers/seeder.h" namespace "ai":
+  cdef cppclass Seeder:
+    Seeder()
+
 cdef extern from "headers/player.h" namespace "ai":
   cdef cppclass Player:
     Player()
@@ -49,7 +53,8 @@ cdef extern from "headers/checkers-game.h" namespace "ai":
     CheckersGame() except +
     CheckersGame(Board & board,
                 shared_ptr[Player] red,
-                shared_ptr[Player] black) except +
+                shared_ptr[Player] black,
+                shared_ptr[Seeder] seeder) except +
     bool isInvalid(const pair[int, int] & move)
     bool isInvalid(const pair[int, Jump] & jump)
     vector[char] getBoard()

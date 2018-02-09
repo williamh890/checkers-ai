@@ -6,7 +6,7 @@
 namespace ai {
     class Seeder {
         public:
-            Seeder() = default;
+            Seeder();
             virtual unsigned int get() = 0;
     };
 
@@ -20,8 +20,9 @@ namespace ai {
             std::random_device device;
 
         public:
-            RandomDeviceSeeder() = default;
+            RandomDeviceSeeder();
             unsigned int get() override;
+            ~RandomDeviceSeeder() = default;
     };
 }
 
