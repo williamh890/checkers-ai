@@ -370,6 +370,7 @@ void CheckersGame::makeJump(const pair<int, Jump> & jump){
     if (not areJumps()){
       swapPlayers();
       makeRandomValidAction();
+      swapPlayers();
     }
   }
   catch(length_error & e) {
@@ -384,6 +385,7 @@ void CheckersGame::makeMove(const pair<int, int> & move){
   reactTo(action, move);
   swapPlayers();
   makeRandomValidAction();
+  swapPlayers();
   }
 
 void CheckersGame::makeRandomValidAction(){
@@ -394,13 +396,11 @@ void CheckersGame::makeRandomValidAction(){
       if (areJumps()){
         makeRandomValidAction();
       }
-      swapPlayers();
   }
   else{
     auto move = getRandomValidMove();
     auto action = board.make(move);
     reactTo(action, move);
-    swapPlayers();
   }
 
 }
