@@ -215,6 +215,18 @@ void saveKingWeight(ofstream & outFile, double kingWeight) {
     outFile.write( (char*)&kingWeight, sizeof(double));
 }
 
+void saveDimensions(ofstream & outFile, const vector<vector<double>> & layers) {
+    unsigned int numLayers = layers.size();
+    outFile.write((char*)&numLayers, sizeof(unsigned int));
+
+    cout << "dimensions: ";
+	for (const auto & layer : layers) {
+        unsigned int layerSize = layer.size();
+        cout << layerSize << " ";
+        outFile.write( (char*)&layerSize, sizeof(unsigned int));
+	} cout << endl;
+}
+
 void ai::saveNetwork(int ID, Network & networkToSave) {
     ofstream outFile;
 
@@ -223,6 +235,7 @@ void ai::saveNetwork(int ID, Network & networkToSave) {
 
     savePerformance(outFile, networkToSave._performance);
     saveKingWeight(outFile, networkToSave._kingWeight);
+    saveDimensions(outFile, networkToSave._layers);
 
     for (auto & layer : networkToSave._weights) {
         saveWeightsForLayerTo(outFile, layer);
@@ -264,6 +277,23 @@ double loadKingWeightFrom(ifstream & inFile) {
     return kingWeight;
 }
 
+vector<unsigned int> loadDimension(ifstream & inFile) {
+    unsigned int numLayers = 0;
+    inFile.read((char*)&numLayers, sizeof(unsigned int));
+
+    vector<unsigned int> dimensions;
+    cout << "loading dimensions: ";
+	for (unsigned int i = 0; i < numLayers; ++i) {
+        unsigned int layerSize = 0;
+        inFile.read( (char*)&layerSize, sizeof(unsigned int));
+
+        cout << layerSize << " ";
+        dimensions.push_back(layerSize);
+	} cout << endl;
+
+    return dimensions;
+}
+
 
 bool ai::loadNetwork(int ID, Network & networkRecievingData) {
     vector<vector<double>> weights;
@@ -280,6 +310,7 @@ bool ai::loadNetwork(int ID, Network & networkRecievingData) {
 
     networkRecievingData._performance = loadPerformanceFrom(inFile);
     networkRecievingData._kingWeight = loadKingWeightFrom(inFile);
+    auto dimensions = loadDimension(inFile);
 
     unsigned int currLayerDimension = 0.;
     while(true) {
