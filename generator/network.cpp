@@ -294,6 +294,17 @@ vector<unsigned int> loadDimension(ifstream & inFile) {
     return dimensions;
 }
 
+vector<vector<double>> getNodesFromDimensions(const vector<unsigned int> & dimensions) {
+    vector<vector<double>> nodes;
+
+    for (auto size : dimensions) {
+        auto nodeLayer = vector<double>(size, 0);
+        nodes.push_back(nodeLayer);
+    }
+
+    return nodes;
+}
+
 
 bool ai::loadNetwork(int ID, Network & networkRecievingData) {
     vector<vector<double>> weights;
@@ -310,7 +321,10 @@ bool ai::loadNetwork(int ID, Network & networkRecievingData) {
 
     networkRecievingData._performance = loadPerformanceFrom(inFile);
     networkRecievingData._kingWeight = loadKingWeightFrom(inFile);
+
     auto dimensions = loadDimension(inFile);
+    auto nodes = getNodesFromDimensions(dimensions);
+    networkRecievingData._layers = nodes;
 
     unsigned int currLayerDimension = 0.;
     while(true) {

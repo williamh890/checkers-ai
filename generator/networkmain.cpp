@@ -10,32 +10,31 @@
 using std::vector;
 
 double get_time() {
-	return 1.0e-9*std::chrono::duration_cast<std::chrono::nanoseconds>(
-		std::chrono::high_resolution_clock::now().time_since_epoch()
-		).count();
+    return 1.0e-9*std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::high_resolution_clock::now().time_since_epoch()
+            ).count();
 }
 
 int main() {
-		vector <unsigned int> networkCreationInput = { 4, 32, 40, 10, 1 };
+    vector <unsigned int> networkCreationInput = { 4, 32, 40, 10, 1 };
+
+    // Create only one network so that you dont have 100 files running around. Leave off the second parameter defaults to 100
+    AI::setupNetworks(networkCreationInput, 1);
 
 
-		// Create only one network so that you dont have 100 files running around. Leave off the second parameter defaults to 100
-		AI::setupNetworks(networkCreationInput, 1);
+    //Sample full board
+    vector<char> sampleBoard{ 'r','r','r','r','r','r','r','r',' ','r','r','r',' ', ' ','r', ' ',' ', ' ', 'b', ' ','b','b',' ','b','b','b','b','b','b','b','b','b' };
+
+    AI::Network player(0);
+    //Proof of success at runtime
+    //player.outputDebug();
+    std::cout << "Board was evaluated as: " << player.evaluateBoard(sampleBoard) << std::endl;
+
+    // Wait for user
+    std::cin.ignore();
+    std::cout << "Press ENTER to quit ";
+    while (std::cin.get() != '\n');
 
 
-		//Sample full board
-		vector<char> sampleBoard{ 'r','r','r','r','r','r','r','r',' ','r','r','r',' ', ' ','r', ' ',' ', ' ', 'b', ' ','b','b',' ','b','b','b','b','b','b','b','b','b' };
-
-		AI::Network player(0);
-		//Proof of success at runtime
-		//player.outputDebug();
-		std::cout << "Board was evaluated as: " << player.evaluateBoard(sampleBoard) << std::endl;
-
-		// Wait for user
-		std::cin.ignore();
-		std::cout << "Press ENTER to quit ";
-		while (std::cin.get() != '\n');
-
-
-	return 0;
+    return 0;
 }
