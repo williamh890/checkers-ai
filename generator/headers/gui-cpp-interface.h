@@ -9,6 +9,7 @@ namespace ai {
         private:
             CheckersGame game;
         public:
+            GuiCppInterface() = default;
             GuiCppInterface(const CheckersGame & game);
 
             bool isInvalid(const CheckersGame::MovePackage & move);
