@@ -23,9 +23,13 @@ int main() {
 		AI::setupNetworks(networkCreationInput, 1);
 
 
-		AI::Network player(1);
+		//Sample full board
+		vector<char> sampleBoard{ 'r','r','r','r','r','r','r','r',' ','r','r','r',' ', ' ','r', ' ',' ', ' ', 'b', ' ','b','b',' ','b','b','b','b','b','b','b','b','b' };
+
+		AI::Network player(0);
 		//Proof of success at runtime
 		//player.outputDebug();
+		std::cout << "Board was evaluated as: " << player.evaluateBoard(sampleBoard) << std::endl;
 
 		// Wait for user
 		std::cin.ignore();
