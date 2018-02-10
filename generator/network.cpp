@@ -38,6 +38,7 @@ Network::Network(
         shared_ptr<Seeder> & seeder) : _ID(inputID), _performance(0) {
 
 	_layers.resize(inputdimensions.at(0));
+    cout << "Processing input dimensions" << endl << endl;
 	// Sizing each layer containing nodes within the _layers vector
 	for (unsigned int index = 1; index <= inputdimensions.at(0); ++index) {
 		_layers[index-1].resize(inputdimensions.at(index));
