@@ -13,6 +13,17 @@ cdef extern from "headers/json.hpp":
 cdef extern from "headers/consts.h" namespace "ai":
   pass
 
+cdef extern from "headers/seeder.h" namespace "ai":
+  cdef cppclass Seeder:
+    Seeder()
+  cdef cppclass RandomDeviceSeeder(Seeder):
+    RandomDeviceSeeder()
+  cdef cppclass SRandSeeder(Seeder):
+    SRandSeeder()
+
+  Seeder getSeeder()
+
+
 cdef extern from "headers/player.h" namespace "ai":
   cdef cppclass Player:
     Player()
@@ -44,16 +55,28 @@ cdef extern from "headers/table-types.h" namespace "ai":
 cdef extern from "headers/json-to-stl.h" namespace "ai":
   pass
 
+cdef extern from "headers/seeder.h" namespace "ai":
+  pass
+
+cdef extern from "headers/network.h" namespace "ai":
+  pass
+
 cdef extern from "headers/checkers-game.h" namespace "ai":
+  ctypedef pair[int, int] MovePackage
+  ctypedef pair[int, Jump] JumpPackage
+  ctypedef shared_ptr[Player] PlayerPtr;
+  ctypedef shared_ptr[Seeder] SeederPtr;
+
   cdef cppclass CheckersGame:
     CheckersGame() except +
     CheckersGame(Board & board,
                 shared_ptr[Player] red,
-                shared_ptr[Player] black) except +
+                shared_ptr[Player] black,
+                shared_ptr[Seeder] seeder) except +
     bool isInvalid(const pair[int, int] & move)
     bool isInvalid(const pair[int, Jump] & jump)
     vector[char] getBoard()
     bool areJumps()
-    void makeMove(const pair[int, int] & move)
-    void makeJump(const pair[int, Jump] & jump)
+    void makeMove(MovePackage & move)
+    void makeJump(JumpPackage & jump)
   CheckersGame getCheckersGame() except +

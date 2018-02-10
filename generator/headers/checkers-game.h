@@ -5,6 +5,8 @@
 // ai::Board
 #include "move-generator.h"
 // ai::MoveGenerator
+#include "seeder.h"
+// ai::Seeder
 #include "player.h"
 // ai::Player
 #include "models.h"
@@ -30,13 +32,15 @@ namespace ai {
             using MovePackage = std::pair<int, int>;
             using JumpPackage = std::pair<int, Jump>;
             using PlayerPtr = std::shared_ptr<Player>;
+            using SeederPtr = std::shared_ptr<Seeder>;
 
-            using turn_type = std::pair<std::vector<char>, std::pair<std::vector<MovePackage>, std::vector<std::pair<int,Jump>>>>;
+            using turn_type = std::pair<Board::BoardType, std::pair<std::vector<MovePackage>, std::vector<JumpPackage>>>;
 
         private:
             int moveCounter = 0;
 
             Board board;
+
             PlayerPtr red;
             PlayerPtr black;
 
@@ -47,7 +51,12 @@ namespace ai {
 
         public:
             CheckersGame();
-            CheckersGame(const Board & board, PlayerPtr red, PlayerPtr black);
+            CheckersGame(
+                    const Board & board,
+                    PlayerPtr red,
+                    PlayerPtr black,
+                    SeederPtr & seeder
+                    );
 
             // following are public for use in the gui/cython wrapper
             bool isInvalid(const MovePackage & move);
@@ -71,6 +80,8 @@ namespace ai {
             JumpPackage getJumpFromActivePlayer();
             JumpPackage getRandomValidJump();
             JumpPackage getJumpFromUser();
+
+            void makeRandomValidAction();
 
             MovePackage parseUserInput();
 
