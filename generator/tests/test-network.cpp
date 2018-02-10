@@ -16,7 +16,16 @@ TEST_CASE("Test the network class") {
     }
 
     SECTION("test network evaluation") {
-        vector<char> sampleBoard{ 'r','r','r','r','r','r','r','r',' ','r','r','r',' ', ' ','r', ' ',' ', ' ', 'b', ' ','b','b',' ','b','b','b','b','b','b','b','b','b' };
+        vector<char> sampleBoard{
+            'r',   'r',   'r',   'r',
+         'r',   'r',   'r',   'r',
+            ' ',   'r',   'r',   'r',
+         ' ',   ' ',   'r',   ' ',
+            ' ',   ' ',   'b',   ' ',
+         'b',   'b',   ' ',   'b',
+            'b',   'b',   'b',   'b',
+         'b',   'b',   'b',   'b'
+        };
 
         ai::Network player(0);
         //Proof of success at runtime

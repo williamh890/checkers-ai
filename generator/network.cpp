@@ -119,7 +119,6 @@ double Network::evaluateBoard(const vector<char> & inputBoard ) {
 };
 
 void Network::calculateNode(unsigned int x, unsigned int y) {
-	//cout << "Calculating node " << tracker++ << endl;
 	unsigned int previousLayerSize = _layers[x - 1].size();
 	for (unsigned int i = 0; i < previousLayerSize; ++i) {
 		_layers[x][y] += _weights[x][y*previousLayerSize + i] * _layers[x - 1][i];
@@ -243,13 +242,13 @@ void ai::saveNetwork(int ID, Network & networkToSave) {
 
     cout << endl;
 
-    outFile.close();
+    outFile.close(); //Unnecessary
 }
 
 vector<double> loadWeightsForLayerFrom(ifstream & inFile, unsigned int currLayerDimension) {
     vector<double> layerWeights;
 
-    for (auto i = 0; (unsigned int)i < currLayerDimension; ++i) {
+    for (unsigned int i = 0; i < currLayerDimension; ++i) {
         double weight = 0;
         inFile.read( (char*)&weight, sizeof(double));
         layerWeights.push_back(weight);
@@ -308,14 +307,11 @@ vector<vector<double>> getNodesFromDimensions(const vector<unsigned int> & dimen
 
 bool ai::loadNetwork(int ID, Network & networkRecievingData) {
     vector<vector<double>> weights;
+
     cout << "loading network" << endl;
-
-    ifstream inFile;
-    auto filename = idToFilename(ID);
-    inFile.open(filename, ios::in | ios::binary);
-
+    ifstream inFile (idToFilename(ID), ios::in | ios::binary);
     if (!inFile) {
-        cout << "Error opening nn file." << endl;
+        cout << "Error opening nn file" << endl;
         return false;
     }
 
@@ -336,10 +332,9 @@ bool ai::loadNetwork(int ID, Network & networkRecievingData) {
         cout << "Layer Dimension: " << currLayerDimension << endl;
 
         auto layerWeights = loadWeightsForLayerFrom(inFile, currLayerDimension);
-
         weights.push_back(layerWeights);
     }
-    inFile.close();
+    inFile.close(); // unnecessary, files close automatically when they go out of scope
 
     networkRecievingData._weights = weights;
 
