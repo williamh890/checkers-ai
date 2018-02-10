@@ -16,6 +16,11 @@ cdef extern from "headers/consts.h" namespace "ai":
 cdef extern from "headers/seeder.h" namespace "ai":
   cdef cppclass Seeder:
     Seeder()
+  cdef cppclass RandomDeviceSeeder:
+    RandomDeviceSeeder(Seeder)
+  cdef cppclass SRandSeeder(Seeder):
+    SRandSeeder()
+
 
 cdef extern from "headers/player.h" namespace "ai":
   cdef cppclass Player:
