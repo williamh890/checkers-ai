@@ -3,4 +3,4 @@ checkers_game_obj.cpp
 checkers_game_obj_2
 gui-checkers
 
-*.nn
+*.network

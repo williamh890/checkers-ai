@@ -190,58 +190,78 @@ string ai::idToFilename(int ID) {
 	return filename;
 }
 
+void saveLayerSize(ofstream & outFile, const vector<double> & layer) {
+    unsigned int size = layer.size();
+    cout << "writing " << layer.size() << " to file." << endl;
+    outFile.write( (char*)&size, sizeof(unsigned int));
+}
+
+void saveWeightsForLayerTo(ofstream & outFile, const vector<double> & layer) {
+
+    saveLayerSize(outFile, layer);
+    for (auto & w : layer) {
+        outFile.write( (char*)&w, sizeof(double));
+    }
+}
+
 void ai::saveNetwork(int ID, Network & networkToSave) {
-    ofstream OutFile;
-    OutFile.open("test.nn", ios::out | ios::binary);
+    ofstream outFile;
 
-    for (auto & dimension : networkToSave._weights) {
-        unsigned int size = dimension.size();
-        cout << "writing " << dimension.size() << " to file." << endl;
-        OutFile.write( (char*)&size, sizeof(unsigned int));
+    auto filename = idToFilename(ID);
+    outFile.open(filename, ios::out | ios::binary);
 
-        for (auto & v : dimension) {
-            OutFile.write( (char*)&v, sizeof(double));
-        }
+    for (auto & layer : networkToSave._weights) {
+        saveWeightsForLayerTo(outFile, layer);
     }
 
     cout << endl;
 
-    OutFile.close();
+    outFile.close();
+}
+
+vector<double> loadWeightsForLayerFrom(ifstream & inFile, unsigned int currLayerDimension) {
+    vector<double> layerWeights;
+
+    for (auto i = 0; (unsigned int)i < currLayerDimension; ++i) {
+        double weight = 0;
+        inFile.read( (char*)&weight, sizeof(double));
+        layerWeights.push_back(weight);
+    }
+
+    return layerWeights;
+}
+
+bool inline noMoreLayersIn(ifstream & inFile) {
+    return inFile.eof();
 }
 
 bool ai::loadNetwork(int ID, Network & networkRecievingData) {
     vector<vector<double>> weights;
     cout << "loading network" << endl;
 
-    ifstream InFile;
-    InFile.open("test.nn", ios::in | ios::binary);
-    if (!InFile) {
+    ifstream inFile;
+    auto filename = idToFilename(ID);
+    inFile.open(filename, ios::in | ios::binary);
+
+    if (!inFile) {
         cout << "Error opening nn file." << endl;
         return false;
     }
 
     unsigned int currLayerDimension = 0.;
-
     while(true) {
-        InFile.read( (char*)&currLayerDimension, sizeof(unsigned int));
+        inFile.read( (char*)&currLayerDimension, sizeof(unsigned int));
 
-        if(InFile.eof()) {
+        if(noMoreLayersIn(inFile)) {
             break;
         }
         cout << "Layer Dimension: " << currLayerDimension << endl;
 
-        vector<double> layerWeights;
-
-        for (auto i = 0; (unsigned int)i < currLayerDimension; ++i) {
-            double weight = 0;
-            InFile.read( (char*)&weight, sizeof(double));
-            layerWeights.push_back(weight);
-        }
+        auto layerWeights = loadWeightsForLayerFrom(inFile, currLayerDimension);
 
         weights.push_back(layerWeights);
     }
-
-    InFile.close();
+    inFile.close();
 
     return true;
 }
