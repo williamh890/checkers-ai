@@ -21,6 +21,7 @@ using std::uniform_real_distribution;
 using std::ofstream;
 using std::ifstream;
 #include <iostream>
+using std::ios;
 #include <string>
 using std::string;
 using std::to_string;
@@ -38,7 +39,6 @@ Network::Network(
         shared_ptr<Seeder> & seeder) : _ID(inputID), _performance(0) {
 
 	_layers.resize(inputdimensions.at(0));
-    cout << "Processing input dimensions" << endl << endl;
 	// Sizing each layer containing nodes within the _layers vector
 	for (unsigned int index = 1; index <= inputdimensions.at(0); ++index) {
 		_layers[index-1].resize(inputdimensions.at(index));
@@ -75,7 +75,7 @@ Network::Network(
 
 Network::~Network() {
 	if (_gameCompleted) {
-		saveNetwork(_ID, *this);
+		//saveNetwork(_ID, *this);
 	}
 };
 
@@ -191,8 +191,57 @@ string ai::idToFilename(int ID) {
 }
 
 void ai::saveNetwork(int ID, Network & networkToSave) {
+    ofstream OutFile;
+    OutFile.open("test.nn", ios::out | ios::binary);
+
+    for (auto & dimension : networkToSave._weights) {
+        unsigned int size = dimension.size();
+        cout << "writing " << dimension.size() << " to file." << endl;
+        OutFile.write( (char*)&size, sizeof(unsigned int));
+
+        for (auto & v : dimension) {
+            OutFile.write( (char*)&v, sizeof(double));
+        }
+    }
+
+    cout << endl;
+
+    OutFile.close();
 }
 
 bool ai::loadNetwork(int ID, Network & networkRecievingData) {
+    vector<vector<double>> weights;
+    cout << "loading network" << endl;
+
+    ifstream InFile;
+    InFile.open("test.nn", ios::in | ios::binary);
+    if (!InFile) {
+        cout << "Error opening nn file." << endl;
+        return false;
+    }
+
+    unsigned int currLayerDimension = 0.;
+
+    while(true) {
+        InFile.read( (char*)&currLayerDimension, sizeof(unsigned int));
+
+        if(InFile.eof()) {
+            break;
+        }
+        cout << "Layer Dimension: " << currLayerDimension << endl;
+
+        vector<double> layerWeights;
+
+        for (auto i = 0; (unsigned int)i < currLayerDimension; ++i) {
+            double weight = 0;
+            InFile.read( (char*)&weight, sizeof(double));
+            layerWeights.push_back(weight);
+        }
+
+        weights.push_back(layerWeights);
+    }
+
+    InFile.close();
+
     return true;
 }

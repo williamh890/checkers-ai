@@ -12,4 +12,8 @@ TEST_CASE("Test the network class") {
         vector<unsigned int> dimesions{4, 32, 40, 10, 1};
         setupNetworks(dimesions, 2);
     }
+
+    SECTION("test loading a network") {
+        Network(0);
+    }
 }

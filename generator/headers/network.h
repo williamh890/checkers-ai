@@ -51,6 +51,8 @@ namespace ai {
 			ar & _kingWeight;
 			ar & _performance;
 		}
+        friend void saveNetwork(int, Network &);
+        friend bool loadNetwork(int, Network &);
 
 		void calculateNode(unsigned int, unsigned int);
 	}; // end class AI_Network
