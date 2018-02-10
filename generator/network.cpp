@@ -263,5 +263,7 @@ bool ai::loadNetwork(int ID, Network & networkRecievingData) {
     }
     inFile.close();
 
+    networkRecievingData._weights = weights;
+
     return true;
 }
