@@ -40,9 +40,11 @@ Network::Network(
 
 	_layers.resize(inputdimensions.at(0));
 	// Sizing each layer containing nodes within the _layers vector
+    cout << "inputdimensions: ";
 	for (unsigned int index = 1; index <= inputdimensions.at(0); ++index) {
 		_layers[index-1].resize(inputdimensions.at(index));
-	}
+        cout << inputdimensions.at(index) << " ";
+	} cout << endl;
 
 	_weights.resize(inputdimensions.at(0));
 	// Sizing each network weights vector contained in _weights
@@ -60,6 +62,7 @@ Network::Network(
 	for (auto i = 1; (unsigned int)i < _weights.size(); ++i) {
 		_weights[i].resize(inputdimensions.at(i) * inputdimensions.at(i + 1));
 	}
+
 	for (auto i = 0; (unsigned int)i < _weights.size(); i++) {
 		for (auto j = 0; (unsigned int)j < _weights[i].size(); j++) {
 			_weights[i][j] = distribution(randomNumGenerator);
@@ -204,11 +207,22 @@ void saveWeightsForLayerTo(ofstream & outFile, const vector<double> & layer) {
     }
 }
 
+void savePerformance(ofstream & outFile, int networkPerormance) {
+    outFile.write( (char*)&networkPerormance, sizeof(int));
+}
+
+void saveKingWeight(ofstream & outFile, double kingWeight) {
+    outFile.write( (char*)&kingWeight, sizeof(double));
+}
+
 void ai::saveNetwork(int ID, Network & networkToSave) {
     ofstream outFile;
 
     auto filename = idToFilename(ID);
     outFile.open(filename, ios::out | ios::binary);
+
+    savePerformance(outFile, networkToSave._performance);
+    saveKingWeight(outFile, networkToSave._kingWeight);
 
     for (auto & layer : networkToSave._weights) {
         saveWeightsForLayerTo(outFile, layer);
@@ -235,6 +249,22 @@ bool inline noMoreLayersIn(ifstream & inFile) {
     return inFile.eof();
 }
 
+int loadPerformanceFrom(ifstream & inFile) {
+    int performace = 0;
+    inFile.read( (char*)&performace, sizeof(int));
+    cout << "Perfomance: " << performace << endl;
+    return performace;
+};
+
+double loadKingWeightFrom(ifstream & inFile) {
+    double kingWeight = 0.;
+    inFile.read( (char*)&kingWeight, sizeof(double));
+    cout << "King Weight: " << kingWeight << endl;
+
+    return kingWeight;
+}
+
+
 bool ai::loadNetwork(int ID, Network & networkRecievingData) {
     vector<vector<double>> weights;
     cout << "loading network" << endl;
@@ -247,6 +277,9 @@ bool ai::loadNetwork(int ID, Network & networkRecievingData) {
         cout << "Error opening nn file." << endl;
         return false;
     }
+
+    networkRecievingData._performance = loadPerformanceFrom(inFile);
+    networkRecievingData._kingWeight = loadKingWeightFrom(inFile);
 
     unsigned int currLayerDimension = 0.;
     while(true) {
