@@ -2,6 +2,11 @@
 #define SEEDER_H
 
 #include <random>
+// std::random_device
+#include <memory>
+// std::shared_ptr
+#include <string>
+// std::string
 
 namespace ai {
     class Seeder {
@@ -24,6 +29,8 @@ namespace ai {
             unsigned int get() override;
             ~RandomDeviceSeeder() = default;
     };
+
+    std::shared_ptr<Seeder> getSeeder();
 }
 
 #endif
