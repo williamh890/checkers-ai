@@ -20,7 +20,7 @@ namespace AI {
 		Network(const std::vector<unsigned int>&, unsigned int); // This should probably be made private
 		~Network();
 
-		double evaluateBoard (const std::vector<char> &); // *** TODO ***
+		double evaluateBoard (const std::vector<char> &);
 		void adjustPerformance(int result);
 		int getPerformance() const;
 		void resetPerformance();

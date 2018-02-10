@@ -74,10 +74,10 @@ Network::~Network() {
 	}
 };
 
-double Network::evaluateBoard(const vector<char> & inputBoard ) { 	//***TODO*** In progress
+double Network::evaluateBoard(const vector<char> & inputBoard ) {
 	/*If I remember correctly, he said to just flip the sign of the final answer to get the evaluation for your opponent.
 	  This evaluate function calculates for red, just flip the sign for black. */
-	
+	cout << "WARNING: Evaluator function not set!" << endl;
 	//parse board
 	int index = 0;
 	for (auto i : inputBoard) {
@@ -102,6 +102,8 @@ double Network::evaluateBoard(const vector<char> & inputBoard ) { 	//***TODO*** 
 			if(DEBUG)
 				cout << "Node: " << y << endl;
 			calculateNode(x, y);
+			// *** Insert activation function here ***
+			// _layers[x][y] is the value used in the activator function
 		}
 	}
 	// return looks funny but it will pull the last vector of the arbitrarily large _layers vector
