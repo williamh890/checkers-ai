@@ -51,6 +51,12 @@ namespace ai {
         public:
             CheckersGame();
             CheckersGame(
+                  const Board & board,
+                  PlayerPtr red,
+                  PlayerPtr black
+                );
+
+            CheckersGame(
                     const Board & board,
                     PlayerPtr red,
                     PlayerPtr black,
@@ -96,6 +102,7 @@ namespace ai {
             std::string toString();
     };
 
+    CheckersGame getSeedlessCheckersGame();
     CheckersGame getCheckersGame();
 }
 

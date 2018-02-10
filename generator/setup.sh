@@ -16,6 +16,5 @@ else
     g++ -I/usr/include/python$1m \
         -o checkers_game_obj      \
         checkers_game_obj.cpp json-to-stl.cpp move-generator.cpp checkers-game.cpp board.cpp utils.cpp player.cpp \
-        -lpython3.6m -std=c++14
+        -lpython$1m -std=c++14
 fi
-
