@@ -8,6 +8,7 @@ using JumpPackage = CheckersGame::JumpPackage;
 using ai::RandomDeviceSeeder;
 using ai::Seeder;
 using ai::SRandSeeder;
+using ai::getSeeder;
 
 #include "headers/board.h"
 using ai::Board;
@@ -74,40 +75,18 @@ CheckersGame ai::getCheckersGame() {
     auto black = getPlayer("black", converter);
     auto board = getBoard();
 
-    shared_ptr<Seeder> seeder;
-    if (Settings::SEEDING_METHOD == "random_device") {
-        seeder = make_shared<RandomDeviceSeeder>();
-    }
-    if (Settings::SEEDING_METHOD == "time") {
-        seeder = make_shared<SRandSeeder>();
-    }
+    auto seeder = getSeeder();
 
     return CheckersGame(board, red, black, seeder);
 }
-
-CheckersGame ai::getSeedlessCheckersGame() {
-    auto table = loadMoveTableFrom("move-table.json");
-    auto converter = JsonToStlConverter{table};
-
-    auto red = getPlayer("red", converter);
-    auto black = getPlayer("black", converter);
-    auto board = getBoard();
-
-    return CheckersGame(board, red, black);
-  }
 
 CheckersGame::CheckersGame() { };
 
 CheckersGame::CheckersGame(
         const Board & board,
         PlayerPtr red,
-        PlayerPtr black):board(board), red(red), black(black){ }
-
-CheckersGame::CheckersGame(
-        const Board & board,
-        PlayerPtr red,
         PlayerPtr black,
-        const shared_ptr<Seeder> & seeder): board(board), red(red), black(black), activePlayer(black), inactivePlayer(red) {
+        shared_ptr<Seeder> & seeder): board(board), red(red), black(black), activePlayer(black), inactivePlayer(red) {
 
     generator = mt19937(seeder->get());
 
@@ -341,7 +320,6 @@ const char CheckersGame::getActivePlayerColor(){
     return activePlayer->getColor();
 }
 
-// TODO! Want to combine these reactTo functions in the future
 void CheckersGame::reactTo(const JumpPackage & jump) {
     activePlayer->updatePieces(jump, board);
     inactivePlayer->removePieceAt(jump.second.through);
@@ -357,46 +335,44 @@ string CheckersGame::toString() {
     return board.toString();
 }
 
+
 void CheckersGame::makeJump(const JumpPackage & jump){
-  try {
-    board.make(jump);
-    reactTo(jump);
-    if (not areJumps()){
-      swapPlayers();
-      makeRandomValidAction();
-      swapPlayers();
+    try {
+        board.make(jump);
+        reactTo(jump);
+
+        if (not areJumps()){
+            swapPlayers();
+            makeRandomValidAction();
+        }
+    } catch(length_error & e) {
+        cout << "Out of moves" << endl;
+        cout << e.what() << endl;
     }
-  }
-  catch(length_error & e) {
-      cout << "Out of moves" << endl;
-      cout << e.what() << endl;
-      throw e;
-  }
 
 }
 
 void CheckersGame::makeMove(const MovePackage & move){
-  board.make(move);
-  reactTo(move);
+    board.make(move);
+    reactTo(move);
 
-  swapPlayers();
-  makeRandomValidAction();
-  swapPlayers();
-  }
+    swapPlayers();
+}
 
 void CheckersGame::makeRandomValidAction(){
-  if (areJumps()){
-    auto jump = getRandomValidJump();
-    board.make(jump);
-    reactTo(jump);
-      if (areJumps()){
-        makeRandomValidAction();
-      }
-  }
-  else{
+    if (areJumps()){
+        auto jump = getRandomValidJump();
+        board.make(jump);
+        reactTo(jump);
+
+        if (areJumps()){
+            makeRandomValidAction();
+        }
+
+        return;
+    }
+
     auto move = getRandomValidMove();
     board.make(move);
     reactTo(move);
-  }
-
 }

@@ -22,8 +22,10 @@ namespace ai {
 
     class Player; //forward declaration
     class Board {
+        public:
+            using BoardType = std::vector<char>;
         private:
-            std::vector<char> boardState;
+            BoardType boardState;
 
         public:
             Board();

@@ -32,8 +32,9 @@ namespace ai {
             using MovePackage = std::pair<int, int>;
             using JumpPackage = std::pair<int, Jump>;
             using PlayerPtr = std::shared_ptr<Player>;
+            using SeederPtr = std::shared_ptr<Seeder>;
 
-            using turn_type = std::pair<std::vector<char>, std::pair<std::vector<MovePackage>, std::vector<std::pair<int,Jump>>>>;
+            using turn_type = std::pair<Board::BoardType, std::pair<std::vector<MovePackage>, std::vector<JumpPackage>>>;
 
         private:
             int moveCounter = 0;
@@ -51,16 +52,10 @@ namespace ai {
         public:
             CheckersGame();
             CheckersGame(
-                  const Board & board,
-                  PlayerPtr red,
-                  PlayerPtr black
-                );
-
-            CheckersGame(
                     const Board & board,
                     PlayerPtr red,
                     PlayerPtr black,
-                    const std::shared_ptr<Seeder> & seeder
+                    SeederPtr & seeder
                     );
 
             // following are public for use in the gui/cython wrapper
@@ -102,7 +97,6 @@ namespace ai {
             std::string toString();
     };
 
-    CheckersGame getSeedlessCheckersGame();
     CheckersGame getCheckersGame();
 }
 

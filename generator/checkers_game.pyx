@@ -20,9 +20,10 @@ ctypedef pair[int, int] move_type
 ctypedef pair[int, Jump] jump_type
 
 cdef class PyCheckersGame:
-  cdef CheckersGame checkers_game
+  cdef GuiCppInterface checkers_game
+
   def __cinit__(self):
-    self.checkers_game = getCheckersGame()
+    self.checkers_game = GuiCppInterface(getCheckersGame())
 
   def get_board(self):
     board = self.checkers_game.getBoard()
@@ -35,10 +36,12 @@ cdef class PyCheckersGame:
     cdef Jump jump
     jump.to, jump.through = to, through
     cdef jump_type full_jump = jump_type(start, jump)
+
     return self.checkers_game.isInvalid(full_jump)
 
   def is_move_invalid(self, int start, int to):
     cdef move_type move = move_type(start, to)
+
     return self.checkers_game.isInvalid(move)
 
   def are_jumps(self):
