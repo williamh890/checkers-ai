@@ -62,6 +62,9 @@ Network::Network(const vector<unsigned int> & inputdimensions, unsigned int inpu
 		}
 	}
 
+	uniform_real_distribution<double> kingWeightRange(0, 5);
+	//_kingWeight = kingWeightRange(randomNumGenerator);
+	_kingWeight = 2;
 	saveNetwork(_ID, *this);
 }
 
@@ -71,10 +74,47 @@ Network::~Network() {
 	}
 };
 
-double Network::evaluateBoard(const vector<char> & inputBoard ) const { 	//***TODO***
-	double dummy = 0;
-	return dummy;
+double Network::evaluateBoard(const vector<char> & inputBoard ) { 	//***TODO*** In progress
+	/*If I remember correctly, he said to just flip the sign of the final answer to get the evaluation for your opponent.
+	  This evaluate function calculates for red, just flip the sign for black. */
+	
+	//parse board
+	int index = 0;
+	for (auto i : inputBoard) {
+		cout << "i = " << i << endl;
+		if (i == ' ')
+			continue;
+		else if (i == 'r')
+			_layers[0][index] = 1;
+		else if (i == 'R')
+			_layers[0][index] = 1 * _kingWeight;
+		else if (i == 'b')
+			_layers[0][index] = -1;
+		else if (i == 'B')
+			_layers[0][index] = -1 * _kingWeight;
+		++index;
+	}
+	// Run the board through the network. I would use range based for loop but the first vector in _layers has been filled
+	for (unsigned int x = 1; x < _layers.size(); ++x) {
+		if (DEBUG)
+			cout << "---------------------Calculating layer: " << x << "--------------------" << endl;
+		for (unsigned int y = 0; y < _layers[x].size(); ++y) {
+			if(DEBUG)
+				cout << "Node: " << y << endl;
+			calculateNode(x, y);
+		}
+	}
+	// return looks funny but it will pull the last vector of the arbitrarily large _layers vector
+	return _layers[_layers.size() - 1][0];
 };
+
+void Network::calculateNode(unsigned int x, unsigned int y) {
+	//cout << "Calculating node " << tracker++ << endl;
+	unsigned int previousLayerSize = _layers[x - 1].size();
+	for (unsigned int i = 0; i < previousLayerSize; ++i) {
+		_layers[x][y] += _weights[x][y*previousLayerSize + i] * _layers[x - 1][i];
+	}
+}
 void Network::adjustPerformance(int resultFromGame) {
 	_performance += resultFromGame;
 	_gameCompleted = true;
@@ -94,15 +134,19 @@ void Network::replaceWithEvolution(const Network & inputNetwork) {
 	_weights = std::move(inputNetwork.evolve());
 };
 
-void Network::outputDebug() {
+void Network::outputCreationDebug() {
+	cout << "Weight for the king: " << _kingWeight << endl;
 	cout << "Number of layers: " << _layers.size() << endl;
+
 	for (unsigned int index = 0; index < _layers.size(); ++index) {
 		cout << "Size of layer " << index << " = " << _layers[index].size() << endl;
 	}
+
 	cout << "size of weights vector: " << _weights.size() << endl;
 	for (unsigned int index = 0; index < _weights.size(); ++index) {
 		cout << "Size of weight layer " << index << " = " << _weights[index].size() << endl;
 	}
+
 	cout << "_weights data: " << endl;
 	for (auto & v : _weights) {
 		for (auto x : v) {
