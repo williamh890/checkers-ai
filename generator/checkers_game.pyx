@@ -46,13 +46,21 @@ cdef class PyCheckersGame:
 
   def make_move(self, int start, int to):
     cdef move_type move = move_type(start, to)
-    self.checkers_game.makeMove(move)
+    try:
+      self.checkers_game.makeMove(move)
+    except Exception as e:
+      print(type(e))
+      print(str(e))
 
   def make_jump(self, int start, int to, int through):
     cdef Jump jump
     jump.to, jump.through = to, through
     cdef jump_type full_jump = jump_type(start, jump)
-    self.checkers_game.makeJump(full_jump)
+    try:
+      self.checkers_game.makeJump(full_jump)
+    except Exception as e:
+      print(type(e))
+      print(str(e))
 
 
 class PyBoard():
