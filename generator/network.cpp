@@ -1,21 +1,22 @@
-#include "headers\network.h"
-using AI::Network;
+#include "headers/seeder.h"
+using ai::getSeeder;
+using ai::Seeder;
+
+#include "headers/network.h"
+using ai::Network;
+
+#include "headers/consts.h"
+
 #include <vector>
 using std::vector;
 #include <iostream>
 using std::cout;
 using std::endl;
 
-#include "headers\consts.h"
 #include <random>
 using std::mt19937;
 using std::uniform_real_distribution;
 
-#include "boost\archive\text_iarchive.hpp"
-#include "boost\archive\text_oarchive.hpp"
-using boost::archive::text_iarchive;
-using boost::archive::text_oarchive;
-#include "boost\serialization\vector.hpp"
 #include <fstream>
 using std::ofstream;
 using std::ifstream;
@@ -23,41 +24,39 @@ using std::ifstream;
 #include <string>
 using std::string;
 using std::to_string;
-
+#include <memory>
+using std::shared_ptr;
 
 
 Network::Network(unsigned int inputID): _ID(inputID) {
 	loadNetwork(_ID, *this);
 };
 
-Network::Network(const vector<unsigned int> & inputdimensions, unsigned int inputID) : _ID(inputID), _performance(0) {
+Network::Network(
+        const vector<unsigned int> & inputdimensions,
+        unsigned int inputID,
+        shared_ptr<Seeder> & seeder) : _ID(inputID), _performance(0) {
+
 	_layers.resize(inputdimensions.at(0));
 	for (unsigned int index = 1; index <= inputdimensions.at(0); ++index) {
 		_layers[index-1].resize(inputdimensions.at(index));
 	}
 
-	std::random_device device;
-	mt19937 randomNumGenerator;
-	if (ai::Settings::SEEDING_METHOD == "random_device") {
-		randomNumGenerator = mt19937(device());
-	}
-	if (ai::Settings::SEEDING_METHOD == "time") {
-		srand(time(NULL));
-		randomNumGenerator = mt19937(rand());
-	}
+	mt19937 randomNumGenerator(seeder->get());
 	uniform_real_distribution<double> distribution(-1, 1);
 
 	_weights.resize(inputdimensions.at(0));
 	_weights[0].resize(inputdimensions.at(1));
-	for (unsigned int i = 1; i < _weights.size(); ++i) {
+
+	for (auto i = 1; (unsigned int)i < _weights.size(); ++i) {
 		_weights[i].resize(inputdimensions.at(i) * inputdimensions.at(i + 1));
 	}
-	for (std::vector<std::vector<int>>::size_type i = 0; i < _weights.size(); i++) {
-		for (std::vector<int>::size_type j = 0; j < _weights[i].size(); j++) {
+	for (auto i = 0; i < _weights.size(); i++) {
+		for (auto j = 0; j < _weights[i].size(); j++) {
 			_weights[i][j] = distribution(randomNumGenerator);
 		}
 	}
-	
+
 	// fill the _weights vector of networkWeights with random values -1 < x < 1
 	saveNetwork(_ID, *this);
 }
@@ -109,47 +108,36 @@ void Network::outputDebug() {
 	}
 }
 
-bool AI::operator<(const Network & lhs, const Network & rhs) {
-	if (lhs.getPerformance() < rhs.getPerformance())
-		return true;
-	return false;
+bool ai::operator<(const Network & lhs, const Network & rhs) {
+    return lhs.getPerformance() < rhs.getPerformance();
 }
 
-bool AI::operator>(const Network & lhs, const Network & rhs) {return rhs < lhs;}
-bool AI::operator<=(const Network & lhs, const Network & rhs) {return !(lhs > rhs);}
-bool AI::operator>=(const Network & lhs, const Network & rhs) {return !(lhs < rhs);}
+bool ai::operator>(const Network & lhs, const Network & rhs) {return rhs < lhs;}
+bool ai::operator<=(const Network & lhs, const Network & rhs) {return !(lhs > rhs);}
+bool ai::operator>=(const Network & lhs, const Network & rhs) {return !(lhs < rhs);}
 
-void AI::setupNetworks(const vector<unsigned int>& dimensions, int numberOfNetworks) { //numberOfNetworks = 100
+void ai::setupNetworks(const vector<unsigned int>& dimensions, int numberOfNetworks) { //numberOfNetworks = 100
 	std::cout << "You are about to setup a new set of networks. This operation will overwrite previous networks. \n" <<
 		"Are you sure you want to continue? (y,n) ";
 	if (std::cin.get() == 'n')
 		return;
 
+    auto seeder = getSeeder();
 	for (auto index = 0; index < numberOfNetworks; ++index) {
-		Network(dimensions, index);
+		Network(dimensions, index, seeder);
 	}
 };
 
-string AI::idToFilename(int ID) {
+string ai::idToFilename(int ID) {
 	string filename = to_string(ID) + ".network";
 	// The following implementation will be used once we begin to get the network integrated.
 	//string filename = ".\\networks\\" + to_string(ID) + ".network"; //creates filenames that scope to a folder called networks
 	return filename;
 }
 
-void AI::saveNetwork(int ID, Network & networkToSave) {
-	ofstream file{ idToFilename(ID) };
-	text_oarchive oa{ file };
-	oa << networkToSave;
+void ai::saveNetwork(int ID, Network & networkToSave) {
 }
 
-bool AI::loadNetwork(int ID, Network & networkRecievingData) {
-	ifstream file{ idToFilename(ID) };
-	if (!file) {
-		std::cout << "The file does not exist" << std::endl;
-		return false;
-	}
-	text_iarchive ia{ file };
-	ia >> networkRecievingData;
-	return true;
+bool ai::loadNetwork(int ID, Network & networkRecievingData) {
+    return true;
 }

@@ -15,6 +15,6 @@ else
     echo looking for python in /usr/include/python$1m
     g++ -I/usr/include/python$1m \
         -o checkers_game_obj      \
-        checkers_game_obj.cpp json-to-stl.cpp move-generator.cpp checkers-game.cpp board.cpp utils.cpp player.cpp \
+        checkers_game_obj.cpp json-to-stl.cpp move-generator.cpp checkers-game.cpp board.cpp utils.cpp player.cpp seeder.cpp\
         -lpython$1m -std=c++14
 fi

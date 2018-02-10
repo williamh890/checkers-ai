@@ -21,6 +21,8 @@ cdef extern from "headers/seeder.h" namespace "ai":
   cdef cppclass SRandSeeder(Seeder):
     SRandSeeder()
 
+  Seeder getSeeder()
+
 
 cdef extern from "headers/player.h" namespace "ai":
   cdef cppclass Player:
@@ -77,4 +79,4 @@ cdef extern from "headers/checkers-game.h" namespace "ai":
     bool areJumps()
     void makeMove(MovePackage & move)
     void makeJump(JumpPackage & jump)
-  CheckersGame getSeedlessCheckersGame() except +
+  CheckersGame getCheckersGame() except +

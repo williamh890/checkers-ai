@@ -8,6 +8,7 @@ using JumpPackage = CheckersGame::JumpPackage;
 using ai::RandomDeviceSeeder;
 using ai::Seeder;
 using ai::SRandSeeder;
+using ai::getSeeder;
 
 #include "headers/board.h"
 using ai::Board;
