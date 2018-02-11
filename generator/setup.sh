@@ -14,10 +14,10 @@ else
 
 
     echo looking for python in /usr/include/python$1m
-    g++ -I/usr/include/python$1m \
-        -o gui-checkers      \
-        checkers_game_obj.cpp json-to-stl.cpp move-generator.cpp \
-        checkers-game.cpp board.cpp utils.cpp player.cpp seeder.cpp \
-        gui-cpp-interface.cpp \
+    g++ -I/usr/include/python$1m                                     \
+        -o gui-checkers.out                                          \
+        checkers_game_obj.cpp json-to-stl.cpp move-generator.cpp     \
+        checkers-game.cpp board.cpp utils.cpp player.cpp seeder.cpp  \
+        gui-cpp-interface.cpp                                        \
         -lpython$1m -std=c++14
 fi
