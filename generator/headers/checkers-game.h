@@ -48,7 +48,6 @@ namespace ai {
             PlayerPtr inactivePlayer;
 
             std::mt19937 generator;
-
         public:
             CheckersGame();
             CheckersGame(

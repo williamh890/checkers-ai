@@ -72,7 +72,7 @@ cdef extern from "headers/checkers-game.h" namespace "ai":
     CheckersGame(Board & board,
                 shared_ptr[Player] red,
                 shared_ptr[Player] black,
-                shared_ptr[Seeder] seed) except +
+                SeederPtr seed) except +
     bool isInvalid(MovePackage & move)
     bool isInvalid(JumpPackage & jump)
     vector[char] getBoard()
