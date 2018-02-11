@@ -5,7 +5,9 @@ using ai::Seeder;
 #include "headers/network.h"
 using ai::Network;
 
-#include "headers/consts.h"
+#include "headers/network-file-io.h"
+using ai::loadNetwork;
+using ai::saveNetwork;
 
 #include <vector>
 using std::vector;
@@ -24,7 +26,6 @@ using std::ifstream;
 using std::ios;
 #include <string>
 using std::string;
-using std::to_string;
 #include <memory>
 using std::shared_ptr;
 
@@ -185,158 +186,4 @@ void ai::setupNetworks(const vector<unsigned int>& dimensions, int numberOfNetwo
 	}
 };
 
-string ai::idToFilename(int ID) {
-	string filename = to_string(ID) + ".network";
-	// The following implementation will be used once we begin to get the network integrated.
-	//string filename = ".\\networks\\" + to_string(ID) + ".network"; //creates filenames that scope to a folder called networks
-	return filename;
-}
 
-void saveLayerSize(ofstream & outFile, const vector<double> & layer) {
-    unsigned int size = layer.size();
-    cout << "writing " << layer.size() << " to file." << endl;
-    outFile.write( (char*)&size, sizeof(unsigned int));
-}
-
-void saveWeightsForLayerTo(ofstream & outFile, const vector<double> & layer) {
-
-    saveLayerSize(outFile, layer);
-    for (auto & w : layer) {
-        outFile.write( (char*)&w, sizeof(double));
-    }
-}
-
-void savePerformance(ofstream & outFile, int networkPerormance) {
-    outFile.write( (char*)&networkPerormance, sizeof(int));
-}
-
-void saveKingWeight(ofstream & outFile, double kingWeight) {
-    outFile.write( (char*)&kingWeight, sizeof(double));
-}
-
-void saveDimensions(ofstream & outFile, const vector<vector<double>> & layers) {
-    unsigned int numLayers = layers.size();
-    outFile.write((char*)&numLayers, sizeof(unsigned int));
-
-    cout << "dimensions: ";
-	for (const auto & layer : layers) {
-        unsigned int layerSize = layer.size();
-        cout << layerSize << " ";
-        outFile.write( (char*)&layerSize, sizeof(unsigned int));
-	} cout << endl;
-}
-
-void ai::saveNetwork(int ID, Network & networkToSave) {
-    ofstream outFile;
-
-    auto filename = idToFilename(ID);
-    outFile.open(filename, ios::out | ios::binary);
-
-    savePerformance(outFile, networkToSave._performance);
-    saveKingWeight(outFile, networkToSave._kingWeight);
-    saveDimensions(outFile, networkToSave._layers);
-
-    for (auto & layer : networkToSave._weights) {
-        saveWeightsForLayerTo(outFile, layer);
-    }
-
-    cout << endl;
-
-    outFile.close(); //Unnecessary
-}
-
-vector<double> loadWeightsForLayerFrom(ifstream & inFile, unsigned int currLayerDimension) {
-    vector<double> layerWeights;
-
-    for (unsigned int i = 0; i < currLayerDimension; ++i) {
-        double weight = 0;
-        inFile.read( (char*)&weight, sizeof(double));
-        layerWeights.push_back(weight);
-    }
-
-    return layerWeights;
-}
-
-bool inline noMoreLayersIn(ifstream & inFile) {
-    return inFile.eof();
-}
-
-int loadPerformanceFrom(ifstream & inFile) {
-    int performace = 0;
-    inFile.read( (char*)&performace, sizeof(int));
-    cout << "Perfomance: " << performace << endl;
-    return performace;
-};
-
-double loadKingWeightFrom(ifstream & inFile) {
-    double kingWeight = 0.;
-    inFile.read( (char*)&kingWeight, sizeof(double));
-    cout << "King Weight: " << kingWeight << endl;
-
-    return kingWeight;
-}
-
-vector<unsigned int> loadDimension(ifstream & inFile) {
-    unsigned int numLayers = 0;
-    inFile.read((char*)&numLayers, sizeof(unsigned int));
-
-    vector<unsigned int> dimensions;
-    cout << "loading dimensions: ";
-	for (unsigned int i = 0; i < numLayers; ++i) {
-        unsigned int layerSize = 0;
-        inFile.read( (char*)&layerSize, sizeof(unsigned int));
-
-        cout << layerSize << " ";
-        dimensions.push_back(layerSize);
-	} cout << endl;
-
-    return dimensions;
-}
-
-vector<vector<double>> getNodesFromDimensions(const vector<unsigned int> & dimensions) {
-    vector<vector<double>> nodes;
-
-    for (auto size : dimensions) {
-        auto nodeLayer = vector<double>(size, 0);
-        nodes.push_back(nodeLayer);
-    }
-
-    return nodes;
-}
-
-
-bool ai::loadNetwork(int ID, Network & networkRecievingData) {
-    vector<vector<double>> weights;
-
-    cout << "loading network" << endl;
-    ifstream inFile (idToFilename(ID), ios::in | ios::binary);
-    if (!inFile) {
-        cout << "Error opening nn file" << endl;
-        return false;
-    }
-
-    networkRecievingData._performance = loadPerformanceFrom(inFile);
-    networkRecievingData._kingWeight = loadKingWeightFrom(inFile);
-
-    auto dimensions = loadDimension(inFile);
-    auto nodes = getNodesFromDimensions(dimensions);
-    networkRecievingData._layers = nodes;
-
-    unsigned int currLayerDimension = 0.;
-    while(true) {
-        inFile.read( (char*)&currLayerDimension, sizeof(unsigned int));
-
-        if(noMoreLayersIn(inFile)) {
-            break;
-        }
-        cout << "Layer Dimension: " << currLayerDimension << endl;
-
-        auto layerWeights = loadWeightsForLayerFrom(inFile, currLayerDimension);
-        weights.push_back(layerWeights);
-    }
-    inFile.close(); // unnecessary, files close automatically when they go out of scope
-
-    networkRecievingData._weights = weights;
-
-    return true;
-}
