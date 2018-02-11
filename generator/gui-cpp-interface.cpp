@@ -7,7 +7,15 @@ using ai::CheckersGame;
 #include "headers/board.h"
 using ai::Board;
 
+#include <unistd.h>
+
 GuiCppInterface::GuiCppInterface(const CheckersGame & game): game(game) {
+}
+
+void GuiCppInterface::play(){
+    game.makeRandomValidAction();
+    game.swapPlayers();
+    usleep(1000000);
 }
 
 bool GuiCppInterface::isInvalid(const CheckersGame::MovePackage & move) {
@@ -23,6 +31,11 @@ Board::BoardType GuiCppInterface::getBoard() {
 }
 
 const char GuiCppInterface::getActivePlayerColor() {
+    return game.getActivePlayerColor();
+}
+
+const char GuiCppInterface::getInactivePlayerColor() {
+    swapPlayers();
     return game.getActivePlayerColor();
 }
 

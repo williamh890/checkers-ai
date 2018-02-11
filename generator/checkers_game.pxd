@@ -90,9 +90,12 @@ cdef extern from "headers/gui-cpp-interface.h" namespace "ai":
   cdef cppclass GuiCppInterface:
     GuiCppInterface() except +
     GuiCppInterface(const CheckersGame & game) except +
+    void play() except +
     bool isInvalid(const pair[int, int] & move)
     bool isInvalid(const pair[int, Jump] & jump)
     vector[char] getBoard()
+    char getActivePlayerColor()
+    char getInactivePlayerColor()
     bool areJumps()
     void makeMove(MovePackage & move)
     void makeJump(JumpPackage & jump)

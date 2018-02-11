@@ -32,6 +32,9 @@ cdef class PyCheckersGame:
       char_board.append(chr(space))
     return char_board
 
+  def play(self):
+    self.checkers_game.play()
+
   def is_jump_invalid(self, int start, int to, int through):
     cdef Jump jump
     jump.to, jump.through = to, through
@@ -64,6 +67,9 @@ cdef class PyCheckersGame:
     except Exception as e:
       print(type(e))
       print(str(e))
+
+  def get_winner(self):
+    return chr(self.checkers_game.getInactivePlayerColor())
 
 
 class PyBoard():
@@ -103,8 +109,19 @@ class PyBoard():
 #********** GUI SETUP **********#
     def run(self):
       while True:
+        try:
+          self.game.play()
+        except Exception:
+          self.run_end_game()
         board = self.game.get_board()
         self.compare_and_update_board(board)
+        self.window.update_idletasks()
+        self.window.update()
+
+    def run_end_game(self):
+      print("GAME IS OVER")
+      print("{} wins".format(self.game.get_winner()))
+      while True:
         self.window.update_idletasks()
         self.window.update()
 
