@@ -169,6 +169,10 @@ void CheckersGame::swapPlayers(){
 bool CheckersGame::areJumps(){
   return getValidJumps().size();
 }
+
+bool CheckersGame::areMoves(){
+  return getValidMoves().size();
+}
 JumpPackage CheckersGame::getJumpFromActivePlayer() {
     if (activePlayer->getPlayerType() == PlayerType::Computer) {
         return getRandomValidJump();
@@ -319,6 +323,10 @@ vector<char> CheckersGame::getBoard(){
 
 const char CheckersGame::getActivePlayerColor(){
     return activePlayer->getColor();
+}
+
+const char CheckersGame::getInactivePlayerColor(){
+  return inactivePlayer->getColor();
 }
 
 void CheckersGame::reactTo(const JumpPackage & jump) {

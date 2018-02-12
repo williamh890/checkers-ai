@@ -25,7 +25,6 @@ namespace ai {
     class NetworkFileWriter;
 
 	class Network {
-		bool DEBUG = true;
 	public:
 		using layersContainingNodes = std::vector<Settings::NetworkWeightType>;
 		using networkWeights = std::vector<Settings::NetworkWeightType>;
@@ -58,6 +57,7 @@ namespace ai {
 		void replaceWithEvolution(const Network &);
 
 		void outputCreationDebug();
+		void changeKingWeight(double);
 
 	private:
 		unsigned int _ID;
@@ -73,6 +73,7 @@ namespace ai {
     public:
         friend class NetworkFileReader;
         friend class NetworkFileWriter;
+		friend bool operator==(const Network &, const Network &);
 	}; // end class AI_Network
 
 	// Global operators to allow sorting of networks based on their performance
@@ -80,9 +81,8 @@ namespace ai {
 	bool operator> (const Network &lhs, const Network &rhs);
 	bool operator<= (const Network &lhs, const Network &rhs);
 	bool operator>= (const Network &lhs, const Network &rhs);
+	bool operator== (const Network &lhs, const Network &rhs);
 
 	void setupNetworks (const std::vector<unsigned int> & dimesions, int numberOfNetworks = 100);
-
-	// Functions to handle saving and loading of networks utilizing boost serialization
 }
 #endif // NETWORK_H_INCLUDED

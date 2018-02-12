@@ -1,3 +1,5 @@
+#include "headers/consts.h"
+using ai::DEBUG;
 #include "headers/network-file-io.h"
 using  ai::NetworkFileReader;
 
@@ -47,14 +49,16 @@ bool inline NetworkFileReader::noMoreLayersIn() {
 int NetworkFileReader::loadPerformanceFrom() {
     int performace = 0;
     inFile.read( (char*)&performace, sizeof(int));
-    cout << "Perfomance: " << performace << endl;
+    if (DEBUG)
+        cout << "Perfomance: " << performace << endl;
     return performace;
 };
 
 double NetworkFileReader::loadKingWeightFrom() {
     double kingWeight = 0.;
     inFile.read( (char*)&kingWeight, sizeof(double));
-    cout << "King Weight: " << kingWeight << endl;
+    if (DEBUG)
+        cout << "King Weight: " << kingWeight << endl;
 
     return kingWeight;
 }
@@ -64,14 +68,18 @@ vector<unsigned int> NetworkFileReader::loadDimension() {
     inFile.read((char*)&numLayers, sizeof(unsigned int));
 
     vector<unsigned int> dimensions;
-    cout << "loading dimensions: ";
+    if (DEBUG)
+        cout << "loading dimensions: ";
 	for (unsigned int i = 0; i < numLayers; ++i) {
         unsigned int layerSize = 0;
         inFile.read( (char*)&layerSize, sizeof(unsigned int));
 
-        cout << layerSize << " ";
+        if (DEBUG)
+            cout << layerSize << " ";
         dimensions.push_back(layerSize);
-	} cout << endl;
+	}
+    if (DEBUG)
+        cout << endl;
 
     return dimensions;
 }
@@ -91,7 +99,9 @@ vector<vector<NetworkWeightType>> NetworkFileReader::getNodesFromDimensions(cons
 bool NetworkFileReader::load(const string & filename, Network & networkRecievingData) {
     vector<vector<NetworkWeightType>> weights;
 
-    cout << "loading network" << endl;
+    if (DEBUG)
+        cout << "loading network" << endl;
+
     inFile.open(filename, ios::in | ios::binary);
     if (!inFile) {
         cout << "Error opening nn file" << endl;
@@ -112,7 +122,8 @@ bool NetworkFileReader::load(const string & filename, Network & networkRecieving
         if(noMoreLayersIn()) {
             break;
         }
-        cout << "Layer Dimension: " << currLayerDimension << endl;
+        if (DEBUG)
+            cout << "Layer Dimension: " << currLayerDimension << endl;
 
         auto layerWeights = loadWeightsForLayerFrom(currLayerDimension);
         weights.push_back(layerWeights);

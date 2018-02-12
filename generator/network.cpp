@@ -10,6 +10,7 @@ using ai::loadNetwork;
 using ai::saveNetwork;
 
 #include "headers/consts.h"
+using ai::DEBUG;
 using NetworkWeightType = ai::Settings::NetworkWeightType;
 
 #include <vector>
@@ -34,7 +35,7 @@ using std::shared_ptr;
 
 Network::Network(unsigned int inputID): _ID(inputID) {
 	loadNetwork(_ID, *this);
-};
+}
 
 Network::Network(
         const vector<unsigned int> & layerDimensions,
@@ -98,68 +99,82 @@ Network::~Network() {
     if (_gameCompleted) {
         saveNetwork(_ID, *this);
     }
-};
+}
 
 double Network::evaluateBoard(const vector<char> & inputBoard ) {
-    /*If I remember correctly, he said to just flip the sign of the final answer to get the evaluation for your opponent.
-      This evaluate function calculates for red, just flip the sign for black. */
-    cout << "WARNING: Evaluator function not set!" << endl;
-    //parse board
-    int index = 0;
-    for (auto i : inputBoard) {
-        cout << "i = " << i << endl;
-        if (i == ' ')
-            continue;
-        else if (i == 'r')
-            _layers[0][index] = 1;
-        else if (i == 'R')
-            _layers[0][index] = 1 * _kingWeight;
-        else if (i == 'b')
-            _layers[0][index] = -1;
-        else if (i == 'B')
-            _layers[0][index] = -1 * _kingWeight;
-        ++index;
-    }
-    // Run the board through the network. I would use range based for loop but the first vector in _layers has been filled
-    for (unsigned int x = 1; x < _layers.size(); ++x) {
-        if (DEBUG)
-            cout << "---------------------Calculating layer: " << x << "--------------------" << endl;
-        for (unsigned int y = 0; y < _layers[x].size(); ++y) {
-            if(DEBUG)
-                cout << "Node: " << y << endl;
-            calculateNode(x, y);
-            // *** Insert activation function here ***
-            // _layers[x][y] is the value used in the activator function
-        }
-    }
-    // return looks funny but it will pull the last vector of the arbitrarily large _layers vector
-    return _layers[_layers.size() - 1][0];
-};
+	/*If I remember correctly, he said to just flip the sign of the final answer to get the evaluation for your opponent.
+	  This evaluate function calculates for red, just flip the sign for black. */
+	cout << "WARNING: Evaluator function not set!" << endl;
+	//parse board
+	int index = 0;
+	if (DEBUG)
+		cout << "This is my input board: " << endl;
+	for (auto i : inputBoard) {
+		if (DEBUG)
+			cout << "i = " << i << endl;
+		if (i == ' ' || i == 0)
+			continue;
+		else if (i == 'r')
+			_layers[0][index] = 1;
+		else if (i == 'R')
+			_layers[0][index] = 1 * _kingWeight;
+		else if (i == 'b')
+			_layers[0][index] = -1;
+		else if (i == 'B')
+			_layers[0][index] = -1 * _kingWeight;
+		else
+			cout << "Something has slipped through!" << endl;
+		++index;
+	}
+	// Run the board through the network. I would use range based for loop but the first vector in _layers has been filled
+	for (unsigned int x = 1; x < _layers.size(); ++x) {
+		if (DEBUG)
+			cout << "---------------------Calculating layer: " << x << "--------------------" << endl;
+		for (unsigned int y = 0; y < _layers[x].size(); ++y) {
+			if(DEBUG)
+				cout << "Node: " << y << " _________ ";
+			calculateNode(x, y);
+			// *** Insert activation function here ***
+			// _layers[x][y] is the value used in the activator function
+		}
+	}
+	// return looks funny but it will pull the last vector of the arbitrarily large _layers vector
+	return _layers[_layers.size() - 1][0];
+}
 
 void Network::calculateNode(unsigned int x, unsigned int y) {
-    unsigned int previousLayerSize = _layers[x - 1].size();
-    for (unsigned int i = 0; i < previousLayerSize; ++i) {
-        _layers[x][y] += _weights[x][y*previousLayerSize + i] * _layers[x - 1][i];
-    }
+	_layers[x][y] = 0;
+	unsigned int previousLayerSize = _layers[x - 1].size();
+
+	for (unsigned int i = 0; i < previousLayerSize; ++i) {
+		_layers[x][y] += _weights[x][y*previousLayerSize + i] * _layers[x - 1][i];
+	}
+
+	if (DEBUG)
+		cout << _layers[x][y] << endl;
 }
+
 void Network::adjustPerformance(int resultFromGame) {
     _performance += resultFromGame;
     _gameCompleted = true;
-};
+}
 
 int Network::getPerformance() const {
     return _performance;
 }
+
 void Network::resetPerformance() {
     _performance = 0;
-};
+}
+
 vector<Network::networkWeights> Network::evolve() const { 	// *** TODO *** Not required for Project 2
     vector<networkWeights> dummy;
     return dummy;
-};
+}
+
 void Network::replaceWithEvolution(const Network & inputNetwork) {
     _weights = std::move(inputNetwork.evolve());
-};
+}
 
 void Network::outputCreationDebug() {
     cout << "Weight for the king: " << _kingWeight << endl;
@@ -183,13 +198,40 @@ void Network::outputCreationDebug() {
     }
 }
 
+void Network::changeKingWeight(double newWeight) {
+	_kingWeight = newWeight;
+}
+
 bool ai::operator<(const Network & lhs, const Network & rhs) {
     return lhs.getPerformance() < rhs.getPerformance();
 }
 
-bool ai::operator>(const Network & lhs, const Network & rhs) {return rhs < lhs;}
-bool ai::operator<=(const Network & lhs, const Network & rhs) {return !(lhs > rhs);}
-bool ai::operator>=(const Network & lhs, const Network & rhs) {return !(lhs < rhs);}
+bool ai::operator>(const Network & lhs, const Network & rhs) {
+    return rhs < lhs;
+}
+
+bool ai::operator<=(const Network & lhs, const Network & rhs) {
+    return !(lhs > rhs);
+}
+
+bool ai::operator>=(const Network & lhs, const Network & rhs) {
+    return !(lhs < rhs);
+}
+
+bool ai::operator== (const Network &lhs, const Network &rhs) {
+	if (lhs._ID != rhs._ID)
+		return false;
+	if (lhs._kingWeight != rhs. _kingWeight)
+		return false;
+	if (lhs._performance != rhs._performance)
+		return false;
+	if (lhs._layers != rhs._layers)
+		return false;
+	if (lhs._weights != rhs._weights)
+		return false;
+
+	return true;
+}
 
 void ai::setupNetworks(const vector<unsigned int>& dimensions, int numberOfNetworks) { //numberOfNetworks = 100
     std::cout << "You are about to setup a new set of networks. This operation will overwrite previous networks. \n" <<
@@ -203,6 +245,5 @@ void ai::setupNetworks(const vector<unsigned int>& dimensions, int numberOfNetwo
     for (auto index = 0; index < numberOfNetworks; ++index) {
         Network(dimensions, index, seeder);
     }
-};
-
+}
 

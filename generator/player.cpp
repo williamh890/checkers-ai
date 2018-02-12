@@ -189,7 +189,10 @@ bool BlackPlayer::isInitialSpace(int space) const {
 }
 
 bool BlackPlayer::shouldBeCrowned(const Piece & piece) const {
-    return piece.space < NUM_PIECES_IN_ROW;
+    if (not piece.isKing){
+      return piece.space < NUM_PIECES_IN_ROW;
+    }
+    return false;
 }
 
 RedPlayer::RedPlayer(char color,
@@ -204,7 +207,10 @@ bool RedPlayer::isInitialSpace(int space) const {
 }
 
 bool RedPlayer::shouldBeCrowned(const Piece & piece) const {
-    return piece.space >= TOTAL_NUM_SPACES - NUM_PIECES_IN_ROW;
+    if (not piece.isKing){
+      return piece.space >= TOTAL_NUM_SPACES - NUM_PIECES_IN_ROW;
+    }
+    return false;
 }
 
 
@@ -220,5 +226,3 @@ shared_ptr<Player> ai::getPlayer(const string & color, JsonToStlConverter conver
 
     return make_shared<BlackPlayer>('b', blackGenerator, kingGenerator, Settings::BLACK_PLAYER_TYPE);
 }
-
-
