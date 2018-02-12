@@ -97,5 +97,6 @@ cdef extern from "headers/gui-cpp-interface.h" namespace "ai":
     char getActivePlayerColor()
     char getInactivePlayerColor()
     bool areJumps()
+    bool areMoves()
     void makeMove(MovePackage & move)
     void makeJump(JumpPackage & jump)

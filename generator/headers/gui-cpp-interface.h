@@ -26,6 +26,7 @@ namespace ai {
 
             void swapPlayers(); // may not need
             bool areJumps();
+            bool areMoves();
     };
 }
 

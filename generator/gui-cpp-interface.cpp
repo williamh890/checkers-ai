@@ -35,8 +35,7 @@ const char GuiCppInterface::getActivePlayerColor() {
 }
 
 const char GuiCppInterface::getInactivePlayerColor() {
-    swapPlayers();
-    return game.getActivePlayerColor();
+  return game.getInactivePlayerColor();
 }
 
 void GuiCppInterface::makeJump(const CheckersGame::JumpPackage & jump) {
@@ -53,4 +52,8 @@ void GuiCppInterface::swapPlayers() {
 
 bool GuiCppInterface::areJumps() {
     return game.areJumps();
+}
+
+bool GuiCppInterface::areMoves(){
+  return game.areMoves();
 }

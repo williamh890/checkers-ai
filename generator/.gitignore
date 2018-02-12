@@ -4,3 +4,4 @@ checkers_game_obj_2
 gui-checkers
 *.gch
 *.network
+board*.json
