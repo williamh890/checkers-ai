@@ -141,11 +141,10 @@ class PyBoard():
       print("GAME IS OVER")
       print("{} wins".format(self.game.get_winner()))
       reset = input("Play again? (y/n)")
-      if reset.lower == "n":
+      if reset == "n":
         exit(0)
-      while True:
-        self.window.update_idletasks()
-        self.window.update()
+      self.game = PyCheckersGame()
+      self.run()
 
     def make_board_space(self, row, column):
         callback = self.make_move_callback(row, column)
