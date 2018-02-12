@@ -35,34 +35,35 @@ Network::Network(unsigned int inputID): _ID(inputID) {
 };
 
 Network::Network(
-        const vector<unsigned int> & inputdimensions,
+        const vector<unsigned int> & layerDimensions,
         unsigned int inputID,
         shared_ptr<Seeder> & seeder) : _ID(inputID), _performance(0) {
 
-	_layers.resize(inputdimensions.at(0));
+    auto numLayers = layerDimensions.size();
+
 	// Sizing each layer containing nodes within the _layers vector
     cout << "inputdimensions: ";
-	for (unsigned int index = 1; index <= inputdimensions.at(0); ++index) {
-		_layers[index-1].resize(inputdimensions.at(index));
-        cout << inputdimensions.at(index) << " ";
-	} cout << endl;
+	for (auto & dim : layerDimensions) {
+        vector<double> layer(dim, 0);
 
-	_weights.resize(inputdimensions.at(0));
-	// Sizing each network weights vector contained in _weights
-	_weights[0].resize(inputdimensions.at(1));
-	for (unsigned int i = 1; i < _weights.size(); ++i) {
-		_weights[i].resize(inputdimensions.at(i) * inputdimensions.at(i + 1));
-	}
+        _layers.push_back(layer);
+        cout << dim << " ";
+	} cout << endl;
 
 	mt19937 randomNumGenerator(seeder->get());
 	uniform_real_distribution<double> distribution(-1, 1);
 
-	_weights.resize(inputdimensions.at(0));
-	_weights[0].resize(inputdimensions.at(1));
+	_weights.resize(numLayers);
+	_weights[0].resize(layerDimensions.at(0));
 
-	for (auto i = 1; (unsigned int)i < _weights.size(); ++i) {
-		_weights[i].resize(inputdimensions.at(i) * inputdimensions.at(i + 1));
-	}
+	for (auto i = 0; (unsigned int)i < numLayers - 1; ++i) {
+        auto currentLayerDim = layerDimensions.at(i);
+        auto nextLayerDim = layerDimensions.at(i + 1);
+
+        cout << "curr (" << currentLayerDim << ") next (" << nextLayerDim << "), ";
+		_weights[i + 1].resize(currentLayerDim * nextLayerDim);
+	} cout << endl;
+
 
 	for (auto i = 0; (unsigned int)i < _weights.size(); i++) {
 		for (auto j = 0; (unsigned int)j < _weights[i].size(); j++) {
@@ -178,7 +179,7 @@ void ai::setupNetworks(const vector<unsigned int>& dimensions, int numberOfNetwo
 	std::cout << "You are about to setup a new set of networks. This operation will overwrite previous networks. \n" <<
 		"Are you sure you want to continue? (y,n) ";
     if (std::cin.get() == 'n') {
-        cout << "Not overwriting networks.\n" << endl;
+        cout << "Not overwriting files" << endl;
 		return;
     }
 

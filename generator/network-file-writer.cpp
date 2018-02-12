@@ -72,7 +72,7 @@ void NetworkFileWriter::save(const string & filename, const Network & networkToS
 
     cout << endl;
 
-    outFile.close(); //Unnecessary
+    outFile.close();
 }
 
 

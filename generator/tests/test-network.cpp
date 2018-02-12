@@ -12,12 +12,12 @@ using std::endl;
 
 TEST_CASE("Test the network class") {
     SECTION("Test setupNetworks") {
-        vector<unsigned int> dimesions{4, 32, 40, 10, 1};
+        vector<unsigned int> dimesions{32, 40, 10, 1};
         setupNetworks(dimesions, 2);
     }
 
     SECTION("test loading a network") {
-        Network(0);
+      //  Network(0);
     }
 
     SECTION("test network evaluation") {
@@ -32,9 +32,9 @@ TEST_CASE("Test the network class") {
          'b',   'b',   'b',   'b'
         };
 
-        ai::Network player(0);
+     //   ai::Network player(0);
         //Proof of success at runtime
         //player.outputDebug();
-        cout << "Board was evaluated as: " << player.evaluateBoard(sampleBoard) << endl;
+    //    cout << "Board was evaluated as: " << player.evaluateBoard(sampleBoard) << endl;
     }
 }
