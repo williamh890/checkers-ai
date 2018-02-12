@@ -79,7 +79,7 @@ Network::Network(
 
 Network::~Network() {
 	if (_gameCompleted) {
-		//saveNetwork(_ID, *this);
+		saveNetwork(_ID, *this);
 	}
 };
 
@@ -177,8 +177,10 @@ bool ai::operator>=(const Network & lhs, const Network & rhs) {return !(lhs < rh
 void ai::setupNetworks(const vector<unsigned int>& dimensions, int numberOfNetworks) { //numberOfNetworks = 100
 	std::cout << "You are about to setup a new set of networks. This operation will overwrite previous networks. \n" <<
 		"Are you sure you want to continue? (y,n) ";
-	if (std::cin.get() == 'n')
+    if (std::cin.get() == 'n') {
+        cout << "Not overwriting networks.\n" << endl;
 		return;
+    }
 
     auto seeder = getSeeder();
 	for (auto index = 0; index < numberOfNetworks; ++index) {
