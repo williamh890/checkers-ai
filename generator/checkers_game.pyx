@@ -2,6 +2,7 @@
 # Author: Hal Dimarchi
 # wrapper of board and gui
 
+import json
 import tkinter as tk
 import tkinter.ttk as ttk
 from time import sleep
@@ -50,6 +51,9 @@ cdef class PyCheckersGame:
   def are_jumps(self):
     return self.checkers_game.areJumps()
 
+  def are_moves(self):
+    return self.checkers_game.areMoves()
+
   def make_move(self, int start, int to):
     cdef move_type move = move_type(start, to)
     try:
@@ -80,6 +84,7 @@ class PyBoard():
         self.entry = ttk.Entry(self.window)
         self.entry.bind('<Command-a>', self.get_entry_move)
         self.entry.pack(side=tk.RIGHT)
+        self.game_record = []
 
         self.board = tk.Frame(
             self.window,
@@ -109,9 +114,17 @@ class PyBoard():
 #********** GUI SETUP **********#
     def run(self):
       while True:
+        board = self.game.get_board()
+        self.compare_and_update_board(board)
+        self.window.update_idletasks()
+        self.window.update()
+
+    def run_without_interface(self):
+      while True:
         try:
           self.game.play()
-        except Exception:
+        except Exception as e:
+          print(str(e))
           self.run_end_game()
         board = self.game.get_board()
         self.compare_and_update_board(board)
@@ -147,7 +160,6 @@ class PyBoard():
 #********** GUI MOVE FUNCTIONS **********#
     def move_callback(self, row, col):
         print('({}, {})'.format(row, col))
-
         self.move_buttons.append(self.draw_spaces[row][col])
         self.mb_info.append((row, col))
 
@@ -158,10 +170,12 @@ class PyBoard():
             if self.game.are_jumps():
               print("making jump")
               self.submit_jump()
-            else:
+            elif self.game.are_moves():
                 print("making move")
                 self.submit_move()
-            print("select your next move")
+            else:
+              self.write_game()
+              self.run_end_game()
 
     def submit_move(self):
         move = convert_spaces_to_indices(self.mb_info)
@@ -170,6 +184,7 @@ class PyBoard():
         else:
           self.b_space["text"], self.e_space["text"] = self.e_space["text"], self.b_space["text"]
           self.game.make_move(move[0], move[1])
+          self.game_record.append(move)
           print("buttons should be different")
         self.move_buttons, self.mb_info = [], []
 
@@ -187,6 +202,7 @@ class PyBoard():
         self.b_space["text"] = " "
         mid_space["text"] = " "
         self.game.make_jump(jump[0], jump[1], jump[2])
+        self.game_record.append(jump)
       self.move_buttons, self.mb_info = [], []
 
     def is_diagonal(self):
@@ -212,8 +228,13 @@ class PyBoard():
           if check_space(row, col):
             index = convert_row_col_to_index((row, col))
             if self.board[index] != self.draw_spaces[row][col]["text"]:
+              print("Index: {}".format(index))
+              print("Thing: {}".format(self.board[index]))
               self.draw_spaces[row][col]["text"] = self.board[index]
 
+    def write_game(self):
+      with open('board.json', 'w') as f:
+        json.dump(self.game_record, f)
     def get_entry_move(self, e):
         print(self.entry.get())
 
@@ -268,7 +289,6 @@ def example_board():
 
 
 if __name__ == "__main__":
-
     board = example_board()
     checkers = PyBoard()
     checkers.get_board(checkers.game.get_board())

@@ -65,10 +65,12 @@ namespace ai {
 
             std::vector<char> getBoard(); // may not need
             const char getActivePlayerColor();
+            const char getInactivePlayerColor();
             void makeJump(const JumpPackage & jump);
             void makeMove(const MovePackage & move);
             void swapPlayers(); // may not need
             bool areJumps();
+            bool areMoves();
             // end gui/cython wrapper functions
 
             void play();
