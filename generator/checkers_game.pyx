@@ -237,4 +237,4 @@ if __name__ == "__main__":
     checkers = PyBoard()
     checkers.get_board(checkers.game.get_board())
     checkers.make_board()
-    checkers.run()
+    checkers.run_without_interface()
