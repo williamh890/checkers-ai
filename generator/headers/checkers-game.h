@@ -48,7 +48,6 @@ namespace ai {
             PlayerPtr inactivePlayer;
 
             std::mt19937 generator;
-
         public:
             CheckersGame();
             CheckersGame(
@@ -59,15 +58,19 @@ namespace ai {
                     );
 
             // following are public for use in the gui/cython wrapper
+            void makeRandomValidAction();
+
             bool isInvalid(const MovePackage & move);
             bool isInvalid(const JumpPackage & jump);
 
             std::vector<char> getBoard(); // may not need
             const char getActivePlayerColor();
+            const char getInactivePlayerColor();
             void makeJump(const JumpPackage & jump);
             void makeMove(const MovePackage & move);
             void swapPlayers(); // may not need
             bool areJumps();
+            bool areMoves();
             // end gui/cython wrapper functions
 
             void play();
@@ -80,9 +83,6 @@ namespace ai {
             JumpPackage getJumpFromActivePlayer();
             JumpPackage getRandomValidJump();
             JumpPackage getJumpFromUser();
-
-            void makeRandomValidAction();
-
             MovePackage parseUserInput();
 
             JumpPackage getJumpFrom(const MovePackage & inputJump);

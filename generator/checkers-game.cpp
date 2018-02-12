@@ -3,6 +3,7 @@ using ai::CheckersGame;
 using PlayerPtr = CheckersGame::PlayerPtr;
 using MovePackage = CheckersGame::MovePackage;
 using JumpPackage = CheckersGame::JumpPackage;
+using SeederPtr = CheckersGame::SeederPtr;
 
 #include "headers/seeder.h"
 using ai::RandomDeviceSeeder;
@@ -86,7 +87,7 @@ CheckersGame::CheckersGame(
         const Board & board,
         PlayerPtr red,
         PlayerPtr black,
-        shared_ptr<Seeder> & seeder): board(board), red(red), black(black), activePlayer(black), inactivePlayer(red) {
+        SeederPtr & seeder): board(board), red(red), black(black), activePlayer(black), inactivePlayer(red) {
 
     generator = mt19937(seeder->get());
 
@@ -167,6 +168,10 @@ void CheckersGame::swapPlayers(){
 
 bool CheckersGame::areJumps(){
   return getValidJumps().size();
+}
+
+bool CheckersGame::areMoves(){
+  return getValidMoves().size();
 }
 JumpPackage CheckersGame::getJumpFromActivePlayer() {
     if (activePlayer->getPlayerType() == PlayerType::Computer) {
@@ -320,6 +325,10 @@ const char CheckersGame::getActivePlayerColor(){
     return activePlayer->getColor();
 }
 
+const char CheckersGame::getInactivePlayerColor(){
+  return inactivePlayer->getColor();
+}
+
 void CheckersGame::reactTo(const JumpPackage & jump) {
     activePlayer->updatePieces(jump, board);
     inactivePlayer->removePieceAt(jump.second.through);
@@ -344,6 +353,7 @@ void CheckersGame::makeJump(const JumpPackage & jump){
         if (not areJumps()){
             swapPlayers();
             makeRandomValidAction();
+            swapPlayers();
         }
     } catch(length_error & e) {
         cout << "Out of moves" << endl;
@@ -356,6 +366,8 @@ void CheckersGame::makeMove(const MovePackage & move){
     board.make(move);
     reactTo(move);
 
+    swapPlayers();
+    makeRandomValidAction();
     swapPlayers();
 }
 
