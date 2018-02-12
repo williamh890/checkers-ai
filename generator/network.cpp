@@ -43,11 +43,15 @@ Network::Network(
 
 	_layers.resize(inputdimensions.at(0));
 	// Sizing each layer containing nodes within the _layers vector
-    cout << "inputdimensions: ";
+	if (DEBUG)
+    	cout << "inputdimensions: ";
 	for (unsigned int index = 1; index <= inputdimensions.at(0); ++index) {
 		_layers[index-1].resize(inputdimensions.at(index));
-        cout << inputdimensions.at(index) << " ";
-	} cout << endl;
+		if (DEBUG)
+        	cout << inputdimensions.at(index) << " ";
+	} 
+	if (DEBUG)
+		cout << endl;
 
 	_weights.resize(inputdimensions.at(0));
 	// Sizing each network weights vector contained in _weights

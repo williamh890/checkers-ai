@@ -46,14 +46,16 @@ bool inline NetworkFileReader::noMoreLayersIn() {
 int NetworkFileReader::loadPerformanceFrom() {
     int performace = 0;
     inFile.read( (char*)&performace, sizeof(int));
-    cout << "Perfomance: " << performace << endl;
+    if (DEBUG)
+        cout << "Perfomance: " << performace << endl;
     return performace;
 };
 
 double NetworkFileReader::loadKingWeightFrom() {
     double kingWeight = 0.;
     inFile.read( (char*)&kingWeight, sizeof(double));
-    cout << "King Weight: " << kingWeight << endl;
+    if (DEBUG)
+        cout << "King Weight: " << kingWeight << endl;
 
     return kingWeight;
 }
@@ -63,14 +65,18 @@ vector<unsigned int> NetworkFileReader::loadDimension() {
     inFile.read((char*)&numLayers, sizeof(unsigned int));
 
     vector<unsigned int> dimensions;
-    cout << "loading dimensions: ";
+    if (DEBUG)
+        cout << "loading dimensions: ";
 	for (unsigned int i = 0; i < numLayers; ++i) {
         unsigned int layerSize = 0;
         inFile.read( (char*)&layerSize, sizeof(unsigned int));
 
-        cout << layerSize << " ";
+        if (DEBUG)
+            cout << layerSize << " ";
         dimensions.push_back(layerSize);
-	} cout << endl;
+	}
+    if (DEBUG)
+        cout << endl;
 
     return dimensions;
 }

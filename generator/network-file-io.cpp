@@ -49,7 +49,9 @@ void NetworkFileWriter::saveDimensions(const vector<vector<double>> & layers) {
         if (DEBUG)
             cout << layerSize << " ";
         outFile.write( (char*)&layerSize, sizeof(unsigned int));
-	} cout << endl;
+	} 
+    if (DEBUG)
+        cout << endl;
 }
 
 void NetworkFileWriter::save(const string & filename, const Network & networkToSave) {
