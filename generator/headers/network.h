@@ -3,7 +3,10 @@
 
 #include "seeder.h"
 // ai::Seeder
-
+#include "network-file-io.h"
+// ai::NetworkFileReader
+// ai::NetworkFileWriter
+#include "consts.h"
 #include <vector>
 // std::vector
 #include <fstream>
@@ -14,8 +17,10 @@
 // std::string
 
 namespace ai {
+    class NetworkFileReader;
+    class NetworkFileWriter;
+
 	class Network {
-		bool DEBUG = true;
 	public:
 		using layersContainingNodes = std::vector<double>;
 		using networkWeights = std::vector<double>;
@@ -42,17 +47,12 @@ namespace ai {
 		int _performance;
 		bool _gameCompleted = false;
 
-		//friend class boost::serialization::access;
-		template <typename Archive>
-		void serialize(Archive &ar, const unsigned int version) {
-			ar & _ID;
-			ar & _layers;
-			ar & _weights;
-			ar & _kingWeight;
-			ar & _performance;
-		}
-
 		void calculateNode(unsigned int, unsigned int);
+
+    public:
+        friend class NetworkFileReader;
+        friend class NetworkFileWriter;
+		friend bool operator==(const Network &, const Network &);
 	}; // end class AI_Network
 
 	// Global operators to allow sorting of networks based on their performance
@@ -60,12 +60,8 @@ namespace ai {
 	bool operator> (const Network &lhs, const Network &rhs);
 	bool operator<= (const Network &lhs, const Network &rhs);
 	bool operator>= (const Network &lhs, const Network &rhs);
+	bool operator== (const Network &lhs, const Network &rhs);
 
 	void setupNetworks (const std::vector<unsigned int> & dimesions, int numberOfNetworks = 100);
-
-	// Functions to handle saving and loading of networks utilizing boost serialization
-	std::string idToFilename(int);
-	void saveNetwork(int, Network &);
-	bool loadNetwork(int, Network &);
 }
 #endif // NETWORK_H_INCLUDED

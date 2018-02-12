@@ -1,8 +1,14 @@
 #include "headers/utils.h"
 using ai::spaceToPosition;
+using ai::positionToSpace;
+using ai::idToFilename;
 
 #include "headers/models.h"
 using ai::Position;
+
+#include <string>
+using std::string;
+using std::to_string;
 
 /*         0   1   2   3   4   5   6   7
          +---+---+---+---+---+---+---+---+
@@ -41,4 +47,11 @@ int ai::positionToSpace(const Position & pos) {
     space += (pos.col / 2);
 
     return space;
+}
+
+string ai::idToFilename(int ID) {
+	string filename = to_string(ID) + ".network";
+	// The following implementation will be used once we begin to get the network integrated.
+	//string filename = ".\\networks\\" + to_string(ID) + ".network"; //creates filenames that scope to a folder called networks
+	return filename;
 }

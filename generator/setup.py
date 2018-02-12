@@ -6,7 +6,7 @@ setup(name="cython_checkers",
            "checkers_game.pyx",                 # our Cython source
            sources=["checkers-game.cpp", "move-generator.cpp",
                     "json-to-stl.cpp", "board.cpp", "player.cpp",
-                    "utils.cpp"],  # additional source file(s)
+                    "utils.cpp", "gui-cpp-interface.cpp", "seeder.cpp"],  # additional source file(s)
            language="c++",
            extra_compile_args=["-std=c++14"],
           )))

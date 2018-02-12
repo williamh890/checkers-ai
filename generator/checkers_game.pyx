@@ -20,9 +20,10 @@ ctypedef pair[int, int] move_type
 ctypedef pair[int, Jump] jump_type
 
 cdef class PyCheckersGame:
-  cdef CheckersGame checkers_game
+  cdef GuiCppInterface checkers_game
+
   def __cinit__(self):
-    self.checkers_game = getCheckersGame()
+    self.checkers_game = GuiCppInterface(getCheckersGame())
 
   def get_board(self):
     board = self.checkers_game.getBoard()
@@ -30,6 +31,9 @@ cdef class PyCheckersGame:
     for space in board:
       char_board.append(chr(space))
     return char_board
+
+  def play(self):
+    self.checkers_game.play()
 
   def is_jump_invalid(self, int start, int to, int through):
     cdef Jump jump
@@ -48,13 +52,24 @@ cdef class PyCheckersGame:
 
   def make_move(self, int start, int to):
     cdef move_type move = move_type(start, to)
-    self.checkers_game.makeMove(move)
+    try:
+      self.checkers_game.makeMove(move)
+    except Exception as e:
+      print(type(e))
+      print(str(e))
 
   def make_jump(self, int start, int to, int through):
     cdef Jump jump
     jump.to, jump.through = to, through
     cdef jump_type full_jump = jump_type(start, jump)
-    self.checkers_game.makeJump(full_jump)
+    try:
+      self.checkers_game.makeJump(full_jump)
+    except Exception as e:
+      print(type(e))
+      print(str(e))
+
+  def get_winner(self):
+    return chr(self.checkers_game.getInactivePlayerColor())
 
 
 class PyBoard():
@@ -94,8 +109,19 @@ class PyBoard():
 #********** GUI SETUP **********#
     def run(self):
       while True:
+        try:
+          self.game.play()
+        except Exception:
+          self.run_end_game()
         board = self.game.get_board()
         self.compare_and_update_board(board)
+        self.window.update_idletasks()
+        self.window.update()
+
+    def run_end_game(self):
+      print("GAME IS OVER")
+      print("{} wins".format(self.game.get_winner()))
+      while True:
         self.window.update_idletasks()
         self.window.update()
 
