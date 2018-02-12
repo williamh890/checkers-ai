@@ -6,7 +6,7 @@
 #include "network-file-io.h"
 // ai::NetworkFileReader
 // ai::NetworkFileWriter
-
+#include "consts.h"
 #include <vector>
 // std::vector
 #include <fstream>
@@ -21,8 +21,8 @@ namespace ai {
     class NetworkFileWriter;
 
 	class Network {
-		bool DEBUG = false;
 	public:
+		//bool DEBUG = false;
 		using layersContainingNodes = std::vector<double>;
 		using networkWeights = std::vector<double>;
 

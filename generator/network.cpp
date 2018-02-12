@@ -2,6 +2,8 @@
 using ai::getSeeder;
 using ai::Seeder;
 
+#include "headers/consts.h"
+using ai::DEBUG;
 #include "headers/network.h"
 using ai::Network;
 
@@ -89,8 +91,11 @@ double Network::evaluateBoard(const vector<char> & inputBoard ) {
 	cout << "WARNING: Evaluator function not set!" << endl;
 	//parse board
 	int index = 0;
+	if (DEBUG)
+		cout << "This is my input board: " << endl;
 	for (auto i : inputBoard) {
-		cout << "i = " << i << endl;
+		if (DEBUG)
+			cout << "i = " << i << endl;
 		if (i == ' ' || i == 0)
 			continue;
 		else if (i == 'r')

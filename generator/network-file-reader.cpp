@@ -1,3 +1,5 @@
+#include "headers/consts.h"
+using ai::DEBUG;
 #include "headers/network-file-io.h"
 using  ai::NetworkFileReader;
 
@@ -87,8 +89,8 @@ vector<vector<double>> NetworkFileReader::getNodesFromDimensions(const vector<un
 
 bool NetworkFileReader::load(const string & filename, Network & networkRecievingData) {
     vector<vector<double>> weights;
-
-    cout << "loading network" << endl;
+    if (DEBUG)
+        cout << "loading network" << endl;
     inFile.open(filename, ios::in | ios::binary);
     if (!inFile) {
         cout << "Error opening nn file" << endl;
@@ -109,7 +111,8 @@ bool NetworkFileReader::load(const string & filename, Network & networkRecieving
         if(noMoreLayersIn()) {
             break;
         }
-        cout << "Layer Dimension: " << currLayerDimension << endl;
+        if (DEBUG)
+            cout << "Layer Dimension: " << currLayerDimension << endl;
 
         auto layerWeights = loadWeightsForLayerFrom(currLayerDimension);
         weights.push_back(layerWeights);
