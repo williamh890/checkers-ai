@@ -91,7 +91,7 @@ double Network::evaluateBoard(const vector<char> & inputBoard ) {
 	int index = 0;
 	for (auto i : inputBoard) {
 		cout << "i = " << i << endl;
-		if (i == ' ')
+		if (i == ' ' || i == 0)
 			continue;
 		else if (i == 'r')
 			_layers[0][index] = 1;
@@ -101,6 +101,8 @@ double Network::evaluateBoard(const vector<char> & inputBoard ) {
 			_layers[0][index] = -1;
 		else if (i == 'B')
 			_layers[0][index] = -1 * _kingWeight;
+		else
+			cout << "Something has slipped through!" << endl;
 		++index;
 	}
 	// Run the board through the network. I would use range based for loop but the first vector in _layers has been filled

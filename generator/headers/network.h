@@ -21,7 +21,7 @@ namespace ai {
     class NetworkFileWriter;
 
 	class Network {
-		bool DEBUG = true;
+		bool DEBUG = false;
 	public:
 		using layersContainingNodes = std::vector<double>;
 		using networkWeights = std::vector<double>;
