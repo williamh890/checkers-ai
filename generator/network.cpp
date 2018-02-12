@@ -79,7 +79,7 @@ Network::Network(
 	// fill the _weights vector of networkWeights with random values -1 < x < 1
 	uniform_real_distribution<double> kingWeightRange(0, 5);
 	//_kingWeight = kingWeightRange(randomNumGenerator);
-	_kingWeight = 2;
+	_kingWeight = 2; // This is purely for manually testing. Use above line in production.
 	saveNetwork(_ID, *this);
 }
 
@@ -120,7 +120,7 @@ double Network::evaluateBoard(const vector<char> & inputBoard ) {
 			cout << "---------------------Calculating layer: " << x << "--------------------" << endl;
 		for (unsigned int y = 0; y < _layers[x].size(); ++y) {
 			if(DEBUG)
-				cout << "Node: " << y << endl;
+				cout << "Node: " << y << " _________ ";
 			calculateNode(x, y);
 			// *** Insert activation function here ***
 			// _layers[x][y] is the value used in the activator function
@@ -131,10 +131,13 @@ double Network::evaluateBoard(const vector<char> & inputBoard ) {
 };
 
 void Network::calculateNode(unsigned int x, unsigned int y) {
+	_layers[x][y] = 0;
 	unsigned int previousLayerSize = _layers[x - 1].size();
 	for (unsigned int i = 0; i < previousLayerSize; ++i) {
 		_layers[x][y] += _weights[x][y*previousLayerSize + i] * _layers[x - 1][i];
 	}
+	if (DEBUG)
+		cout << _layers[x][y] << endl;
 }
 void Network::adjustPerformance(int resultFromGame) {
 	_performance += resultFromGame;

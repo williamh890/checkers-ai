@@ -13,13 +13,14 @@ using std::vector;
 using std::cout;
 using std::endl;
 
-TEST_CASE("Test the network class") {
+TEST_CASE("Testing setupNetworks") {
     vector<unsigned int> dimesions{4, 32, 40, 10, 1};
     //setupNetworks(dimesions, 2);
 }
 TEST_CASE("Test saving and loading consistency") {
     ai::Network player(0);
     ai::Network playerAgain(0);
+
     SECTION ("Testing loading consistency") {
         REQUIRE(player == playerAgain);
     }
@@ -27,6 +28,10 @@ TEST_CASE("Test saving and loading consistency") {
     saveNetwork(0, player);
     loadNetwork(0, playerAgain);
     REQUIRE(player == playerAgain);
+    }
+    SECTION ("Loading an unavailable network fails") {
+        ai::Network failLoadTest(101);
+        REQUIRE(loadNetwork(101, failLoadTest) == false);
     }
 }
 TEST_CASE("Test Network Evaluation") {
