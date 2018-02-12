@@ -180,6 +180,10 @@ void Network::outputCreationDebug() {
 	}
 }
 
+void Network::changeKingWeight(double newWeight) {
+	_kingWeight = newWeight;
+}
+
 bool ai::operator<(const Network & lhs, const Network & rhs) {
     return lhs.getPerformance() < rhs.getPerformance();
 }

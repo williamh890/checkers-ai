@@ -38,6 +38,7 @@ namespace ai {
 		void replaceWithEvolution(const Network &);
 
 		void outputCreationDebug();
+		void changeKingWeight(double);
 
 	private:
 		unsigned int _ID;
