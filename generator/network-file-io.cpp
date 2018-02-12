@@ -3,7 +3,8 @@ using ai::NetworkFileReader;
 using ai::NetworkFileWriter;
 #include "headers/network.h"
 using ai::Network;
-
+#include "headers/consts.h"
+using ai::DEBUG;
 #include <vector>
 using std::vector;
 #include <string>
@@ -15,7 +16,9 @@ using std::endl;
 
 void NetworkFileWriter::saveLayerSize(const vector<double> & layer) {
     unsigned int size = layer.size();
-    cout << "writing " << layer.size() << " to file." << endl;
+
+    if (DEBUG)
+        cout << "writing " << layer.size() << " to file." << endl;
     outFile.write( (char*)&size, sizeof(unsigned int));
 }
 
@@ -39,15 +42,19 @@ void NetworkFileWriter::saveDimensions(const vector<vector<double>> & layers) {
     unsigned int numLayers = layers.size();
     outFile.write((char*)&numLayers, sizeof(unsigned int));
 
-    cout << "dimensions: ";
+    if (DEBUG)
+        cout << "dimensions: ";
 	for (const auto & layer : layers) {
         unsigned int layerSize = layer.size();
-        cout << layerSize << " ";
+        if (DEBUG)
+            cout << layerSize << " ";
         outFile.write( (char*)&layerSize, sizeof(unsigned int));
-	} cout << endl;
+	} 
+    if (DEBUG)
+        cout << endl;
 }
 
-bool NetworkFileWriter::save(const string & filename, const Network & networkToSave) {
+void NetworkFileWriter::save(const string & filename, const Network & networkToSave) {
 
     outFile.open(filename, ios::out | ios::binary);
 
@@ -58,8 +65,8 @@ bool NetworkFileWriter::save(const string & filename, const Network & networkToS
     for (auto & layer : networkToSave._weights) {
         saveWeightsForLayerTo(layer);
     }
-
-    cout << endl;
+    if (DEBUG)
+        cout << endl;
 
     outFile.close(); //Unnecessary
 }
