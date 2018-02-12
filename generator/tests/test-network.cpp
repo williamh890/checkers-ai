@@ -14,9 +14,10 @@ using std::cout;
 using std::endl;
 
 TEST_CASE("Testing setupNetworks") {
-    vector<unsigned int> dimesions{4, 32, 40, 10, 1};
-    //setupNetworks(dimesions, 2);
+    vector<unsigned int> dimesions{32, 40, 10, 1};
+    setupNetworks(dimesions, 2);
 }
+
 TEST_CASE("Test saving and loading consistency") {
     ai::Network player(0);
     ai::Network playerAgain(0);
@@ -24,19 +25,25 @@ TEST_CASE("Test saving and loading consistency") {
     SECTION ("Testing loading consistency") {
         REQUIRE(player == playerAgain);
     }
+
     SECTION ("Loading a saved object == object that was saved.") {
-    saveNetwork(0, player);
-    loadNetwork(0, playerAgain);
-    REQUIRE(player == playerAgain);
+        saveNetwork(0, player);
+        loadNetwork(0, playerAgain);
+
+        REQUIRE(player == playerAgain);
     }
+
     SECTION ("Loading an unavailable network fails") {
         ai::Network failLoadTest(101);
+
         REQUIRE(loadNetwork(101, failLoadTest) == false);
     }
 }
+
 TEST_CASE("Test Network Evaluation") {
     ai::Network player(0);
     ai::Network playerAgain(0);
+
     vector<char> emptyBoard(32);
     vector<char> sampleBigBoard{
             'r',   'r',   'r',   'r',
@@ -54,15 +61,19 @@ TEST_CASE("Test Network Evaluation") {
     SECTION("test network evaluation of empty board is 0.") {
         REQUIRE(player.evaluateBoard(emptyBoard) == 0);
     }
+
     SECTION ("Ensure output of a big board evaluation is consistent.") {
         REQUIRE(player.evaluateBoard(sampleBigBoard) == player.evaluateBoard(sampleBigBoard));
     }
+
     SECTION ("Ensure output of a small board evaluation is consistent.") {
         REQUIRE(player.evaluateBoard(sampleSmallBoard) == player.evaluateBoard(sampleSmallBoard));
     }
+
     SECTION ("Ensure output of a board with twice the king weight is double") {
         player.changeKingWeight(1);
         playerAgain.changeKingWeight(2);
-        REQUIRE((player.evaluateBoard(sampleSmallBoard) *2) == playerAgain.evaluateBoard(sampleSmallBoard));
+
+        REQUIRE((player.evaluateBoard(sampleSmallBoard) * 2) == playerAgain.evaluateBoard(sampleSmallBoard));
     }
 }

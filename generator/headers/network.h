@@ -7,6 +7,10 @@
 // ai::NetworkFileReader
 // ai::NetworkFileWriter
 #include "consts.h"
+// ai::Settings::NetworkWeightType
+
+#include <random>
+// std::uniform_real_distribution
 #include <vector>
 // std::vector
 #include <fstream>
@@ -22,13 +26,28 @@ namespace ai {
 
 	class Network {
 	public:
-		using layersContainingNodes = std::vector<double>;
-		using networkWeights = std::vector<double>;
+		using layersContainingNodes = std::vector<Settings::NetworkWeightType>;
+		using networkWeights = std::vector<Settings::NetworkWeightType>;
 
-		Network(unsigned int);
-		Network(const std::vector<unsigned int>&, unsigned int, std::shared_ptr<Seeder> & seeder); // This should probably be made private
+		Network(unsigned int id);
+		Network(const std::vector<unsigned int>& layerDimension,
+                unsigned int networkId,
+                std::shared_ptr<Seeder> & seeder); // This should probably be made private
+
 		~Network();
 
+    private:
+        void setupLayers(const std::vector<unsigned int> & layerDimensions);
+        void setupRandomWeights(const std::vector<unsigned int> & layerDimensions);
+        void setupKingWeight();
+
+        template <typename RandomNumberType>
+        std::vector<RandomNumberType>
+        getRandomNumbersOfLength(
+                const unsigned int length,
+                std::uniform_real_distribution<RandomNumberType> & distribution);
+
+    public:
 		double evaluateBoard (const std::vector<char> &);
 		void adjustPerformance(int result);
 		int getPerformance() const;
@@ -47,6 +66,7 @@ namespace ai {
 		double _kingWeight;
 		int _performance;
 		bool _gameCompleted = false;
+        std::mt19937 randomNumGenerator;
 
 		void calculateNode(unsigned int, unsigned int);
 
