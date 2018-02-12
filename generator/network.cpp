@@ -185,6 +185,21 @@ bool ai::operator>(const Network & lhs, const Network & rhs) {return rhs < lhs;}
 bool ai::operator<=(const Network & lhs, const Network & rhs) {return !(lhs > rhs);}
 bool ai::operator>=(const Network & lhs, const Network & rhs) {return !(lhs < rhs);}
 
+bool ai::operator== (const Network &lhs, const Network &rhs) {
+	if (lhs._ID != rhs._ID)
+		return false;
+	if (lhs._kingWeight != rhs. _kingWeight)
+		return false;
+	if (lhs._performance != rhs._performance)
+		return false;
+	if (lhs._layers != rhs._layers)
+		return false;
+	if (lhs._weights != rhs._weights)
+		return false;
+
+	return true;
+}
+
 void ai::setupNetworks(const vector<unsigned int>& dimensions, int numberOfNetworks) { //numberOfNetworks = 100
 	std::cout << "You are about to setup a new set of networks. This operation will overwrite previous networks. \n" <<
 		"Are you sure you want to continue? (y,n) ";

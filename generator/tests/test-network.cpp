@@ -12,7 +12,14 @@ TEST_CASE("Test the network class") {
     //setupNetworks(dimesions, 2);
 
     SECTION("test loading a network") {
-        Network(0);
+       // Network(0);
+    }
+}
+TEST_CASE("Test saving and loading consistency") {
+    SECTION ("Testing loading consistency") {
+        ai::Network player(0);
+        ai::Network playerAgain(0);
+        REQUIRE(player == playerAgain);
     }
 }
 TEST_CASE("Test Network Evaluation") {
@@ -30,11 +37,9 @@ TEST_CASE("Test Network Evaluation") {
         };
         vector<char> sampleSmallBoard(32);
         sampleSmallBoard[0] = 'r';
-    SECTION("Testing space and default vec are equal") {
-        REQUIRE(emptyBoard[0] == ' ');
-    }
+
     SECTION("test network evaluation works.") {
-        std::cout << "Board was evaluated as: " << player.evaluateBoard(emptyBoard) << std::endl;
+        REQUIRE(player.evaluateBoard(emptyBoard));
     }
     SECTION ("Ensure output of a big board evaluation is consistent.") {
         REQUIRE(player.evaluateBoard(sampleBigBoard) == player.evaluateBoard(sampleBigBoard));
