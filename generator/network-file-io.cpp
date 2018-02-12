@@ -1,8 +1,12 @@
 #include "headers/network-file-io.h"
 using ai::NetworkFileReader;
 using ai::NetworkFileWriter;
+
 #include "headers/network.h"
 using ai::Network;
+
+#include "headers/consts.h"
+using NetworkWeightType = ai::Settings::NetworkWeightType;
 
 #include <vector>
 using std::vector;
@@ -13,17 +17,17 @@ using std::ios;
 using std::cout;
 using std::endl;
 
-void NetworkFileWriter::saveLayerSize(const vector<double> & layer) {
+void NetworkFileWriter::saveLayerSize(const vector<NetworkWeightType> & layer) {
     unsigned int size = layer.size();
     cout << "writing " << layer.size() << " to file." << endl;
     outFile.write( (char*)&size, sizeof(unsigned int));
 }
 
-void NetworkFileWriter::saveWeightsForLayerTo(const vector<double> & layer) {
+void NetworkFileWriter::saveWeightsForLayerTo(const vector<NetworkWeightType> & layer) {
 
     saveLayerSize(layer);
     for (auto & w : layer) {
-        outFile.write( (char*)&w, sizeof(double));
+        outFile.write( (char*)&w, sizeof(NetworkWeightType));
     }
 }
 
@@ -32,10 +36,10 @@ void NetworkFileWriter::savePerformance(int networkPerormance) {
 }
 
 void NetworkFileWriter::saveKingWeight(double kingWeight) {
-    outFile.write( (char*)&kingWeight, sizeof(double));
+    outFile.write( (char*)&kingWeight, sizeof(NetworkWeightType));
 }
 
-void NetworkFileWriter::saveDimensions(const vector<vector<double>> & layers) {
+void NetworkFileWriter::saveDimensions(const vector<vector<NetworkWeightType>> & layers) {
     unsigned int numLayers = layers.size();
     outFile.write((char*)&numLayers, sizeof(unsigned int));
 
@@ -47,7 +51,7 @@ void NetworkFileWriter::saveDimensions(const vector<vector<double>> & layers) {
 	} cout << endl;
 }
 
-bool NetworkFileWriter::save(const string & filename, const Network & networkToSave) {
+void NetworkFileWriter::save(const string & filename, const Network & networkToSave) {
 
     outFile.open(filename, ios::out | ios::binary);
 

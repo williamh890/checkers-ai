@@ -18,6 +18,8 @@ namespace ai {
 
         static const PlayerType RED_PLAYER_TYPE = PlayerType::Computer;
         static const PlayerType BLACK_PLAYER_TYPE = PlayerType::Computer;
+
+        using NetworkWeightType = double;
     }
 }
 

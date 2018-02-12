@@ -7,6 +7,9 @@ using ai::Network;
 #include "headers/utils.h"
 using ai::idToFilename;
 
+#include "headers/consts.h"
+using NetworkWeightType = ai::Settings::NetworkWeightType;
+
 #include <vector>
 using std::vector;
 #include <string>
@@ -25,12 +28,12 @@ bool ai::loadNetwork(unsigned int id, Network & network) {
     return reader.load(filename, network);
 }
 
-vector<double> NetworkFileReader::loadWeightsForLayerFrom(unsigned int currLayerDimension) {
-    vector<double> layerWeights;
+vector<NetworkWeightType> NetworkFileReader::loadWeightsForLayerFrom(unsigned int currLayerDimension) {
+    vector<NetworkWeightType> layerWeights;
 
     for (unsigned int i = 0; i < currLayerDimension; ++i) {
-        double weight = 0;
-        inFile.read( (char*)&weight, sizeof(double));
+        NetworkWeightType weight = 0;
+        inFile.read( (char*)&weight, sizeof(NetworkWeightType));
         layerWeights.push_back(weight);
     }
 
@@ -73,11 +76,11 @@ vector<unsigned int> NetworkFileReader::loadDimension() {
     return dimensions;
 }
 
-vector<vector<double>> NetworkFileReader::getNodesFromDimensions(const vector<unsigned int> & dimensions) {
-    vector<vector<double>> nodes;
+vector<vector<NetworkWeightType>> NetworkFileReader::getNodesFromDimensions(const vector<unsigned int> & dimensions) {
+    vector<vector<NetworkWeightType>> nodes;
 
     for (auto size : dimensions) {
-        auto nodeLayer = vector<double>(size, 0);
+        auto nodeLayer = vector<NetworkWeightType>(size, 0);
         nodes.push_back(nodeLayer);
     }
 
@@ -86,7 +89,7 @@ vector<vector<double>> NetworkFileReader::getNodesFromDimensions(const vector<un
 
 
 bool NetworkFileReader::load(const string & filename, Network & networkRecievingData) {
-    vector<vector<double>> weights;
+    vector<vector<NetworkWeightType>> weights;
 
     cout << "loading network" << endl;
     inFile.open(filename, ios::in | ios::binary);
