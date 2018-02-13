@@ -93,10 +93,10 @@ TEST_CASE("Test Network Evaluation") {
 
 
 TEST_CASE("Testing the speed of board evaluation.") {
-    int LOOPCOUNTER = 100000;
-    vector<unsigned int> dimesionsSmall{32, 40, 10, 1};
-    vector<unsigned int> dimesionsLarge{32, 40, 10, 1};
-    setupNetworks(dimesionsSmall, 2);
+    int LOOPCOUNTER = 10000;
+    vector<unsigned int> dimesionsLarge{32, 1000, 100, 1};
+    vector<unsigned int> dimesions{32, 40, 10, 1};
+    setupNetworks(dimesions, 2);
     vector<char> sampleBigBoard{
             'r',   'r',   'r',   'r',
          'r',   'r',   'r',   'r',
@@ -108,6 +108,9 @@ TEST_CASE("Testing the speed of board evaluation.") {
          'b',   'b',   'b',   'b'
         };
     Network player(0);
+
+    cout << "\n\n\n\n****** Getting board evaluation time.. This could take a while ******" << endl;
+
     double evaluationStart = get_time();
     for (volatile int i; i < LOOPCOUNTER; ++i) {
         player.evaluateBoard(sampleBigBoard);
@@ -115,12 +118,16 @@ TEST_CASE("Testing the speed of board evaluation.") {
     double evaluationEnd = get_time();
     double evaluationTotal = evaluationEnd - evaluationStart;
 
+
     double loopStart = get_time();
-     for (volatile int i; i < LOOPCOUNTER; ++i) {
+    for (volatile int i; i < LOOPCOUNTER; ++i) {
     }
     double loopEnd = get_time();
     double loopTotal = loopEnd - loopStart;
-    double timeTaken = (evaluationStart - loopTotal)/LOOPCOUNTER;
-    cout << "Time taken for board evaluation was: " << timeTaken << " nanoseconds" << endl;
-    cout << "Number of boards per seconds = " << 1/(timeTaken * 1.0e-9) << endl;
+
+
+    double timeTaken = (evaluationTotal - loopTotal)/LOOPCOUNTER;
+    cout << "Time taken for board evaluation was: " << timeTaken << " seconds" << endl;
+    cout << "Number of boards calculated: " << LOOPCOUNTER << endl;
+    cout << "Number of boards per second = " << 1/timeTaken << endl;
 }
