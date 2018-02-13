@@ -64,7 +64,8 @@ void NetworkFileWriter::saveDimensions(const vector<vector<NetworkWeightType>> &
         if (DEBUG)
             cout << layerSize << " ";
         outFile.write( (char*)&layerSize, sizeof(unsigned int));
-	} 
+	}
+
     if (DEBUG)
         cout << endl;
 }

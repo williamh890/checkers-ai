@@ -102,6 +102,7 @@ bool NetworkFileReader::load(const string & filename, Network & networkRecieving
     if (DEBUG)
         cout << "loading network" << endl;
 
+    cout << filename << endl;
     inFile.open(filename, ios::in | ios::binary);
     if (!inFile) {
         cout << "Error opening nn file" << endl;

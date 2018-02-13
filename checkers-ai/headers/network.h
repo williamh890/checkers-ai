@@ -25,55 +25,58 @@ namespace ai {
     class NetworkFileWriter;
 
 	class Network {
-	public:
-		using layersContainingNodes = std::vector<Settings::NetworkWeightType>;
-		using networkWeights = std::vector<Settings::NetworkWeightType>;
+        public:
+            using LayersContainingNodes = std::vector<Settings::NetworkWeightType>;
+            using NetworkWeights = std::vector<Settings::NetworkWeightType>;
 
-		Network(unsigned int id);
-		Network(const std::vector<unsigned int>& layerDimension,
-                unsigned int networkId,
-                std::shared_ptr<Seeder> & seeder); // This should probably be made private
+            Network(unsigned int id);
+            Network(unsigned int id,
+                    const std::vector<unsigned int> & LayerDimension,
+                    std::shared_ptr<Seeder> & seeder); // This should probably be made private
 
-		~Network();
+            ~Network();
 
-    private:
-        void setupLayers(const std::vector<unsigned int> & layerDimensions);
-        void setupRandomWeights(const std::vector<unsigned int> & layerDimensions);
-        void setupKingWeight();
+        private:
+            void setupLayers(const std::vector<unsigned int> & LayerDimensions);
+            void setupRandomWeights(const std::vector<unsigned int> & LayerDimensions);
+            void setupKingWeight();
 
-        template <typename RandomNumberType>
-        std::vector<RandomNumberType>
-        getRandomNumbersOfLength(
-                const unsigned int length,
-                std::uniform_real_distribution<RandomNumberType> & distribution);
+            template <typename RandomNumberType>
+            std::vector<RandomNumberType>
+            getRandomNumbersOfLength(
+                    const unsigned int length,
+                    std::uniform_real_distribution<RandomNumberType> & distribution);
 
-    public:
-		double evaluateBoard (const std::vector<char> &);
-		void adjustPerformance(int result);
-		int getPerformance() const;
-		void resetPerformance();
+        public:
+            double evaluateBoard (const std::vector<char> &);
 
-		std::vector<networkWeights> evolve() const; // *** TODO *** Not required for Project 2
-		void replaceWithEvolution(const Network &);
+            void adjustPerformance(int result);
+            int getPerformance() const;
+            void resetPerformance();
 
-		void outputCreationDebug();
-		void changeKingWeight(double);
+            std::vector<NetworkWeights> evolve() const; // *** TODO *** Not required for Project 2
+            void replaceWithEvolution(const Network &);
 
-	private:
-		unsigned int _ID;
-		std::vector<layersContainingNodes> _layers;
-		std::vector<networkWeights> _weights;
-		double _kingWeight;
-		int _performance;
-		bool _gameCompleted = false;
-        std::mt19937 randomNumGenerator;
+            void outputCreationDebug();
+            void changeKingWeight(double);
 
-		void calculateNode(unsigned int, unsigned int);
+        private:
+            std::vector<LayersContainingNodes> _layers;
+            std::vector<NetworkWeights> _weights;
 
-    public:
-        friend class NetworkFileReader;
-        friend class NetworkFileWriter;
-		friend bool operator==(const Network &, const Network &);
+            unsigned int _ID;
+            double _kingWeight;
+            int _performance;
+            bool _gameCompleted = false;
+
+            std::mt19937 randomNumGenerator;
+
+            void calculateNode(unsigned int, unsigned int);
+
+        public:
+            friend class NetworkFileReader;
+            friend class NetworkFileWriter;
+            friend bool operator==(const Network &, const Network &);
 	}; // end class AI_Network
 
 	// Global operators to allow sorting of networks based on their performance

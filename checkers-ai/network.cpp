@@ -33,13 +33,13 @@ using std::string;
 #include <memory>
 using std::shared_ptr;
 
-Network::Network(unsigned int inputID): _ID(inputID) {
+Network::Network(unsigned int networkId): _ID(networkId) {
 	loadNetwork(_ID, *this);
 }
 
 Network::Network(
-        const vector<unsigned int> & layerDimensions,
         unsigned int networkId,
+        const vector<unsigned int> & layerDimensions,
         shared_ptr<Seeder> & seeder) : _ID(networkId), _performance(0), randomNumGenerator(mt19937(seeder->get())) {
 
     setupLayers(layerDimensions);
@@ -167,8 +167,8 @@ void Network::resetPerformance() {
     _performance = 0;
 }
 
-vector<Network::networkWeights> Network::evolve() const { 	// *** TODO *** Not required for Project 2
-    vector<networkWeights> dummy;
+vector<Network::NetworkWeights> Network::evolve() const { 	// *** TODO *** Not required for Project 2
+    vector<NetworkWeights> dummy;
     return dummy;
 }
 
@@ -243,7 +243,7 @@ void ai::setupNetworks(const vector<unsigned int>& dimensions, int numberOfNetwo
 
     auto seeder = getSeeder();
     for (auto index = 0; index < numberOfNetworks; ++index) {
-        Network(dimensions, index, seeder);
+        Network(index, dimensions, seeder);
     }
 }
 
