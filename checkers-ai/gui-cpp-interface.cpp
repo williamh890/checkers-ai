@@ -15,7 +15,7 @@ GuiCppInterface::GuiCppInterface(const CheckersGame & game): game(game) {
 void GuiCppInterface::play(){
     game.makeRandomValidAction();
     game.swapPlayers();
-    usleep(1000000);
+    usleep(10000);
 }
 
 bool GuiCppInterface::isInvalid(const CheckersGame::MovePackage & move) {
