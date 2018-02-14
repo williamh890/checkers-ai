@@ -68,7 +68,7 @@ $(SEEDER_OBJ): $(SEEDER).cpp
 	$(CMP) -o $(SEEDER_OBJ) -c $(SEEDER).cpp
 
 $(NETWORK_OBJ): $(NETWORK).cpp
-	$(CMP) -fopenmp -o $(NETWORK_OBJ) -c $(NETWORK).cpp
+	$(CMP) -o $(NETWORK_OBJ) -c $(NETWORK).cpp
 
 $(NETWORK_READER_OBJ): $(NETWORK_READER).cpp
 	$(CMP) -o $(NETWORK_READER_OBJ) -c $(NETWORK_READER).cpp
