@@ -77,7 +77,6 @@ void Network::setupRandomWeights(const vector<unsigned int> & layerDimensions){
 
 void Network::setupKingWeight() {
     _kingWeight = 2;
-
 }
 
 template <typename RandomNumberType>
@@ -102,16 +101,16 @@ Network::~Network() {
 }
 
 double Network::evaluateBoard(const vector<char> & inputBoard, bool testing) { // testing defaults false
-
 	/*If I remember correctly, he said to just flip the sign of the final answer to get the evaluation for your opponent.
 	  This evaluate function calculates for red, just flip the sign for black. */
 	//parse board
 	int index = 0;
 	if (DEBUG)
 		cout << "This is my input board: " << endl;
-	for (auto i : inputBoard) {
+	for (const auto & i : inputBoard) {
 		if (DEBUG)
 			cout << "i = " << i << endl;
+
 		if (i == ' ' || i == 0)
 			continue;
 		else if (i == 'r')
@@ -123,7 +122,7 @@ double Network::evaluateBoard(const vector<char> & inputBoard, bool testing) { /
 		else if (i == 'B')
 			_layers[0][index] = -1 * _kingWeight;
 		else
-			cout << "Something has slipped through!" << endl;
+			cout << "Unrecognized character in board: " << i << endl;
 		++index;
 	}
 	// Run the board through the network. I would use range based for loop but the first vector in _layers has been filled
@@ -135,16 +134,21 @@ double Network::evaluateBoard(const vector<char> & inputBoard, bool testing) { /
 				cout << "Node: " << y << " _________ ";
 			calculateNode(x, y);
 
-			// *** Activation function ***
-            // _layers[x][y] is the value used in the activator function
-            // Fast Sigmoid: f(x) = x / (1 + abs(x))
-            if (!testing)
-                _layers[x][y] = _layers[x][y] / (1+ abs(_layers[x][y]));
+            if (!testing) {
+                _layers[x][y] = activationFunction(_layers[x][y]);
+            }
 		}
 	}
+
 	// return looks funny but it will pull the last vector of the arbitrarily large _layers vector
 	return _layers[_layers.size() - 1][0];
 }
+
+inline NetworkWeightType Network::activationFunction(NetworkWeightType x) {
+    // Fast Sigmoid
+    return x / (1 + abs(x));
+}
+
 
 void Network::calculateNode(unsigned int x, unsigned int y) {
 	_layers[x][y] = 0;

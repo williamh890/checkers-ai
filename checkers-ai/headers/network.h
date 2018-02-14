@@ -48,7 +48,9 @@ namespace ai {
                         std::uniform_real_distribution<RandomNumberType> & distribution);
 
         public:
-            double evaluateBoard (const std::vector<char> &, bool leave_Out_Activator = false);
+            Settings::NetworkWeightType evaluateBoard(const std::vector<char> &, bool leave_Out_Activator = false);
+            inline Settings::NetworkWeightType activationFunction(Settings::NetworkWeightType x);
+
             void adjustPerformance(int result);
             int getPerformance() const;
             void resetPerformance();
