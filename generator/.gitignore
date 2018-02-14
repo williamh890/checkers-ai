@@ -1,0 +1,8 @@
+checkers_game_obj
+checkers_game_obj.cpp
+checkers_game_obj_2
+gui-checkers
+*.gch
+*.network
+game*.json
+board*.json

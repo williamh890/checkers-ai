@@ -7,5 +7,5 @@ from . import get_random_string
 
 def write_game(game_record):
     rand = get_random_string()
-    with open("boards/game{}.json".format(rand), 'w') as f:
+    with open("boards/board{}.json".format(rand), 'w') as f:
         json.dump(game_record, f)
