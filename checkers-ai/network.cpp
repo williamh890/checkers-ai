@@ -127,12 +127,12 @@ NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool t
 	}
 	// Run the board through the network. I would use range based for loop but the first vector in _layers has been filled
 	for (unsigned int x = 1; x < _layers.size(); ++x) {
-		if (DEBUG)
-			cout << "---------------------Calculating layer: " << x << "--------------------" << endl;
+		//if (DEBUG)
+		//	cout << "---------------------Calculating layer: " << x << "--------------------" << endl;
         //# pragma omp parallel for schedule(guided, 2)
 		for (unsigned int y = 0; y < _layers[x].size(); ++y) {
-			if(DEBUG)
-				cout << "Node: " << y << " _________ ";
+			//if(DEBUG)
+			//	cout << "Node: " << y << " _________ ";
 			//calculateNode(x, y);
             {
                 NetworkWeightType totalNodeValue = 0;
@@ -144,8 +144,8 @@ NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool t
 
 	            _layers[x][y] = totalNodeValue;
 
-	            if (DEBUG)
-	            	cout << _layers[x][y] << endl;
+	            //if (DEBUG)
+	            //	cout << _layers[x][y] << endl;
             }
 
             if (!testing) {
