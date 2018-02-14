@@ -147,9 +147,11 @@ NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool t
 	            //if (DEBUG)
 	            //	cout << _layers[x][y] << endl;
             }
-
+            
             if (!testing) {
-                _layers[x][y] = activationFunction(_layers[x][y]);
+            //activationFunction
+            NetworkWeightType var = _layers[x][y];
+            _layers[x][y] = var / (1 + abs(var));
             }
 		}
 	}
