@@ -24,7 +24,7 @@ namespace ai {
     class NetworkFileReader;
     class NetworkFileWriter;
 
-	class Network {
+    class Network {
         public:
             using LayersContainingNodes = std::vector<Settings::NetworkWeightType>;
             using NetworkWeights = std::vector<Settings::NetworkWeightType>;
@@ -42,14 +42,13 @@ namespace ai {
             void setupKingWeight();
 
             template <typename RandomNumberType>
-            std::vector<RandomNumberType>
-            getRandomNumbersOfLength(
-                    const unsigned int length,
-                    std::uniform_real_distribution<RandomNumberType> & distribution);
+                std::vector<RandomNumberType>
+                getRandomNumbersOfLength(
+                        const unsigned int length,
+                        std::uniform_real_distribution<RandomNumberType> & distribution);
 
         public:
-            double evaluateBoard (const std::vector<char> &);
-
+            double evaluateBoard (const std::vector<char> &, bool leave_Out_Activator = false);
             void adjustPerformance(int result);
             int getPerformance() const;
             void resetPerformance();
@@ -61,14 +60,12 @@ namespace ai {
             void changeKingWeight(double);
 
         private:
+            unsigned int _ID;
             std::vector<LayersContainingNodes> _layers;
             std::vector<NetworkWeights> _weights;
-
-            unsigned int _ID;
             double _kingWeight;
             int _performance;
             bool _gameCompleted = false;
-
             std::mt19937 randomNumGenerator;
 
             void calculateNode(unsigned int, unsigned int);
@@ -77,15 +74,15 @@ namespace ai {
             friend class NetworkFileReader;
             friend class NetworkFileWriter;
             friend bool operator==(const Network &, const Network &);
-	}; // end class AI_Network
+    }; // end class AI_Network
 
-	// Global operators to allow sorting of networks based on their performance
-	bool operator< (const Network &lhs, const Network &rhs);
-	bool operator> (const Network &lhs, const Network &rhs);
-	bool operator<= (const Network &lhs, const Network &rhs);
-	bool operator>= (const Network &lhs, const Network &rhs);
-	bool operator== (const Network &lhs, const Network &rhs);
+    // Global operators to allow sorting of networks based on their performance
+    bool operator< (const Network &lhs, const Network &rhs);
+    bool operator> (const Network &lhs, const Network &rhs);
+    bool operator<= (const Network &lhs, const Network &rhs);
+    bool operator>= (const Network &lhs, const Network &rhs);
+    bool operator== (const Network &lhs, const Network &rhs);
 
-	void setupNetworks (const std::vector<unsigned int> & dimesions, int numberOfNetworks = 100);
+    void setupNetworks (const std::vector<unsigned int> & dimesions, int numberOfNetworks = 100);
 }
 #endif // NETWORK_H_INCLUDED

@@ -24,9 +24,14 @@ namespace ai {
             void makeJump(const CheckersGame::JumpPackage & jump);
             void makeMove(const CheckersGame::MovePackage & move);
 
+            void replayJump(const CheckersGame::JumpPackage & jump);
+            void replayMove(const CheckersGame::MovePackage & move);
+
             void swapPlayers(); // may not need
             bool areJumps();
             bool areMoves();
+
+            std::vector<std::vector<int>> getGame();
     };
 }
 

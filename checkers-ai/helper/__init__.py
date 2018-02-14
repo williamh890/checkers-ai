@@ -35,4 +35,4 @@ def example_board():
                         board[row][column] = "r"
                 else:
                     board[row][column] = " "
-    return board
+        return board
