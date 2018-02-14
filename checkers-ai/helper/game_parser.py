@@ -12,7 +12,7 @@ class GameParser:
         self.end_game = False
 
     def advance(self):
-        sleep(.25)
+        sleep(1.00)
         try:
             self.move = self.game[self.turn]
         except Exception:

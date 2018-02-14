@@ -30,7 +30,7 @@ using std::ifstream;
 using std::ios;
 #include <string>
 using std::string;
-#include <memory>
+#include <memory>   
 using std::shared_ptr;
 
 Network::Network(unsigned int networkId): _ID(networkId) {
@@ -129,33 +129,30 @@ NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool t
 	for (unsigned int x = 1; x < _layers.size(); ++x) {
 		//if (DEBUG)
 		//	cout << "---------------------Calculating layer: " << x << "--------------------" << endl;
-        // # pragma omp parallel for schedule(guided, 2)
+        //# pragma omp parallel for schedule(guided, 2)
 		for (unsigned int y = 0; y < _layers[x].size(); ++y) {
 			//if(DEBUG)
 			//	cout << "Node: " << y << " _________ ";
 			//calculateNode(x, y);
             {
-                NetworkWeightType total1 = 0, total2 = 0;
+                NetworkWeightType totalNodeValue = 0;
                  unsigned int previousLayerSize = _layers[x - 1].size();
 
 	            for (unsigned int i = 0; i < previousLayerSize; i+=2) {
-                    total1 += _weights[x][y*previousLayerSize + i] * _layers[x - 1][i];
-                    total2 += _weights[x][y*previousLayerSize + i + 1] * _layers[x - 1][i + 1];
+		        totalNodeValue += _weights[x][y*previousLayerSize + i] * _layers[x - 1][i];
 	            }
 
-	            _layers[x][y] = total1 + total2;
+	            _layers[x][y] = totalNodeValue;
 
 	            //if (DEBUG)
 	            //	cout << _layers[x][y] << endl;
             }
-
-            if (testing) {
-                continue;
+            
+            if (!testing) {
+            //activationFunction
+            NetworkWeightType var = _layers[x][y];
+            _layers[x][y] = var / (1 + abs(var));
             }
-			//activationFunction
-			NetworkWeightType var = _layers[x][y];
-			_layers[x][y] = var / (1 + abs(var));
-            //_layers[x][y] = activationFunction(_layers[x][y]);
 		}
 	}
 

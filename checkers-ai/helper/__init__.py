@@ -3,7 +3,6 @@
 
 import random
 import string
-import os
 
 BOARD_SIZE = 8
 
@@ -37,8 +36,3 @@ def example_board():
                 else:
                     board[row][column] = " "
         return board
-
-
-def ensure_dir(directory):
-    if not os.path.exists(directory):
-        os.makedirs(directory)
