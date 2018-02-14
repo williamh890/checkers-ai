@@ -49,7 +49,7 @@ void NetworkFileWriter::savePerformance(int networkPerormance) {
     outFile.write( (char*)&networkPerormance, sizeof(int));
 }
 
-void NetworkFileWriter::saveKingWeight(double kingWeight) {
+void NetworkFileWriter::saveKingWeight(NetworkWeightType kingWeight) {
     outFile.write( (char*)&kingWeight, sizeof(NetworkWeightType));
 }
 

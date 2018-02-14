@@ -54,9 +54,9 @@ int NetworkFileReader::loadPerformanceFrom() {
     return performace;
 };
 
-double NetworkFileReader::loadKingWeightFrom() {
-    double kingWeight = 0.;
-    inFile.read( (char*)&kingWeight, sizeof(double));
+NetworkWeightType NetworkFileReader::loadKingWeightFrom() {
+    NetworkWeightType kingWeight = 0.;
+    inFile.read( (char*)&kingWeight, sizeof(NetworkWeightType));
     if (DEBUG)
         cout << "King Weight: " << kingWeight << endl;
 

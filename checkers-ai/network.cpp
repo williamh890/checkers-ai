@@ -100,7 +100,7 @@ Network::~Network() {
     }
 }
 
-double Network::evaluateBoard(const vector<char> & inputBoard, bool testing) { // testing defaults false
+NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool testing) { // testing defaults false
 	/*If I remember correctly, he said to just flip the sign of the final answer to get the evaluation for your opponent.
 	  This evaluate function calculates for red, just flip the sign for black. */
 	//parse board
@@ -154,8 +154,7 @@ void Network::calculateNode(unsigned int x, unsigned int y) {
     NetworkWeightType totalNodeValue = 0;
     unsigned int previousLayerSize = _layers[x - 1].size();
 
-    # pragma omp parallel for schedule(dynamic, 4) reduction(+:totalNodeValue)
-	for (unsigned int i = 0; i < previousLayerSize; i++) {
+	for (unsigned int i = 0; i < previousLayerSize; i+=2) {
 		totalNodeValue += _weights[x][y*previousLayerSize + i] * _layers[x - 1][i];
 	}
 
