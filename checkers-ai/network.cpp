@@ -151,12 +151,14 @@ inline NetworkWeightType Network::activationFunction(NetworkWeightType x) {
 
 
 void Network::calculateNode(unsigned int x, unsigned int y) {
-	_layers[x][y] = 0;
-	unsigned int previousLayerSize = _layers[x - 1].size();
+    NetworkWeightType totalNodeValue = 0;
+    double previousLayerSize = _layers[x - 1].size();
 
 	for (unsigned int i = 0; i < previousLayerSize; ++i) {
-		_layers[x][y] += _weights[x][y*previousLayerSize + i] * _layers[x - 1][i];
+		totalNodeValue += _weights[x][y*previousLayerSize + i] * _layers[x - 1][i];
 	}
+
+	_layers[x][y] = totalNodeValue;
 
 	if (DEBUG)
 		cout << _layers[x][y] << endl;
@@ -227,18 +229,12 @@ bool ai::operator>=(const Network & lhs, const Network & rhs) {
 }
 
 bool ai::operator== (const Network &lhs, const Network &rhs) {
-	if (lhs._ID != rhs._ID)
-		return false;
-	if (lhs._kingWeight != rhs. _kingWeight)
-		return false;
-	if (lhs._performance != rhs._performance)
-		return false;
-	if (lhs._layers != rhs._layers)
-		return false;
-	if (lhs._weights != rhs._weights)
-		return false;
-
-	return true;
+    return
+        (lhs._ID == rhs._ID) and
+        (lhs._kingWeight == rhs. _kingWeight) and
+        (lhs._performance == rhs._performance) and
+        (lhs._layers == rhs._layers) and
+        (lhs._weights == rhs._weights);
 }
 
 void ai::setupNetworks(const vector<unsigned int>& dimensions, int numberOfNetworks) { //numberOfNetworks = 100
