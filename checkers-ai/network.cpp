@@ -101,10 +101,10 @@ Network::~Network() {
     }
 }
 
-double Network::evaluateBoard(const vector<char> & inputBoard ) {
+double Network::evaluateBoard(const vector<char> & inputBoard, bool testing) { // testing defaults false
+
 	/*If I remember correctly, he said to just flip the sign of the final answer to get the evaluation for your opponent.
 	  This evaluate function calculates for red, just flip the sign for black. */
-	cout << "WARNING: Evaluator function not set!" << endl;
 	//parse board
 	int index = 0;
 	if (DEBUG)
@@ -134,8 +134,12 @@ double Network::evaluateBoard(const vector<char> & inputBoard ) {
 			if(DEBUG)
 				cout << "Node: " << y << " _________ ";
 			calculateNode(x, y);
-			// *** Insert activation function here ***
-			// _layers[x][y] is the value used in the activator function
+
+			// *** Activation function ***
+            // _layers[x][y] is the value used in the activator function
+            // Fast Sigmoid: f(x) = x / (1 + abs(x))
+            if (!testing)
+                _layers[x][y] = _layers[x][y] / (1+ abs(_layers[x][y]));
 		}
 	}
 	// return looks funny but it will pull the last vector of the arbitrarily large _layers vector
@@ -238,6 +242,7 @@ void ai::setupNetworks(const vector<unsigned int>& dimensions, int numberOfNetwo
         "Are you sure you want to continue? (y,n) ";
     if (std::cin.get() == 'n') {
         cout << "Not overwriting files" << endl;
+        std::cin.ignore();
         return;
     }
 
@@ -245,5 +250,6 @@ void ai::setupNetworks(const vector<unsigned int>& dimensions, int numberOfNetwo
     for (auto index = 0; index < numberOfNetworks; ++index) {
         Network(dimensions, index, seeder);
     }
+    std::cin.ignore();
 }
 

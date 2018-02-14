@@ -48,7 +48,7 @@ namespace ai {
                 std::uniform_real_distribution<RandomNumberType> & distribution);
 
     public:
-		double evaluateBoard (const std::vector<char> &);
+		double evaluateBoard (const std::vector<char> &, bool leave_Out_Activator = false);
 		void adjustPerformance(int result);
 		int getPerformance() const;
 		void resetPerformance();
