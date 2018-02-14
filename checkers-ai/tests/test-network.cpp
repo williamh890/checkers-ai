@@ -1,5 +1,6 @@
 #include "../headers/network.h"
 using ai::Network;
+using ai::Settings::NetworkWeightType;
 using ai::setupNetworks;
 
 #include "../headers/network-file-io.h"
@@ -19,11 +20,18 @@ using std::cout;
 using std::endl;
 #include <chrono>
 
+const NetworkWeightType EPSILON = 0.0000001;
+
 double get_time() {
     return 1.0e-9*std::chrono::duration_cast<std::chrono::nanoseconds>(
             std::chrono::high_resolution_clock::now().time_since_epoch()
             ).count();
 }
+
+bool areSame(NetworkWeightType a, NetworkWeightType b) {
+    return fabs(a - b) < EPSILON;
+}
+
 
 
 TEST_CASE("Testing setupNetworks") {
@@ -77,22 +85,22 @@ TEST_CASE("Test Network Evaluation") {
     }
 
     SECTION ("Ensure output of a big board evaluation is consistent.") {
-        REQUIRE(player.evaluateBoard(sampleBigBoard, true) == player.evaluateBoard(sampleBigBoard, true));
-        REQUIRE(player.evaluateBoard(sampleBigBoard) == player.evaluateBoard(sampleBigBoard));
+        REQUIRE(areSame(player.evaluateBoard(sampleBigBoard, true), player.evaluateBoard(sampleBigBoard, true)));
+        REQUIRE(areSame(player.evaluateBoard(sampleBigBoard), player.evaluateBoard(sampleBigBoard)));
     }
 
     SECTION ("Ensure output of a small board evaluation is consistent.") {
-        REQUIRE(player.evaluateBoard(sampleSmallBoard, true) == player.evaluateBoard(sampleSmallBoard, true));
+        REQUIRE(areSame(player.evaluateBoard(sampleSmallBoard, true), player.evaluateBoard(sampleSmallBoard, true)));
     }
 
     SECTION ("Ensure output of a board with twice the king weight is double") {
         player.changeKingWeight(1);
         playerAgain.changeKingWeight(2);
 
-        REQUIRE((player.evaluateBoard(sampleSmallBoard, true) * 2) == playerAgain.evaluateBoard(sampleSmallBoard, true));
+        REQUIRE(areSame((player.evaluateBoard(sampleSmallBoard, true) * 2), playerAgain.evaluateBoard(sampleSmallBoard, true)));
     }
     SECTION("Testing the use of the activation function is different than without") {
-        REQUIRE(player.evaluateBoard(sampleBigBoard, true) != player.evaluateBoard(sampleBigBoard));
+        REQUIRE(!areSame(player.evaluateBoard(sampleBigBoard, true), player.evaluateBoard(sampleBigBoard)));
     }
 }
 
