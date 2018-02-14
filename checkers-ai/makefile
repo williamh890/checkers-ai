@@ -1,4 +1,4 @@
-CMP=g++ -std=c++14 -Wall -fopenmp
+CMP=g++ -std=c++14 -Wall
 
 BUILD_DIR=build
 GENERATOR=move-generator
