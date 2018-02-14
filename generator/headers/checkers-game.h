@@ -47,6 +47,8 @@ namespace ai {
             PlayerPtr activePlayer;
             PlayerPtr inactivePlayer;
 
+            std::vector<std::vector<int>> game_record{};
+
             std::mt19937 generator;
         public:
             CheckersGame();
@@ -68,9 +70,14 @@ namespace ai {
             const char getInactivePlayerColor();
             void makeJump(const JumpPackage & jump);
             void makeMove(const MovePackage & move);
+
+            void replayJump(const JumpPackage & jump);
+            void replayMove(const MovePackage & move);
             void swapPlayers(); // may not need
             bool areJumps();
             bool areMoves();
+
+            std::vector<std::vector<int>> getGame();
             // end gui/cython wrapper functions
 
             void play();

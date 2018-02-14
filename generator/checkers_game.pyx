@@ -6,13 +6,13 @@ import json
 import random
 import string
 from helper.conversions import one_to_two_dimensions, convert_spaces_to_indices, convert_row_col_to_index
-
 from helper.checking import is_diagonal, check_space
 from helper.writer import write_game
+from helper.reader import Reader
+from helper.game_parser import GameParser
 
 import tkinter as tk
 import tkinter.ttk as ttk
-from time import sleep
 cimport checkers_game
 from libcpp.pair cimport pair
 from libcpp.vector cimport vector
@@ -60,6 +60,9 @@ cdef class PyCheckersGame:
   def are_moves(self):
     return self.checkers_game.areMoves()
 
+  def get_game(self):
+    return self.checkers_game.getGame()
+
   def make_move(self, int start, int to):
     cdef move_type move = move_type(start, to)
     try:
@@ -78,6 +81,16 @@ cdef class PyCheckersGame:
       print(type(e))
       print(str(e))
 
+  def replay_jump(self, int start, int through, int to):
+    cdef Jump jump
+    jump.to, jump.through = to, through
+    cdef jump_type full_jump = jump_type(start, jump)
+    self.checkers_game.replayJump(full_jump)
+
+  def replay_move(self, int start, int to):
+    cdef move_type move = move_type(start, to)
+    self.checkers_game.replayMove(move)
+
   def get_winner(self):
     return chr(self.checkers_game.getInactivePlayerColor())
 
@@ -90,7 +103,8 @@ class PyBoard():
         self.entry = ttk.Entry(self.window)
         self.entry.bind('<Command-a>', self.get_entry_move)
         self.entry.pack(side=tk.RIGHT)
-        self.game_record = []
+
+        self.reader = Reader()
 
         self.board = tk.Frame(
             self.window,
@@ -137,14 +151,42 @@ class PyBoard():
         self.window.update_idletasks()
         self.window.update()
 
+    def run_from_file(self):
+      self.reader.get_file("gamedqO24dgC")
+      self.reader.get_game()
+      self.parser = GameParser(self.reader.game)
+      while True:
+        if self.parser.advance():
+          print(self.parser.move)
+          self.game.replay_jump(self.parser.move[0],
+                                self.parser.move[1],
+                                self.parser.move[2])
+        elif not self.parser.end_game:
+          print(self.parser.move)
+          self.game.replay_move(self.parser.move[0], self.parser.move[1])
+        else:
+          self.run_end_game()
+
+        board = self.game.get_board()
+        self.compare_and_update_board(board)
+        self.window.update_idletasks()
+        self.window.update()
+
     def run_end_game(self):
+      write_game(self.game.get_game())
       print("GAME IS OVER")
       print("{} wins".format(self.game.get_winner()))
       reset = input("Play again? (y/n)")
       if reset == "n":
         exit(0)
       self.game = PyCheckersGame()
-      self.run()
+      option = input("Select a game type: Computer v. Human('h'), Computer v. Computer('c'), From File('f')")
+      if option == 'h':
+        self.run()
+      if option == 'c':
+        self.run_without_interface()
+      else:
+        self.run_from_file()
 
     def make_board_space(self, row, column):
         callback = self.make_move_callback(row, column)
@@ -184,7 +226,6 @@ class PyBoard():
               print("making move")
               self.submit_move()
           else:
-            write_game(self.game_record)
             self.run_end_game()
 
     def submit_move(self):
@@ -194,7 +235,6 @@ class PyBoard():
         else:
           self.b_space["text"], self.e_space["text"] = self.e_space["text"], self.b_space["text"]
           self.game.make_move(move[0], move[1])
-          self.game_record.append(move)
           print("buttons should be different")
         self.move_buttons, self.mb_info = [], []
 
@@ -212,7 +252,6 @@ class PyBoard():
         self.b_space["text"] = " "
         mid_space["text"] = " "
         self.game.make_jump(jump[0], jump[1], jump[2])
-        self.game_record.append(jump)
       self.move_buttons, self.mb_info = [], []
 
     def compare_and_update_board(self, board):

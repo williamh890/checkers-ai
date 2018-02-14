@@ -349,7 +349,8 @@ void CheckersGame::makeJump(const JumpPackage & jump){
     try {
         board.make(jump);
         reactTo(jump);
-
+        vector<int> move = {jump.first, jump.second.through, jump.second.to};
+        game_record.push_back(move);
         if (not areJumps()){
             swapPlayers();
             makeRandomValidAction();
@@ -366,6 +367,8 @@ void CheckersGame::makeMove(const MovePackage & move){
     board.make(move);
     reactTo(move);
 
+    vector<int> vec_move = {move.first, move.second};
+    game_record.push_back(vec_move);
     swapPlayers();
     makeRandomValidAction();
     swapPlayers();
@@ -376,6 +379,8 @@ void CheckersGame::makeRandomValidAction(){
         auto jump = getRandomValidJump();
         board.make(jump);
         reactTo(jump);
+        vector<int> move = {jump.first, jump.second.through, jump.second.to};
+        game_record.push_back(move);
 
         if (areJumps()){
             makeRandomValidAction();
@@ -387,4 +392,24 @@ void CheckersGame::makeRandomValidAction(){
     auto move = getRandomValidMove();
     board.make(move);
     reactTo(move);
+    vector<int> vec_move = {move.first, move.second};
+    game_record.push_back(vec_move);
+}
+
+void CheckersGame::replayJump(const JumpPackage & jump){
+    board.make(jump);
+    reactTo(jump);
+    if (not areJumps()){
+      swapPlayers();
+    }
+}
+
+void CheckersGame::replayMove(const MovePackage & move){
+  board.make(move);
+  reactTo(move);
+  swapPlayers();
+}
+
+vector<std::vector<int>> CheckersGame::getGame(){
+  return game_record;
 }
