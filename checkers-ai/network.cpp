@@ -152,9 +152,10 @@ inline NetworkWeightType Network::activationFunction(NetworkWeightType x) {
 
 void Network::calculateNode(unsigned int x, unsigned int y) {
     NetworkWeightType totalNodeValue = 0;
-    double previousLayerSize = _layers[x - 1].size();
+    unsigned int previousLayerSize = _layers[x - 1].size();
 
-	for (unsigned int i = 0; i < previousLayerSize; ++i) {
+    # pragma omp parallel for schedule(dynamic, 4) reduction(+:totalNodeValue)
+	for (unsigned int i = 0; i < previousLayerSize; i++) {
 		totalNodeValue += _weights[x][y*previousLayerSize + i] * _layers[x - 1][i];
 	}
 
