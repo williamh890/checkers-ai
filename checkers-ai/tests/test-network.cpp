@@ -20,7 +20,7 @@ using std::cout;
 using std::endl;
 #include <chrono>
 
-const NetworkWeightType EPSILON = 0.0000001;
+const NetworkWeightType EPSILON = 0.00001;
 
 double get_time() {
     return 1.0e-9*std::chrono::duration_cast<std::chrono::nanoseconds>(
