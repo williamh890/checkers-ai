@@ -123,6 +123,7 @@ $(TEST_NETWORK).o: $(TEST_NETWORK).cpp
 	$(CMP) -o $(TEST_NETWORK).o -c $(TEST_NETWORK).cpp
 
 tests-run: tests
+	mkdir -p logs
 	./$(TEST_OUT_FILE)
 
 run: all

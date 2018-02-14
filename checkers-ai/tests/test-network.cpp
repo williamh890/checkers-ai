@@ -9,6 +9,11 @@ using ai::saveNetwork;
 
 #include <vector>
 using std::vector;
+#include <fstream>
+using std::ofstream;
+using std::ios_base;
+#include <sstream>
+using std::ostringstream;
 #include <iostream>
 using std::cout;
 using std::endl;
@@ -91,28 +96,43 @@ TEST_CASE("Test Network Evaluation") {
     }
 }
 
+void writeToLogs(double timeTaken, int loopIterations, double boardsPerSec) {
+    ofstream outFile;
+    auto logFilePath = "logs/nn.log";
+    outFile.open(logFilePath, ios_base::app);
+
+    ostringstream outStr;
+    outStr << "Timing Run:" << endl;
+    outStr << "------------------------------------------------------------------" << endl;
+    outStr << "Time taken for board evaluation was: " << timeTaken << " seconds" << endl;
+    outStr << "Number of boards calculated: " << loopIterations << endl;
+    outStr << "Number of boards per second = " << boardsPerSec << endl;
+    outStr << "------------------------------------------------------------------" << endl << endl;
+
+    outFile << outStr.str();
+}
 
 TEST_CASE("Testing the speed of board evaluation.") {
-    int LOOPCOUNTER = 10000;
+    const int LOOP_COUNTER = 10000;
     vector<unsigned int> dimesionsLarge{32, 1000, 100, 1};
     vector<unsigned int> dimesions{32, 40, 10, 1};
     setupNetworks(dimesions, 2);
     vector<char> sampleBigBoard{
+        'r',   'r',   'r',   'r',
             'r',   'r',   'r',   'r',
-         'r',   'r',   'r',   'r',
             ' ',   'r',   'r',   'r',
-         ' ',   ' ',   'r',   ' ',
+            ' ',   ' ',   'r',   ' ',
             ' ',   ' ',   'b',   ' ',
-         'b',   'b',   ' ',   'b',
+            'b',   'b',   ' ',   'b',
             'b',   'b',   'b',   'b',
-         'b',   'b',   'b',   'b'
-        };
+            'b',   'b',   'b',   'b'
+    };
     Network player(0);
 
     cout << "\n\n\n\n****** Getting board evaluation time.. This could take a while ******" << endl;
 
     double evaluationStart = get_time();
-    for (volatile int i; i < LOOPCOUNTER; ++i) {
+    for (volatile int i; i < LOOP_COUNTER; ++i) {
         player.evaluateBoard(sampleBigBoard);
     }
     double evaluationEnd = get_time();
@@ -120,14 +140,16 @@ TEST_CASE("Testing the speed of board evaluation.") {
 
 
     double loopStart = get_time();
-    for (volatile int i; i < LOOPCOUNTER; ++i) {
+    for (volatile int i; i < LOOP_COUNTER; ++i) {
     }
     double loopEnd = get_time();
     double loopTotal = loopEnd - loopStart;
 
-
-    double timeTaken = (evaluationTotal - loopTotal)/LOOPCOUNTER;
+    double timeTaken = (evaluationTotal - loopTotal)/LOOP_COUNTER;
+    auto boardsPerSec = 1 / timeTaken;
     cout << "Time taken for board evaluation was: " << timeTaken << " seconds" << endl;
-    cout << "Number of boards calculated: " << LOOPCOUNTER << endl;
-    cout << "Number of boards per second = " << 1/timeTaken << endl;
+    cout << "Number of boards calculated: " << LOOP_COUNTER << endl;
+    cout << "Number of boards per second = " << boardsPerSec << endl;
+
+    writeToLogs(timeTaken, LOOP_COUNTER, boardsPerSec);
 }
