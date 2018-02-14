@@ -104,9 +104,9 @@ void writeToLogs(double timeTaken, int loopIterations, double boardsPerSec) {
     ostringstream outStr;
     outStr << "Timing Run:" << endl;
     outStr << "------------------------------------------------------------------" << endl;
-    outStr << "Time taken for board evaluation was: " << timeTaken << " seconds" << endl;
-    outStr << "Number of boards calculated: " << loopIterations << endl;
-    outStr << "Number of boards per second = " << boardsPerSec << endl;
+    outStr << "Total board evaluations = " << timeTaken << " seconds" << endl;
+    outStr << "Boards calculated = " << loopIterations << endl;
+    outStr << "Boards evalutions per second = " << boardsPerSec << endl;
     outStr << "------------------------------------------------------------------" << endl << endl;
 
     outFile << outStr.str();
