@@ -431,14 +431,26 @@ int CheckersGame::minimaxSearch(Board passedBoard, RedPlayer red_player, BlackPl
     auto blackCopy = black_player;
     auto shared_black = make_shared<BlackPlayer>(blackCopy);
     auto shared_red = make_shared<RedPlayer>(redCopy);
+    vector<MovePackage> player_moves;
+    vector<JumpPackage> player_jumps;
+    int best_move = 0;
 
     if(playerColor == 'b')
     {
-        auto player_moves = boardCopy.getValidMovesFor(shared_black);
+        player_moves = boardCopy.getValidMovesFor(shared_black);
+        player_jumps = boardCopy.getValidJumpsFor(shared_black);
     }
     if(playerColor == 'r')
     {
-        auto player_moves = boardCopy.getValidMovesFor(shared_red);
+        player_moves = boardCopy.getValidMovesFor(shared_red);
+        player_jumps = boardCopy.getValidJumpsFor(shared_red);
+    }
+    if(player_jumps.size())
+    {
+        for(auto & jump : player_jumps)
+        {
+            if
+        }
     }
     return 0;
 }
