@@ -21,6 +21,7 @@ using ai::JumpTableType;
 #include "headers/move-generator.h"
 using ai::MoveGenerator;
 using ai::JsonToStlConverter;
+using ai::loadMoveTableFrom;
 
 #include <cctype>
 using std::tolower;
