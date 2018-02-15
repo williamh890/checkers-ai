@@ -424,10 +424,21 @@ vector<std::vector<int>> CheckersGame::getGame(){
   return game_record;
 }
 
-void CheckersGame::makeMinimaxMove(Board passedBoard, RedPlayer red_player, BlackPlayer black_player, int depth = 0)
+int CheckersGame::minimaxSearch(Board passedBoard, RedPlayer red_player, BlackPlayer black_player,char playerColor, int depth, int init_depth = 0)
 {
     auto boardCopy = passedBoard;
     auto redCopy = red_player;
     auto blackCopy = black_player;
-    
+    auto shared_black = make_shared<BlackPlayer>(blackCopy);
+    auto shared_red = make_shared<RedPlayer>(redCopy);
+
+    if(playerColor == 'b')
+    {
+        auto player_moves = boardCopy.getValidMovesFor(shared_black);
+    }
+    if(playerColor == 'r')
+    {
+        auto player_moves = boardCopy.getValidMovesFor(shared_red);
+    }
+    return 0;
 }
