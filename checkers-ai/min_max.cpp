@@ -26,6 +26,12 @@ MinMaxHelper::MinMaxHelper(const std::string color, CheckersGame &game, Network 
 }
 
 int MinMaxHelper::parseTree(BoardType board){
+    int total = 0;
+    return total;
+}
 
-  return 0; //dummy
+vector<BoardType> MinMaxHelper::generateMoves(BoardType board){
+    BoardType help = {'h', 'e', 'l', 'p'};
+    vector<BoardType> moves = {help};
+    return moves;
 }

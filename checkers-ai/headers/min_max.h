@@ -12,8 +12,9 @@
 // ai::MoveTableType
 // ai::JumpTableType
 
-#include "player.h"
-// ai::Player
+#include "move-generator.h"
+// ai::MoveGenerator
+// ai::JsonToStlConverter
 
 #include <utility>
 // std::make_pair
@@ -27,7 +28,6 @@ namespace ai{
     class MinMaxHelper{
         public:
             using BoardType = std::vector<char>;
-            using PlayerPtr = std::shared_ptr<Player>;
         private:
             Network checkers_player;
             const std::string player_color;
@@ -44,7 +44,7 @@ namespace ai{
 
         private:
             int parseTree(BoardType move); // recurse on boards //return is board score best on minmax of children
-            std::vector<std::vector<BoardType>> generateMoves(BoardType board); // returns vector of boardState
+            std::vector<BoardType> generateMoves(BoardType board); // returns vector of boardState
                                                                                 // representing possible moves
                                                                                 // recurse on these with parseTree
 
