@@ -424,7 +424,10 @@ vector<std::vector<int>> CheckersGame::getGame(){
   return game_record;
 }
 
-void CheckersGame::makeMinimaxMove(Board passedBoard)
+void CheckersGame::makeMinimaxMove(Board passedBoard, RedPlayer red_player, BlackPlayer black_player, int depth = 0)
 {
+    auto boardCopy = passedBoard;
+    auto redCopy = red_player;
+    auto blackCopy = black_player;
     
 }
