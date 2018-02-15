@@ -131,7 +131,7 @@ class PyBoard():
 
 ########### GUI FUNCTIONS ###########
 
-#********** GUI SETUP **********#
+#********** GUI SETUP AND RUNNING **********#
     def run(self):
       while True:
         board = self.game.get_board()
@@ -152,8 +152,8 @@ class PyBoard():
         self.window.update()
 
     def run_from_file(self):
-      self.reader.get_file("gamedqO24dgC")
-      self.reader.get_game()
+      self.reader.get_file("boardfZtuqtCK") # place a board you've generated here
+      self.reader.get_game()                # or use get_file_from_command_line
       self.parser = GameParser(self.reader.game)
       while True:
         if self.parser.advance():

@@ -121,43 +121,51 @@ void writeToLogs(double timeTaken, int loopIterations, double boardsPerSec) {
 }
 
 TEST_CASE("Testing the speed of board evaluation.") {
-    const int LOOP_COUNTER = 10000;
+    const int LOOP_COUNTER = 1000;
     vector<unsigned int> dimesionsLarge{32, 1000, 100, 1};
     vector<unsigned int> dimesions{32, 40, 10, 1};
     setupNetworks(dimesionsLarge, 2);
     vector<char> sampleBigBoard{
-        'r',   'r',   'r',   'r',
             'r',   'r',   'r',   'r',
+        'r',   'r',   'r',   'r',
             ' ',   'r',   'r',   'r',
-            ' ',   ' ',   'r',   ' ',
+        ' ',   ' ',   'r',   ' ',
             ' ',   ' ',   'b',   ' ',
-            'b',   'b',   ' ',   'b',
+        'b',   'b',   ' ',   'b',
             'b',   'b',   'b',   'b',
-            'b',   'b',   'b',   'b'
+        'b',   'b',   'b',   'b'
     };
     Network player(0);
 
-    cout << "\n\n\n\n****** Getting board evaluation time.. This could take a while ******" << endl;
+    cout << "\n\n\n\n****** Getting average board evaluation time.. This could take a while ******" << endl;
+    double averageTime = 0;
+    const unsigned int LOOPSFORAVERAGE = 10;
+    for (volatile unsigned int index = 0; index < LOOPSFORAVERAGE; ++index){
+        double evaluationStart = get_time();
+        for (volatile int i = 0; i < LOOP_COUNTER; ++i) {
+            player.evaluateBoard(sampleBigBoard);
+        }
+        double evaluationEnd = get_time();
+        double evaluationTotal = evaluationEnd - evaluationStart;
 
-    double evaluationStart = get_time();
-    for (volatile int i; i < LOOP_COUNTER; ++i) {
-        player.evaluateBoard(sampleBigBoard);
+
+        double loopStart = get_time();
+        for (volatile int j = 0; j < LOOP_COUNTER; ++j) {
+        }
+        double loopEnd = get_time();
+        double loopTotal = loopEnd - loopStart;
+
+        averageTime += (evaluationTotal - loopTotal)/LOOP_COUNTER;
     }
-    double evaluationEnd = get_time();
-    double evaluationTotal = evaluationEnd - evaluationStart;
+
+    averageTime /= LOOPSFORAVERAGE;
+    double averageBPS = 1/averageTime;
 
 
-    double loopStart = get_time();
-    for (volatile int i; i < LOOP_COUNTER; ++i) {
-    }
-    double loopEnd = get_time();
-    double loopTotal = loopEnd - loopStart;
-
-    double timeTaken = (evaluationTotal - loopTotal)/LOOP_COUNTER;
-    auto boardsPerSec = 1 / timeTaken;
-    cout << "Time taken for board evaluation was: " << timeTaken << " seconds" << endl;
+    cout << "Average time taken for board evaluation was: " << averageTime << " seconds" << endl;
     cout << "Number of boards calculated: " << LOOP_COUNTER << endl;
-    cout << "Number of boards per second = " << boardsPerSec << endl;
+    cout << "Number of boards per second = " << averageBPS << endl;
 
-    writeToLogs(timeTaken, LOOP_COUNTER, boardsPerSec);
+    writeToLogs(averageTime, LOOP_COUNTER, averageBPS);
+
 }
