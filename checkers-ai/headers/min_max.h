@@ -12,9 +12,6 @@
 // ai::MoveTableType
 // ai::JumpTableType
 
-#include "move-generator.h"
-// ai::MoveGenerator
-
 #include "player.h"
 // ai::Player
 
@@ -24,11 +21,13 @@
 
 #include <vector>
 // std::vector
+
 static const std::vector<char> COLORS = {'r', 'b'};
 namespace ai{
     class MinMaxHelper{
         public:
             using BoardType = std::vector<char>;
+            using PlayerPtr = std::shared_ptr<Player>;
         private:
             Network checkers_player;
             const std::string player_color;

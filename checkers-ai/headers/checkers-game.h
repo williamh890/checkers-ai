@@ -80,13 +80,17 @@ namespace ai {
             std::vector<std::vector<int>> getGame();
             // end gui/cython wrapper functions
 
+            //minMax accessors
+            std::vector<MovePackage> getValidMoves();
+            std::vector<JumpPackage> getValidJumps();
+            std::vector<JumpPackage> getOpponentValidJumps();
+            std::vector<MovePackage> getOpponentValidMoves();
             void play();
 
         private:
             MovePackage getMoveFromActivePlayer();
             MovePackage getRandomValidMove();
             MovePackage getMoveFromUser();
-            std::vector<JumpPackage> getValidJumps();
             JumpPackage getJumpFromActivePlayer();
             JumpPackage getRandomValidJump();
             JumpPackage getJumpFromUser();
@@ -95,8 +99,6 @@ namespace ai {
             JumpPackage getJumpFrom(const MovePackage & inputJump);
 
             std::vector<JumpPackage> getValidJumpsAt(int space);
-
-            std::vector<MovePackage> getValidMoves();
 
             void reactTo(const MovePackage & move);
             void reactTo(const JumpPackage & jump);

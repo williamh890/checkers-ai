@@ -304,6 +304,16 @@ vector<JumpPackage> CheckersGame::getValidJumps() {
     return validJumps;
 }
 
+vector<JumpPackage> CheckersGame::getOpponentValidJumps(){
+  auto validJumps = board.getValidJumpsFor(inactivePlayer);
+
+  return validJumps;
+}
+vector<MovePackage> CheckersGame::getOpponentValidMoves(){
+  auto validMoves = board.getValidMovesFor(inactivePlayer);
+
+  return validMoves;
+}
 vector<JumpPackage> CheckersGame::getValidJumpsAt(int space) {
     auto validJumps = board.getValidJumpsFor(activePlayer);
     auto jumpsAtSpace = vector<JumpPackage>{};
