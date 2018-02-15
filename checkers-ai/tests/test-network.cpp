@@ -121,19 +121,19 @@ void writeToLogs(double timeTaken, int loopIterations, double boardsPerSec) {
 }
 
 TEST_CASE("Testing the speed of board evaluation.") {
-    const int LOOP_COUNTER = 10000;
+    const int LOOP_COUNTER = 1000;
     vector<unsigned int> dimesionsLarge{32, 1000, 100, 1};
     vector<unsigned int> dimesions{32, 40, 10, 1};
     setupNetworks(dimesionsLarge, 2);
     vector<char> sampleBigBoard{
-        'r',   'r',   'r',   'r',
             'r',   'r',   'r',   'r',
+        'r',   'r',   'r',   'r',
             ' ',   'r',   'r',   'r',
-            ' ',   ' ',   'r',   ' ',
+        ' ',   ' ',   'r',   ' ',
             ' ',   ' ',   'b',   ' ',
-            'b',   'b',   ' ',   'b',
+        'b',   'b',   ' ',   'b',
             'b',   'b',   'b',   'b',
-            'b',   'b',   'b',   'b'
+        'b',   'b',   'b',   'b'
     };
     Network player(0);
 
