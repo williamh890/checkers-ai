@@ -21,7 +21,7 @@
 
 #include <vector>
 // std::vector
-
+static const std::vector<char> COLORS = {'r', 'b'};
 namespace ai{
     class MinMaxHelper{
         public:
@@ -34,6 +34,10 @@ namespace ai{
 
 
         private:
+            int parseTree(BoardType move); // recurse on boards //return is board score best on minmax of children
+            std::vector<std::vector<BoardType>> generateMoves(BoardType board); // returns vector of boardState
+                                                                                // representing possible moves
+                                                                                // recurse on these with parseTree
 
     };
 };
