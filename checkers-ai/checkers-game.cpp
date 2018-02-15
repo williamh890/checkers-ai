@@ -449,7 +449,6 @@ int CheckersGame::minimaxSearch(Board passedBoard, RedPlayer red_player, BlackPl
     {
         for(auto & jump : player_jumps)
         {
-            if
         }
     }
     return 0;
