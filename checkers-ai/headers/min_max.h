@@ -28,14 +28,19 @@ namespace ai{
     class MinMaxHelper{
         public:
             using BoardType = std::vector<char>;
+            using MovesType = std::vector<int>;
+            using JumpsType = std::vector<Jump>;
+            using BoardMovesType = std::vector<std::pair<int, MovesType>>;
+            using BoardJumpsType = std::vector<std::pair<int, JumpsType>>;
         private:
             Network checkers_player;
-            const std::string player_color;
+            std::string player_color;
             BoardType activeBoard;
             CheckersGame game;
 
             MoveGenerator redGenerator;
             MoveGenerator blackGenerator;
+            MoveGenerator kingGenerator;
 
 
         public:
@@ -48,10 +53,12 @@ namespace ai{
 
         private:
             int parseTree(BoardType move); // recurse on boards //return is board score best on minmax of children
-            std::vector<BoardType> generateMoves(BoardType board); // returns vector of boardState
-                                                                                // representing possible moves
-                                                                                // recurse on these with parseTree
+            std::vector<BoardType> generateBoards(BoardType board); // returns vector of boardState
+            std::pair<BoardMovesType, BoardMovesType> parseBoardMoves(BoardType &board);
+            std::pair<BoardJumpsType, BoardJumpsType> parseBoardJumps(BoardType &board);
 
+            BoardJumpsType removeInvalidJumps(BoardType board,  BoardJumpsType Jumps);
+            BoardMovesType removeInvalidMoves(BoardType board, BoardMovesType Moves);
     };
 };
 
