@@ -423,3 +423,8 @@ void CheckersGame::replayMove(const MovePackage & move){
 vector<std::vector<int>> CheckersGame::getGame(){
   return game_record;
 }
+
+void CheckersGame::makeMinimaxMove(Board passedBoard)
+{
+    
+}

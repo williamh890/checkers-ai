@@ -29,3 +29,8 @@ int MinMaxHelper::parseTree(BoardType board){
 
   return 0; //dummy
 }
+
+BoardType MinMaxHelper::minMax(BoardType board)
+{
+  
+}
