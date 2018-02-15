@@ -34,6 +34,10 @@ namespace ai{
             BoardType activeBoard;
             CheckersGame game;
 
+            MoveGenerator redGenerator;
+            MoveGenerator blackGenerator;
+
+
         public:
             MinMaxHelper() = default;
             MinMaxHelper(const std::string color, CheckersGame &game, Network network); // color is the Player

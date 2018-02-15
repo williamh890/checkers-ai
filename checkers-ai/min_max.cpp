@@ -16,6 +16,7 @@ using ai::JumpTableType;
 
 #include "headers/move-generator.h"
 using ai::MoveGenerator;
+using ai::JsonToStlConverter;
 
 #include <vector>
 using std::vector;
@@ -23,6 +24,11 @@ using std::vector;
 using std::string;
 
 MinMaxHelper::MinMaxHelper(const std::string color, CheckersGame &game, Network network):player_color(color), game(game), checkers_player(network){
+  auto table = loadMoveTableFrom("move-table.json");
+  auto converter = JsonToStlConverter{table};
+
+  auto redGenerator = getGeneratorFor("red", converter);
+  auto blackGenerator = getGeneratorFor("black", converter);
 }
 
 int MinMaxHelper::parseTree(BoardType board){
