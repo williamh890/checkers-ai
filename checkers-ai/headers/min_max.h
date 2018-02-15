@@ -26,8 +26,18 @@ namespace ai{
     class MinMaxHelper{
         public:
             using BoardType = std::vector<char>;
+        private:
+            Network checkers_player;
+            MoveGenerator generator;
+            MoveGenerator kingGenerator;
+            MoveGenerator opponentGenerator;
+            MoveGenerator opponentKingGenerator;
+            BoardType activeBoard;
+            CheckersGame game;
+
+        public:
             MinMaxHelper() = default;
-            MinMaxHelper(BoardType board, const std::string color); // color is the Player
+            MinMaxHelper(BoardType board, const std::string color, CheckersGame &game); // color is the Player
                                                                     // we are evaluating for
 
             BoardType minMax(BoardType board); // the actual minMax function
