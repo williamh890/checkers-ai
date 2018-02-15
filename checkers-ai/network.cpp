@@ -271,4 +271,3 @@ void ai::setupNetworks(const vector<unsigned int>& dimensions, int numberOfNetwo
     }
     std::cin.ignore();
 }
-

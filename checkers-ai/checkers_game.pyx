@@ -131,7 +131,7 @@ class PyBoard():
 
 ########### GUI FUNCTIONS ###########
 
-#********** GUI SETUP **********#
+#********** GUI SETUP AND RUNNING **********#
     def run(self):
       while True:
         board = self.game.get_board()
