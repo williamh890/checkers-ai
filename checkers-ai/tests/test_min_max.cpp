@@ -39,11 +39,17 @@ using std::string;
 #include "catch.hpp"
 
 TEST_CASE("testing min max class"){
-    string player_color = "r";
+    string player_color = "b";
     CheckersGame game = getCheckersGame();
     Network network = Network(0);
 
-    SECTION("Testing Constructor of MinMaxHelper"){
+    SECTION("Testing Constructor of MinMaxHelper and board generator"){
         MinMaxHelper minmax = MinMaxHelper(player_color, game, network);
-      }
+    }
+    SECTION("Testing board generator"){
+      MinMaxHelper minmax = MinMaxHelper(player_color, game, network);
+      int count = minmax.parseTree(minmax.game.getBoard());
+      REQUIRE(count);
+      REQUIRE(count > 0);
+  }
 }

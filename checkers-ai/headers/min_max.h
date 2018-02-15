@@ -32,11 +32,11 @@ namespace ai{
             using JumpsType = std::vector<Jump>;
             using BoardMovesType = std::vector<std::pair<int, MovesType>>;
             using BoardJumpsType = std::vector<std::pair<int, JumpsType>>;
+            CheckersGame game;
         private:
             Network checkers_player;
             std::string player_color;
             BoardType activeBoard;
-            CheckersGame game;
 
             MoveGenerator redGenerator;
             MoveGenerator blackGenerator;
@@ -44,6 +44,7 @@ namespace ai{
 
 
         public:
+            int parseTree(BoardType move);
             MinMaxHelper() = default;
             MinMaxHelper(const std::string color, CheckersGame &game, Network network); // color is the Player
                                                                     // we are evaluating for
@@ -52,13 +53,16 @@ namespace ai{
 
 
         private:
-            int parseTree(BoardType move); // recurse on boards //return is board score best on minmax of children
+             // recurse on boards //return is board score best on minmax of children
             std::vector<BoardType> generateBoards(BoardType board); // returns vector of boardState
-            std::pair<BoardMovesType, BoardMovesType> parseBoardMoves(BoardType &board);
-            std::pair<BoardJumpsType, BoardJumpsType> parseBoardJumps(BoardType &board);
+            std::pair<BoardMovesType, BoardMovesType> parseBoardMoves(BoardType board);
+            std::pair<BoardJumpsType, BoardJumpsType> parseBoardJumps(BoardType board);
 
-            BoardJumpsType removeInvalidJumps(BoardType board,  BoardJumpsType Jumps);
-            BoardMovesType removeInvalidMoves(BoardType board, BoardMovesType Moves);
+            BoardJumpsType removeInvalidJumps(BoardType board,  BoardJumpsType jumps);
+            BoardMovesType removeInvalidMoves(BoardType board, BoardMovesType moves);
+            std::vector<BoardType> _generate_boards(BoardType board, BoardMovesType moves);
+            std::vector<BoardType> _generate_boards(BoardType board, BoardJumpsType jumps);
+
     };
 };
 
