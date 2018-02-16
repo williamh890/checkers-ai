@@ -91,7 +91,6 @@ TEST_CASE("Test Network Evaluation") {
 
     SECTION ("Ensure output from a board with a single input node works and is consistent.") {
         for (int index = 0; index < 32; index++) {
-            cout << "Testing " << index << endl;
             vector<char> sampleLoopBoard(32);
             sampleLoopBoard[index] = 'R';
             REQUIRE(player.evaluateBoard(sampleLoopBoard) != 0);
@@ -99,6 +98,14 @@ TEST_CASE("Test Network Evaluation") {
         }
     }
 
+    SECTION ("Ensure output of evaluation given different boards is different.") {
+        REQUIRE(!areSame(player.evaluateBoard(sampleBigBoard), player.evaluateBoard(emptyBoard)));
+        REQUIRE(!areSame(player.evaluateBoard(sampleSmallBoard), player.evaluateBoard(emptyBoard)));
+        REQUIRE(!areSame(player.evaluateBoard(sampleBigBoard), player.evaluateBoard(sampleSmallBoard)));
+        REQUIRE(!areSame(player.evaluateBoard(sampleBigBoard, true), player.evaluateBoard(emptyBoard, true)));
+        REQUIRE(!areSame(player.evaluateBoard(sampleSmallBoard, true), player.evaluateBoard(emptyBoard, true)));
+        REQUIRE(!areSame(player.evaluateBoard(sampleBigBoard, true), player.evaluateBoard(sampleSmallBoard, true)));
+    }
     SECTION ("Ensure output of a board with twice the king weight is double") {
         player.changeKingWeight(1);
         playerAgain.changeKingWeight(2);
@@ -129,7 +136,7 @@ void writeToLogs(double timeTaken, int loopIterations, double boardsPerSec) {
 TEST_CASE("Testing the speed of board evaluation.") {
     const int LOOP_COUNTER = 1000;
     vector<unsigned int> dimesionsLarge{32, 1000, 100, 1};
-    vector<unsigned int> dimesions{32, 40, 10, 1};
+    cout << "\n\n\n\n\n**** To use blondie dimensions (which is faster), say no ****\n\n" << endl;
     setupNetworks(dimesionsLarge, 2);
     vector<char> sampleBigBoard{
             'r',   'r',   'r',   'r',
