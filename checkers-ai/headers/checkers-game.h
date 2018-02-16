@@ -36,7 +36,6 @@ namespace ai {
 
             using turn_type = std::pair<Board::BoardType, std::pair<std::vector<MovePackage>, std::vector<JumpPackage>>>;
 
-        private:
             int moveCounter = 0;
 
             Board board;
@@ -61,6 +60,7 @@ namespace ai {
 
             // following are public for use in the gui/cython wrapper
             void makeRandomValidAction();
+
 
             bool isInvalid(const MovePackage & move);
             bool isInvalid(const JumpPackage & jump);
@@ -87,7 +87,7 @@ namespace ai {
             std::vector<MovePackage> getOpponentValidMoves();
             void play();
 
-        private:
+            MovePackage getBestMove();
             MovePackage getMoveFromActivePlayer();
             MovePackage getRandomValidMove();
             MovePackage getMoveFromUser();
@@ -97,6 +97,7 @@ namespace ai {
             MovePackage parseUserInput();
 
             JumpPackage getJumpFrom(const MovePackage & inputJump);
+            int minimaxSearch(Board passedBoard, RedPlayer red_player, BlackPlayer black_player, char playerColor, int depth, int init_depth);
 
             std::vector<JumpPackage> getValidJumpsAt(int space);
 
@@ -104,6 +105,8 @@ namespace ai {
             void reactTo(const JumpPackage & jump);
 
             std::string toString();
+
+            int getNumPiecesFor(char color);
     };
 
     CheckersGame getCheckersGame();

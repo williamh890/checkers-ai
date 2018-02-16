@@ -166,3 +166,24 @@ vector<vector<char>> Board::getEmptyBoard() {
 
     return board;
 }
+
+int Board::pieceCount(char color)
+{
+    int redTotal = 0, blackTotal = 0;
+    for ( auto & position : boardState)
+    {
+        if(position == 'r' || position == 'R')
+        {
+            ++redTotal;
+        }
+        if(position == 'b' || position == 'B')
+        {
+            ++blackTotal;
+        }
+    }
+    if (color =='r')
+    {
+        return redTotal - blackTotal;
+    }
+    return blackTotal - redTotal;
+}
