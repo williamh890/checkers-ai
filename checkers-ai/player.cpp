@@ -59,6 +59,8 @@ void Player::initPieces() {
     }
 }
 
+Player::Player(const Player & player) {};
+
 const vector<Piece> Player::getPieces() const {
     return pieces;
 }
@@ -175,7 +177,6 @@ string Player::jumpsToString() const {
     return ss.str();
 }
 
-
 BlackPlayer::BlackPlayer(
         char color,
         const MoveGenerator & generator,
@@ -183,6 +184,12 @@ BlackPlayer::BlackPlayer(
         PlayerType type): Player(color, generator, kingGenerator, type) {
     initPieces();
 }
+
+shared_ptr<Player> BlackPlayer::clone() {
+    return make_shared<BlackPlayer>(*this);
+}
+
+BlackPlayer::BlackPlayer(const BlackPlayer & player): Player(player) {}
 
 bool BlackPlayer::isInitialSpace(int space) const {
     return space >= (TOTAL_NUM_SPACES - INIT_NUM_PIECES);
@@ -192,6 +199,7 @@ bool BlackPlayer::shouldBeCrowned(const Piece & piece) const {
     if (not piece.isKing){
       return piece.space < NUM_PIECES_IN_ROW;
     }
+
     return false;
 }
 
@@ -202,6 +210,12 @@ RedPlayer::RedPlayer(char color,
     initPieces();
 }
 
+RedPlayer::RedPlayer(const RedPlayer & player): Player(player) {}
+
+shared_ptr<Player> RedPlayer::clone() {
+    return make_shared<RedPlayer>(*this);
+}
+
 bool RedPlayer::isInitialSpace(int space) const {
     return space < (INIT_NUM_PIECES);
 }
@@ -210,6 +224,7 @@ bool RedPlayer::shouldBeCrowned(const Piece & piece) const {
     if (not piece.isKing){
       return piece.space >= TOTAL_NUM_SPACES - NUM_PIECES_IN_ROW;
     }
+
     return false;
 }
 

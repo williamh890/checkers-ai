@@ -1,55 +1,26 @@
+#include "catch.hpp"
 #include "../headers/min_max.h"
-using ai::MinMaxHelper;
-
-#include "../headers/move-generator.h"
-using ai::getGeneratorFor;
-using ai::getKingGenerator;
-using ai::MoveGenerator;
-using ai::JsonToStlConverter;
-using ai::loadMoveTableFrom;
-
-#include "../headers/models.h"
-using ai::Jump;
-
-#include "../headers/consts.h"
-using ai::TOTAL_NUM_SPACES;
+using ai::minimax;
 
 #include "../headers/checkers-game.h"
-using ai::CheckersGame;
 using ai::getCheckersGame;
-
-#include "../headers/table-types.h"
-using ai::MoveTableType;
-using ai::JumpTableType;
-
-#include "../headers/network.h"
-using ai::Network;
+using ai::CheckersGame;
 
 #include<utility>
-using std::pair;
 using std::make_pair;
 
-#include <vector>
-using std::vector;
+TEST_CASE("test minimax search funciton") {
+    auto game = getCheckersGame();
 
-#include <string>
-using std::string;
-
-
-#include "catch.hpp"
-
-TEST_CASE("testing min max class"){
-    string player_color = "b";
-    CheckersGame game = getCheckersGame();
-    Network network = Network(0);
-
-    SECTION("Testing Constructor of MinMaxHelper and board generator"){
-        MinMaxHelper minmax = MinMaxHelper(player_color, game, network);
+    SECTION("test base case") {
+        auto move = game.getValidMoves()[0];
+        REQUIRE(minimax(move, 0, 'r', game) == 12);
+        REQUIRE(minimax(move, 0, 'b', game) == 12);
     }
-    SECTION("Testing board generator"){
-      MinMaxHelper minmax = MinMaxHelper(player_color, game, network);
-      int count = minmax.parseTree(minmax.game.getBoard());
-      REQUIRE(count);
-      REQUIRE(count > 0);
-  }
+
+    SECTION("test depth 1") {
+        auto move = game.getValidMoves()[0];
+        REQUIRE(minimax(move, 1, 'r', game) == 12);
+        REQUIRE(minimax(move, 1, 'b', game) == 12);
+    }
 }

@@ -33,6 +33,8 @@ namespace ai {
         public:
             Player() = default;
             Player(char color, const MoveGenerator & generator, const MoveGenerator & kingGenerator, PlayerType type);
+            Player(const Player & player);
+            virtual std::shared_ptr<Player> clone() = 0;
 
             const std::vector<Piece> getPieces() const;
             const char getColor() const;
@@ -59,6 +61,8 @@ namespace ai {
     class RedPlayer: public Player {
         public:
             RedPlayer(char color, const MoveGenerator & generator, const MoveGenerator & kingGenerator, PlayerType type);
+            RedPlayer(const RedPlayer & player);
+            std::shared_ptr<Player> clone() override;
         private:
             bool isInitialSpace(int space) const override;
             bool shouldBeCrowned(const Piece & piece) const override ;
@@ -67,6 +71,8 @@ namespace ai {
     class BlackPlayer: public Player {
         public:
             BlackPlayer(char color, const MoveGenerator & generator, const MoveGenerator & kingGenerator, PlayerType type);
+            BlackPlayer(const BlackPlayer & player);
+            std::shared_ptr<Player> clone() override;
         private:
             bool isInitialSpace(int space) const override;
             bool shouldBeCrowned(const Piece & piece) const override ;
