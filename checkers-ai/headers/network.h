@@ -59,13 +59,12 @@ namespace ai {
             void replaceWithEvolution(const Network &);
 
             void outputCreationDebug();
-            void changeKingWeight(double);
-
+            void changeKingWeight(Settings::NetworkWeightType);
         private:
             unsigned int _ID;
             std::vector<LayersContainingNodes> _layers;
             std::vector<NetworkWeights> _weights;
-            double _kingWeight;
+            Settings::NetworkWeightType _kingWeight;
             int _performance;
             bool _gameCompleted = false;
             std::mt19937 randomNumGenerator;

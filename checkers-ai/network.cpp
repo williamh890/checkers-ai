@@ -129,7 +129,7 @@ NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool t
 	for (unsigned int x = 1; x < _layers.size(); ++x) {
 		//if (DEBUG)
 		//	cout << "---------------------Calculating layer: " << x << "--------------------" << endl;
-        # pragma omp parallel for schedule(guided, 2) firstprivate(x, testing) default(none)
+        //# pragma omp parallel for schedule(guided, 2) firstprivate(x, testing) default(none)
 		for (unsigned int y = 0; y < _layers[x].size(); ++y) {
 			//if(DEBUG)
 			//	cout << "Node: " << y << " _________ ";
@@ -232,7 +232,7 @@ void Network::outputCreationDebug() {
     }
 }
 
-void Network::changeKingWeight(double newWeight) {
+void Network::changeKingWeight(NetworkWeightType newWeight) {
 	_kingWeight = newWeight;
 }
 
