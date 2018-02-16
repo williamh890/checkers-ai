@@ -66,6 +66,8 @@ using std::length_error;
 using std::random_device;
 using std::mt19937;
 using std::uniform_int_distribution;
+#include <algorithm>
+using std::max_element;
 
 
 CheckersGame ai::getCheckersGame() {
@@ -482,11 +484,33 @@ int CheckersGame::minimaxSearch(Board passedBoard, RedPlayer red_player, BlackPl
         }
         return best_move;
     }
-    return 0;
+    return passedBoard.pieceCount(playerColor);
 }
 
+//depth should be even
 void CheckersGame::makeMinimaxMove(int depth)
 {
     auto current_player = getActivePlayerColor();
-    
+    vector<JumpPackage> player_jumps;
+    vector<MovePackage> player_moves;
+    if(current_player == 'b')
+    {
+        player_jumps = board.getValidJumpsFor(black);
+        player_moves = board.getValidMovesFor(black);
+    }
+    else
+    {
+        player_jumps = board.getValidJumpsFor(red);
+        player_moves = board.getValidMovesFor(red);
+    }
+    if(player_jumps.size())
+    {
+        vector<int> jump_ratings;
+        for(const auto & jump : player_jumps)
+        {
+            //jump_ratings.push_back(minimaxSearch(board, red, black, current_player,depth,1));
+        }
+       // auto chosen_jump = player_jumps[std::distance(jump_ratings.begin(),max_element(jump_ratings.begin(),jump_ratings.end()))];
+
+    }
 }
