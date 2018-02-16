@@ -124,6 +124,7 @@ void CheckersGame::play() {
                 jump = getJumpFromActivePlayer();
             } else {
                 move = getMoveFromActivePlayer();
+                cout << "got best move !!" << endl;
             }
         }
         catch(length_error & e) {
@@ -245,8 +246,8 @@ MovePackage CheckersGame::getBestMove() {
 
     for (auto & move : getValidMoves()) {
         auto moveVal = minimax(move, 1, activePlayer->getColor(), *this);
-
-        if (bestMoveVal > moveVal) {
+        cout << moveVal << " " ;
+        if (moveVal < bestMoveVal) {
             bestMoveVal = moveVal;
             bestMove = move;
         }

@@ -14,6 +14,6 @@
 
 static const std::vector<char> COLORS = {'r', 'b'};
 namespace ai {
-    int minimax(std::pair<int, int> move, int depth, char maximizingPlayer, CheckersGame game);
+    int minimax(std::pair<int, int> move, int depth, char maximizingPlayer, CheckersGame & game);
 }
 #endif
