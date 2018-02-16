@@ -58,8 +58,6 @@ namespace ai {
                     SeederPtr & seeder
                     );
 
-            CheckersGame(const CheckersGame & game);
-
             // following are public for use in the gui/cython wrapper
             void makeRandomValidAction();
 

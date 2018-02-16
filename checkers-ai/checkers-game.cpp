@@ -99,19 +99,6 @@ CheckersGame::CheckersGame(
     this->board.addPiecesFor(black);
 }
 
-CheckersGame::CheckersGame(const CheckersGame & game): board(game.board) {
-    red = game.red->clone();
-    black = game.black->clone();
-
-    if (game.activePlayer->getColor() == 'r') {
-        activePlayer = red;
-        inactivePlayer = black;
-    } else {
-        activePlayer = black;
-        inactivePlayer = red;
-    }
-}
-
 void CheckersGame::play() {
     while (moveCounter++ < 100) {
         cout << toString() << endl;
@@ -252,6 +239,7 @@ MovePackage CheckersGame::getBestMove() {
             bestMove = move;
         }
     }
+
     cout << bestMove.first << " " << bestMove.second << endl;
     return bestMove;
 }
