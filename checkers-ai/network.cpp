@@ -135,15 +135,20 @@ NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool t
 			//	cout << "Node: " << y << " _________ ";
 			//calculateNode(x, y);
             {
-                NetworkWeightType total1 = 0, total2 = 0;
+                NetworkWeightType total1 = 0, total2 = 0, total3 = 0, total4 = 0;
+                                    //total5 = 0, total6 = 0, total7 = 0, total8 = 0,
+                                    //total9 = 0, total0 = 0;
+
                  unsigned int previousLayerSize = _layers[x - 1].size();
 
-	            for (unsigned int i = 0; i < previousLayerSize; i+=2) {
+	            for (unsigned int i = 0; i < previousLayerSize; i+=4) {
                     total1 += _weights[x][y*previousLayerSize + i] * _layers[x - 1][i];
                     total2 += _weights[x][y*previousLayerSize + i + 1] * _layers[x - 1][i + 1];
+                    total3 += _weights[x][y*previousLayerSize + i + 2] * _layers[x - 1][i + 2];
+                    total4 += _weights[x][y*previousLayerSize + i + 3] * _layers[x - 1][i + 3];
 	            }
 
-	            _layers[x][y] = total1 + total2;
+	            _layers[x][y] = total1 + total2 + total3 + total4;
 
 	            //if (DEBUG)
 	            //	cout << _layers[x][y] << endl;

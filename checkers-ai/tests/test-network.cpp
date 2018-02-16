@@ -89,8 +89,14 @@ TEST_CASE("Test Network Evaluation") {
         REQUIRE(areSame(player.evaluateBoard(sampleBigBoard), player.evaluateBoard(sampleBigBoard)));
     }
 
-    SECTION ("Ensure output of a small board evaluation is consistent.") {
-        REQUIRE(areSame(player.evaluateBoard(sampleSmallBoard, true), player.evaluateBoard(sampleSmallBoard, true)));
+    SECTION ("Ensure output from a board with a single input node works and is consistent.") {
+        for (int index = 0; index < 32; index++) {
+            cout << "Testing " << index << endl;
+            vector<char> sampleLoopBoard(32);
+            sampleLoopBoard[index] = 'R';
+            REQUIRE(player.evaluateBoard(sampleLoopBoard) != 0);
+            REQUIRE(areSame(player.evaluateBoard(sampleLoopBoard, true), player.evaluateBoard(sampleLoopBoard, true)));
+        }
     }
 
     SECTION ("Ensure output of a board with twice the king weight is double") {
