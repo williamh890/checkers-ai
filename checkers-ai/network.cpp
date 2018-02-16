@@ -112,7 +112,7 @@ NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool t
 		//	cout << "i = " << i << endl;
 
 		if (i == ' ' || i == 0)
-			continue;
+			_layers[0][index] = 0;
 		else if (i == 'r')
 			_layers[0][index] = 1;
 		else if (i == 'R')
