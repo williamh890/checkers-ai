@@ -15,6 +15,7 @@ using NetworkWeightType = ai::Settings::NetworkWeightType;
 
 #include <vector>
 using std::vector;
+
 #include <iostream>
 using std::cout;
 using std::endl;
@@ -30,10 +31,11 @@ Network::Network(unsigned int networkId): _ID(networkId) {
 	loadNetwork(_ID, *this);
 }
 
-Network::Network(
-        unsigned int networkId,
-        const vector<unsigned int> & layerDimensions,
-        shared_ptr<Seeder> & seeder) : _ID(networkId), _performance(0), randomNumGenerator(mt19937(seeder->get())) {
+Network::Network(unsigned int networkId,
+                const vector<unsigned int> & layerDimensions,
+                shared_ptr<Seeder> & seeder) :  _ID(networkId), 
+                                                _performance(0), 
+                                                randomNumGenerator(mt19937(seeder->get())) {
 
     setupLayers(layerDimensions);
     setupRandomWeights(layerDimensions);
@@ -73,17 +75,14 @@ void Network::setupKingWeight() {
 }
 
 template <typename RandomNumberType>
-vector<RandomNumberType> Network::getRandomNumbersOfLength(
-        const unsigned int length,
-        uniform_real_distribution<RandomNumberType> & distribution) {
+vector<RandomNumberType> Network::getRandomNumbersOfLength( const unsigned int length,
+                                                            uniform_real_distribution<RandomNumberType> & distribution) {
     vector<RandomNumberType> rngNumbers;
-
     for (auto i = 0; (unsigned int)i < length; ++i) {
         auto randomNumber = distribution(randomNumGenerator);
 
         rngNumbers.push_back(randomNumber);
     }
-
     return rngNumbers;
 }
 
@@ -93,11 +92,8 @@ Network::~Network() {
     }
 }
 
+// evaluateBoard returns an answer for red. Flip the sign for black.
 NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool testing) { // testing defaults false
-	/*If I remember correctly, he said to just flip the sign of the final answer to get the evaluation for your opponent.
-	  This evaluate function calculates for red, just flip the sign for black. */
-	
-
     /*void inputBoardIntoFirstLayer(inputBoard)*/ {
         int index = 0;
         for (const auto & i : inputBoard) {
@@ -119,7 +115,7 @@ NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool t
             ++index;
         }
     }
-    /*void evaluateBoard()*/{
+    /*void feedForward()*/{
         for (unsigned int x = 1; x < _layers.size(); ++x) {
             # pragma omp parallel for schedule(guided, 2) firstprivate(x, testing) default(none)
             for (unsigned int y = 0; y < _layers[x].size(); ++y) {

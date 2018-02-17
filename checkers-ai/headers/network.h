@@ -8,13 +8,10 @@
 // ai::NetworkFileWriter
 #include "consts.h"
 // ai::Settings::NetworkWeightType
-
 #include <random>
 // std::uniform_real_distribution
 #include <vector>
 // std::vector
-#include <string>
-// std::string
 
 namespace ai {
     class NetworkFileReader;
@@ -25,27 +22,13 @@ namespace ai {
             using LayersContainingNodes = std::vector<Settings::NetworkWeightType>;
             using NetworkWeights = std::vector<Settings::NetworkWeightType>;
 
-            Network(unsigned int id);
-            Network(unsigned int id,
-                    const std::vector<unsigned int> & LayerDimension,
-                    std::shared_ptr<Seeder> & seeder); // This should probably be made private
-
+            Network (unsigned int id);
+            Network (unsigned int id,
+                     const std::vector<unsigned int> & LayerDimension,
+                     std::shared_ptr<Seeder> & seeder);
             ~Network();
 
-        private:
-            void setupLayers(const std::vector<unsigned int> & LayerDimensions);
-            void setupRandomWeights(const std::vector<unsigned int> & LayerDimensions);
-            void setupKingWeight();
-
-            template <typename RandomNumberType>
-                std::vector<RandomNumberType>
-                getRandomNumbersOfLength(
-                        const unsigned int length,
-                        std::uniform_real_distribution<RandomNumberType> & distribution);
-
-        public:
             Settings::NetworkWeightType evaluateBoard(const std::vector<char> &, bool leave_Out_Activator = false);
-            inline Settings::NetworkWeightType activationFunction(Settings::NetworkWeightType x);
 
             void adjustPerformance(int result);
             int getPerformance() const;
@@ -65,11 +48,24 @@ namespace ai {
             bool _gameCompleted = false;
             std::mt19937 randomNumGenerator;
 
+            void setupLayers(const std::vector<unsigned int> & LayerDimensions);
+            void setupRandomWeights(const std::vector<unsigned int> & LayerDimensions);
+            void setupKingWeight();
+
+            template <typename RandomNumberType>
+                std::vector<RandomNumberType>
+                getRandomNumbersOfLength(
+                        const unsigned int length,
+                        std::uniform_real_distribution<RandomNumberType> & distribution);
+
+
             void calculateNode(unsigned int, unsigned int);
+            inline Settings::NetworkWeightType activationFunction(Settings::NetworkWeightType x);
 
         public:
             friend class NetworkFileReader;
             friend class NetworkFileWriter;
+
             friend bool operator==(const Network &, const Network &);
     }; // end class AI_Network
 
