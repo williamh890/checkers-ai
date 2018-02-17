@@ -88,6 +88,7 @@ namespace ai {
             void play();
 
             MovePackage getBestMove();
+
             MovePackage getMoveFromActivePlayer();
             MovePackage getRandomValidMove();
             MovePackage getMoveFromUser();

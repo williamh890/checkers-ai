@@ -11,7 +11,7 @@ using ai::Seeder;
 using ai::SRandSeeder;
 using ai::getSeeder;
 
-#include "headers/min_max.h"
+#include "headers/minimax.h"
 using ai::minimax;
 
 #include "headers/board.h"
@@ -234,7 +234,7 @@ MovePackage CheckersGame::getBestMove() {
     for (auto & move : getValidMoves()) {
         auto moveVal = minimax(move, 1, activePlayer->getColor(), *this);
         cout << moveVal << " " ;
-        if (moveVal < bestMoveVal) {
+        if (moveVal > bestMoveVal) {
             bestMoveVal = moveVal;
             bestMove = move;
         }

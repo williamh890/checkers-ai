@@ -42,13 +42,15 @@ namespace ai {
             bool hasPieceAt(int space) const;
             bool hasOpposingPieceAt(const Jump & jump, char color) const;
             bool destinationIsNotEmpty(const Jump & jump) const;
-            
+
 
         public:
             std::string toString();
             char operator[](const int & index) const;
-            std::vector<char> getBoardState();
             int pieceCount(char color);
+
+            std::vector<char> getBoardState();
+            void setBoardState(const std::vector<char> & boardState);
 
         private:
             std::vector<std::vector<char>> getEmptyBoard();

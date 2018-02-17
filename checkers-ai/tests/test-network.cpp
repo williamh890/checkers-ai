@@ -180,5 +180,4 @@ TEST_CASE("Testing the speed of board evaluation.") {
     cout << "Number of boards per second = " << averageBPS << endl;
 
     writeToLogs(averageTime, LOOP_COUNTER, averageBPS);
-
 }

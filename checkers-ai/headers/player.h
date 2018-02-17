@@ -35,6 +35,7 @@ namespace ai {
             Player(char color, const MoveGenerator & generator, const MoveGenerator & kingGenerator, PlayerType type);
 
             const std::vector<Piece> getPieces() const;
+            void setPieces(const std::vector<Piece> & pieces);
             const char getColor() const;
             const PlayerType getPlayerType() const;
 
