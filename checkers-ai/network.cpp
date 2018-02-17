@@ -216,6 +216,7 @@ void Network::replaceWithEvolution(vector<NetworkWeights> & inputWeights) {
     _kingWeight = inputWeights[inputWeights.size()-1][0];
     inputWeights.pop_back();
     _weights = std::move(inputWeights);
+    saveNetwork (_ID, *this);
 }
 
 void Network::outputCreationDebug() {
