@@ -23,13 +23,6 @@ using std::endl;
 using std::mt19937;
 using std::uniform_real_distribution;
 
-#include <fstream>
-using std::ofstream;
-using std::ifstream;
-#include <iostream>
-using std::ios;
-#include <string>
-using std::string;
 #include <memory>
 using std::shared_ptr;
 
@@ -128,7 +121,7 @@ NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool t
     }
     /*void evaluateBoard()*/{
         for (unsigned int x = 1; x < _layers.size(); ++x) {
-            //# pragma omp parallel for schedule(guided, 2) firstprivate(x, testing) default(none)
+            # pragma omp parallel for schedule(guided, 2) firstprivate(x, testing) default(none)
             for (unsigned int y = 0; y < _layers[x].size(); ++y) {
                 /*calculateNode(x, y)*/ {
                     NetworkWeightType total1 = 0, total2 = 0, total3 = 0, total4 = 0;
