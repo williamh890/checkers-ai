@@ -61,7 +61,6 @@ namespace ai {
             // following are public for use in the gui/cython wrapper
             void makeRandomValidAction();
 
-
             bool isInvalid(const MovePackage & move);
             bool isInvalid(const JumpPackage & jump);
 
@@ -88,6 +87,7 @@ namespace ai {
             void play();
 
             MovePackage getBestMove();
+
             MovePackage getMoveFromActivePlayer();
             MovePackage getRandomValidMove();
             MovePackage getMoveFromUser();

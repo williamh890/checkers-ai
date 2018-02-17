@@ -12,7 +12,7 @@ SEEDER=seeder
 NETWORK=network
 NETWORK_READER=network-file-reader
 NETWORK_WRITER=network-file-writer
-MIN_MAX=min_max
+MIN_MAX=minimax
 MAIN=main
 
 GENERATOR_OBJ=$(BUILD_DIR)/$(GENERATOR).o

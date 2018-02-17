@@ -15,6 +15,37 @@
 static const std::vector<char> COLORS = {'r', 'b'};
 namespace ai {
     int minimax(std::pair<int, int> move, int depth, char maximizingPlayer, CheckersGame & game);
-    int minimax(std::pair<int, Jump> jump, int depth, char maximizingPlayer, CheckersGame & game);
-}
+
+    using Pieces = std::vector<Piece>;
+    using BoardState = std::vector<char>;
+
+    struct GameState {
+        BoardState boardState;
+        std::vector<Piece> redPieces;
+        std::vector<Piece> blackPieces;
+
+        GameState(const BoardState & board, const Pieces & red, const Pieces & black);
+    };
+
+    class MiniMaxHelper {
+        public:
+            CheckersGame game;
+            char maximizingPlayer;
+            int depth;
+
+            MiniMaxHelper(int depth, char maximizingPlayer, CheckersGame & game);
+
+            int recurse(CheckersGame::MovePackage move);
+
+            GameState getCurrentGameState();
+            void applyMoveTo(const CheckersGame::MovePackage & move);
+
+            bool isBaseCase();
+            int handleBaseCase();
+            int recursiveCase();
+
+            void setGameState(GameState & gameState);
+   };
+};
+
 #endif

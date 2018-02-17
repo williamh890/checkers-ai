@@ -63,6 +63,10 @@ const vector<Piece> Player::getPieces() const {
     return pieces;
 }
 
+void Player::setPieces(const vector<Piece> & newPieces) {
+    pieces = newPieces;
+}
+
 const char Player::getColor() const {
     return color;
 }
