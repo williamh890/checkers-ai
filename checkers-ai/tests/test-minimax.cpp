@@ -8,19 +8,18 @@ using ai::CheckersGame;
 
 #include<utility>
 using std::make_pair;
+#include <iostream>
+using std::cout;
+using std::endl;
 
 TEST_CASE("test minimax search funciton") {
     auto game = getCheckersGame();
 
     SECTION("test base case") {
-        auto move = game.getValidMoves()[0];
-        REQUIRE(minimax(move, 0, 'r', game) == 12);
-        REQUIRE(minimax(move, 0, 'b', game) == 12);
-    }
-
-    SECTION("test depth 1") {
-        auto move = game.getValidMoves()[0];
-        REQUIRE(minimax(move, 1, 'r', game) == 12);
-        REQUIRE(minimax(move, 1, 'b', game) == 12);
+        cout << "testing base case" << endl;
+        for ( auto & move : game.getValidMoves() ) {
+            REQUIRE(minimax(move, 0, 'r', game) == 12);
+            REQUIRE(minimax(move, 0, 'b', game) == 12);
+        }
     }
 }

@@ -101,7 +101,7 @@ TEST_PLAYER=$(TESTING_DIR)/test-player
 TEST_UTILS=$(TESTING_DIR)/test-utils
 TEST_MOVE_GENERATOR=$(TESTING_DIR)/test-move-generator
 TEST_NETWORK=$(TESTING_DIR)/test-network
-TEST_MIN_MAX=$(TESTING_DIR)/test_min_max
+TEST_MIN_MAX=$(TESTING_DIR)/test-minimax
 
 TEST_OUT_FILE=$(TESTING_DIR)/tests.out
 
