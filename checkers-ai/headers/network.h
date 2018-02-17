@@ -53,11 +53,8 @@ namespace ai {
             void setupKingWeight();
 
             template <typename RandomNumberType>
-                std::vector<RandomNumberType>
-                getRandomNumbersOfLength(
-                        const unsigned int length,
-                        std::uniform_real_distribution<RandomNumberType> & distribution);
-
+                std::vector<RandomNumberType> getRandomNumbersOfLength(const unsigned int length,
+                                        std::uniform_real_distribution<RandomNumberType> & distribution);
 
             void calculateNode(unsigned int, unsigned int);
             inline Settings::NetworkWeightType activationFunction(Settings::NetworkWeightType x);

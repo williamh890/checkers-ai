@@ -55,7 +55,7 @@ void Network::setupLayers(const vector<unsigned int> & layerDimensions) {
 void Network::setupRandomWeights(const vector<unsigned int> & layerDimensions){
     auto firstLayerSize = layerDimensions.at(0);
 
-    uniform_real_distribution<NetworkWeightType> distribution(-1, 1);
+    uniform_real_distribution<NetworkWeightType> distribution(-0.2, 0.2);
     auto firstLayerWeights = getRandomNumbersOfLength(firstLayerSize, distribution);
     _weights.push_back(firstLayerWeights);
 
@@ -71,7 +71,8 @@ void Network::setupRandomWeights(const vector<unsigned int> & layerDimensions){
 }
 
 void Network::setupKingWeight() {
-    _kingWeight = 2;
+    uniform_real_distribution<NetworkWeightType> distribution(1,3);
+    _kingWeight = distribution(randomNumGenerator);
 }
 
 template <typename RandomNumberType>
