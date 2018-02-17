@@ -103,69 +103,57 @@ Network::~Network() {
 NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool testing) { // testing defaults false
 	/*If I remember correctly, he said to just flip the sign of the final answer to get the evaluation for your opponent.
 	  This evaluate function calculates for red, just flip the sign for black. */
-	//parse board
-	int index = 0;
-	//if (DEBUG)
-	//	cout << "This is my input board: " << endl;
-	for (const auto & i : inputBoard) {
-		//if (DEBUG)
-		//	cout << "i = " << i << endl;
+	
 
-		if (i == ' ' || i == 0)
-			_layers[0][index] = 0;
-		else if (i == 'r')
-			_layers[0][index] = 1;
-		else if (i == 'R')
-			_layers[0][index] = 1 * _kingWeight;
-		else if (i == 'b')
-			_layers[0][index] = -1;
-		else if (i == 'B')
-			_layers[0][index] = -1 * _kingWeight;
-		else
-			cout << "Unrecognized character in board: " << i << endl;
-		++index;
-	}
-	// Run the board through the network. I would use range based for loop but the first vector in _layers has been filled
-	for (unsigned int x = 1; x < _layers.size(); ++x) {
-		//if (DEBUG)
-		//	cout << "---------------------Calculating layer: " << x << "--------------------" << endl;
-        //# pragma omp parallel for schedule(guided, 2) firstprivate(x, testing) default(none)
-		for (unsigned int y = 0; y < _layers[x].size(); ++y) {
-			//if(DEBUG)
-			//	cout << "Node: " << y << " _________ ";
-			//calculateNode(x, y);
-            {
-                NetworkWeightType total1 = 0, total2 = 0, total3 = 0, total4 = 0;
-                                    //total5 = 0, total6 = 0, total7 = 0, total8 = 0,
-                                    //total9 = 0, total0 = 0;
+    /*void inputBoardIntoFirstLayer(inputBoard)*/ {
+        int index = 0;
+        for (const auto & i : inputBoard) {
+            //if (DEBUG)
+            //	cout << "i = " << i << endl;
 
-                 unsigned int previousLayerSize = _layers[x - 1].size();
+            if (i == ' ' || i == 0)
+                _layers[0][index] = 0;
+            else if (i == 'r')
+                _layers[0][index] = 1;
+            else if (i == 'R')
+                _layers[0][index] = 1 * _kingWeight;
+            else if (i == 'b')
+                _layers[0][index] = -1;
+            else if (i == 'B')
+                _layers[0][index] = -1 * _kingWeight;
+            else
+                cout << "Unrecognized character in board: " << i << endl;
+            ++index;
+        }
+    }
+    /*void evaluateBoard()*/{
+        for (unsigned int x = 1; x < _layers.size(); ++x) {
+            //# pragma omp parallel for schedule(guided, 2) firstprivate(x, testing) default(none)
+            for (unsigned int y = 0; y < _layers[x].size(); ++y) {
+                /*calculateNode(x, y)*/ {
+                    NetworkWeightType total1 = 0, total2 = 0, total3 = 0, total4 = 0;
+                    unsigned int previousLayerSize = _layers[x - 1].size();
 
-	            for (unsigned int i = 0; i < previousLayerSize; i+=4) {
-                    total1 += _weights[x][y*previousLayerSize + i] * _layers[x - 1][i];
-                    total2 += _weights[x][y*previousLayerSize + i + 1] * _layers[x - 1][i + 1];
-                    total3 += _weights[x][y*previousLayerSize + i + 2] * _layers[x - 1][i + 2];
-                    total4 += _weights[x][y*previousLayerSize + i + 3] * _layers[x - 1][i + 3];
-	            }
+                    for (unsigned int i = 0; i < previousLayerSize; i+=4) {
+                        total1 += _weights[x][y*previousLayerSize + i] * _layers[x - 1][i];
+                        total2 += _weights[x][y*previousLayerSize + i + 1] * _layers[x - 1][i + 1];
+                        total3 += _weights[x][y*previousLayerSize + i + 2] * _layers[x - 1][i + 2];
+                        total4 += _weights[x][y*previousLayerSize + i + 3] * _layers[x - 1][i + 3];
+                    }
 
-	            _layers[x][y] = total1 + total2 + total3 + total4;
-
-	            //if (DEBUG)
-	            //	cout << _layers[x][y] << endl;
+                    _layers[x][y] = total1 + total2 + total3 + total4;
+                }
+                if (testing) {
+                    continue;
+                }
+                /*useActivationFunction*/ {
+                    NetworkWeightType var = _layers[x][y];
+                    _layers[x][y] = var / (1 + abs(var));
+                }
             }
-
-            if (testing) {
-                continue;
-            }
-			//activationFunction
-			NetworkWeightType var = _layers[x][y];
-			_layers[x][y] = var / (1 + abs(var));
-            //_layers[x][y] = activationFunction(_layers[x][y]);
-		}
-	}
-
-	// return looks funny but it will pull the last vector of the arbitrarily large _layers vector
-	return _layers[_layers.size() - 1][0];
+        }
+    }
+	return _layers[_layers.size() - 1][0] /*boardEvaluationOutput()*/;
 }
 
 inline NetworkWeightType Network::activationFunction(NetworkWeightType x) {
