@@ -201,13 +201,21 @@ void Network::resetPerformance() {
     _performance = 0;
 }
 
-vector<Network::NetworkWeights> Network::evolve() const { 	// *** TODO *** Not required for Project 2
-    vector<NetworkWeights> dummy;
-    return dummy;
+vector<Network::NetworkWeights> Network::evolve() const { 	// *** TODO *** Required for Project 3
+    vector<NetworkWeights> weights_to_pass = _weights;
+    NetworkWeightType tempKing = _kingWeight;
+    // *** Evolve tempKing
+    // *** Evolve sigma
+    // *** Evolve weights in weights_to_pass
+    
+    weights_to_pass.push_back(vector<NetworkWeightType>(tempKing)); //Add tempking to the back of the weights vector for passing
+    return weights_to_pass;
 }
 
-void Network::replaceWithEvolution(const Network & inputNetwork) {
-    _weights = std::move(inputNetwork.evolve());
+void Network::replaceWithEvolution(vector<NetworkWeights> & inputWeights) {
+    _kingWeight = inputWeights[inputWeights.size()-1][0];
+    inputWeights.pop_back();
+    _weights = std::move(inputWeights);
 }
 
 void Network::outputCreationDebug() {

@@ -55,8 +55,8 @@ namespace ai {
             int getPerformance() const;
             void resetPerformance();
 
-            std::vector<NetworkWeights> evolve() const; // *** TODO *** Not required for Project 2
-            void replaceWithEvolution(const Network &);
+            std::vector<NetworkWeights> evolve() const; // *** TODO *** Required for Project 3
+            void replaceWithEvolution(std::vector<NetworkWeights> &);
 
             void outputCreationDebug();
             void changeKingWeight(Settings::NetworkWeightType);
