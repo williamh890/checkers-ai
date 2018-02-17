@@ -60,7 +60,7 @@ namespace ai {
 
             // following are public for use in the gui/cython wrapper
             void makeRandomValidAction();
-
+            void makeMinimaxMove(int depth);
 
             bool isInvalid(const MovePackage & move);
             bool isInvalid(const JumpPackage & jump);
