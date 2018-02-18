@@ -135,9 +135,33 @@ TEST_CASE("minimax jumps recursion", "[minimax], [minimax-jumps]") {
             Piece('b', 24)
         });
 
-        auto blackMove = make_pair(24, 21);
+        auto setupJumpForRed = make_pair(24, 21);
 
-        REQUIRE(minimax(blackMove, 1, 'b', game) == 0);
+        REQUIRE(minimax(setupJumpForRed, 1, 'b', game) == 0);
+    }
+
+    SECTION("will recursively jump the same piece") {
+        game.board.setBoardState({
+                ' ',   ' ',   ' ',   ' ',
+             ' ',   ' ',   ' ',   ' ',
+                ' ',   ' ',   ' ',   ' ',
+             ' ',   ' ',   'r',   ' ',
+                ' ',   ' ',   ' ',   ' ',
+             ' ',   ' ',   'b',   ' ',
+                'b',   ' ',   ' ',   ' ',
+             ' ',   ' ',   ' ',   ' '
+        });
+        game.red->setPieces({
+            Piece('r', 14)
+        });
+        game.black->setPieces({
+            Piece('b', 24),
+            Piece('b', 22)
+        });
+
+        auto doubleJumpSetupMove = make_pair(22, 17);
+
+        REQUIRE(minimax(doubleJumpSetupMove, 3, 'b', game) == 0);
     }
 }
 
