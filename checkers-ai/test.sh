@@ -1,2 +1,1 @@
-make tests
-./tests/tests.out $1
+make tests && ./tests/tests.out $1
