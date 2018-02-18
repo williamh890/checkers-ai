@@ -82,6 +82,7 @@ int MiniMaxHelper::recurse(JumpPackage jump, int depth) {
     auto stateBeforeMove = getCurrentGameState();
 
     auto jumpDestination = applyAction(jump);
+    game.swapPlayers();
 
     if (isBaseCase(depth)) {
         setGameState(stateBeforeMove);
@@ -140,7 +141,7 @@ int MiniMaxHelper::applyAction(const JumpPackage & jump) {
 
 
 bool MiniMaxHelper::isBaseCase(int depth) {
-    return depth == 0;
+    return depth == 0 or !(game.areJumps() or game.areMoves());
 }
 
 int MiniMaxHelper::handleBaseCase() {

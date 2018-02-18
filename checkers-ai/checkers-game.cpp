@@ -172,11 +172,11 @@ void CheckersGame::swapPlayers(){
 }
 
 bool CheckersGame::areJumps(){
-    return getValidJumps().size();
+    return getValidJumps().size() > 0;
 }
 
 bool CheckersGame::areMoves(){
-    return getValidMoves().size();
+    return getValidMoves().size() > 0;
 }
 JumpPackage CheckersGame::getJumpFromActivePlayer() {
     if (activePlayer->getPlayerType() == PlayerType::Computer) {

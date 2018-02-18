@@ -148,7 +148,6 @@ std::vector<char> Board::getBoardState()
 
 void Board::setBoardState(const vector<char> & newState) {
     boardState = newState;
-    cout << toString() << endl;
 }
 
 char Board::operator[](const int & index) const

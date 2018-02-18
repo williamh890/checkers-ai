@@ -9,6 +9,7 @@ using ai::CheckersGame;
 
 #include "../headers/models.h"
 using ai::Piece;
+using ai::Jump;
 
 #include<utility>
 using std::make_pair;
@@ -22,7 +23,7 @@ TEST_CASE("test minimax search function", "[minimax]") {
     auto game = getCheckersGame();
 
     SECTION("test base case") {
-        SECTION("testing all base cases from init board") {
+        SECTION("all base cases from init board") {
             cout << "testing base case" << endl;
             for ( auto & move : game.getValidMoves() ) {
                 REQUIRE(minimax(move, 0, 'r', game) == 12);
@@ -30,7 +31,30 @@ TEST_CASE("test minimax search function", "[minimax]") {
             }
         }
 
-        SECTION("testing minimax doesn't change the game state when run") {
+        SECTION("base case when a player is out of moves") {
+            game.board.setBoardState({
+                    ' ',   ' ',   ' ',   ' ',
+                 ' ',   ' ',   ' ',   ' ',
+                    ' ',   ' ',   ' ',   ' ',
+                 ' ',   ' ',   'r',   ' ',
+                    ' ',   'b',   'b',   ' ',
+                 ' ',   ' ',   ' ',   ' ',
+                    ' ',   ' ',   ' ',   ' ',
+                 ' ',   ' ',   'b',   ' '
+            });
+            game.red->setPieces({
+                Piece('r', 14)
+            });
+            game.black->setPieces({
+                Piece('b', 17),
+                Piece('b', 18),
+                Piece('b', 30)
+            });
+
+            REQUIRE(minimax(make_pair(17, Jump(10, 14)), 10, 'b', game) == 3);
+        }
+
+        SECTION("minimax doesn't change the game state when run") {
             auto redPieces = game.red->getPieces();
             auto blackPieces = game.black->getPieces();
             auto boardState = game.board.getBoardState();
