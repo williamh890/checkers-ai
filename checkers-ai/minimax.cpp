@@ -52,16 +52,11 @@ GameState::GameState(const BoardState & board, const Pieces & red, const Pieces 
 int MiniMaxHelper::recurse(MovePackage move, int depth) {
     auto stateBeforeMove = getCurrentGameState();
 
-    applyAction(move);
+    changeGameState(move);
 
-    if (isBaseCase(depth)) {
-        int numPieces = handleBaseCase();
-        setGameState(stateBeforeMove);
-
-        return numPieces;
-    }
-
-    int bestNumPieces = recursiveCase(depth);
+    int bestNumPieces = isBaseCase(depth) ?
+        baseCase() :
+        recursiveCase(depth);
 
     setGameState(stateBeforeMove);
 
@@ -71,12 +66,11 @@ int MiniMaxHelper::recurse(MovePackage move, int depth) {
 int MiniMaxHelper::recurse(JumpPackage jump, int depth) {
     auto stateBeforeMove = getCurrentGameState();
 
-    auto jumpDestination = applyAction(jump);
-    game.swapPlayers();
-    cout << "depth: " <<  depth << endl;
+    auto jumpDestination = changeGameState(jump);
 
+    game.swapPlayers();
     if (isBaseCase(depth)) {
-        int numPieces = handleBaseCase();
+        int numPieces = baseCase();
         setGameState(stateBeforeMove);
 
         return numPieces;
@@ -91,11 +85,9 @@ int MiniMaxHelper::recurse(JumpPackage jump, int depth) {
 int MiniMaxHelper::recursiveCase(int depth) {
     auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
     int bestNumPieces = (isMaximizingPlayer) ? INT_MIN : INT_MAX;
-    cout << game.board.toString();
 
     if (game.getValidJumps().size() != 0) {
         for (auto & jump : game.getValidJumps()) {
-            cout << "recusing on jump " << jump.second.toString() << endl;
             auto jumpVal = recurse(jump, depth - 1);
 
             bestNumPieces = (isMaximizingPlayer) ?
@@ -126,25 +118,24 @@ GameState MiniMaxHelper::getCurrentGameState() {
             );
 }
 
-void MiniMaxHelper::applyAction(const MovePackage & move) {
+void MiniMaxHelper::changeGameState(const MovePackage & move) {
     game.board.make(move);
     game.reactTo(move);
     game.swapPlayers();
 }
 
-int MiniMaxHelper::applyAction(const JumpPackage & jump) {
+int MiniMaxHelper::changeGameState(const JumpPackage & jump) {
     game.board.make(jump);
     game.reactTo(jump);
 
     return jump.second.to;
 }
 
-
 bool MiniMaxHelper::isBaseCase(int depth) {
     return depth == 0 or !(game.areJumps() or game.areMoves());
 }
 
-int MiniMaxHelper::handleBaseCase() {
+int MiniMaxHelper::baseCase() {
     return game.getNumPiecesFor(maximizingPlayer);
 }
 
