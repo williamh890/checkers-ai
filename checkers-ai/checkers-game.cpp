@@ -180,11 +180,42 @@ bool CheckersGame::areMoves(){
 }
 JumpPackage CheckersGame::getJumpFromActivePlayer() {
     if (activePlayer->getPlayerType() == PlayerType::Computer) {
-        return getRandomValidJump();
+        return getMinimaxJump();
     }
 
     return getJumpFromUser();
 }
+
+MovePackage CheckersGame::getMinimaxMove() {
+    int bestMoveVal = INT_MIN;
+    MovePackage bestMove;
+
+    for (auto & move : getValidMoves()) {
+        auto moveVal = minimax(move, 3, getActivePlayerColor(), *this);
+        if (moveVal > bestMoveVal) {
+            bestMoveVal = moveVal;
+            bestMove = move;
+        }
+    }
+
+    return bestMove;
+}
+
+JumpPackage CheckersGame::getMinimaxJump() {
+    int bestJumpVal = INT_MIN;
+    JumpPackage bestJump;
+
+    for (auto & jump : getValidJumps()) {
+        auto jumpVal = minimax(jump, 3, getActivePlayerColor(), *this);
+        if (jumpVal > bestJumpVal) {
+            bestJumpVal = jumpVal;
+            bestJump = jump;
+        }
+    }
+
+    return bestJump;
+}
+
 
 JumpPackage CheckersGame::getRandomValidJump() {
     auto jumps = getValidJumps();
@@ -221,27 +252,10 @@ JumpPackage CheckersGame::getJumpFrom(const MovePackage & inputJump) {
 
 MovePackage CheckersGame::getMoveFromActivePlayer() {
     if (activePlayer->getPlayerType() == PlayerType::Computer) {
-        return getBestMove();
+        return getMinimaxMove();
     }
 
     return getMoveFromUser();
-}
-
-MovePackage CheckersGame::getBestMove() {
-    auto bestMove = make_pair(-1, -1);
-    auto bestMoveVal = INT_MIN;
-
-    for (auto & move : getValidMoves()) {
-        auto moveVal = minimax(move, 1, activePlayer->getColor(), *this);
-        cout << moveVal << " " ;
-        if (moveVal > bestMoveVal) {
-            bestMoveVal = moveVal;
-            bestMove = move;
-        }
-    }
-
-    cout << bestMove.first << " " << bestMove.second << endl;
-    return bestMove;
 }
 
 MovePackage CheckersGame::getRandomValidMove() {

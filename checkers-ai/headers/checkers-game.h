@@ -88,7 +88,8 @@ namespace ai {
             std::vector<JumpPackage> getValidJumpsAt(int space);
             void play();
 
-            MovePackage getBestMove();
+            MovePackage getMinimaxMove();
+            JumpPackage getMinimaxJump();
 
             MovePackage getMoveFromActivePlayer();
             MovePackage getRandomValidMove();
