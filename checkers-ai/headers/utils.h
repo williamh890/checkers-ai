@@ -10,8 +10,12 @@
 
 namespace ai {
     Position spaceToPosition(int space);
+
     int positionToSpace(const Position & pos);
+
     std::string idToFilename(int ID);
+
+    double getTime();
 }
 
 #endif

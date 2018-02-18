@@ -10,6 +10,8 @@ using ai::Position;
 using std::string;
 using std::to_string;
 
+#include <chrono>
+
 /*         0   1   2   3   4   5   6   7
          +---+---+---+---+---+---+---+---+
      0   | X | 0 |   | 1 |   | 2 |   | 3 |
@@ -55,3 +57,10 @@ string ai::idToFilename(int ID) {
 	//string filename = ".\\networks\\" + to_string(ID) + ".network"; //creates filenames that scope to a folder called networks
 	return filename;
 }
+
+double ai::getTime() {
+    return 1.0e-9*std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::high_resolution_clock::now().time_since_epoch()
+            ).count();
+}
+

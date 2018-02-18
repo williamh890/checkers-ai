@@ -89,15 +89,7 @@ void Player::removePieceAt(int space) {
 void Player::Crown(Piece & piece)
 {
     piece.isKing = true;
-    cout << "crowning piece in space: " << piece.space <<endl;
-    if(piece.color == 'r')
-    {
-        piece.color = 'R';
-    }
-    else
-    {
-        piece.color = 'B';
-    }
+    piece.color = toupper(piece.color);
 }
 
 void Player::updatePieces(const pair<int, int> & move, Board & board) {
