@@ -54,24 +54,12 @@ int MiniMaxHelper::recurse(MovePackage move, int depth) {
 
     applyAction(move);
 
-    int bestNumPieces;
     if (isBaseCase(depth)) {
-        bestNumPieces = handleBaseCase();
+        setGameState(stateBeforeMove);
+        return handleBaseCase();
     }
-    // recursive case
-    else {
-        auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
 
-        bestNumPieces = (isMaximizingPlayer) ? INT_MIN : INT_MAX;
-
-        for (auto & checkMove : game.getValidMoves()) {
-            auto moveValue = recurse(checkMove, depth - 1);
-
-            bestNumPieces = (isMaximizingPlayer) ?
-                max(moveValue, bestNumPieces ) :
-                min(moveValue, bestNumPieces);
-        }
-    }
+    int bestNumPieces = recursiveCase(depth);
 
     setGameState(stateBeforeMove);
 
@@ -89,10 +77,16 @@ int MiniMaxHelper::recurse(JumpPackage jump, int depth) {
         return handleBaseCase();
     }
 
+    int bestNumPieces = recursiveCase(depth);
+
+    setGameState(stateBeforeMove);
+    return bestNumPieces;
+}
+
+int MiniMaxHelper::recursiveCase(int depth) {
     auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
     int bestNumPieces = (isMaximizingPlayer) ? INT_MIN : INT_MAX;
 
-    // Either recurse on moves or jumps
     if (game.getValidJumps().size() != 0) {
         for (auto & jump : game.getValidJumps()) {
             auto jumpVal = recurse(jump, depth - 1);
@@ -112,7 +106,6 @@ int MiniMaxHelper::recurse(JumpPackage jump, int depth) {
         }
     }
 
-    setGameState(stateBeforeMove);
     return bestNumPieces;
 }
 

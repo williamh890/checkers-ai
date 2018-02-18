@@ -130,7 +130,7 @@ TEST_CASE("test minimax search function", "[minimax]") {
             Piece('b', 24)
         });
 
-        auto blackMove = make_pair(13, 21);
+        auto blackMove = make_pair(24, 21);
 
         REQUIRE(minimax(blackMove, 1, 'b', game) == 0);
     }

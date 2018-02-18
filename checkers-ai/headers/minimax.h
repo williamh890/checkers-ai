@@ -45,6 +45,7 @@ namespace ai {
 
             bool isBaseCase(int depth);
             int handleBaseCase();
+            int recursiveCase(int depth);
 
             void setGameState(GameState & gameState);
    };
