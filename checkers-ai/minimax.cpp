@@ -75,8 +75,26 @@ int MiniMaxHelper::recurse(JumpPackage jump, int depth) {
 
         return numPieces;
     }
+    game.swapPlayers();
 
-    int bestNumPieces = recursiveCase(depth);
+    auto multiJumps = game.getValidJumpsAt(jumpDestination);
+    int bestNumPieces;
+
+    if (multiJumps.size() > 0) {
+        auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
+        bestNumPieces = (isMaximizingPlayer) ? INT_MIN : INT_MAX;
+        for (auto & jump : multiJumps) {
+            auto jumpVal = recurse(jump, depth - 1);
+
+            bestNumPieces = (isMaximizingPlayer) ?
+                max(jumpVal, bestNumPieces) :
+                min(jumpVal, bestNumPieces);
+        }
+    }
+    else {
+        bestNumPieces = recursiveCase(depth);
+    }
+
 
     setGameState(stateBeforeMove);
     return bestNumPieces;
