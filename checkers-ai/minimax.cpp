@@ -53,6 +53,8 @@ int MiniMaxHelper::recurse(MovePackage move, int depth) {
     auto stateBeforeMove = getCurrentGameState();
 
     changeGameState(move);
+    //cout << "AT DEPTH " << depth << endl;
+    //cout << game.board.toString() << endl;
 
     int bestNumPieces = isBaseCase(depth) ?
         baseCase() :
@@ -67,6 +69,8 @@ int MiniMaxHelper::recurse(JumpPackage jump, int depth) {
     auto stateBeforeMove = getCurrentGameState();
 
     auto jumpDestination = changeGameState(jump);
+    //cout << "AT DEPTH " << depth << endl;
+    //cout << game.board.toString() << endl;
 
     game.swapPlayers();
     if (isBaseCase(depth)) {
@@ -92,6 +96,7 @@ int MiniMaxHelper::recurse(JumpPackage jump, int depth) {
         }
     }
     else {
+        game.swapPlayers();
         bestNumPieces = recursiveCase(depth);
     }
 
@@ -154,7 +159,9 @@ bool MiniMaxHelper::isBaseCase(int depth) {
 }
 
 int MiniMaxHelper::baseCase() {
-    return game.getNumPiecesFor(maximizingPlayer);
+    auto numPieces = game.getNumPiecesFor(maximizingPlayer);
+
+    return numPieces;
 }
 
 void MiniMaxHelper::setGameState(GameState & gameState) {
@@ -162,6 +169,7 @@ void MiniMaxHelper::setGameState(GameState & gameState) {
     game.red->setPieces(gameState.redPieces);
     game.black->setPieces(gameState.blackPieces);
     game.activePlayer = gameState.activePlayerColor == 'r' ? game.red : game.black;
+    game.inactivePlayer = gameState.activePlayerColor == 'r' ? game.black : game.red;
 }
 
 
