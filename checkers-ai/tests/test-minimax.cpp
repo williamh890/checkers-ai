@@ -85,9 +85,7 @@ TEST_CASE("test minimax search function", "[minimax]") {
         }
     }
 
-    SECTION("test that piece count changes if jump is inevitable.") {
-        vector<char> sampleBoard ;
-
+    SECTION("piece count changes if jump is inevitable.") {
         game.board.setBoardState({
                 ' ',   ' ',   ' ',   ' ',
              ' ',   ' ',   ' ',   ' ',
@@ -99,8 +97,8 @@ TEST_CASE("test minimax search function", "[minimax]") {
              ' ',   ' ',   ' ',   ' '
         });
         game.red->setPieces({
-                Piece('r', 8),
-                Piece('r', 14)
+            Piece('r', 8),
+            Piece('r', 14)
         });
         game.black->setPieces({
             Piece('b', 17),
@@ -112,5 +110,28 @@ TEST_CASE("test minimax search function", "[minimax]") {
             REQUIRE(minimax(jump, 1, 'r', game) == 1);
             REQUIRE(minimax(jump, 1, 'b', game) == 2);
         }
+    }
+
+    SECTION("handle jumps before moves in move recurse") {
+        game.board.setBoardState({
+                ' ',   ' ',   ' ',   ' ',
+             ' ',   ' ',   ' ',   ' ',
+                ' ',   ' ',   ' ',   ' ',
+             ' ',   ' ',   ' ',   ' ',
+                ' ',   'r',   ' ',   ' ',
+             ' ',   ' ',   ' ',   ' ',
+                'b',   ' ',   ' ',   ' ',
+             ' ',   ' ',   ' ',   ' '
+        });
+        game.red->setPieces({
+            Piece('r', 13)
+        });
+        game.black->setPieces({
+            Piece('b', 24)
+        });
+
+        auto blackMove = make_pair(13, 21);
+
+        REQUIRE(minimax(blackMove, 1, 'b', game) == 0);
     }
 }
