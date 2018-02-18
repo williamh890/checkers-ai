@@ -1,5 +1,6 @@
 // min_max.cpp
-
+#include "headers/consts.h"
+using ai::TOTAL_NUM_SPACES;
 #include "headers/min_max.h"
 using ai::MinMaxHelper;
 using MovesType = MinMaxHelper::MovesType;
@@ -7,6 +8,7 @@ using JumpsType = MinMaxHelper::JumpsType;
 using BoardType = MinMaxHelper::BoardType;
 using BoardMovesType = MinMaxHelper::BoardMovesType;
 using BoardJumpsType = MinMaxHelper::BoardJumpsType;
+
 
 #include "headers/network.h"
 using ai::Network;
@@ -20,6 +22,10 @@ using ai::JumpTableType;
 
 #include "headers/move-generator.h"
 using ai::MoveGenerator;
+using ai::getGeneratorFor;
+using ai::getKingGenerator;
+
+#include "headers/json-to-stl.h"
 using ai::JsonToStlConverter;
 using ai::loadMoveTableFrom;
 
@@ -35,19 +41,50 @@ using std::string;
 #include <utility>
 using std::make_pair;
 using std::pair;
+using std::swap;
 
-MinMaxHelper::MinMaxHelper(std::string color, CheckersGame &game, Network network):player_color(color), game(game), checkers_player(network){
+#include <iostream>
+using std::cout;
+using std::endl;
+
+
+MinMaxHelper ai::getMinMaxHelper(const std::string color, Network network, CheckersGame & game){
   auto table = loadMoveTableFrom("move-table.json");
   auto converter = JsonToStlConverter{table};
-
-  auto redGenerator = getGeneratorFor("red", converter);
-  auto blackGenerator = getGeneratorFor("black", converter);
-  auto kingGenerator = getKingGenerator(converter);
+  auto red = getGeneratorFor("red", converter);
+  auto black = getGeneratorFor("black", converter);
+  auto king = getKingGenerator(converter);
+  return MinMaxHelper(red, black, king, color, network, game);
 }
 
-int MinMaxHelper::parseTree(BoardType board){
-    auto boards = generateBoards(board);
-    return boards.size();
+MinMaxHelper::MinMaxHelper(const MoveGenerator & redGenerator, const MoveGenerator & blackGenerator, const MoveGenerator & kingGenerator, const string color, Network network, CheckersGame & game):redGenerator(redGenerator), blackGenerator(blackGenerator), kingGenerator(kingGenerator), player_color(color), checkers_player(network), game(game){
+}
+
+vector<BoardType> MinMaxHelper::parseTree(const BoardType board, int depth, const int & max_depth){
+  auto boards = generateBoards(board);
+  if (depth == max_depth){
+      return boards;
+  }
+  depth += 1;
+  for (int i = boards.size()-1; i >= 0; i--){
+      auto new_boards = parseTree(boards[i], depth, max_depth);
+      boards.reserve(boards.size() + distance(new_boards.begin(), new_boards.end()));
+      boards.insert(boards.end(), new_boards.begin(), new_boards.end());
+    }
+  return boards;
+}
+
+vector<BoardType> MinMaxHelper::parseTree(){
+    int depth = 0;
+    const int max_depth = 3;
+    BoardType current_board = game.getBoard();
+    auto boards = generateBoards(current_board);
+    for (int i = boards.size()-1; i >= 0; i--){
+        auto new_boards = parseTree(boards[i], depth, max_depth);
+        boards.reserve(boards.size() + distance(new_boards.begin(), new_boards.end()));
+        boards.insert(boards.end(), new_boards.begin(), new_boards.end());
+      }
+    return boards;
 }
 
 vector<BoardType> MinMaxHelper::generateBoards(BoardType board){
@@ -61,21 +98,23 @@ vector<BoardType> MinMaxHelper::generateBoards(BoardType board){
     BoardMovesType redMoves;
     BoardMovesType blackMoves;
 
-    boardJumps = parseBoardJumps(board);
-    boardMoves = parseBoardMoves(board);
+    boardJumps = parseBoardJumps(board); // gets all possible jumps from each occupied spot
+    boardMoves = parseBoardMoves(board); // above, but for moves
+
+
     if (boardJumps.first.size()){
         redJumps = removeInvalidJumps(board, boardJumps.first);
+        if(not redJumps.size()){
+            redMoves = removeInvalidMoves(board, boardMoves.first);
+        }
     }
     if (boardJumps.second.size()){
         blackJumps = removeInvalidJumps(board, boardJumps.second);
+        if (not blackJumps.size()){
+            blackMoves = removeInvalidMoves(board, boardMoves.second);
+        }
     }
 
-    if(not redJumps.size()){
-        redMoves = removeInvalidMoves(board, boardMoves.first);
-        }
-    if (not blackJumps.size()){
-        blackMoves = removeInvalidMoves(board, boardMoves.second);
-    }
     if (player_color == "r"){
         if(redJumps.size()){
             return _generate_boards(board, redJumps);
@@ -93,25 +132,22 @@ vector<BoardType> MinMaxHelper::generateBoards(BoardType board){
           }
         }
     }
-
-BoardType MinMaxHelper::minMax(BoardType board)
+int MinMaxHelper::minMax()
 {
-    return board;
+    auto boards = parseTree();
+    return boards.size();
 }
-
 pair<BoardJumpsType, BoardJumpsType> MinMaxHelper::parseBoardJumps(BoardType board){
     BoardJumpsType redJumps{};
     BoardJumpsType blackJumps{};
-
-    for (auto i = 0; i < board.size(); i++){
-        if (board[i] == ' '){
-          continue;
-        }
+    for (auto i = 0; i < TOTAL_NUM_SPACES; i++){
         if (board[i] == 'r'){
             redJumps.push_back(make_pair(i, redGenerator.getJumps(i)));
+
         }
         else if (board[i] == 'b'){
             blackJumps.push_back(make_pair(i, blackGenerator.getJumps(i)));
+
         }
         else if (board[i] == 'R'){
           redJumps.push_back(make_pair(i, kingGenerator.getJumps(i)));
@@ -128,15 +164,14 @@ pair<BoardMovesType, BoardMovesType> MinMaxHelper::parseBoardMoves(BoardType boa
     BoardMovesType redMoves{};
     BoardMovesType blackMoves{};
     for (auto i = 0; i < board.size(); i++){
-        if (board[i] == ' '){
-          continue;
-        }
         if (board[i] == 'r'){
             redMoves.push_back(make_pair(i, redGenerator.getMoves(i)));
+
         }
         else if (board[i] == 'b'){
             blackMoves.push_back(make_pair(i, blackGenerator.getMoves(i)));
-        }
+          }
+
         else if (board[i] == 'R'){
           redMoves.push_back(make_pair(i, kingGenerator.getMoves(i)));
         }
@@ -147,41 +182,29 @@ pair<BoardMovesType, BoardMovesType> MinMaxHelper::parseBoardMoves(BoardType boa
     return make_pair(redMoves, blackMoves);
 }
 
-BoardJumpsType MinMaxHelper::removeInvalidJumps(BoardType board, BoardJumpsType jumps){
+BoardJumpsType MinMaxHelper::removeInvalidJumps(BoardType & board, BoardJumpsType & jumps){
     BoardJumpsType validJumps{};
-
-    char color = board[jumps[0].first];
-    color = tolower(int(color));
-    char enemy_color;
-    for(auto i = 0; i < COLORS.size(); i++){
-        if (color != COLORS[i]){
-          enemy_color = COLORS[i];
-          break;
-        }
-    }
+    char enemy_color = RED;
+    if (tolower(board[jumps[0].first]) == RED){
+        enemy_color = BLACK;
+      }
 
     for(auto j = 0; j < jumps.size(); j++){
         for(auto i = 0; i < jumps[j].second.size(); i++){
-          if(not(board[jumps[j].second[i].to] != ' ' or tolower(board[(jumps[j].second[i].through)])  != enemy_color)){
+          if(board[jumps[j].second[i].to] == ' ' and tolower(board[(jumps[j].second[i].through)])  == enemy_color){
               validJumps.push_back(jumps[j]);
               }
            }
         }
       return validJumps;
     }
-
-BoardMovesType MinMaxHelper::removeInvalidMoves(BoardType board, BoardMovesType moves){
+BoardMovesType MinMaxHelper::removeInvalidMoves(BoardType & board, BoardMovesType & moves){
     BoardMovesType validMoves{};
+    char enemy_color = RED;
+    if (tolower(board[moves[0].first]) == RED){
+        enemy_color = BLACK;
+      }
 
-    char color = board[moves[0].first];
-    color = tolower(int(color));
-    char enemy_color;
-    for(auto i = 0; i < COLORS.size(); i++){
-        if (color != COLORS[i]){
-          enemy_color = COLORS[i];
-          break;
-          }
-        }
     for(auto j = 0; j < moves.size(); j++){
         for(auto i = 0; i < moves[j].second.size(); i++){
             if(board[moves[j].second[i]] == ' '){
@@ -191,29 +214,27 @@ BoardMovesType MinMaxHelper::removeInvalidMoves(BoardType board, BoardMovesType 
     }
     return validMoves;
 }
-
-vector<BoardType> MinMaxHelper::_generate_boards(BoardType board, BoardJumpsType jumps){
+vector<BoardType> MinMaxHelper::_generate_boards(BoardType & board, BoardJumpsType & jumps){
     vector<BoardType> genBoards{};
-
+    genBoards.reserve(jumps.size());
     for(int i = 0; i < jumps.size(); i++){
         for (auto j = 0; j < jumps[i].second.size(); j++){
             auto new_board = board;
-            new_board[jumps[i].second[j].to] = new_board[jumps[i].first];
-            new_board[jumps[i].first] = ' ';
+            swap(new_board[jumps[i].second[j].to], new_board[jumps[i].first]);
             new_board[jumps[i].second[j].through] = ' ';
             genBoards.push_back(new_board);
           }
     }
   return genBoards;
 }
-
-vector<BoardType> MinMaxHelper::_generate_boards(BoardType board, BoardMovesType moves){
+vector<BoardType> MinMaxHelper::_generate_boards(BoardType & board, BoardMovesType & moves){
     vector<BoardType> genBoards{};
+    genBoards.reserve(moves.size());
     for(int i = 0; i < moves.size(); i++){
         for (auto j = 0; j < moves[i].second.size(); j++){
             auto new_board = board;
-            new_board[moves[i].second[j]] = new_board[moves[i].first];
-            new_board[moves[i].first] = ' ';
+            swap(new_board[moves[i].second[j]], new_board[moves[i].first]);
+            genBoards.push_back(new_board);
           }
         }
     return genBoards;

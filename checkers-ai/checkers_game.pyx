@@ -36,7 +36,8 @@ cdef class PyCheckersGame:
     board = self.checkers_game.getBoard()
     char_board = []
     for space in board:
-      char_board.append(chr(space))
+      space = chr(space)
+      char_board.append(str(space))
     return char_board
 
   def play(self):
@@ -98,7 +99,7 @@ cdef class PyCheckersGame:
 class PyBoard():
     def __init__(self):
         self.game = PyCheckersGame()
-        self.board = self.game.get_board()
+        self.game_board = self.game.get_board()
         self.window = tk.Tk()
         self.entry = ttk.Entry(self.window)
         self.entry.bind('<Command-a>', self.get_entry_move)
@@ -255,8 +256,8 @@ class PyBoard():
       self.move_buttons, self.mb_info = [], []
 
     def compare_and_update_board(self, board):
-      if (board != self.board):
-        self.board = board
+      if (board != self.game_board):
+        self.game_board = board
         self.update_buttons()
         print(board)
 
@@ -265,8 +266,8 @@ class PyBoard():
         for col in range(BOARD_SIZE):
           if check_space(row, col):
             index = convert_row_col_to_index((row, col))
-            if self.board[index] != self.draw_spaces[row][col]["text"]:
-              self.draw_spaces[row][col]["text"] = self.board[index]
+            if self.game_board[index] != self.draw_spaces[row][col]["text"]:
+              self.draw_spaces[row][col]["text"] = self.game_board[index]
 
     def get_entry_move(self, e):
         print(self.entry.get())

@@ -5,6 +5,8 @@ using ai::MinMaxHelper;
 using ai::getGeneratorFor;
 using ai::getKingGenerator;
 using ai::MoveGenerator;
+
+#include "../headers/json-to-stl.h"
 using ai::JsonToStlConverter;
 using ai::loadMoveTableFrom;
 
@@ -35,21 +37,36 @@ using std::vector;
 #include <string>
 using std::string;
 
+#include <iostream>
+using std::cout;
+using std::endl;
 
 #include "catch.hpp"
 
-TEST_CASE("testing min max class"){
-    string player_color = "b";
-    CheckersGame game = getCheckersGame();
-    Network network = Network(0);
+#include <chrono>
 
-    SECTION("Testing Constructor of MinMaxHelper and board generator"){
-        MinMaxHelper minmax = MinMaxHelper(player_color, game, network);
-    }
+double get_minmax_time() {
+    return 1.0e-9*std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::high_resolution_clock::now().time_since_epoch()
+            ).count();
+}
+
+TEST_CASE("testing min max class"){
+    const string player_color = "b";
+    Network network = Network(0);
+    auto game = getCheckersGame();
+
     SECTION("Testing board generator"){
-      MinMaxHelper minmax = MinMaxHelper(player_color, game, network);
-      int count = minmax.parseTree(minmax.game.getBoard());
+      cout<<"Testing minMax board generation"<<endl;
+      MinMaxHelper minmax = getMinMaxHelper(player_color, network, game);
+      auto start = get_minmax_time();
+      auto count = minmax.minMax();
+      auto finish = get_minmax_time();
+      auto run_time = finish-start;
+      cout<<count<<" boards took "<<run_time<<" seconds "<<endl;
+      cout<<"that's "<< count/run_time <<" boards per second"<<endl;
+      cout<<"or "<<run_time/count<<" seconds per board on average"<<endl;
       REQUIRE(count);
-      REQUIRE(count > 0);
+
   }
 }

@@ -19,6 +19,9 @@ using std::string;
 using std::stringstream;
 #include <vector>
 using std::vector;
+#include <iostream>
+using std::cout;
+using std::endl;
 
 json ai::loadMoveTableFrom(const string & moveTableFilename) {
     ifstream jsonIn(moveTableFilename);
@@ -42,6 +45,7 @@ MoveTableType JsonToStlConverter::getMovesFor(const string & color) const {
 JumpTableType JsonToStlConverter::getJumpsFor(const string & color) const {
     auto jumpsJson = this->moveTable[color]["jumps"];
     auto jumpTableStl = jumpsToStlContainer(jumpsJson);
+
 
     return jumpTableStl;
 }

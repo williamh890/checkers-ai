@@ -488,5 +488,5 @@ int CheckersGame::minimaxSearch(Board passedBoard, RedPlayer red_player, BlackPl
 void CheckersGame::makeMinimaxMove(int depth)
 {
     auto current_player = getActivePlayerColor();
-    
+
 }

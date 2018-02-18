@@ -16,6 +16,9 @@
 // ai::MoveGenerator
 // ai::JsonToStlConverter
 
+#include "json-to-stl.h"
+// ai::JsonToStlConverter
+
 #include <utility>
 // std::make_pair
 // std::pair
@@ -24,6 +27,8 @@
 // std::vector
 
 static const std::vector<char> COLORS = {'r', 'b'};
+static const char RED = 'r';
+static const char BLACK = 'b';
 namespace ai{
     class MinMaxHelper{
         public:
@@ -44,12 +49,13 @@ namespace ai{
 
 
         public:
-            int parseTree(BoardType move);
+            std::vector<BoardType> parseTree();
+            std::vector<BoardType> parseTree(const BoardType board, int depth, const int & max_depth);
             MinMaxHelper() = default;
-            MinMaxHelper(const std::string color, CheckersGame &game, Network network); // color is the Player
+            MinMaxHelper(const MoveGenerator & redGenerator, const MoveGenerator & blackGenerator, const MoveGenerator & kingGenerator, const std::string color, Network network, CheckersGame & game); // color is the Player
                                                                     // we are evaluating for
 
-            BoardType minMax(BoardType board); // the actual minMax function
+            int minMax(); // the actual minMax function
 
 
         private:
@@ -58,12 +64,14 @@ namespace ai{
             std::pair<BoardMovesType, BoardMovesType> parseBoardMoves(BoardType board);
             std::pair<BoardJumpsType, BoardJumpsType> parseBoardJumps(BoardType board);
 
-            BoardJumpsType removeInvalidJumps(BoardType board,  BoardJumpsType jumps);
-            BoardMovesType removeInvalidMoves(BoardType board, BoardMovesType moves);
-            std::vector<BoardType> _generate_boards(BoardType board, BoardMovesType moves);
-            std::vector<BoardType> _generate_boards(BoardType board, BoardJumpsType jumps);
+            BoardJumpsType removeInvalidJumps(BoardType & board,  BoardJumpsType & jumps);
+            BoardMovesType removeInvalidMoves(BoardType & board, BoardMovesType & moves);
+            std::vector<BoardType> _generate_boards(BoardType & board, BoardMovesType & moves);
+            std::vector<BoardType> _generate_boards(BoardType & board, BoardJumpsType & jumps);
 
-    };
-};
+          };
+
+    MinMaxHelper getMinMaxHelper(const std::string color, Network network, CheckersGame & game);
+}
 
 #endif
