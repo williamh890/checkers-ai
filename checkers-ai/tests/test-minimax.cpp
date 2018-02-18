@@ -112,6 +112,11 @@ TEST_CASE("test minimax search function", "[minimax]") {
         }
     }
 
+}
+
+TEST_CASE("minimax jumps recursion", "[minimax], [minimax-jumps]") {
+    auto game = getCheckersGame();
+
     SECTION("handle jumps before moves in move recurse") {
         game.board.setBoardState({
                 ' ',   ' ',   ' ',   ' ',
@@ -135,3 +140,4 @@ TEST_CASE("test minimax search function", "[minimax]") {
         REQUIRE(minimax(blackMove, 1, 'b', game) == 0);
     }
 }
+
