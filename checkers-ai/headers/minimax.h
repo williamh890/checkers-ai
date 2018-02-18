@@ -24,8 +24,9 @@ namespace ai {
         BoardState boardState;
         Pieces redPieces;
         Pieces blackPieces;
+        char activePlayerColor;
 
-        GameState(const BoardState & board, const Pieces & red, const Pieces & black);
+        GameState(const BoardState & board, const Pieces & red, const Pieces & black, char activePlayerColor);
     };
 
     class MiniMaxHelper {
@@ -39,11 +40,11 @@ namespace ai {
             int recurse(CheckersGame::JumpPackage jump, int depth);
 
             GameState getCurrentGameState();
-            void applyMoveTo(const CheckersGame::MovePackage & move);
+            int applyAction(const CheckersGame::JumpPackage & jump);
+            void applyAction(const CheckersGame::MovePackage & move);
 
             bool isBaseCase(int depth);
             int handleBaseCase();
-            int recursiveCase(int depth);
 
             void setGameState(GameState & gameState);
    };

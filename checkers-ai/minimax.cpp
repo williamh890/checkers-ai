@@ -39,36 +39,80 @@ int ai::minimax(JumpPackage jump, int depth, char maximizingPlayer, CheckersGame
 
 MiniMaxHelper::MiniMaxHelper(char maximizingPlayer, CheckersGame & game) :
     game(game),
-    maximizingPlayer(maximizingPlayer)
-    {
+    maximizingPlayer(maximizingPlayer) {
     }
 
-GameState::GameState(const BoardState & board, const Pieces & red, const Pieces & black):
+GameState::GameState(const BoardState & board, const Pieces & red, const Pieces & black, char activePlayerColor):
     boardState(board),
     redPieces(red),
-    blackPieces(black) {
+    blackPieces(black),
+    activePlayerColor(activePlayerColor) {
     }
 
 int MiniMaxHelper::recurse(MovePackage move, int depth) {
     auto stateBeforeMove = getCurrentGameState();
 
-    applyMoveTo(move);
+    applyAction(move);
 
-    int best;
+    int bestNumPieces;
     if (isBaseCase(depth)) {
-        best = handleBaseCase();
+        bestNumPieces = handleBaseCase();
     }
+    // recursive case
     else {
-        best = recursiveCase(depth);
+        auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
+
+        bestNumPieces = (isMaximizingPlayer) ? INT_MIN : INT_MAX;
+
+        for (auto & checkMove : game.getValidMoves()) {
+            auto moveValue = recurse(checkMove, depth - 1);
+
+            bestNumPieces = (isMaximizingPlayer) ?
+                max(moveValue, bestNumPieces ) :
+                min(moveValue, bestNumPieces);
+        }
     }
 
     setGameState(stateBeforeMove);
 
-    return best;
+    return bestNumPieces;
 }
 
 int MiniMaxHelper::recurse(JumpPackage jump, int depth) {
-    return 0;
+    auto stateBeforeMove = getCurrentGameState();
+
+    auto jumpDestination = applyAction(jump);
+
+    if (isBaseCase(depth)) {
+        setGameState(stateBeforeMove);
+        return handleBaseCase();
+    }
+
+    auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
+    int bestNumPieces = (isMaximizingPlayer) ? INT_MIN : INT_MAX;
+
+    // Either recurse on moves or jumps
+    if (game.getValidJumps().size() != 0) {
+        for (auto & jump : game.getValidJumps()) {
+            auto jumpVal = recurse(jump, depth - 1);
+
+            bestNumPieces = (isMaximizingPlayer) ?
+                max(jumpVal, bestNumPieces) :
+                min(jumpVal, bestNumPieces);
+        }
+    }
+    else {
+        for (auto & move : game.getValidMoves()) {
+            auto moveVal = recurse(move, depth - 1);
+
+            bestNumPieces = (isMaximizingPlayer) ?
+                max(moveVal, bestNumPieces) :
+                min(moveVal, bestNumPieces);
+        }
+    }
+
+    setGameState(stateBeforeMove);
+    return bestNumPieces;
 }
 
 
@@ -76,15 +120,24 @@ GameState MiniMaxHelper::getCurrentGameState() {
     return GameState(
             game.board.getBoardState(),
             game.red->getPieces(),
-            game.black->getPieces()
+            game.black->getPieces(),
+            game.activePlayer->getColor()
             );
 }
 
-void MiniMaxHelper::applyMoveTo(const MovePackage & move) {
+void MiniMaxHelper::applyAction(const MovePackage & move) {
     game.board.make(move);
     game.reactTo(move);
     game.swapPlayers();
 }
+
+int MiniMaxHelper::applyAction(const JumpPackage & jump) {
+    game.board.make(jump);
+    game.reactTo(jump);
+
+    return jump.second.to;
+}
+
 
 bool MiniMaxHelper::isBaseCase(int depth) {
     return depth == 0;
@@ -94,26 +147,11 @@ int MiniMaxHelper::handleBaseCase() {
     return game.getNumPiecesFor(maximizingPlayer);
 }
 
-int MiniMaxHelper::recursiveCase(int depth) {
-    auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
-
-    int best = (isMaximizingPlayer) ? INT_MIN : INT_MAX;
-
-    for (auto & checkMove : game.getValidMoves()) {
-        auto moveValue = recurse(checkMove, depth - 1);
-
-        best = (isMaximizingPlayer) ?
-            max(moveValue, best) :
-            min(moveValue, best);
-    }
-
-    return best;
-}
-
 void MiniMaxHelper::setGameState(GameState & gameState) {
     game.board.setBoardState(gameState.boardState);
     game.red->setPieces(gameState.redPieces);
     game.black->setPieces(gameState.blackPieces);
+    game.activePlayer = gameState.activePlayerColor == 'r' ? game.red : game.black;
 }
 
 
