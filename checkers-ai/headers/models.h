@@ -42,6 +42,12 @@ namespace ai {
 
         Piece(char color, int space): color(color), space(space) {
         }
+        friend bool operator==(const Piece & rhs, const Piece & lhs) {
+            return
+                rhs.color == lhs.color and
+                rhs.space == lhs.space and
+                rhs.isKing == lhs.isKing;
+        }
     };
 }
 

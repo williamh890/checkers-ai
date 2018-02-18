@@ -63,6 +63,10 @@ const vector<Piece> Player::getPieces() const {
     return pieces;
 }
 
+void Player::setPieces(const vector<Piece> & newPieces) {
+    pieces = newPieces;
+}
+
 const char Player::getColor() const {
     return color;
 }
@@ -175,7 +179,6 @@ string Player::jumpsToString() const {
     return ss.str();
 }
 
-
 BlackPlayer::BlackPlayer(
         char color,
         const MoveGenerator & generator,
@@ -192,6 +195,7 @@ bool BlackPlayer::shouldBeCrowned(const Piece & piece) const {
     if (not piece.isKing){
       return piece.space < NUM_PIECES_IN_ROW;
     }
+
     return false;
 }
 
@@ -210,6 +214,7 @@ bool RedPlayer::shouldBeCrowned(const Piece & piece) const {
     if (not piece.isKing){
       return piece.space >= TOTAL_NUM_SPACES - NUM_PIECES_IN_ROW;
     }
+
     return false;
 }
 
