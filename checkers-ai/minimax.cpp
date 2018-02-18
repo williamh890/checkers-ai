@@ -55,8 +55,10 @@ int MiniMaxHelper::recurse(MovePackage move, int depth) {
     applyAction(move);
 
     if (isBaseCase(depth)) {
+        int numPieces = handleBaseCase();
         setGameState(stateBeforeMove);
-        return handleBaseCase();
+
+        return numPieces;
     }
 
     int bestNumPieces = recursiveCase(depth);
@@ -71,10 +73,13 @@ int MiniMaxHelper::recurse(JumpPackage jump, int depth) {
 
     auto jumpDestination = applyAction(jump);
     game.swapPlayers();
+    cout << "depth: " <<  depth << endl;
 
     if (isBaseCase(depth)) {
+        int numPieces = handleBaseCase();
         setGameState(stateBeforeMove);
-        return handleBaseCase();
+
+        return numPieces;
     }
 
     int bestNumPieces = recursiveCase(depth);
@@ -86,9 +91,11 @@ int MiniMaxHelper::recurse(JumpPackage jump, int depth) {
 int MiniMaxHelper::recursiveCase(int depth) {
     auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
     int bestNumPieces = (isMaximizingPlayer) ? INT_MIN : INT_MAX;
+    cout << game.board.toString();
 
     if (game.getValidJumps().size() != 0) {
         for (auto & jump : game.getValidJumps()) {
+            cout << "recusing on jump " << jump.second.toString() << endl;
             auto jumpVal = recurse(jump, depth - 1);
 
             bestNumPieces = (isMaximizingPlayer) ?

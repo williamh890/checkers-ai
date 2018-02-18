@@ -129,7 +129,7 @@ TEST_CASE("minimax jumps recursion", "[minimax], [minimax-jumps]") {
              ' ',   ' ',   ' ',   ' '
         });
         game.red->setPieces({
-            Piece('r', 13)
+            Piece('r', 17)
         });
         game.black->setPieces({
             Piece('b', 24)
