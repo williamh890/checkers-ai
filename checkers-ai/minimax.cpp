@@ -26,9 +26,15 @@ using Pieces = vector<Piece>;
 using BoardState = vector<char>;
 
 int ai::minimax(MovePackage move, int depth, char maximizingPlayer, CheckersGame & game) {
-    MiniMaxHelper mm(maximizingPlayer, game);
+    MiniMaxHelper minimax(maximizingPlayer, game);
 
-    return mm.recurse(move, depth);
+    return minimax.recurse(move, depth);
+}
+
+int ai::minimax(JumpPackage jump, int depth, char maximizingPlayer, CheckersGame & game) {
+    MiniMaxHelper minimax(maximizingPlayer, game);
+
+    return minimax.recurse(jump, depth);
 }
 
 MiniMaxHelper::MiniMaxHelper(char maximizingPlayer, CheckersGame & game) :
@@ -60,6 +66,11 @@ int MiniMaxHelper::recurse(MovePackage move, int depth) {
 
     return best;
 }
+
+int MiniMaxHelper::recurse(JumpPackage jump, int depth) {
+    return 0;
+}
+
 
 GameState MiniMaxHelper::getCurrentGameState() {
     return GameState(
