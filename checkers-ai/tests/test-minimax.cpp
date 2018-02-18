@@ -98,17 +98,14 @@ TEST_CASE("test minimax search function", "[minimax]") {
                 ' ',   ' ',   ' ',   ' ',
              ' ',   ' ',   ' ',   ' '
         });
-        auto red = vector<Piece>{
+        game.red->setPieces({
                 Piece('r', 8),
                 Piece('r', 14)
-        };
-        auto black = vector<Piece>{
+        });
+        game.black->setPieces({
             Piece('b', 17),
             Piece('b', 18)
-        };
-
-        game.red->setPieces(red);
-        game.black->setPieces(black);
+        });
 
         REQUIRE(game.getValidJumps().size() > 0);
         for (auto & jump : game.getValidJumps() ) {
