@@ -6,10 +6,14 @@ using ai::minimax;
 #include "../headers/checkers-game.h"
 using ai::getCheckersGame;
 using ai::CheckersGame;
+using MovePackage = CheckersGame::MovePackage;
 
 #include "../headers/models.h"
 using ai::Piece;
 using ai::Jump;
+
+#include "../headers/utils.h"
+using ai::getTime;
 
 #include<utility>
 using std::make_pair;
@@ -18,13 +22,14 @@ using std::cout;
 using std::endl;
 #include <vector>
 using std::vector;
+#include <chrono>
+
 
 TEST_CASE("test minimax search function", "[minimax]") {
     auto game = getCheckersGame();
 
     SECTION("test base case") {
         SECTION("all base cases from init board") {
-            cout << "testing base case" << endl;
             for ( auto & move : game.getValidMoves() ) {
                 REQUIRE(minimax(move, 0, 'r', game) == 12);
                 REQUIRE(minimax(move, 0, 'b', game) == 12);
@@ -163,5 +168,31 @@ TEST_CASE("minimax jumps recursion", "[minimax], [minimax-jumps]") {
 
         REQUIRE(minimax(doubleJumpSetupMove, 3, 'b', game) == 0);
     }
+}
+
+TEST_CASE ("timing minimax at different depths", "[minimax][timing]") {
+    auto game = getCheckersGame();
+    const int ITERATIONS = 1;
+
+    vector<int> dummy;
+    auto start = getTime();
+    for (volatile int i = 0; i < ITERATIONS; ++i) {
+        dummy.push_back((int)i);
+    }
+    auto end = getTime();
+    auto pushBackTotal = end - start;
+
+
+    vector<MovePackage> moves;
+
+    start = getTime();
+    for (volatile int i = 0; i < ITERATIONS; ++i) {
+        moves.push_back(game.getMinimaxMove());
+    }
+    end = getTime();
+
+    auto total = (end - start) - pushBackTotal;
+
+    cout << "Total time per search: " << total / ITERATIONS << endl;
 }
 

@@ -186,7 +186,7 @@ MovePackage CheckersGame::getMinimaxMove() {
     MovePackage bestMove;
 
     for (auto & move : getValidMoves()) {
-        auto moveVal = minimax(move, 3, getActivePlayerColor(), *this);
+        auto moveVal = minimax(move, 4, getActivePlayerColor(), *this);
         if (moveVal > bestMoveVal) {
             bestMoveVal = moveVal;
             bestMove = move;
@@ -201,7 +201,7 @@ JumpPackage CheckersGame::getMinimaxJump() {
     JumpPackage bestJump;
 
     for (auto & jump : getValidJumps()) {
-        auto jumpVal = minimax(jump, 3, getActivePlayerColor(), *this);
+        auto jumpVal = minimax(jump, 4, getActivePlayerColor(), *this);
         if (jumpVal > bestJumpVal) {
             bestJumpVal = jumpVal;
             bestJump = jump;

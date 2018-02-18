@@ -6,6 +6,11 @@ using ai::setupNetworks;
 #include "../headers/network-file-io.h"
 using ai::loadNetwork;
 using ai::saveNetwork;
+
+#include "../headers/utils.h"
+using ai::getTime;
+
+
 #include "catch.hpp"
 
 #include <vector>
@@ -18,15 +23,9 @@ using std::ostringstream;
 #include <iostream>
 using std::cout;
 using std::endl;
-#include <chrono>
 
 const NetworkWeightType EPSILON = 0.00001;
 
-double get_time() {
-    return 1.0e-9*std::chrono::duration_cast<std::chrono::nanoseconds>(
-            std::chrono::high_resolution_clock::now().time_since_epoch()
-            ).count();
-}
 
 bool areSame(NetworkWeightType a, NetworkWeightType b) {
     return fabs(a - b) < EPSILON;
@@ -152,18 +151,18 @@ TEST_CASE("Testing the speed of board evaluation.") {
     double averageTime = 0;
     const unsigned int LOOPSFORAVERAGE = 10;
     for (volatile unsigned int index = 0; index < LOOPSFORAVERAGE; ++index){
-        double evaluationStart = get_time();
+        double evaluationStart = getTime();
         for (volatile int i = 0; i < LOOP_COUNTER; ++i) {
             player.evaluateBoard(sampleBigBoard);
         }
-        double evaluationEnd = get_time();
+        double evaluationEnd = getTime();
         double evaluationTotal = evaluationEnd - evaluationStart;
 
 
-        double loopStart = get_time();
+        double loopStart = getTime();
         for (volatile int j = 0; j < LOOP_COUNTER; ++j) {
         }
-        double loopEnd = get_time();
+        double loopEnd = getTime();
         double loopTotal = loopEnd - loopStart;
 
         averageTime += (evaluationTotal - loopTotal)/LOOP_COUNTER;
