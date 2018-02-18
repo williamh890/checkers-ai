@@ -148,7 +148,7 @@ $(TEST_MINIMAX).o: $(TEST_MINIMAX).cpp
 
 tests-run: tests
 	mkdir -p logs
-	./$(TEST_OUT_FILE)
+	./$(TEST_OUT_FILE) $1
 
 run: all
 	./$(OUT_FILE)

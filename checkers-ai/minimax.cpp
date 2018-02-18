@@ -26,15 +26,15 @@ using Pieces = vector<Piece>;
 using BoardState = vector<char>;
 
 int ai::minimax(MovePackage move, int depth, char maximizingPlayer, CheckersGame & game) {
-    MiniMaxHelper mm(depth, maximizingPlayer, game);
+    MiniMaxHelper mm(maximizingPlayer, game);
 
-    return mm.recurse(move);
+    return mm.recurse(move, depth);
 }
 
-MiniMaxHelper::MiniMaxHelper(int depth, char maximizingPlayer, CheckersGame & game) :
+MiniMaxHelper::MiniMaxHelper(char maximizingPlayer, CheckersGame & game) :
     game(game),
-    maximizingPlayer(maximizingPlayer),
-    depth(depth) {
+    maximizingPlayer(maximizingPlayer)
+    {
     }
 
 GameState::GameState(const BoardState & board, const Pieces & red, const Pieces & black):
@@ -43,23 +43,21 @@ GameState::GameState(const BoardState & board, const Pieces & red, const Pieces 
     blackPieces(black) {
     }
 
-int MiniMaxHelper::recurse(MovePackage move) {
+int MiniMaxHelper::recurse(MovePackage move, int depth) {
     auto stateBeforeMove = getCurrentGameState();
 
     applyMoveTo(move);
 
     int best;
-    if (isBaseCase()) {
+    if (isBaseCase(depth)) {
         best = handleBaseCase();
     }
     else {
-        depth -= 1;
-        best = recursiveCase();
+        best = recursiveCase(depth);
     }
 
     setGameState(stateBeforeMove);
 
-    depth += 1;
     return best;
 }
 
@@ -77,7 +75,7 @@ void MiniMaxHelper::applyMoveTo(const MovePackage & move) {
     game.swapPlayers();
 }
 
-bool MiniMaxHelper::isBaseCase() {
+bool MiniMaxHelper::isBaseCase(int depth) {
     return depth == 0;
 }
 
@@ -85,13 +83,13 @@ int MiniMaxHelper::handleBaseCase() {
     return game.getNumPiecesFor(maximizingPlayer);
 }
 
-int MiniMaxHelper::recursiveCase() {
+int MiniMaxHelper::recursiveCase(int depth) {
     auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
 
     int best = (isMaximizingPlayer) ? INT_MIN : INT_MAX;
 
     for (auto & checkMove : game.getValidMoves()) {
-        auto moveValue = recurse(checkMove);
+        auto moveValue = recurse(checkMove, depth - 1);
 
         best = (isMaximizingPlayer) ?
             max(moveValue, best) :

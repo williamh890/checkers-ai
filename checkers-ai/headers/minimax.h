@@ -31,18 +31,17 @@ namespace ai {
         public:
             CheckersGame game;
             char maximizingPlayer;
-            int depth;
 
-            MiniMaxHelper(int depth, char maximizingPlayer, CheckersGame & game);
+            MiniMaxHelper(char maximizingPlayer, CheckersGame & game);
 
-            int recurse(CheckersGame::MovePackage move);
+            int recurse(CheckersGame::MovePackage move, int depth);
 
             GameState getCurrentGameState();
             void applyMoveTo(const CheckersGame::MovePackage & move);
 
-            bool isBaseCase();
+            bool isBaseCase(int depth);
             int handleBaseCase();
-            int recursiveCase();
+            int recursiveCase(int depth);
 
             void setGameState(GameState & gameState);
    };

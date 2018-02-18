@@ -49,4 +49,10 @@ TEST_CASE("test minimax search funciton", "[minimax]") {
         }
     }
 
+    SECTION("test recusion depth of 1") {
+        for ( auto & move : game.getValidMoves() ) {
+            REQUIRE(minimax(move, 1, 'r', game) == 12);
+            REQUIRE(minimax(move, 1, 'b', game) == 12);
+        }
+    }
 }
