@@ -32,8 +32,6 @@ bool areSame(NetworkWeightType a, NetworkWeightType b) {
     return fabs(a - b) < EPSILON;
 }
 
-
-
 TEST_CASE("Testing setupNetworks") {
     vector<unsigned int> dimesions{32, 40, 10, 1};
     setupNetworks(dimesions, 2);
