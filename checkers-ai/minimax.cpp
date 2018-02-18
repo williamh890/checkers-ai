@@ -53,13 +53,13 @@ int MiniMaxHelper::recurse(MovePackage move) {
         best = handleBaseCase();
     }
     else {
-        --depth;
+        depth -= 1;
         best = recursiveCase();
     }
 
     setGameState(stateBeforeMove);
 
-    ++depth;
+    depth += 1;
     return best;
 }
 
@@ -89,6 +89,7 @@ int MiniMaxHelper::recursiveCase() {
     auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
 
     int best = (isMaximizingPlayer) ? INT_MIN : INT_MAX;
+
     for (auto & checkMove : game.getValidMoves()) {
         auto moveValue = recurse(checkMove);
 
