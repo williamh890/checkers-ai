@@ -61,6 +61,10 @@ namespace ai {
             // following are public for use in the gui/cython wrapper
             void makeRandomValidAction();
             void makeMinimaxMove(int depth);
+<<<<<<< HEAD
+
+=======
+>>>>>>> 6e07c80b10fcf8f760443774b2109a206f8f3922
 
             bool isInvalid(const MovePackage & move);
             bool isInvalid(const JumpPackage & jump);
@@ -85,6 +89,7 @@ namespace ai {
             std::vector<JumpPackage> getValidJumps();
             std::vector<JumpPackage> getOpponentValidJumps();
             std::vector<MovePackage> getOpponentValidMoves();
+            std::vector<JumpPackage> getValidJumpsAt(int space);
             void play();
 
             MovePackage getBestMove();
@@ -100,7 +105,6 @@ namespace ai {
             JumpPackage getJumpFrom(const MovePackage & inputJump);
             int minimaxSearch(Board passedBoard, RedPlayer red_player, BlackPlayer black_player, char playerColor, int depth, int init_depth);
 
-            std::vector<JumpPackage> getValidJumpsAt(int space);
 
             void reactTo(const MovePackage & move);
             void reactTo(const JumpPackage & jump);
