@@ -33,12 +33,12 @@ MINIMAX_OBJ=$(BUILD_DIR)/$(MINIMAX).o
 OBJ_FILES=$(GENERATOR_OBJ) $(CONVERTER_OBJ) $(GAME_OBJ) $(PLAYER_OBJ) $(UTILS_OBJ) \
 		  $(BOARD_OBJ) $(SEEDER_OBJ) \
 		  $(NETWORK_OBJ) $(NETWORK_READER_OBJ) $(NETWORK_WRITER_OBJ) \
-		  $(MINIMAX_OBJ) # $(MIN_MAX_OBJ)
+		  $(MINIMAX_OBJ) $(MIN_MAX_OBJ)
 
 CPP_FILES=$(GENERATOR).cpp $(CONVERTER).cpp $(GAME).cpp $(PLAYER).cpp \
 		  $(UTILS).cpp $(BOARD).cpp $(SEEDER).cpp                     \
 		  $(NETWORK).cpp $(NETWORK_WRITER).cpp $(NETWORK_READER).cpp \
-		  $(MINIMAX).cpp # $(MIN_MAX).cpp
+		  $(MINIMAX).cpp $(MIN_MAX).cpp
 
 OBJ_FILES_WITH_MAIN=$(OBJ_FILES) $(MAIN).o
 
@@ -82,8 +82,8 @@ $(NETWORK_READER_OBJ): $(NETWORK_READER).cpp
 $(NETWORK_WRITER_OBJ): $(NETWORK_WRITER).cpp
 	$(CMP) -o $(NETWORK_WRITER_OBJ) -c $(NETWORK_WRITER).cpp
 
-#$(MIN_MAX_OBJ): $(MIN_MAX).cpp
-	#$(CMP) -o $(MIN_MAX_OBJ) -c $(MIN_MAX).cpp
+$(MIN_MAX_OBJ): $(MIN_MAX).cpp
+	$(CMP) -o $(MIN_MAX_OBJ) -c $(MIN_MAX).cpp
 
 $(MINIMAX_OBJ): $(MINIMAX).cpp
 	$(CMP) -o $(MINIMAX_OBJ) -c $(MINIMAX).cpp
@@ -107,15 +107,15 @@ TEST_PLAYER=$(TESTING_DIR)/test-player
 TEST_UTILS=$(TESTING_DIR)/test-utils
 TEST_MOVE_GENERATOR=$(TESTING_DIR)/test-move-generator
 TEST_NETWORK=$(TESTING_DIR)/test-network
-# TEST_MIN_MAX=$(TESTING_DIR)/test_min_max
+TEST_MIN_MAX=$(TESTING_DIR)/test_min_max
 TEST_MINIMAX=$(TESTING_DIR)/test-minimax
 
 TEST_OUT_FILE=$(TESTING_DIR)/tests.out
 
 TESTING_OBJ_FILES=$(TEST_MAIN).o $(TEST_JSON_TO_STL).o $(TEST_PLAYER).o \
 				  $(TEST_UTILS).o $(TEST_MOVE_GENERATOR).o $(TEST_NETWORK).o \
-				   $(TEST_MINIMAX).o										\
-				  $(OBJ_FILES) #$(TEST_MIN_MAX)
+				   $(TEST_MINIMAX).o	 $(TEST_MIN_MAX).o									\
+				  $(OBJ_FILES)# $(TEST_MIN_MAX)
 
 tests: $(TEST_OUT_FILE)
 
@@ -140,8 +140,8 @@ $(TEST_MOVE_GENERATOR).o: $(TEST_MOVE_GENERATOR).cpp
 $(TEST_NETWORK).o: $(TEST_NETWORK).cpp
 	$(CMP) -o $(TEST_NETWORK).o -c $(TEST_NETWORK).cpp
 
-#$(TEST_MIN_MAX).o: $(TEST_MIN_MAX).cpp
-	#$(CMP) -o $(TEST_MIN_MAX).o -c $(TEST_MIN_MAX).cpp
+$(TEST_MIN_MAX).o: $(TEST_MIN_MAX).cpp
+	$(CMP) -o $(TEST_MIN_MAX).o -c $(TEST_MIN_MAX).cpp
 
 $(TEST_MINIMAX).o: $(TEST_MINIMAX).cpp
 	$(CMP) -o $(TEST_MINIMAX).o -c $(TEST_MINIMAX).cpp

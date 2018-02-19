@@ -29,6 +29,9 @@
 static const std::vector<char> COLORS = {'r', 'b'};
 static const char RED = 'r';
 static const char BLACK = 'b';
+static const int KING_WEIGHT = 2;
+static const int PAWN_WEIGHT = 1;
+
 namespace ai{
     class MinMaxHelper{
         public:
@@ -37,41 +40,48 @@ namespace ai{
             using JumpsType = std::vector<Jump>;
             using BoardMovesType = std::vector<std::pair<int, MovesType>>;
             using BoardJumpsType = std::vector<std::pair<int, JumpsType>>;
+            int max_depth;
             CheckersGame game;
         private:
             Network checkers_player;
-            std::string player_color;
+            const char player_color;
+            const char enemy_color;
             BoardType activeBoard;
 
             MoveGenerator redGenerator;
             MoveGenerator blackGenerator;
             MoveGenerator kingGenerator;
+            MoveGenerator activeGenerator;
 
+            bool jumped = false;
+            char active_player;
+            char inactive_player;
 
         public:
-            std::vector<BoardType> parseTree();
-            std::vector<BoardType> parseTree(const BoardType board, int depth, const int & max_depth);
+            BoardType parseTree();
+            int parseTree(const BoardType board, int depth);
             MinMaxHelper() = default;
-            MinMaxHelper(const MoveGenerator & redGenerator, const MoveGenerator & blackGenerator, const MoveGenerator & kingGenerator, const std::string color, Network network, CheckersGame & game); // color is the Player
+            MinMaxHelper(const MoveGenerator & redGenerator, const MoveGenerator & blackGenerator, const MoveGenerator & kingGenerator, const char color, const char opponent_color, Network network, CheckersGame & game, int max_depth); // color is the Player
                                                                     // we are evaluating for
 
-            int minMax(); // the actual minMax function
+            BoardType minMax(); // the actual minMax function
 
 
         private:
              // recurse on boards //return is board score best on minmax of children
             std::vector<BoardType> generateBoards(BoardType board); // returns vector of boardState
-            std::pair<BoardMovesType, BoardMovesType> parseBoardMoves(BoardType board);
-            std::pair<BoardJumpsType, BoardJumpsType> parseBoardJumps(BoardType board);
+            BoardMovesType parseBoardMoves(BoardType board);
+            BoardJumpsType parseBoardJumps(BoardType board);
 
             BoardJumpsType removeInvalidJumps(BoardType & board,  BoardJumpsType & jumps);
             BoardMovesType removeInvalidMoves(BoardType & board, BoardMovesType & moves);
             std::vector<BoardType> _generate_boards(BoardType & board, BoardMovesType & moves);
             std::vector<BoardType> _generate_boards(BoardType & board, BoardJumpsType & jumps);
-
+            int evaluateBoard(BoardType & board);
+            void swapActivePlayer();
           };
 
-    MinMaxHelper getMinMaxHelper(const std::string color, Network network, CheckersGame & game);
+    MinMaxHelper getMinMaxHelper(const char & color, Network network, CheckersGame & game, int max_depth);
 }
 
 #endif
