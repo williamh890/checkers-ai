@@ -14,6 +14,9 @@
 
 static const std::vector<char> COLORS = {'r', 'b'};
 namespace ai {
+    CheckersGame::MovePackage minimaxMove(CheckersGame & game, int depth, char maximizingPlayer);
+    CheckersGame::JumpPackage minimaxJump(CheckersGame & game, int depth, char maximizingPlayer);
+
     int minimax(CheckersGame::MovePackage move, int depth, char maximizingPlayer, CheckersGame & game);
     int minimax(CheckersGame::JumpPackage jump, int depth, char maximizingPlayer, CheckersGame & game);
 
@@ -40,11 +43,12 @@ namespace ai {
             int recurse(CheckersGame::JumpPackage jump, int depth);
 
             GameState getCurrentGameState();
-            int applyAction(const CheckersGame::JumpPackage & jump);
-            void applyAction(const CheckersGame::MovePackage & move);
+            int changeGameState(const CheckersGame::JumpPackage & jump);
+            void changeGameState(const CheckersGame::MovePackage & move);
 
             bool isBaseCase(int depth);
-            int handleBaseCase();
+            int baseCase();
+            int recursiveCase(int depth);
 
             void setGameState(GameState & gameState);
    };

@@ -25,6 +25,40 @@ using std::vector;
 using Pieces = vector<Piece>;
 using BoardState = vector<char>;
 
+CheckersGame::MovePackage ai::minimaxMove(CheckersGame & game, int depth, char maximizingPlayer) {
+    int bestMoveVal = INT_MIN;
+    MovePackage bestMove;
+
+    for (auto & move : game.getValidMoves()) {
+        auto moveVal = minimax(move, 4, game.getActivePlayerColor(), game);
+
+        if (moveVal > bestMoveVal) {
+            bestMoveVal = moveVal;
+            bestMove = move;
+        }
+    }
+
+    return bestMove;
+}
+
+CheckersGame::JumpPackage ai::minimaxJump(CheckersGame & game, int depth, char maximizingPlayer) {
+    int bestJumpVal = INT_MIN;
+    JumpPackage bestJump;
+
+    for (auto & jump : game.getValidJumps()) {
+        auto jumpVal = minimax(jump, 4, game.getActivePlayerColor(), game);
+
+        if (jumpVal > bestJumpVal) {
+            bestJumpVal = jumpVal;
+            bestJump = jump;
+        }
+    }
+
+    return bestJump;
+
+}
+
+
 int ai::minimax(MovePackage move, int depth, char maximizingPlayer, CheckersGame & game) {
     MiniMaxHelper minimax(maximizingPlayer, game);
 
@@ -52,26 +86,13 @@ GameState::GameState(const BoardState & board, const Pieces & red, const Pieces 
 int MiniMaxHelper::recurse(MovePackage move, int depth) {
     auto stateBeforeMove = getCurrentGameState();
 
-    applyAction(move);
+    changeGameState(move);
+    //cout << "AT DEPTH " << depth << endl;
+    //cout << game.board.toString() << endl;
 
-    int bestNumPieces;
-    if (isBaseCase(depth)) {
-        bestNumPieces = handleBaseCase();
-    }
-    // recursive case
-    else {
-        auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
-
-        bestNumPieces = (isMaximizingPlayer) ? INT_MIN : INT_MAX;
-
-        for (auto & checkMove : game.getValidMoves()) {
-            auto moveValue = recurse(checkMove, depth - 1);
-
-            bestNumPieces = (isMaximizingPlayer) ?
-                max(moveValue, bestNumPieces ) :
-                min(moveValue, bestNumPieces);
-        }
-    }
+    int bestNumPieces = isBaseCase(depth) ?
+        baseCase() :
+        recursiveCase(depth);
 
     setGameState(stateBeforeMove);
 
@@ -81,17 +102,47 @@ int MiniMaxHelper::recurse(MovePackage move, int depth) {
 int MiniMaxHelper::recurse(JumpPackage jump, int depth) {
     auto stateBeforeMove = getCurrentGameState();
 
-    auto jumpDestination = applyAction(jump);
+    auto jumpDestination = changeGameState(jump);
+    //cout << "AT DEPTH " << depth << endl;
+    //cout << game.board.toString() << endl;
 
+    game.swapPlayers();
     if (isBaseCase(depth)) {
+        int numPieces = baseCase();
         setGameState(stateBeforeMove);
-        return handleBaseCase();
+
+        return numPieces;
+    }
+    game.swapPlayers();
+
+    auto multiJumps = game.getValidJumpsAt(jumpDestination);
+    int bestNumPieces;
+
+    if (multiJumps.size() > 0) {
+        auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
+        bestNumPieces = (isMaximizingPlayer) ? INT_MIN : INT_MAX;
+        for (auto & jump : multiJumps) {
+            auto jumpVal = recurse(jump, depth - 1);
+
+            bestNumPieces = (isMaximizingPlayer) ?
+                max(jumpVal, bestNumPieces) :
+                min(jumpVal, bestNumPieces);
+        }
+    }
+    else {
+        game.swapPlayers();
+        bestNumPieces = recursiveCase(depth);
     }
 
+
+    setGameState(stateBeforeMove);
+    return bestNumPieces;
+}
+
+int MiniMaxHelper::recursiveCase(int depth) {
     auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
     int bestNumPieces = (isMaximizingPlayer) ? INT_MIN : INT_MAX;
 
-    // Either recurse on moves or jumps
     if (game.getValidJumps().size() != 0) {
         for (auto & jump : game.getValidJumps()) {
             auto jumpVal = recurse(jump, depth - 1);
@@ -111,7 +162,6 @@ int MiniMaxHelper::recurse(JumpPackage jump, int depth) {
         }
     }
 
-    setGameState(stateBeforeMove);
     return bestNumPieces;
 }
 
@@ -125,26 +175,27 @@ GameState MiniMaxHelper::getCurrentGameState() {
             );
 }
 
-void MiniMaxHelper::applyAction(const MovePackage & move) {
+void MiniMaxHelper::changeGameState(const MovePackage & move) {
     game.board.make(move);
     game.reactTo(move);
     game.swapPlayers();
 }
 
-int MiniMaxHelper::applyAction(const JumpPackage & jump) {
+int MiniMaxHelper::changeGameState(const JumpPackage & jump) {
     game.board.make(jump);
     game.reactTo(jump);
 
     return jump.second.to;
 }
 
-
 bool MiniMaxHelper::isBaseCase(int depth) {
-    return depth == 0;
+    return depth == 0 or !(game.areJumps() or game.areMoves());
 }
 
-int MiniMaxHelper::handleBaseCase() {
-    return game.getNumPiecesFor(maximizingPlayer);
+int MiniMaxHelper::baseCase() {
+    auto numPieces = game.getNumPiecesFor(maximizingPlayer);
+
+    return numPieces;
 }
 
 void MiniMaxHelper::setGameState(GameState & gameState) {
@@ -152,6 +203,7 @@ void MiniMaxHelper::setGameState(GameState & gameState) {
     game.red->setPieces(gameState.redPieces);
     game.black->setPieces(gameState.blackPieces);
     game.activePlayer = gameState.activePlayerColor == 'r' ? game.red : game.black;
+    game.inactivePlayer = gameState.activePlayerColor == 'r' ? game.black : game.red;
 }
 
 
