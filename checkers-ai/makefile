@@ -115,7 +115,7 @@ TEST_OUT_FILE=$(TESTING_DIR)/tests.out
 TESTING_OBJ_FILES=$(TEST_MAIN).o $(TEST_JSON_TO_STL).o $(TEST_PLAYER).o \
 				  $(TEST_UTILS).o $(TEST_MOVE_GENERATOR).o $(TEST_NETWORK).o \
 				   $(TEST_MINIMAX).o	 $(TEST_MIN_MAX).o									\
-				  $(OBJ_FILES)# $(TEST_MIN_MAX)
+				  $(OBJ_FILES)
 
 tests: $(TEST_OUT_FILE)
 

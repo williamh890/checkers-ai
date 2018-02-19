@@ -12,7 +12,7 @@ namespace ai {
     static const int NUM_PIECES_IN_ROW = 4;
     static const int ROWS = 8;
     static const int COLS = 8;
-    static const int MINIMAX_SEARCH_DEPTH = 4;
+    static const int MINIMAX_SEARCH_DEPTH = 8;
     static const int DEBUG = false;
 
     namespace Settings {

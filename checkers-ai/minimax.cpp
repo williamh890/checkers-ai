@@ -29,8 +29,11 @@ CheckersGame::MovePackage ai::minimaxMove(CheckersGame & game, int depth, char m
     int bestMoveVal = INT_MIN;
     MovePackage bestMove;
 
-    for (auto & move : game.getValidMoves()) {
-        auto moveVal = minimax(move, 4, game.getActivePlayerColor(), game);
+    auto moves = game.getValidMoves();
+
+    for (auto i = 0; i < (int) moves.size(); ++i) {
+        auto move = moves[i];
+        auto moveVal = minimax(move, depth, game.getActivePlayerColor(), game);
 
         if (moveVal > bestMoveVal) {
             bestMoveVal = moveVal;
@@ -45,8 +48,11 @@ CheckersGame::JumpPackage ai::minimaxJump(CheckersGame & game, int depth, char m
     int bestJumpVal = INT_MIN;
     JumpPackage bestJump;
 
-    for (auto & jump : game.getValidJumps()) {
-        auto jumpVal = minimax(jump, 4, game.getActivePlayerColor(), game);
+    auto jumps = game.getValidJumps();
+
+    for (auto i = 0; i < (int) jumps.size(); ++i) {
+        auto jump = jumps[i] ;
+        auto jumpVal = minimax(jump, depth, game.getActivePlayerColor(), game);
 
         if (jumpVal > bestJumpVal) {
             bestJumpVal = jumpVal;

@@ -131,9 +131,18 @@ TEST_CASE("testing min max class"){
       cout<<"Testing 12 turn lookahead"<<endl;
       MinMaxHelper minmax = getMinMaxHelper(player_color, network, game, 3);
       minmax.max_depth = 11;
-      minmax.game.board.setBoardState(
-        {'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', ' ', ' ', ' ', ' ', 'r', ' ', 'b', ' ', ' ', 'b', 'b', ' ', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'}
-      );
+
+      minmax.game.board.setBoardState({
+             'r',  'r',  'r',  'r',
+          'r',  'r',  'r',  'r',
+             'r',  'r',  'r',  ' ',
+          ' ',  ' ',  ' ',  'r',
+             ' ',  'b',  ' ',  ' ',
+          'b',  'b',  ' ',  'b',
+             'b',  'b',  'b',  'b',
+          'b',  'b',  'b',  'b'
+      });
+
       auto start = get_minmax_time();
       auto best_board = minmax.minMax();
       minmax.game.board.setBoardState(best_board);
