@@ -170,6 +170,7 @@ TEST_CASE("minimax jumps recursion", "[minimax], [minimax-jumps]") {
     }
 }
 
+vector<MovePackage> moves;
 TEST_CASE ("timing minimax at different depths", "[minimax][timing]") {
     auto game = getCheckersGame();
     const int ITERATIONS = 1;
@@ -182,8 +183,6 @@ TEST_CASE ("timing minimax at different depths", "[minimax][timing]") {
     auto end = getTime();
     auto pushBackTotal = end - start;
 
-
-    vector<MovePackage> moves;
 
     start = getTime();
     for (volatile int i = 0; i < ITERATIONS; ++i) {
