@@ -25,6 +25,8 @@ using std::vector;
 using Pieces = vector<Piece>;
 using BoardState = vector<char>;
 
+int MiniMaxHelper::totalNodes = 0;
+
 CheckersGame::MovePackage ai::minimaxMove(CheckersGame & game, int depth, char maximizingPlayer) {
     int bestMoveVal = INT_MIN;
     MovePackage bestMove;
@@ -33,7 +35,7 @@ CheckersGame::MovePackage ai::minimaxMove(CheckersGame & game, int depth, char m
 
     for (auto i = 0; i < (int) moves.size(); ++i) {
         auto move = moves[i];
-        auto moveVal = minimax(move, depth, game.getActivePlayerColor(), game);
+        auto moveVal = minimax(move, depth - 1, game.getActivePlayerColor(), game);
 
         if (moveVal > bestMoveVal) {
             bestMoveVal = moveVal;
@@ -41,8 +43,10 @@ CheckersGame::MovePackage ai::minimaxMove(CheckersGame & game, int depth, char m
         }
     }
 
+    cout << "Nodes evaluated: " << MiniMaxHelper::totalNodes << endl;
     return bestMove;
 }
+
 
 CheckersGame::JumpPackage ai::minimaxJump(CheckersGame & game, int depth, char maximizingPlayer) {
     int bestJumpVal = INT_MIN;
@@ -52,13 +56,15 @@ CheckersGame::JumpPackage ai::minimaxJump(CheckersGame & game, int depth, char m
 
     for (auto i = 0; i < (int) jumps.size(); ++i) {
         auto jump = jumps[i] ;
-        auto jumpVal = minimax(jump, depth, game.getActivePlayerColor(), game);
+        auto jumpVal = minimax(jump, depth - 1, game.getActivePlayerColor(), game);
 
         if (jumpVal > bestJumpVal) {
             bestJumpVal = jumpVal;
             bestJump = jump;
         }
     }
+
+    cout << "Nodes evaluated: " << MiniMaxHelper::totalNodes << endl;
 
     return bestJump;
 
@@ -90,6 +96,7 @@ GameState::GameState(const BoardState & board, const Pieces & red, const Pieces 
     }
 
 int MiniMaxHelper::recurse(const MovePackage & move, int depth) {
+    totalNodes++;
     auto stateBeforeMove = getCurrentGameState();
 
     changeGameState(move);
@@ -104,6 +111,7 @@ int MiniMaxHelper::recurse(const MovePackage & move, int depth) {
 }
 
 int MiniMaxHelper::recurse(const JumpPackage & jump, int depth) {
+    totalNodes++;
     auto stateBeforeMove = getCurrentGameState();
 
     auto jumpDestination = changeGameState(jump);
