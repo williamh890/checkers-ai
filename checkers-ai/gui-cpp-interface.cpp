@@ -30,7 +30,7 @@ bool GuiCppInterface::isInvalid(const CheckersGame::JumpPackage & jump) {
 }
 
 Board::BoardType GuiCppInterface::getBoard() {
-    return game.getBoard();
+    return game.board.getBoardState();
 }
 
 const char GuiCppInterface::getActivePlayerColor() {

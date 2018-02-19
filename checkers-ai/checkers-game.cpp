@@ -12,9 +12,11 @@ using ai::SRandSeeder;
 using ai::getSeeder;
 
 #include "headers/minimax.h"
-using ai::minimax;
+using ai::minimaxJump;
+using ai::minimaxMove;
 
 #include "headers/board.h"
+using ai::getBoard;
 using ai::Board;
 
 #include "headers/player.h"
@@ -42,6 +44,7 @@ using ai::Piece;
 #include "headers/consts.h"
 using ai::TOTAL_NUM_SPACES;
 using ai::INIT_NUM_PIECES;
+using ai::MINIMAX_SEARCH_DEPTH;
 
 #include "headers/table-types.h"
 using ai::MoveTableType;
@@ -107,7 +110,7 @@ void CheckersGame::play() {
         JumpPackage jump = make_pair(-1, Jump(-1, -1));
 
         try {
-            if (getValidJumps().size()) {
+            if (areJumps()) {
                 jump = getJumpFromActivePlayer();
             } else {
                 move = getMoveFromActivePlayer();
@@ -122,7 +125,7 @@ void CheckersGame::play() {
             continue;
         }
 
-        cout << activePlayer->getColor() << ": "
+        cout << getActivePlayerColor() << ": "
             << spaceToPosition(move.first).toString() << ", "
             << spaceToPosition(move.second).toString()
             << endl;
@@ -133,9 +136,9 @@ void CheckersGame::play() {
 
             auto validJumps = getValidJumpsAt(jump.second.to);
 
-            cout << board.toString() << endl;
 
             while (validJumps.size()) {
+                cout << board.toString() << endl;
                 auto jump = make_pair(-1, Jump(-1, -1));
 
                 try {
@@ -173,6 +176,7 @@ bool CheckersGame::areJumps(){
 bool CheckersGame::areMoves(){
     return getValidMoves().size() > 0;
 }
+
 JumpPackage CheckersGame::getJumpFromActivePlayer() {
     if (activePlayer->getColor() == 'r') {
         return getMinimaxJump();
@@ -182,33 +186,11 @@ JumpPackage CheckersGame::getJumpFromActivePlayer() {
 }
 
 MovePackage CheckersGame::getMinimaxMove() {
-    int bestMoveVal = INT_MIN;
-    MovePackage bestMove;
-
-    for (auto & move : getValidMoves()) {
-        auto moveVal = minimax(move, 4, getActivePlayerColor(), *this);
-        if (moveVal > bestMoveVal) {
-            bestMoveVal = moveVal;
-            bestMove = move;
-        }
-    }
-
-    return bestMove;
+    return minimaxMove(*this, MINIMAX_SEARCH_DEPTH, getActivePlayerColor());
 }
 
 JumpPackage CheckersGame::getMinimaxJump() {
-    int bestJumpVal = INT_MIN;
-    JumpPackage bestJump;
-
-    for (auto & jump : getValidJumps()) {
-        auto jumpVal = minimax(jump, 4, getActivePlayerColor(), *this);
-        if (jumpVal > bestJumpVal) {
-            bestJumpVal = jumpVal;
-            bestJump = jump;
-        }
-    }
-
-    return bestJump;
+    return minimaxJump(*this, MINIMAX_SEARCH_DEPTH, getActivePlayerColor());
 }
 
 
@@ -357,10 +339,6 @@ vector<JumpPackage> CheckersGame::getValidJumpsAt(int space) {
 
     return jumpsAtSpace;
 }
-// Accessor functions for gui/cython wrapper
-vector<char> CheckersGame::getBoard(){
-    return board.getBoardState();
-}
 
 const char CheckersGame::getActivePlayerColor(){
     return activePlayer->getColor();
@@ -483,7 +461,7 @@ int CheckersGame::minimaxSearch(Board passedBoard, RedPlayer red_player, BlackPl
     {
         boardCopy.make(player_jumps[0]);
         best_move = minimaxSearch(boardCopy, redCopy, blackCopy, playerColor == 'b' ? 'r' : 'b', depth, init_depth+1);
-        for(auto i = 1; i < player_jumps.size(); ++i)
+        for(auto i = 1; i < (int) player_jumps.size(); ++i)
         {
             boardCopy = passedBoard;
             boardCopy.make(player_jumps[i]);
@@ -499,7 +477,7 @@ int CheckersGame::minimaxSearch(Board passedBoard, RedPlayer red_player, BlackPl
     {
         boardCopy.make(player_moves[0]);
         best_move = minimaxSearch(boardCopy, redCopy, blackCopy, playerColor == 'b' ? 'r' : 'b', depth, init_depth+1);
-        for(auto i = 1; i < player_moves.size(); ++i)
+        for(auto i = 1; i < (int) player_moves.size(); ++i)
         {
             boardCopy = passedBoard;
             boardCopy.make(player_moves[i]);
@@ -520,5 +498,4 @@ int CheckersGame::getNumPiecesFor(char color) {
 
 void CheckersGame::makeMinimaxMove(int depth)
 {
-    auto current_player = getActivePlayerColor();
 }

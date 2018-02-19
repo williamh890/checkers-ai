@@ -25,6 +25,40 @@ using std::vector;
 using Pieces = vector<Piece>;
 using BoardState = vector<char>;
 
+CheckersGame::MovePackage ai::minimaxMove(CheckersGame & game, int depth, char maximizingPlayer) {
+    int bestMoveVal = INT_MIN;
+    MovePackage bestMove;
+
+    for (auto & move : game.getValidMoves()) {
+        auto moveVal = minimax(move, 4, game.getActivePlayerColor(), game);
+
+        if (moveVal > bestMoveVal) {
+            bestMoveVal = moveVal;
+            bestMove = move;
+        }
+    }
+
+    return bestMove;
+}
+
+CheckersGame::JumpPackage ai::minimaxJump(CheckersGame & game, int depth, char maximizingPlayer) {
+    int bestJumpVal = INT_MIN;
+    JumpPackage bestJump;
+
+    for (auto & jump : game.getValidJumps()) {
+        auto jumpVal = minimax(jump, 4, game.getActivePlayerColor(), game);
+
+        if (jumpVal > bestJumpVal) {
+            bestJumpVal = jumpVal;
+            bestJump = jump;
+        }
+    }
+
+    return bestJump;
+
+}
+
+
 int ai::minimax(MovePackage move, int depth, char maximizingPlayer, CheckersGame & game) {
     MiniMaxHelper minimax(maximizingPlayer, game);
 

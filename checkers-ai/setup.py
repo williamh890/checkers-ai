@@ -8,7 +8,7 @@ setup(name="cython_checkers",
                     "json-to-stl.cpp", "board.cpp", "player.cpp",
                     "utils.cpp", "gui-cpp-interface.cpp", "seeder.cpp",
                     "network.cpp", "network-file-reader.cpp",
-                    "network-file-writer.cpp"],  # additional source file(s)
+                    "network-file-writer.cpp", "minimax.cpp"],
            language="c++",
            extra_compile_args=["-std=c++14"],
-          )))
+      )))

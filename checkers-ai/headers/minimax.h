@@ -14,6 +14,9 @@
 
 static const std::vector<char> COLORS = {'r', 'b'};
 namespace ai {
+    CheckersGame::MovePackage minimaxMove(CheckersGame & game, int depth, char maximizingPlayer);
+    CheckersGame::JumpPackage minimaxJump(CheckersGame & game, int depth, char maximizingPlayer);
+
     int minimax(CheckersGame::MovePackage move, int depth, char maximizingPlayer, CheckersGame & game);
     int minimax(CheckersGame::JumpPackage jump, int depth, char maximizingPlayer, CheckersGame & game);
 
