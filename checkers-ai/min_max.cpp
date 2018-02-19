@@ -41,6 +41,7 @@ using std::string;
 
 #include <algorithm>
 using std::max;
+using std::min;
 
 #include <utility>
 using std::make_pair;
@@ -90,7 +91,12 @@ int MinMaxHelper::parseTree(const BoardType board, int depth){
     depth += 1;
 
     for (int i = boards.size()-1; i >= 0; i--){
+        if (layer_player == player_color){
         best_count = max(best_count, parseTree(boards[i], depth));
+            }
+        else{
+          best_count = min(best_count, parseTree(boards[i], depth));
+        }
         jumped = layer_jump;
         active_player = layer_player;
       }
@@ -110,7 +116,7 @@ BoardType MinMaxHelper::parseTree(){
     int count = 0;
     BoardType best_board;
 
-    BoardType current_board = game.getBoard();
+    BoardType current_board = game.board.getBoardState();
 
     auto boards = generateBoards(current_board);
     if (depth == max_depth){
@@ -134,6 +140,8 @@ BoardType MinMaxHelper::parseTree(){
         best_count = max(best_count, count);
         if (best_count == count){
             best_board = boards[i];
+            game.board.setBoardState(best_board);
+            cout<<" a better board was "<<endl<<game.board.toString()<<endl;
         }
       }
     cout<<"best count was "<<best_count<<endl;
@@ -172,8 +180,10 @@ vector<BoardType> MinMaxHelper::generateBoards(BoardType board){
   }
 
 BoardType MinMaxHelper::minMax(){
+    cout<<game.board.toString()<<endl;
     BoardType board = parseTree();
     game.board.setBoardState(board);
+    cout<<game.board.toString()<<endl;
     return board;
 }
  BoardJumpsType MinMaxHelper::parseBoardJumps(BoardType board){
@@ -263,7 +273,7 @@ int MinMaxHelper::evaluateBoard(BoardType & board){
           continue;
         }
         if (isupper(board[i])){
-          if (tolower(board[i]) == active_player){
+          if (tolower(board[i]) == player_color){
               count += 2;
           }
           else{
@@ -271,7 +281,7 @@ int MinMaxHelper::evaluateBoard(BoardType & board){
           }
         }
         else{
-          if ((board[i]) == active_player){
+          if ((board[i]) == player_color){
             count += 1;
           }
           else{
