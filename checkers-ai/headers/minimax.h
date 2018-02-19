@@ -50,6 +50,8 @@ namespace ai {
 
             bool isBaseCase(int depth);
             int baseCase();
+
+            int recurseMultiJumpCase(const std::vector<CheckersGame::JumpPackage> & multiJumps, int depth);
             int recursiveCase(int depth);
 
             void setGameState(GameState & gameState);
