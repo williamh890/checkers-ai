@@ -117,18 +117,11 @@ void CheckersGame::play() {
             }
         }
         catch(length_error & e) {
-            cout << e.what() << endl;
             break;
         }
         catch(runtime_error & e) {
-            cout << e.what() << endl;
             continue;
         }
-
-        cout << getActivePlayerColor() << ": "
-            << spaceToPosition(move.first).toString() << ", "
-            << spaceToPosition(move.second).toString()
-            << endl;
 
         if (move.first == -1) {
             board.make(jump);
@@ -198,11 +191,9 @@ JumpPackage CheckersGame::getRandomValidJump() {
     auto jumps = getValidJumps();
 
     auto numJumps = jumps.size();
-    cout << "number of jumps: " << numJumps << endl;
 
     uniform_int_distribution<int> distribution(0, numJumps - 1);
     auto rngVal = distribution(generator);
-    cout << "rngValue: " << rngVal << endl;
     return jumps[rngVal];
 }
 
@@ -214,7 +205,6 @@ JumpPackage CheckersGame::getJumpFromUser() {
 
 JumpPackage CheckersGame::getJumpFrom(const MovePackage & inputJump) {
     auto validJumps = getValidJumps();
-    cout << "number of jumps: " << validJumps.size() << endl;
 
     for (const auto & checkJump: validJumps) {
         if (checkJump.first == inputJump.first and
@@ -239,7 +229,6 @@ MovePackage CheckersGame::getRandomValidMove() {
     auto moves = getValidMoves();
     auto numMoves = moves.size();
 
-    cout << "number of moves: " << numMoves << endl;
     if ( numMoves < 1 ) {
         throw length_error("out of moves");
     }
@@ -251,7 +240,6 @@ MovePackage CheckersGame::getRandomValidMove() {
 }
 
 MovePackage CheckersGame::parseUserInput() {
-    cout << "Enter move (startRow startCol endRow endCol): ";
 
     string in;
     getline(cin, in);
@@ -374,8 +362,6 @@ void CheckersGame::makeJump(const JumpPackage & jump){
             swapPlayers();
         }
     } catch(length_error & e) {
-        cout << "Out of moves" << endl;
-        cout << e.what() << endl;
     }
 
 }

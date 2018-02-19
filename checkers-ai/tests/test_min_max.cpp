@@ -56,6 +56,7 @@ TEST_CASE("testing min max class"){
     Network network = Network(0);
     auto game = ai::getCheckersGame();
     game.board.setBoardState({' ', 'r', ' ', 'r', 'r', 'r', ' ', 'r', ' ', 'r', 'r', ' ', 'r', ' ', ' ', 'r', ' ', ' ', ' ', ' ', ' ', 'b', 'b', 'b', ' ', ' ', 'b', 'b', 'b', 'b', 'b', 'b'});
+
     SECTION("Testing board generator"){
       cout<<"Testing minMax board generation"<<endl;
       MinMaxHelper minmax = getMinMaxHelper(player_color, network, game, 3);
@@ -66,6 +67,7 @@ TEST_CASE("testing min max class"){
       cout<<"those boards took "<<run_time<<" seconds "<<endl;
       REQUIRE(best_board.size());
     }
+
     SECTION("Testing made jumps"){
       cout<<"testing if jumps were forced"<<endl;
       MinMaxHelper minmax = getMinMaxHelper(player_color, network, game, 3);
