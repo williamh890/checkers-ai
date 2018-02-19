@@ -120,7 +120,7 @@ TEST_CASE("testing min max class"){
         MinMaxHelper minmax = getMinMaxHelper(player_color, network, game, 3);
         minmax.max_depth = 5;
         minmax.game.board.setBoardState(
-          {'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', ' ', ' ', ' ', ' ', 'r', ' ', 'b', ' ', ' ', 'b', 'b', ' ', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'}
+          {'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', ' ', 'r', ' ', ' ', ' ', 'r', ' ', 'b', ' ', ' ', 'b', 'b', 'b', 'b', 'b', ' ', 'b', 'b', 'b', 'b', 'b', 'b'}
         );
         auto start = get_minmax_time();
         auto best_board = minmax.minMax();

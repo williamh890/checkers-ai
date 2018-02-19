@@ -57,25 +57,31 @@ TEST_CASE("Test saving and loading consistency") {
         REQUIRE(loadNetwork(101, failLoadTest) == false);
     }
 }
+ai::Network player(0);
+ai::Network playerAgain(0);
+vector<char> emptyBoard(32);
+vector<char> sampleBigBoard{
+        'r',   'r',   'r',   'r',
+    'r',   'r',   'r',   'r',
+        ' ',   'r',   'r',   'r',
+    ' ',   ' ',   'r',   ' ',
+        ' ',   ' ',   'b',   ' ',
+    'b',   'b',   ' ',   'b',
+        'b',   'b',   'b',   'b',
+    'b',   'b',   'b',   'b'
+    };
+vector<char> sampleSmallBoard{
+        'R',   ' ',   ' ',   ' ',
+    ' ',   ' ',   ' ',   ' ',
+        ' ',   ' ',   ' ',   ' ',
+    ' ',   ' ',   ' ',   ' ',
+        ' ',   ' ',   ' ',   ' ',
+    ' ',   ' ',   ' ',   ' ',
+        ' ',   ' ',   ' ',   ' ',
+    ' ',   ' ',   ' ',   ' '
+    };
 
 TEST_CASE("Test Network Evaluation") {
-    ai::Network player(0);
-    ai::Network playerAgain(0);
-
-    vector<char> emptyBoard(32);
-    vector<char> sampleBigBoard{
-            'r',   'r',   'r',   'r',
-         'r',   'r',   'r',   'r',
-            ' ',   'r',   'r',   'r',
-         ' ',   ' ',   'r',   ' ',
-            ' ',   ' ',   'b',   ' ',
-         'b',   'b',   ' ',   'b',
-            'b',   'b',   'b',   'b',
-         'b',   'b',   'b',   'b'
-        };
-        vector<char> sampleSmallBoard(32);
-        sampleSmallBoard[0] = 'R';
-
     SECTION("test network evaluation of empty board is 0.") {
         REQUIRE(player.evaluateBoard(emptyBoard) == 0);
         REQUIRE(player.evaluateBoard(emptyBoard, true) == 0);
@@ -95,18 +101,18 @@ TEST_CASE("Test Network Evaluation") {
         }
     }
 
-    SECTION ("Ensure output of evaluation given different boards is different.") {
-        REQUIRE(!areSame(player.evaluateBoard(sampleBigBoard), player.evaluateBoard(emptyBoard)));
+    SECTION ("Ensure output of evaluation given different boards is different.") {  
         REQUIRE(!areSame(player.evaluateBoard(sampleSmallBoard), player.evaluateBoard(emptyBoard)));
+        REQUIRE(!areSame(player.evaluateBoard(sampleBigBoard), player.evaluateBoard(emptyBoard)));
         REQUIRE(!areSame(player.evaluateBoard(sampleBigBoard), player.evaluateBoard(sampleSmallBoard)));
         REQUIRE(!areSame(player.evaluateBoard(sampleBigBoard, true), player.evaluateBoard(emptyBoard, true)));
         REQUIRE(!areSame(player.evaluateBoard(sampleSmallBoard, true), player.evaluateBoard(emptyBoard, true)));
         REQUIRE(!areSame(player.evaluateBoard(sampleBigBoard, true), player.evaluateBoard(sampleSmallBoard, true)));
+
     }
     SECTION ("Ensure output of a board with twice the king weight is double") {
         player.changeKingWeight(1);
         playerAgain.changeKingWeight(2);
-
         REQUIRE(areSame((player.evaluateBoard(sampleSmallBoard, true) * 2), playerAgain.evaluateBoard(sampleSmallBoard, true)));
     }
     SECTION("Testing the use of the activation function is different than without") {

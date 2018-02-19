@@ -42,6 +42,7 @@ using std::string;
 
 #include <algorithm>
 using std::max;
+using std::min;
 
 #include <utility>
 using std::make_pair;
@@ -59,42 +60,19 @@ MinMaxHelper ai::getMinMaxHelper(const char & color, Network network, CheckersGa
     auto red = getGeneratorFor("red", converter);
     auto black = getGeneratorFor("black", converter);
     auto king = getKingGenerator(converter);
-
     char opponent;
-    opponent = color == 'r' ? 'b' : 'r';
-
-    const char enemy = opponent;
-
-    return MinMaxHelper(
-            red,
-            black,
-            king,
-            color,
-            enemy,
-            network,
-            game,
-            max_depth
-            );
-}
-
-MinMaxHelper::MinMaxHelper(
-        const MoveGenerator & redGenerator,
-        const MoveGenerator & blackGenerator,
-        const MoveGenerator & kingGenerator,
-        const char color,
-        const char opponent_color,
-        Network network,
-        CheckersGame & game,
-        int max_depth)
-    : redGenerator(redGenerator),
-    blackGenerator(blackGenerator),
-    kingGenerator(kingGenerator),
-    player_color(color),
-    enemy_color(opponent_color),
-    checkers_player(network),
-    game(game),
-    max_depth(max_depth) {
+    if (color == 'r'){
+      opponent = 'b';
     }
+    else{
+      opponent = 'r';
+    }
+    const char enemy = opponent;
+    return MinMaxHelper(red, black, king, color, enemy, network, game, max_depth);
+  }
+
+MinMaxHelper::MinMaxHelper(const MoveGenerator & redGenerator, const MoveGenerator & blackGenerator, const MoveGenerator & kingGenerator, const char color, const char opponent_color, Network network, CheckersGame & game, int max_depth):redGenerator(redGenerator), blackGenerator(blackGenerator), kingGenerator(kingGenerator), player_color(color), enemy_color(opponent_color), checkers_player(network), game(game), max_depth(max_depth){
+}
 
 int MinMaxHelper::parseTree(const BoardType board, int depth){
     auto layer_jump = jumped;
@@ -108,28 +86,29 @@ int MinMaxHelper::parseTree(const BoardType board, int depth){
             count = evaluateBoard(boards[i]);
             best_count = max(best_count, count);
         }
-
         return best_count;
     }
 
     depth += 1;
 
     for (int i = boards.size()-1; i >= 0; i--){
+        if (layer_player == player_color){
         best_count = max(best_count, parseTree(boards[i], depth));
+            }
+        else{
+          best_count = min(best_count, parseTree(boards[i], depth));
+        }
         jumped = layer_jump;
         active_player = layer_player;
-    }
-
+      }
     return best_count;
-}
+  }
 
 BoardType MinMaxHelper::parseTree(){
     jumped = false;
     active_player = player_color;
     inactive_player = enemy_color;
-
     swapActivePlayer(); // i set up the move generator also, do not remove this
-
     auto layer_player = active_player;
     auto layer_jump = jumped;
 
@@ -163,6 +142,8 @@ BoardType MinMaxHelper::parseTree(){
         best_count = max(best_count, count);
         if (best_count == count){
             best_board = boards[i];
+            game.board.setBoardState(best_board);
+            cout<<" a better board was "<<endl<<game.board.toString()<<endl;
         }
     }
     cout<<"best count was "<<best_count<<endl;
@@ -203,14 +184,16 @@ vector<BoardType> MinMaxHelper::generateBoards(BoardType board){
 
         return _generate_boards(board, Jumps);
     }
-}
-
+  }
 
 BoardType MinMaxHelper::minMax(){
+    cout<<game.board.toString()<<endl;
     BoardType board = parseTree();
     game.board.setBoardState(board);
+    cout<<game.board.toString()<<endl;
     return board;
 }
+
 
 BoardJumpsType MinMaxHelper::parseBoardJumps(BoardType board){
     BoardJumpsType Jumps;
@@ -312,18 +295,24 @@ vector<BoardType> MinMaxHelper::_generate_boards(BoardType & board, BoardMovesTy
 int MinMaxHelper::evaluateBoard(BoardType & board){
     int count = 0;
 
-    for (auto & piece : board) {
-        if (piece == ' '){
-            continue;
+    for (auto i = 0; i < board.size(); ++i) {
+        if (isupper(board[i])){
+          if (tolower(board[i]) == player_color){
+              count += 2;
+          }
+          else{
+              count -= 2;
+          }
         }
-
-        if (isupper(piece)){
-            count += (tolower(piece) == active_player) ? 2 : -2;
+        else{
+          if ((board[i]) == player_color){
+            count += 1;
+          }
+          else{
+              count -= 1;
+            }
+          }
         }
-        else {
-            count += ((piece) == active_player) ? 1 : -1;
-        }
-    }
 
     return count;
 }

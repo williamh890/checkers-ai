@@ -179,11 +179,11 @@ JumpPackage CheckersGame::getJumpFromActivePlayer() {
 }
 
 MovePackage CheckersGame::getMinimaxMove() {
-    return minimaxMove(*this, 12, getActivePlayerColor());
+    return minimaxMove(*this, 7, getActivePlayerColor());
 }
 
 JumpPackage CheckersGame::getMinimaxJump() {
-    return minimaxJump(*this, 12, getActivePlayerColor());
+    return minimaxJump(*this, 7, getActivePlayerColor());
 }
 
 
