@@ -31,8 +31,8 @@ TEST_CASE("test minimax search function", "[minimax]") {
     SECTION("test base case") {
         SECTION("all base cases from init board") {
             for ( auto & move : game.getValidMoves() ) {
-                REQUIRE(minimax(move, 0, 'r', game) == 12);
-                REQUIRE(minimax(move, 0, 'b', game) == 12);
+                REQUIRE(minimax(move, 0, 'r', game) == 0);
+                REQUIRE(minimax(move, 0, 'b', game) == 0);
             }
         }
 
@@ -85,8 +85,8 @@ TEST_CASE("test minimax search function", "[minimax]") {
 
     SECTION("test recursion depth of 1") {
         for ( auto & move : game.getValidMoves() ) {
-            REQUIRE(minimax(move, 1, 'r', game) == 12);
-            REQUIRE(minimax(move, 1, 'b', game) == 12);
+            REQUIRE(minimax(move, 1, 'r', game) == 0);
+            REQUIRE(minimax(move, 1, 'b', game) == 0);
         }
     }
 
@@ -112,8 +112,8 @@ TEST_CASE("test minimax search function", "[minimax]") {
 
         REQUIRE(game.getValidJumps().size() > 0);
         for (auto & jump : game.getValidJumps() ) {
-            REQUIRE(minimax(jump, 1, 'r', game) == 1);
-            REQUIRE(minimax(jump, 1, 'b', game) == 2);
+            REQUIRE(minimax(jump, 1, 'r', game) == -1);
+            REQUIRE(minimax(jump, 1, 'b', game) == 1);
         }
     }
 
@@ -142,7 +142,7 @@ TEST_CASE("minimax jumps recursion", "[minimax], [minimax-jumps]") {
 
         auto setupJumpForRed = make_pair(24, 21);
 
-        REQUIRE(minimax(setupJumpForRed, 1, 'b', game) == 0);
+        REQUIRE(minimax(setupJumpForRed, 1, 'b', game) == -1);
     }
 
     SECTION("will recursively jump the same piece") {
@@ -166,12 +166,12 @@ TEST_CASE("minimax jumps recursion", "[minimax], [minimax-jumps]") {
 
         auto doubleJumpSetupMove = make_pair(22, 17);
 
-        REQUIRE(minimax(doubleJumpSetupMove, 3, 'b', game) == 0);
+        REQUIRE(minimax(doubleJumpSetupMove, 3, 'b', game) == -1);
     }
 }
 
 vector<MovePackage> moves;
-TEST_CASE ("timing minimax at different depths", "[minimax][timing]") {
+TEST_CASE ("timing minimax at different depths", "[minimax],[timing]") {
     auto game = getCheckersGame();
 
     game.board.setBoardState({
