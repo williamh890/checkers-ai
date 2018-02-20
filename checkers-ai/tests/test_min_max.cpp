@@ -56,6 +56,7 @@ TEST_CASE("testing min max class"){
     Network network = Network(0);
     auto game = ai::getCheckersGame();
     game.board.setBoardState({' ', 'r', ' ', 'r', 'r', 'r', ' ', 'r', ' ', 'r', 'r', ' ', 'r', ' ', ' ', 'r', ' ', ' ', ' ', ' ', ' ', 'b', 'b', 'b', ' ', ' ', 'b', 'b', 'b', 'b', 'b', 'b'});
+
     SECTION("Testing board generator"){
       cout<<"Testing minMax board generation"<<endl;
       MinMaxHelper minmax = getMinMaxHelper(player_color, network, game, 3);
@@ -145,9 +146,18 @@ TEST_CASE("testing min max class"){
       cout<<"Testing 10 turn lookahead"<<endl;
       MinMaxHelper minmax = getMinMaxHelper(player_color, network, game, 3);
       minmax.max_depth = 9;
-      minmax.game.board.setBoardState(
-        {'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', ' ', ' ', ' ', ' ', 'r', ' ', ' ', ' ', 'b', 'b', 'b', 'b', ' ', 'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'}
-      );
+
+      minmax.game.board.setBoardState({
+             'r',  'r',  'r',  'r',
+          'r',  'r',  'r',  'r',
+             'r',  'r',  'r',  ' ',
+          ' ',  ' ',  ' ',  'r',
+             ' ',  'b',  ' ',  ' ',
+          'b',  'b',  ' ',  'b',
+             'b',  'b',  'b',  'b',
+          'b',  'b',  'b',  'b'
+      });
+
       auto start = get_minmax_time();
       auto best_board = minmax.minMax();
       minmax.game.board.setBoardState(best_board);

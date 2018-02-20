@@ -1,6 +1,7 @@
 // min_max.cpp
 #include "headers/consts.h"
 using ai::TOTAL_NUM_SPACES;
+
 #include "headers/min_max.h"
 using ai::MinMaxHelper;
 using MovesType = MinMaxHelper::MovesType;
@@ -178,6 +179,7 @@ vector<BoardType> MinMaxHelper::generateBoards(BoardType board){
     if (not jumped){
         swapActivePlayer();
     }
+
     vector<BoardType> boards;
     BoardJumpsType boardJumps;
     BoardMovesType boardMoves;
@@ -193,8 +195,8 @@ vector<BoardType> MinMaxHelper::generateBoards(BoardType board){
             legal_jumps_looked_at += Jumps.size();
         }
     }
-    boardMoves = parseBoardMoves(board); // above, but for moves
 
+    boardMoves = parseBoardMoves(board); // above, but for moves
 
     if(not Jumps.size()){
         auto Moves = removeInvalidMoves(board, boardMoves);
@@ -220,32 +222,35 @@ BoardType MinMaxHelper::minMax(){
     BoardJumpsType Jumps{};
     for (size_t i = 0; i < TOTAL_NUM_SPACES; i++){
         if (isupper(board[i])){
-          if (tolower(board[i]) == active_player){
-            Jumps.push_back(make_pair(i, kingGenerator.getJumps(i)));
-              }
-            }
-        else if (board[i] == active_player){
-          Jumps.push_back(make_pair(i, activeGenerator.getJumps(i)));
+            if (tolower(board[i]) == active_player){
+                Jumps.push_back(make_pair(i, kingGenerator.getJumps(i)));
             }
         }
+
+        else if (board[i] == active_player){
+            Jumps.push_back(make_pair(i, activeGenerator.getJumps(i)));
+        }
+    }
+
     return Jumps;
-  }
+}
 
 
-  BoardMovesType MinMaxHelper::parseBoardMoves(BoardType board){
+BoardMovesType MinMaxHelper::parseBoardMoves(BoardType board){
     BoardMovesType Moves{};
     for (size_t i = 0; i < TOTAL_NUM_SPACES; i++){
         if (isupper(board[i])){
-          if (tolower(board[i]) == active_player){
-            Moves.push_back(make_pair(i, kingGenerator.getMoves(i)));
-              }
-            }
-        else if (board[i] == active_player){
-          Moves.push_back(make_pair(i, activeGenerator.getMoves(i)));
+            if (tolower(board[i]) == active_player){
+                Moves.push_back(make_pair(i, kingGenerator.getMoves(i)));
             }
         }
+        else if (board[i] == active_player){
+            Moves.push_back(make_pair(i, activeGenerator.getMoves(i)));
+        }
+    }
+
     return Moves;
-  }
+}
 
 BoardJumpsType MinMaxHelper::removeInvalidJumps(BoardType & board, BoardJumpsType & jumps){
     BoardJumpsType validJumps{};
@@ -257,8 +262,9 @@ BoardJumpsType MinMaxHelper::removeInvalidJumps(BoardType & board, BoardJumpsTyp
               }
            }
         }
-      return validJumps;
-    }
+    return validJumps;
+  }
+
 BoardMovesType MinMaxHelper::removeInvalidMoves(BoardType & board, BoardMovesType & moves){
     BoardMovesType validMoves{};
     for (size_t j = 0; j < moves.size(); ++j){
@@ -268,10 +274,13 @@ BoardMovesType MinMaxHelper::removeInvalidMoves(BoardType & board, BoardMovesTyp
             }
         }
     }
+
     return validMoves;
 }
+
 vector<BoardType> MinMaxHelper::_generate_boards(BoardType & board, BoardJumpsType & jumps){
-    vector<BoardType> genBoards{};
+    vector<BoardType> genBoards;
+
     genBoards.reserve(jumps.size());
     BoardType new_board;
 
@@ -286,7 +295,8 @@ vector<BoardType> MinMaxHelper::_generate_boards(BoardType & board, BoardJumpsTy
   return genBoards;
 }
 vector<BoardType> MinMaxHelper::_generate_boards(BoardType & board, BoardMovesType & moves){
-    vector<BoardType> genBoards{};
+    vector<BoardType> genBoards;
+
     genBoards.reserve(moves.size());
     BoardType new_board;
 

@@ -34,13 +34,15 @@ namespace ai {
 
     class MiniMaxHelper {
         public:
+            static int totalNodes;
+
             CheckersGame game;
             char maximizingPlayer;
 
             MiniMaxHelper(char maximizingPlayer, CheckersGame & game);
 
-            int recurse(CheckersGame::MovePackage move, int depth);
-            int recurse(CheckersGame::JumpPackage jump, int depth);
+            int recurse(const CheckersGame::MovePackage & move, int depth);
+            int recurse(const CheckersGame::JumpPackage & jump, int depth);
 
             GameState getCurrentGameState();
             int changeGameState(const CheckersGame::JumpPackage & jump);
@@ -48,6 +50,8 @@ namespace ai {
 
             bool isBaseCase(int depth);
             int baseCase();
+
+            int recurseMultiJumpCase(const std::vector<CheckersGame::JumpPackage> & multiJumps, int depth);
             int recursiveCase(int depth);
 
             void setGameState(GameState & gameState);

@@ -25,12 +25,17 @@ using std::vector;
 using Pieces = vector<Piece>;
 using BoardState = vector<char>;
 
+int MiniMaxHelper::totalNodes = 0;
+
 CheckersGame::MovePackage ai::minimaxMove(CheckersGame & game, int depth, char maximizingPlayer) {
     int bestMoveVal = INT_MIN;
     MovePackage bestMove;
 
-    for (auto & move : game.getValidMoves()) {
-        auto moveVal = minimax(move, 4, game.getActivePlayerColor(), game);
+    auto moves = game.getValidMoves();
+
+    for (auto i = 0; i < (int) moves.size(); ++i) {
+        auto move = moves[i];
+        auto moveVal = minimax(move, depth - 1, game.getActivePlayerColor(), game);
 
         if (moveVal > bestMoveVal) {
             bestMoveVal = moveVal;
@@ -38,21 +43,28 @@ CheckersGame::MovePackage ai::minimaxMove(CheckersGame & game, int depth, char m
         }
     }
 
+    cout << "Nodes evaluated: " << MiniMaxHelper::totalNodes << endl;
     return bestMove;
 }
+
 
 CheckersGame::JumpPackage ai::minimaxJump(CheckersGame & game, int depth, char maximizingPlayer) {
     int bestJumpVal = INT_MIN;
     JumpPackage bestJump;
 
-    for (auto & jump : game.getValidJumps()) {
-        auto jumpVal = minimax(jump, 4, game.getActivePlayerColor(), game);
+    auto jumps = game.getValidJumps();
+
+    for (auto i = 0; i < (int) jumps.size(); ++i) {
+        auto jump = jumps[i] ;
+        auto jumpVal = minimax(jump, depth - 1, game.getActivePlayerColor(), game);
 
         if (jumpVal > bestJumpVal) {
             bestJumpVal = jumpVal;
             bestJump = jump;
         }
     }
+
+    cout << "Nodes evaluated: " << MiniMaxHelper::totalNodes << endl;
 
     return bestJump;
 
@@ -83,12 +95,11 @@ GameState::GameState(const BoardState & board, const Pieces & red, const Pieces 
     activePlayerColor(activePlayerColor) {
     }
 
-int MiniMaxHelper::recurse(MovePackage move, int depth) {
+int MiniMaxHelper::recurse(const MovePackage & move, int depth) {
+    totalNodes++;
     auto stateBeforeMove = getCurrentGameState();
 
     changeGameState(move);
-    //cout << "AT DEPTH " << depth << endl;
-    //cout << game.board.toString() << endl;
 
     int bestNumPieces = isBaseCase(depth) ?
         baseCase() :
@@ -99,12 +110,11 @@ int MiniMaxHelper::recurse(MovePackage move, int depth) {
     return bestNumPieces;
 }
 
-int MiniMaxHelper::recurse(JumpPackage jump, int depth) {
+int MiniMaxHelper::recurse(const JumpPackage & jump, int depth) {
+    totalNodes++;
     auto stateBeforeMove = getCurrentGameState();
 
     auto jumpDestination = changeGameState(jump);
-    //cout << "AT DEPTH " << depth << endl;
-    //cout << game.board.toString() << endl;
 
     game.swapPlayers();
     if (isBaseCase(depth)) {
@@ -118,15 +128,7 @@ int MiniMaxHelper::recurse(JumpPackage jump, int depth) {
     auto multiJumps = game.getValidJumpsAt(jumpDestination);
     int bestNumPieces;
     if (multiJumps.size() > 0) {
-        auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
-        bestNumPieces = (isMaximizingPlayer) ? INT_MIN : INT_MAX;
-        for (auto & jump : multiJumps) {
-            auto jumpVal = recurse(jump, depth - 1);
-
-            bestNumPieces = (isMaximizingPlayer) ?
-                max(jumpVal, bestNumPieces) :
-                min(jumpVal, bestNumPieces);
-        }
+        bestNumPieces = recurseMultiJumpCase(multiJumps, depth);
     }
     else {
         game.swapPlayers();
@@ -138,12 +140,29 @@ int MiniMaxHelper::recurse(JumpPackage jump, int depth) {
     return bestNumPieces;
 }
 
+int MiniMaxHelper::recurseMultiJumpCase(const vector<JumpPackage> & multiJumps, int depth) {
+    auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
+    int bestNumPieces = (isMaximizingPlayer) ? INT_MIN : INT_MAX;
+
+    for (auto & jump : multiJumps) {
+        auto jumpVal = recurse(jump, depth - 1);
+
+        bestNumPieces = (isMaximizingPlayer) ?
+            max(jumpVal, bestNumPieces) :
+            min(jumpVal, bestNumPieces);
+    }
+
+    return bestNumPieces;
+}
+
 int MiniMaxHelper::recursiveCase(int depth) {
     auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
     int bestNumPieces = (isMaximizingPlayer) ? INT_MIN : INT_MAX;
 
-    if (game.getValidJumps().size() != 0) {
-        for (auto & jump : game.getValidJumps()) {
+    auto jumps = game.getValidJumps();
+
+    if (jumps.size() != 0) {
+        for (auto & jump : jumps) {
             auto jumpVal = recurse(jump, depth - 1);
 
             bestNumPieces = (isMaximizingPlayer) ?
