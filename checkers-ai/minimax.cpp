@@ -147,7 +147,7 @@ int MiniMaxHelper::recurseMultiJumpCase(const vector<JumpPackage> & multiJumps, 
     for (auto & jump : multiJumps) {
         auto jumpVal = recurse(jump, depth - 1);
 
-        bestNumPieces = (isMaximizingPlayer) ?
+        bestNumPieces == (isMaximizingPlayer) ?
             max(jumpVal, bestNumPieces) :
             min(jumpVal, bestNumPieces);
     }
