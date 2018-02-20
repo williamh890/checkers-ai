@@ -35,6 +35,10 @@ static const int PAWN_WEIGHT = 1;
 namespace ai{
     class MinMaxHelper{
         public:
+            using PlayableMoveType = std::pair<int, int>;
+            using PlayableJumpType = std::pair<int, Jump>;
+            using PlayableMovesType = std::vector<PlayableMoveType>;
+            using PlayableJumpsType = std::vector<PlayableJumpType>;
             using BoardType = std::vector<char>;
             using MovesType = std::vector<int>;
             using JumpsType = std::vector<Jump>;
@@ -58,6 +62,16 @@ namespace ai{
             char inactive_player;
 
         public:
+            long int boards_done = 0;
+            long int legal_moves_looked_at = 0;
+            long int legal_jumps_looked_at = 0;
+
+            PlayableMovesType nextMoves;
+            PlayableJumpsType nextJumps;
+
+            PlayableMoveType nextMove;
+            PlayableJumpType nextJump;
+
             BoardType parseTree();
             int parseTree(const BoardType board, int depth);
             MinMaxHelper() = default;
@@ -70,6 +84,8 @@ namespace ai{
         private:
              // recurse on boards //return is board score best on minmax of children
             std::vector<BoardType> generateBoards(BoardType board); // returns vector of boardState
+            std::vector<BoardType> generateBoardsSetMoves(BoardType board);
+
             BoardMovesType parseBoardMoves(BoardType board);
             BoardJumpsType parseBoardJumps(BoardType board);
 
@@ -79,6 +95,8 @@ namespace ai{
             std::vector<BoardType> _generate_boards(BoardType & board, BoardJumpsType & jumps);
             int evaluateBoard(BoardType & board);
             void swapActivePlayer();
+            void setNextJumps(BoardJumpsType & jumps);
+            void setNextMoves(BoardMovesType & moves);
           };
 
     MinMaxHelper getMinMaxHelper(const char & color, Network network, CheckersGame & game, int max_depth);

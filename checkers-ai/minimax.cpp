@@ -117,7 +117,6 @@ int MiniMaxHelper::recurse(JumpPackage jump, int depth) {
 
     auto multiJumps = game.getValidJumpsAt(jumpDestination);
     int bestNumPieces;
-
     if (multiJumps.size() > 0) {
         auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
         bestNumPieces = (isMaximizingPlayer) ? INT_MIN : INT_MAX;
@@ -205,5 +204,3 @@ void MiniMaxHelper::setGameState(GameState & gameState) {
     game.activePlayer = gameState.activePlayerColor == 'r' ? game.red : game.black;
     game.inactivePlayer = gameState.activePlayerColor == 'r' ? game.black : game.red;
 }
-
-
