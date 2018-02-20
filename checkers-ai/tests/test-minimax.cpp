@@ -65,7 +65,7 @@ TEST_CASE("test minimax search function", "[minimax]") {
             auto boardState = game.board.getBoardState();
 
             for ( auto & move : game.getValidMoves() ) {
-                minimax(move, 0, 'r', game);
+                minimax(move, 3, 'r', game);
 
                 REQUIRE(game.red->getPieces() == redPieces);
                 REQUIRE(game.black->getPieces() == blackPieces);
@@ -74,7 +74,7 @@ TEST_CASE("test minimax search function", "[minimax]") {
             }
 
             for ( auto & move : game.getValidMoves() ) {
-                minimax(move, 0, 'b', game);
+                minimax(move, 3, 'b', game);
 
                 REQUIRE(game.red->getPieces() == redPieces);
                 REQUIRE(game.black->getPieces() == blackPieces);
@@ -167,6 +167,15 @@ TEST_CASE("minimax jumps recursion", "[minimax], [minimax-jumps]") {
         auto doubleJumpSetupMove = make_pair(22, 17);
 
         REQUIRE(minimax(doubleJumpSetupMove, 3, 'b', game) == -1);
+    }
+}
+
+TEST_CASE ("minimax wrapper functions behave") {
+    auto game = getCheckersGame();
+
+    SECTION ("throws exception if depth == 0") {
+        REQUIRE_THROWS(minimaxMove(game, 0, 'b'));
+        REQUIRE_THROWS(minimaxJump(game, 0, 'b'));
     }
 }
 

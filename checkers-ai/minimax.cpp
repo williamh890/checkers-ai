@@ -21,6 +21,8 @@ using std::cout;
 using std::endl;
 #include <vector>
 using std::vector;
+#include <exception>
+using std::invalid_argument;
 
 using Pieces = vector<Piece>;
 using BoardState = vector<char>;
@@ -30,6 +32,10 @@ int MiniMaxHelper::totalNodes = 0;
 CheckersGame::MovePackage ai::minimaxMove(CheckersGame & game, int depth, char maximizingPlayer) {
     int bestMoveVal = INT_MIN;
     MovePackage bestMove;
+
+    if (depth == 0) {
+        throw invalid_argument("Search depth must be > 0");
+    }
 
     auto moves = game.getValidMoves();
 
@@ -51,6 +57,10 @@ CheckersGame::MovePackage ai::minimaxMove(CheckersGame & game, int depth, char m
 CheckersGame::JumpPackage ai::minimaxJump(CheckersGame & game, int depth, char maximizingPlayer) {
     int bestJumpVal = INT_MIN;
     JumpPackage bestJump;
+
+    if (depth == 0) {
+        throw invalid_argument("Search depth must be > 0");
+    }
 
     auto jumps = game.getValidJumps();
 
