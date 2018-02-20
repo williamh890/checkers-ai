@@ -482,6 +482,3 @@ int CheckersGame::getNumPiecesFor(char color) {
     return (color == 'r') ? red->getPieces().size() : black->getPieces().size();
 }
 
-void CheckersGame::makeMinimaxMove(int depth)
-{
-}

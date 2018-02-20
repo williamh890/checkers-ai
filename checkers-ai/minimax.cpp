@@ -28,14 +28,14 @@ using BoardState = vector<char>;
 int MiniMaxHelper::totalNodes = 0;
 
 CheckersGame::MovePackage ai::minimaxMove(CheckersGame & game, int depth, char maximizingPlayer) {
-    int bestMoveVal = INT_MIN;
-    MovePackage bestMove;
+    int bestMoveVal = INT_MIN, moveVal;
+    MovePackage bestMove, move;
 
     auto moves = game.getValidMoves();
 
     for (auto i = 0; i < (int) moves.size(); ++i) {
-        auto move = moves[i];
-        auto moveVal = minimax(move, depth - 1, game.getActivePlayerColor(), game);
+        move = moves[i];
+        moveVal = minimax(move, depth - 1, game.getActivePlayerColor(), game);
 
         if (moveVal > bestMoveVal) {
             bestMoveVal = moveVal;
@@ -49,14 +49,14 @@ CheckersGame::MovePackage ai::minimaxMove(CheckersGame & game, int depth, char m
 
 
 CheckersGame::JumpPackage ai::minimaxJump(CheckersGame & game, int depth, char maximizingPlayer) {
-    int bestJumpVal = INT_MIN;
-    JumpPackage bestJump;
+    int bestJumpVal = INT_MIN, jumpVal;
+    JumpPackage bestJump, jump;
 
     auto jumps = game.getValidJumps();
 
     for (auto i = 0; i < (int) jumps.size(); ++i) {
-        auto jump = jumps[i] ;
-        auto jumpVal = minimax(jump, depth - 1, game.getActivePlayerColor(), game);
+        jump = jumps[i] ;
+        jumpVal = minimax(jump, depth - 1, game.getActivePlayerColor(), game);
 
         if (jumpVal > bestJumpVal) {
             bestJumpVal = jumpVal;
