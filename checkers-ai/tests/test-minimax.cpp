@@ -2,6 +2,7 @@
 
 #include "../headers/minimax.h"
 using ai::minimax;
+using ai::MiniMaxHelper;
 
 #include "../headers/checkers-game.h"
 using ai::getCheckersGame;
@@ -183,53 +184,6 @@ vector<MovePackage> moves;
 TEST_CASE ("timing minimax at different depths", "[minimax],[timing]") {
     auto game = getCheckersGame();
 
-    game.board.setBoardState({
-             'r',  'r',  'r',  'r',
-          'r',  'r',  'r',  'r',
-             'r',  'r',  'r',  ' ',
-          ' ',  ' ',  ' ',  'r',
-             ' ',  'b',  ' ',  ' ',
-          'b',  'b',  ' ',  'b',
-             'b',  'b',  'b',  'b',
-          'b',  'b',  'b',  'b'
-    });
-
-    game.red->setPieces({
-        Piece('r', 0),
-        Piece('r', 1),
-        Piece('r', 2),
-        Piece('r', 3),
-
-        Piece('r', 4),
-        Piece('r', 5),
-        Piece('r', 6),
-        Piece('r', 7),
-
-        Piece('r', 8),
-        Piece('r', 9),
-        Piece('r', 10),
-
-        Piece('r', 15)
-    });
-
-    game.black->setPieces({
-        Piece('b', 17),
-
-        Piece('b', 24),
-        Piece('b', 25),
-        Piece('b', 26),
-        Piece('b', 27),
-
-        Piece('b', 28),
-        Piece('b', 29),
-        Piece('b', 30),
-        Piece('b', 31),
-
-        Piece('b', 20),
-        Piece('b', 21),
-        Piece('b', 23),
-    });
-
     const int ITERATIONS = 1;
 
     vector<int> dummy;
@@ -240,7 +194,7 @@ TEST_CASE ("timing minimax at different depths", "[minimax],[timing]") {
     auto end = getTime();
     auto pushBackTotal = end - start;
 
-
+    MiniMaxHelper::totalNodes = 0;
     start = getTime();
     for (volatile int i = 0; i < ITERATIONS; ++i) {
         moves.push_back(game.getMinimaxMove());

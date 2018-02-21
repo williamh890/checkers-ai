@@ -33,8 +33,8 @@ Network::Network(unsigned int networkId): _ID(networkId) {
 
 Network::Network(unsigned int networkId,
                 const vector<unsigned int> & layerDimensions,
-                shared_ptr<Seeder> & seeder) :  _ID(networkId), 
-                                                _performance(0), 
+                shared_ptr<Seeder> & seeder) :  _ID(networkId),
+                                                _performance(0),
                                                 randomNumGenerator(mt19937(seeder->get())) {
 
     setupLayers(layerDimensions);
@@ -185,7 +185,7 @@ vector<Network::NetworkWeights> Network::evolve() const { 	// *** TODO *** Requi
     // *** Evolve tempKing
     // *** Evolve sigma
     // *** Evolve weights in weights_to_pass
-    
+
     weights_to_pass.push_back(vector<NetworkWeightType>(tempKing)); //Add tempking to the back of the weights vector for passing
     return weights_to_pass;
 }
