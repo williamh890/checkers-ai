@@ -35,6 +35,7 @@ namespace ai {
 
             using turn_type = std::pair<Board::BoardType, std::pair<std::vector<MovePackage>, std::vector<JumpPackage>>>;
 
+            static int MINIMAX_SEARCH_DEPTH;
             int moveCounter = 0;
 
             Board board;

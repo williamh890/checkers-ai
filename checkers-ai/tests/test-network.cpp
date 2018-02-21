@@ -24,12 +24,6 @@ using std::ostringstream;
 using std::cout;
 using std::endl;
 
-const NetworkWeightType EPSILON = 0.00001;
-
-
-bool areSame(NetworkWeightType a, NetworkWeightType b) {
-    return fabs(a - b) < EPSILON;
-}
 
 TEST_CASE("Testing setupNetworks") {
     vector<unsigned int> dimesions{32, 40, 10, 1};
@@ -57,6 +51,7 @@ TEST_CASE("Test saving and loading consistency") {
         REQUIRE(loadNetwork(101, failLoadTest) == false);
     }
 }
+
 ai::Network player(0);
 ai::Network playerAgain(0);
 vector<char> emptyBoard(32);
@@ -81,42 +76,75 @@ vector<char> sampleSmallBoard{
     ' ',   ' ',   ' ',   ' '
     };
 
-TEST_CASE("Test Network Evaluation") {
+TEST_CASE("Test Network Evaluation", "[network]") {
     SECTION("test network evaluation of empty board is 0.") {
-        REQUIRE(player.evaluateBoard(emptyBoard) == 0);
-        REQUIRE(player.evaluateBoard(emptyBoard, true) == 0);
+        REQUIRE(player.evaluateBoard(emptyBoard) == Approx(0));
+        REQUIRE(player.evaluateBoard(emptyBoard, true) == Approx(0));
     }
 
     SECTION ("Ensure output of a big board evaluation is consistent.") {
-        REQUIRE(areSame(player.evaluateBoard(sampleBigBoard, true), player.evaluateBoard(sampleBigBoard, true)));
-        REQUIRE(areSame(player.evaluateBoard(sampleBigBoard), player.evaluateBoard(sampleBigBoard)));
+        SECTION("testing == true") {
+            auto run1 = player.evaluateBoard(sampleBigBoard, true);
+            auto run2 = player.evaluateBoard(sampleBigBoard, true);
+            REQUIRE(run1 - run2 == Approx(0));
+        }
+
+        SECTION("testing == false") {
+            auto run1 = player.evaluateBoard(sampleBigBoard);
+            auto run2 = player.evaluateBoard(sampleBigBoard);
+            REQUIRE(run1 - run2 == Approx(0));
+
+        }
     }
 
     SECTION ("Ensure output from a board with a single input node works and is consistent.") {
         for (int index = 0; index < 32; index++) {
             vector<char> sampleLoopBoard(32);
             sampleLoopBoard[index] = 'R';
-            REQUIRE(player.evaluateBoard(sampleLoopBoard) != 0);
-            REQUIRE(areSame(player.evaluateBoard(sampleLoopBoard, true), player.evaluateBoard(sampleLoopBoard, true)));
+
+            REQUIRE(player.evaluateBoard(sampleLoopBoard) != Approx(0));
+
+            auto run1 = player.evaluateBoard(sampleLoopBoard, true);
+            auto run2 = player.evaluateBoard(sampleLoopBoard, true);
+            REQUIRE(run1 - run2 == Approx(0));
         }
     }
 
-    SECTION ("Ensure output of evaluation given different boards is different.") {  
-        REQUIRE(!areSame(player.evaluateBoard(sampleSmallBoard), player.evaluateBoard(emptyBoard)));
-        REQUIRE(!areSame(player.evaluateBoard(sampleBigBoard), player.evaluateBoard(emptyBoard)));
-        REQUIRE(!areSame(player.evaluateBoard(sampleBigBoard), player.evaluateBoard(sampleSmallBoard)));
-        REQUIRE(!areSame(player.evaluateBoard(sampleBigBoard, true), player.evaluateBoard(emptyBoard, true)));
-        REQUIRE(!areSame(player.evaluateBoard(sampleSmallBoard, true), player.evaluateBoard(emptyBoard, true)));
-        REQUIRE(!areSame(player.evaluateBoard(sampleBigBoard, true), player.evaluateBoard(sampleSmallBoard, true)));
+    SECTION ("Ensure output of evaluation given different boards is different.") {
+        NetworkWeightType big = 0, empty = 0, small = 0;
 
+        SECTION("testing == true") {
+            big = player.evaluateBoard(sampleBigBoard, true);
+            empty = player.evaluateBoard(emptyBoard, true);
+            small = player.evaluateBoard(sampleSmallBoard, true);
+        }
+
+        SECTION("testing == false") {
+            big = player.evaluateBoard(sampleBigBoard);
+            empty = player.evaluateBoard(emptyBoard);
+            small = player.evaluateBoard(sampleSmallBoard);
+        }
+
+        REQUIRE(big - empty != Approx(0));
+        REQUIRE(small - empty != Approx(0));
+        REQUIRE(big - small != Approx(0));
     }
+
     SECTION ("Ensure output of a board with twice the king weight is double") {
         player.changeKingWeight(1);
         playerAgain.changeKingWeight(2);
-        REQUIRE(areSame((player.evaluateBoard(sampleSmallBoard, true) * 2), playerAgain.evaluateBoard(sampleSmallBoard, true)));
+
+        auto withKingWeightOf1 = player.evaluateBoard(sampleSmallBoard, true);
+        auto withKingWeightOf2 = playerAgain.evaluateBoard(sampleSmallBoard, true);
+
+        REQUIRE(withKingWeightOf1 * 2 - withKingWeightOf2 == Approx(0));
     }
+
     SECTION("Testing the use of the activation function is different than without") {
-        REQUIRE(!areSame(player.evaluateBoard(sampleBigBoard, true), player.evaluateBoard(sampleBigBoard)));
+        auto withActivation =player.evaluateBoard(sampleBigBoard, true );
+        auto withOutActivation = player.evaluateBoard(sampleBigBoard);
+
+        REQUIRE(withActivation - withOutActivation != Approx(0));
     }
 }
 
