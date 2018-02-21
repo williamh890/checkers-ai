@@ -6,6 +6,11 @@ using ai::setupNetworks;
 #include "../headers/network-file-io.h"
 using ai::loadNetwork;
 using ai::saveNetwork;
+
+#include "../headers/utils.h"
+using ai::getTime;
+
+
 #include "catch.hpp"
 
 #include <vector>
@@ -18,20 +23,6 @@ using std::ostringstream;
 #include <iostream>
 using std::cout;
 using std::endl;
-#include <chrono>
-
-const NetworkWeightType EPSILON = 0.00001;
-
-double get_time() {
-    return 1.0e-9*std::chrono::duration_cast<std::chrono::nanoseconds>(
-            std::chrono::high_resolution_clock::now().time_since_epoch()
-            ).count();
-}
-
-bool areSame(NetworkWeightType a, NetworkWeightType b) {
-    return fabs(a - b) < EPSILON;
-}
-
 
 
 TEST_CASE("Testing setupNetworks") {
@@ -61,46 +52,99 @@ TEST_CASE("Test saving and loading consistency") {
     }
 }
 
-TEST_CASE("Test Network Evaluation") {
-    ai::Network player(0);
-    ai::Network playerAgain(0);
+ai::Network player(0);
+ai::Network playerAgain(0);
+vector<char> emptyBoard(32);
+vector<char> sampleBigBoard{
+        'r',   'r',   'r',   'r',
+    'r',   'r',   'r',   'r',
+        ' ',   'r',   'r',   'r',
+    ' ',   ' ',   'r',   ' ',
+        ' ',   ' ',   'b',   ' ',
+    'b',   'b',   ' ',   'b',
+        'b',   'b',   'b',   'b',
+    'b',   'b',   'b',   'b'
+    };
+vector<char> sampleSmallBoard{
+        'R',   ' ',   ' ',   ' ',
+    ' ',   ' ',   ' ',   ' ',
+        ' ',   ' ',   ' ',   ' ',
+    ' ',   ' ',   ' ',   ' ',
+        ' ',   ' ',   ' ',   ' ',
+    ' ',   ' ',   ' ',   ' ',
+        ' ',   ' ',   ' ',   ' ',
+    ' ',   ' ',   ' ',   ' '
+    };
 
-    vector<char> emptyBoard(32);
-    vector<char> sampleBigBoard{
-            'r',   'r',   'r',   'r',
-         'r',   'r',   'r',   'r',
-            ' ',   'r',   'r',   'r',
-         ' ',   ' ',   'r',   ' ',
-            ' ',   ' ',   'b',   ' ',
-         'b',   'b',   ' ',   'b',
-            'b',   'b',   'b',   'b',
-         'b',   'b',   'b',   'b'
-        };
-        vector<char> sampleSmallBoard(32);
-        sampleSmallBoard[0] = 'R';
-
+TEST_CASE("Test Network Evaluation", "[network]") {
     SECTION("test network evaluation of empty board is 0.") {
-        REQUIRE(player.evaluateBoard(emptyBoard) == 0);
-        REQUIRE(player.evaluateBoard(emptyBoard, true) == 0);
+        REQUIRE(player.evaluateBoard(emptyBoard) == Approx(0));
+        REQUIRE(player.evaluateBoard(emptyBoard, true) == Approx(0));
     }
 
     SECTION ("Ensure output of a big board evaluation is consistent.") {
-        REQUIRE(areSame(player.evaluateBoard(sampleBigBoard, true), player.evaluateBoard(sampleBigBoard, true)));
-        REQUIRE(areSame(player.evaluateBoard(sampleBigBoard), player.evaluateBoard(sampleBigBoard)));
+        SECTION("testing == true") {
+            auto run1 = player.evaluateBoard(sampleBigBoard, true);
+            auto run2 = player.evaluateBoard(sampleBigBoard, true);
+            REQUIRE(run1 - run2 == Approx(0));
+        }
+
+        SECTION("testing == false") {
+            auto run1 = player.evaluateBoard(sampleBigBoard);
+            auto run2 = player.evaluateBoard(sampleBigBoard);
+            REQUIRE(run1 - run2 == Approx(0));
+
+        }
     }
 
-    SECTION ("Ensure output of a small board evaluation is consistent.") {
-        REQUIRE(areSame(player.evaluateBoard(sampleSmallBoard, true), player.evaluateBoard(sampleSmallBoard, true)));
+    SECTION ("Ensure output from a board with a single input node works and is consistent.") {
+        for (int index = 0; index < 32; index++) {
+            vector<char> sampleLoopBoard(32);
+            sampleLoopBoard[index] = 'R';
+
+            REQUIRE(player.evaluateBoard(sampleLoopBoard) != Approx(0));
+
+            auto run1 = player.evaluateBoard(sampleLoopBoard, true);
+            auto run2 = player.evaluateBoard(sampleLoopBoard, true);
+            REQUIRE(run1 - run2 == Approx(0));
+        }
+    }
+
+    SECTION ("Ensure output of evaluation given different boards is different.") {
+        NetworkWeightType big = 0, empty = 0, small = 0;
+
+        SECTION("testing == true") {
+            big = player.evaluateBoard(sampleBigBoard, true);
+            empty = player.evaluateBoard(emptyBoard, true);
+            small = player.evaluateBoard(sampleSmallBoard, true);
+        }
+
+        SECTION("testing == false") {
+            big = player.evaluateBoard(sampleBigBoard);
+            empty = player.evaluateBoard(emptyBoard);
+            small = player.evaluateBoard(sampleSmallBoard);
+        }
+
+        REQUIRE(big - empty != Approx(0));
+        REQUIRE(small - empty != Approx(0));
+        REQUIRE(big - small != Approx(0));
     }
 
     SECTION ("Ensure output of a board with twice the king weight is double") {
         player.changeKingWeight(1);
         playerAgain.changeKingWeight(2);
 
-        REQUIRE(areSame((player.evaluateBoard(sampleSmallBoard, true) * 2), playerAgain.evaluateBoard(sampleSmallBoard, true)));
+        auto withKingWeightOf1 = player.evaluateBoard(sampleSmallBoard, true);
+        auto withKingWeightOf2 = playerAgain.evaluateBoard(sampleSmallBoard, true);
+
+        REQUIRE(withKingWeightOf1 * 2 - withKingWeightOf2 == Approx(0));
     }
+
     SECTION("Testing the use of the activation function is different than without") {
-        REQUIRE(!areSame(player.evaluateBoard(sampleBigBoard, true), player.evaluateBoard(sampleBigBoard)));
+        auto withActivation =player.evaluateBoard(sampleBigBoard, true );
+        auto withOutActivation = player.evaluateBoard(sampleBigBoard);
+
+        REQUIRE(withActivation - withOutActivation != Approx(0));
     }
 }
 
@@ -123,7 +167,7 @@ void writeToLogs(double timeTaken, int loopIterations, double boardsPerSec) {
 TEST_CASE("Testing the speed of board evaluation.") {
     const int LOOP_COUNTER = 1000;
     vector<unsigned int> dimesionsLarge{32, 1000, 100, 1};
-    vector<unsigned int> dimesions{32, 40, 10, 1};
+    cout << "\n\n\n\n\n**** To use blondie dimensions (which is faster), say no ****\n\n" << endl;
     setupNetworks(dimesionsLarge, 2);
     vector<char> sampleBigBoard{
             'r',   'r',   'r',   'r',
@@ -141,18 +185,18 @@ TEST_CASE("Testing the speed of board evaluation.") {
     double averageTime = 0;
     const unsigned int LOOPSFORAVERAGE = 10;
     for (volatile unsigned int index = 0; index < LOOPSFORAVERAGE; ++index){
-        double evaluationStart = get_time();
+        double evaluationStart = getTime();
         for (volatile int i = 0; i < LOOP_COUNTER; ++i) {
             player.evaluateBoard(sampleBigBoard);
         }
-        double evaluationEnd = get_time();
+        double evaluationEnd = getTime();
         double evaluationTotal = evaluationEnd - evaluationStart;
 
 
-        double loopStart = get_time();
+        double loopStart = getTime();
         for (volatile int j = 0; j < LOOP_COUNTER; ++j) {
         }
-        double loopEnd = get_time();
+        double loopEnd = getTime();
         double loopTotal = loopEnd - loopStart;
 
         averageTime += (evaluationTotal - loopTotal)/LOOP_COUNTER;
@@ -167,5 +211,4 @@ TEST_CASE("Testing the speed of board evaluation.") {
     cout << "Number of boards per second = " << averageBPS << endl;
 
     writeToLogs(averageTime, LOOP_COUNTER, averageBPS);
-
 }

@@ -81,4 +81,3 @@ MoveGenerator ai::getKingGenerator(const JsonToStlConverter & converter) {
 
     return MoveGenerator(moves, jumps);
 }
-

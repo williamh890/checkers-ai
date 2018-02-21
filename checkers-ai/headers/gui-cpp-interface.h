@@ -17,7 +17,7 @@ namespace ai {
             bool isInvalid(const CheckersGame::MovePackage & move);
             bool isInvalid(const CheckersGame::JumpPackage & jump);
 
-            std::vector<char> getBoard(); // may not need
+            std::vector<char> getBoard();
             const char getActivePlayerColor();
             const char getInactivePlayerColor();
 
@@ -27,7 +27,7 @@ namespace ai {
             void replayJump(const CheckersGame::JumpPackage & jump);
             void replayMove(const CheckersGame::MovePackage & move);
 
-            void swapPlayers(); // may not need
+            void swapPlayers();
             bool areJumps();
             bool areMoves();
 

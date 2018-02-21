@@ -11,7 +11,12 @@ using ai::Seeder;
 using ai::SRandSeeder;
 using ai::getSeeder;
 
+#include "headers/minimax.h"
+using ai::minimaxJump;
+using ai::minimaxMove;
+
 #include "headers/board.h"
+using ai::getBoard;
 using ai::Board;
 
 #include "headers/player.h"
@@ -39,6 +44,7 @@ using ai::Piece;
 #include "headers/consts.h"
 using ai::TOTAL_NUM_SPACES;
 using ai::INIT_NUM_PIECES;
+using ai::MINIMAX_SEARCH_DEPTH;
 
 #include "headers/table-types.h"
 using ai::MoveTableType;
@@ -66,7 +72,9 @@ using std::length_error;
 using std::random_device;
 using std::mt19937;
 using std::uniform_int_distribution;
+#include <climits>
 
+int CheckersGame::MINIMAX_SEARCH_DEPTH = 7;
 
 CheckersGame ai::getCheckersGame() {
     auto table = loadMoveTableFrom("move-table.json");
@@ -103,27 +111,18 @@ void CheckersGame::play() {
         JumpPackage jump = make_pair(-1, Jump(-1, -1));
 
         try {
-            if (getValidJumps().size()) {
+            if (areJumps()) {
                 jump = getJumpFromActivePlayer();
             } else {
                 move = getMoveFromActivePlayer();
             }
         }
         catch(length_error & e) {
-            cout << "Out of moves" << endl;
-            cout << e.what() << endl;
             break;
         }
         catch(runtime_error & e) {
-            cout << "Invalid Move..." << endl;
-            cout << e.what() << endl;
             continue;
         }
-
-        cout << activePlayer->getColor() << ": "
-            << spaceToPosition(move.first).toString() << ", "
-            << spaceToPosition(move.second).toString()
-            << endl;
 
         if (move.first == -1) {
             board.make(jump);
@@ -131,17 +130,15 @@ void CheckersGame::play() {
 
             auto validJumps = getValidJumpsAt(jump.second.to);
 
-            cout << board.toString() << endl;
-            cout << "jump piece has " << validJumps.size() << " possible jumps." << endl;
 
             while (validJumps.size()) {
+                cout << board.toString() << endl;
                 auto jump = make_pair(-1, Jump(-1, -1));
 
                 try {
                     jump = getJumpFromActivePlayer();
                 }
                 catch(runtime_error & e) {
-                    cout << "Invlaid Jump..." << endl;
                     continue;
                 }
 
@@ -167,29 +164,37 @@ void CheckersGame::swapPlayers(){
 }
 
 bool CheckersGame::areJumps(){
-  return getValidJumps().size();
+    return getValidJumps().size() > 0;
 }
 
 bool CheckersGame::areMoves(){
-  return getValidMoves().size();
+    return getValidMoves().size() > 0;
 }
+
 JumpPackage CheckersGame::getJumpFromActivePlayer() {
-    if (activePlayer->getPlayerType() == PlayerType::Computer) {
-        return getRandomValidJump();
+    if (activePlayer->getColor() == 'r') {
+        return getMinimaxJump();
     }
 
-    return getJumpFromUser();
+    return getRandomValidJump();
 }
+
+MovePackage CheckersGame::getMinimaxMove() {
+    return minimaxMove(*this, MINIMAX_SEARCH_DEPTH, getActivePlayerColor());
+}
+
+JumpPackage CheckersGame::getMinimaxJump() {
+    return minimaxJump(*this, MINIMAX_SEARCH_DEPTH, getActivePlayerColor());
+}
+
 
 JumpPackage CheckersGame::getRandomValidJump() {
     auto jumps = getValidJumps();
 
     auto numJumps = jumps.size();
-    cout << "number of jumps: " << numJumps << endl;
 
     uniform_int_distribution<int> distribution(0, numJumps - 1);
     auto rngVal = distribution(generator);
-    cout << "rngValue: " << rngVal << endl;
     return jumps[rngVal];
 }
 
@@ -201,7 +206,6 @@ JumpPackage CheckersGame::getJumpFromUser() {
 
 JumpPackage CheckersGame::getJumpFrom(const MovePackage & inputJump) {
     auto validJumps = getValidJumps();
-    cout << "number of jumps: " << validJumps.size() << endl;
 
     for (const auto & checkJump: validJumps) {
         if (checkJump.first == inputJump.first and
@@ -215,18 +219,17 @@ JumpPackage CheckersGame::getJumpFrom(const MovePackage & inputJump) {
 }
 
 MovePackage CheckersGame::getMoveFromActivePlayer() {
-    if (activePlayer->getPlayerType() == PlayerType::Computer) {
-        return getRandomValidMove();
+    if (activePlayer->getColor() == 'r') {
+        return getMinimaxMove();
     }
 
-    return getMoveFromUser();
+    return getRandomValidMove();
 }
 
 MovePackage CheckersGame::getRandomValidMove() {
     auto moves = getValidMoves();
     auto numMoves = moves.size();
 
-    cout << "number of moves: " << numMoves << endl;
     if ( numMoves < 1 ) {
         throw length_error("out of moves");
     }
@@ -238,7 +241,6 @@ MovePackage CheckersGame::getRandomValidMove() {
 }
 
 MovePackage CheckersGame::parseUserInput() {
-    cout << "Enter move (startRow startCol endRow endCol): ";
 
     string in;
     getline(cin, in);
@@ -304,6 +306,16 @@ vector<JumpPackage> CheckersGame::getValidJumps() {
     return validJumps;
 }
 
+vector<JumpPackage> CheckersGame::getOpponentValidJumps(){
+    auto validJumps = board.getValidJumpsFor(inactivePlayer);
+
+    return validJumps;
+}
+vector<MovePackage> CheckersGame::getOpponentValidMoves(){
+    auto validMoves = board.getValidMovesFor(inactivePlayer);
+
+    return validMoves;
+}
 vector<JumpPackage> CheckersGame::getValidJumpsAt(int space) {
     auto validJumps = board.getValidJumpsFor(activePlayer);
     auto jumpsAtSpace = vector<JumpPackage>{};
@@ -316,28 +328,22 @@ vector<JumpPackage> CheckersGame::getValidJumpsAt(int space) {
 
     return jumpsAtSpace;
 }
-// Accessor functions for gui/cython wrapper
-vector<char> CheckersGame::getBoard(){
-    return board.getBoardState();
-}
 
 const char CheckersGame::getActivePlayerColor(){
     return activePlayer->getColor();
 }
 
 const char CheckersGame::getInactivePlayerColor(){
-  return inactivePlayer->getColor();
+    return inactivePlayer->getColor();
 }
 
 void CheckersGame::reactTo(const JumpPackage & jump) {
     activePlayer->updatePieces(jump, board);
     inactivePlayer->removePieceAt(jump.second.through);
-    cout << "piece was jumped" << endl;
 }
 
 void CheckersGame::reactTo(const MovePackage & move) {
     activePlayer->updatePieces(move, board);
-    cout << "piece was moved" << endl;
 }
 
 string CheckersGame::toString() {
@@ -357,8 +363,6 @@ void CheckersGame::makeJump(const JumpPackage & jump){
             swapPlayers();
         }
     } catch(length_error & e) {
-        cout << "Out of moves" << endl;
-        cout << e.what() << endl;
     }
 
 }
@@ -400,16 +404,85 @@ void CheckersGame::replayJump(const JumpPackage & jump){
     board.make(jump);
     reactTo(jump);
     if (not areJumps()){
-      swapPlayers();
+        swapPlayers();
     }
 }
 
 void CheckersGame::replayMove(const MovePackage & move){
-  board.make(move);
-  reactTo(move);
-  swapPlayers();
+    board.make(move);
+    reactTo(move);
+    swapPlayers();
 }
 
 vector<std::vector<int>> CheckersGame::getGame(){
-  return game_record;
+    return game_record;
+}
+
+int CheckersGame::minimaxSearch(Board passedBoard, RedPlayer red_player, BlackPlayer black_player,char playerColor, int depth, int init_depth = 0)
+{
+    if(depth == init_depth)
+    {
+        return passedBoard.pieceCount(playerColor);
+    }
+    auto boardCopy = passedBoard;
+    auto redCopy = red_player;
+    auto blackCopy = black_player;
+    auto shared_black = make_shared<BlackPlayer>(blackCopy);
+    auto shared_red = make_shared<RedPlayer>(redCopy);
+    vector<MovePackage> player_moves;
+    vector<JumpPackage> player_jumps;
+    int best_move;
+    int loop_move;
+
+    if(playerColor == 'b')
+    {
+        player_moves = boardCopy.getValidMovesFor(shared_black);
+        player_jumps = boardCopy.getValidJumpsFor(shared_black);
+    }
+    if(playerColor == 'r')
+    {
+        player_moves = boardCopy.getValidMovesFor(shared_red);
+        player_jumps = boardCopy.getValidJumpsFor(shared_red);
+    }
+    if(player_jumps.size())
+    {
+        boardCopy.make(player_jumps[0]);
+        best_move = minimaxSearch(boardCopy, redCopy, blackCopy, playerColor == 'b' ? 'r' : 'b', depth, init_depth+1);
+        for(auto i = 1; i < (int) player_jumps.size(); ++i)
+        {
+            boardCopy = passedBoard;
+            boardCopy.make(player_jumps[i]);
+            loop_move = minimaxSearch(boardCopy, redCopy, blackCopy, playerColor == 'b' ? 'r' : 'b', depth, init_depth+1);
+            if (best_move < loop_move)
+            {
+                best_move = loop_move;
+            }
+        }
+        return best_move;
+    }
+    if(player_moves.size())
+    {
+        boardCopy.make(player_moves[0]);
+        best_move = minimaxSearch(boardCopy, redCopy, blackCopy, playerColor == 'b' ? 'r' : 'b', depth, init_depth+1);
+        for(auto i = 1; i < (int) player_moves.size(); ++i)
+        {
+            boardCopy = passedBoard;
+            boardCopy.make(player_moves[i]);
+            loop_move = minimaxSearch(boardCopy, redCopy, blackCopy, playerColor == 'b' ? 'r' : 'b', depth, init_depth+1);
+            if (best_move < loop_move)
+            {
+                best_move = loop_move;
+            }
+        }
+        return best_move;
+    }
+    return 0;
+}
+
+int CheckersGame::getNumPiecesFor(char color) {
+    return (color == 'r') ? red->getPieces().size() : black->getPieces().size();
+}
+
+void CheckersGame::makeMinimaxMove(int depth)
+{
 }

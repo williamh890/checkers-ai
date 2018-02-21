@@ -47,7 +47,10 @@ namespace ai {
         public:
             std::string toString();
             char operator[](const int & index) const;
+            int pieceCount(char color);
+
             std::vector<char> getBoardState();
+            void setBoardState(const std::vector<char> & boardState);
 
         private:
             std::vector<std::vector<char>> getEmptyBoard();
