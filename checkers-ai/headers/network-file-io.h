@@ -17,35 +17,33 @@
 namespace ai {
     class Network;
 
-	bool loadNetwork(unsigned int, Network &);
+	bool loadNetwork(size_t, Network &);
     class NetworkFileReader {
-            std::ifstream inFile;
+            std::ifstream networkFile;
         public:
             bool load(const std::string & filename, Network & networkRecievingData);
 
         private:
-            std::vector<Settings::NetworkWeightType> loadWeightsForLayerFrom(unsigned int currLayerDimension);
-            std::vector<Settings::NetworkWeightType> loadSigmasForLayerFrom(unsigned int currLayerDimension);
+            std::vector<Settings::NetworkWeightType> loadVector(size_t currLayerDimension);
 
-            bool inline noMoreLayersIn();
+            bool inline noMoreLayersInNetworkFile();
             int loadPerformanceFrom();
             Settings::NetworkWeightType loadKingWeightFrom();
-            std::vector<unsigned int> loadDimension();
+            std::vector<size_t> loadDimension();
 
-            std::vector<std::vector<Settings::NetworkWeightType>> getNodesFromDimensions(const std::vector<unsigned int> & dimensions);
+            std::vector<std::vector<Settings::NetworkWeightType>> getNodesFromDimensions(const std::vector<size_t> & dimensions);
     };
 
-	void saveNetwork(unsigned int, Network &);
+	void saveNetwork(size_t, Network &);
     class NetworkFileWriter {
-            std::ofstream outFile;
+            std::ofstream networkFile;
 
         public:
             void save(const std::string & filename, const Network & networkToSave);
 
         private:
-            void saveLayerSize(const std::vector<Settings::NetworkWeightType> & layer);
-            void saveWeightsForLayerTo(const std::vector<Settings::NetworkWeightType> & layer);
-            void saveSigmasForLayerTo(const std::vector<Settings::NetworkWeightType> & layer);
+            void saveVectorSize(const std::vector<Settings::NetworkWeightType> & layer);
+            void saveVector(const std::vector<Settings::NetworkWeightType> & toSave);
             void savePerformance(int networkPerormance);
             void saveKingWeight(Settings::NetworkWeightType kingWeight);
             void saveDimensions(const std::vector<std::vector<Settings::NetworkWeightType>> & layers);
