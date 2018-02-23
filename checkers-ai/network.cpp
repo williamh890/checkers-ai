@@ -79,12 +79,12 @@ void Network::setupKingWeight() {
 }
 
 void Network::setupSigmas() {
-    _sigmas = _weights;/*
-    for(auto & i: _sigmas) {
-        for (auto ii: i) {
-            ii = .05;
-        }
-    }*/
+    _sigmas = _weights;
+    //for(auto & i: _sigmas) {
+        //for (auto ii: i) {
+            //ii = .05;
+        //}
+    //}
 }
 
 template <typename RandomNumberType>
@@ -200,6 +200,7 @@ void Network::replaceWithEvolution(vector<NetworkWeights> & inputWeights) {
     _kingWeight = inputWeights[inputWeights.size()-1][0];
     inputWeights.pop_back();
     _weights = std::move(inputWeights);
+
     saveNetwork (_ID, *this);
 }
 

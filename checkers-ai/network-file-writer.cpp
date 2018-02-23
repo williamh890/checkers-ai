@@ -30,35 +30,24 @@ void ai::saveNetwork(unsigned int id, Network & network) {
     writer.save(filename, network);
 }
 
-void NetworkFileWriter::saveLayerSize(const vector<NetworkWeightType> & layer) {
-    unsigned int size = layer.size();
-    if (DEBUG)
-        cout << "writing " << layer.size() << " to file." << endl;
-    outFile.write( (char*)&size, sizeof(unsigned int));
-}
+void NetworkFileWriter::save(const string & filename, const Network & networkToSave) {
+    outFile.open(filename, ios::out | ios::binary);
 
-void NetworkFileWriter::saveWeightsForLayerTo(const vector<NetworkWeightType> & layer) {
+    savePerformance(networkToSave._performance);
+    saveKingWeight(networkToSave._kingWeight);
+    saveDimensions(networkToSave._layers);
 
-    saveLayerSize(layer);
-    for (auto & w : layer) {
-        outFile.write( (char*)&w, sizeof(NetworkWeightType));
+    for (size_t i = 0; i < networkToSave._weights.size(); ++i) {
+        auto sigmas = networkToSave._sigmas[i];
+        cout << sigmas.size() << " ";
+        auto weights = networkToSave._weights[i];
+        cout << weights.size() << " " << endl;
+
+        saveWeightsForLayerTo(weights);
+        saveWeightsForLayerTo(sigmas);
     }
-}
 
-void NetworkFileWriter::saveSigmasForLayerTo(const vector<NetworkWeightType> & layer) {
-
-    saveLayerSize(layer);
-    for (auto & w : layer) {
-        outFile.write( (char*)&w, sizeof(NetworkWeightType));
-    }
-}
-
-void NetworkFileWriter::savePerformance(int networkPerormance) {
-    outFile.write( (char*)&networkPerormance, sizeof(int));
-}
-
-void NetworkFileWriter::saveKingWeight(NetworkWeightType kingWeight) {
-    outFile.write( (char*)&kingWeight, sizeof(NetworkWeightType));
+    outFile.close();
 }
 
 void NetworkFileWriter::saveDimensions(const vector<vector<NetworkWeightType>> & layers) {
@@ -78,24 +67,32 @@ void NetworkFileWriter::saveDimensions(const vector<vector<NetworkWeightType>> &
         cout << endl;
 }
 
-void NetworkFileWriter::save(const string & filename, const Network & networkToSave) {
-
-    outFile.open(filename, ios::out | ios::binary);
-
-    savePerformance(networkToSave._performance);
-    saveKingWeight(networkToSave._kingWeight);
-    saveDimensions(networkToSave._layers);
-
-    for (auto & layer : networkToSave._weights) {
-        saveWeightsForLayerTo(layer);
-    }
-    for (auto & layer : networkToSave._sigmas) {
-        saveSigmasForLayerTo(layer);
-    }
-    if (DEBUG)
-        cout << endl;
-
-    outFile.close(); //Unnecessary
+void NetworkFileWriter::saveKingWeight(NetworkWeightType kingWeight) {
+    outFile.write( (char*)&kingWeight, sizeof(NetworkWeightType));
 }
+
+void NetworkFileWriter::savePerformance(int networkPerormance) {
+    outFile.write( (char*)&networkPerormance, sizeof(int));
+}
+
+
+void NetworkFileWriter::saveLayerSize(const vector<NetworkWeightType> & layer) {
+    unsigned int size = layer.size();
+    if (DEBUG)
+        cout << "writing " << layer.size() << " to file." << endl;
+    outFile.write( (char*)&size, sizeof(unsigned int));
+}
+
+void NetworkFileWriter::saveWeightsForLayerTo(const vector<NetworkWeightType> & layer) {
+
+    saveLayerSize(layer);
+    for (auto & w : layer) {
+        outFile.write( (char*)&w, sizeof(NetworkWeightType));
+    }
+}
+
+
+
+
 
 

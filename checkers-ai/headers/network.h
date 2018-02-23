@@ -16,7 +16,6 @@
 namespace ai {
     class NetworkFileReader;
     class NetworkFileWriter;
-    
 
     class Network {
         public:
@@ -44,7 +43,7 @@ namespace ai {
             unsigned int _ID;
             std::vector<LayersContainingNodes> _layers;
             std::vector<NetworkWeights> _weights;
-            std::vector<std::vector<Settings::NetworkWeightType>> _sigmas;
+            std::vector<NetworkWeights> _sigmas;
             Settings::NetworkWeightType _kingWeight;
             int _performance;
             bool _gameCompleted = false;
