@@ -38,10 +38,12 @@ CheckersGame::MovePackage ai::minimaxMove(CheckersGame & game, int depth) {
     }
 
     auto moves = game.getValidMoves();
+    MovePackage move;
+    int moveVal;
 
     for (auto i = 0; i < (int) moves.size(); ++i) {
-        auto move = moves[i];
-        auto moveVal = minimax(move, depth - 1, game.getActivePlayerColor(), game);
+        move = moves[i];
+        moveVal = minimax(move, depth - 1, game.getActivePlayerColor(), game);
 
         if (moveVal > bestMoveVal) {
             bestMoveVal = moveVal;
@@ -63,10 +65,12 @@ CheckersGame::JumpPackage ai::minimaxJump(CheckersGame & game, int depth) {
     }
 
     auto jumps = game.getValidJumps();
+    JumpPackage jump;
+    int jumpVal;
 
     for (auto i = 0; i < (int) jumps.size(); ++i) {
-        auto jump = jumps[i] ;
-        auto jumpVal = minimax(jump, depth - 1, game.getActivePlayerColor(), game);
+        jump = jumps[i] ;
+        jumpVal = minimax(jump, depth - 1, game.getActivePlayerColor(), game);
 
         if (jumpVal > bestJumpVal) {
             bestJumpVal = jumpVal;
@@ -157,9 +161,9 @@ int MiniMaxHelper::recurse(const JumpPackage & jump, int depth) {
 int MiniMaxHelper::recurseMultiJumpCase(const vector<JumpPackage> & multiJumps, int depth) {
     auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
     int bestNumPieces = (isMaximizingPlayer) ? INT_MIN : INT_MAX;
-
+    int jumpVal;
     for (auto & jump : multiJumps) {
-        auto jumpVal = recurse(jump, depth - 1);
+        jumpVal = recurse(jump, depth - 1);
 
         bestNumPieces = (isMaximizingPlayer) ?
             max(jumpVal, bestNumPieces) :
@@ -176,8 +180,9 @@ int MiniMaxHelper::recursiveCase(int depth) {
     auto jumps = game.getValidJumps();
 
     if (jumps.size() != 0) {
+        int jumpVal;
         for (auto & jump : jumps) {
-            auto jumpVal = recurse(jump, depth - 1);
+            jumpVal = recurse(jump, depth - 1);
 
             bestNumPieces = (isMaximizingPlayer) ?
                 max(jumpVal, bestNumPieces) :
@@ -185,8 +190,9 @@ int MiniMaxHelper::recursiveCase(int depth) {
         }
     }
     else {
+        int moveVal;
         for (auto & move : game.getValidMoves()) {
-            auto moveVal = recurse(move, depth - 1);
+            moveVal = recurse(move, depth - 1);
 
             bestNumPieces = (isMaximizingPlayer) ?
                 max(moveVal, bestNumPieces) :
