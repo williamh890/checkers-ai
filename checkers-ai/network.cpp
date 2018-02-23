@@ -186,9 +186,28 @@ void Network::resetPerformance() {
 }
 
 void Network::evolve() { 	// *** TODO *** Required for Project 3
-    // *** Evolve _kingWeight
-    // *** Evolve _weights
+    NetworkWeightType numberofWeights = 0;
+    for (unsigned int index = 0; index < _weights.size(); ++index) {
+        numberofWeights += _weights[index].size();
+    }
+    NetworkWeightType tau = 1/(sqrt(2*sqrt(numberofWeights)));
+
+
+    // *** Evolve _kingWeight DONE
+    uniform_real_distribution<NetworkWeightType> distribution(-1,1);
+    _kingWeight += distribution(randomNumGenerator);
     // *** Evolve sigmas
+    for (unsigned int i = 0; i < _sigmas.size(); ++i) {
+        for (unsigned int ii = 0; ii < _sigmas[i].size(); ++ii) {
+            _sigmas[i][ii] = _sigmas[i][ii] * exp(tau * gaussianNumbersZeroToOne());
+        }
+    }
+    // *** Evolve _weights
+    for (unsigned int i = 0; i < _weights.size(); ++i) {
+        for (unsigned int ii = 0; ii < _weights[i].size(); ++ii) {
+            _weights[i][ii] = _weights[i][ii] + _sigmas[i][ii] * gaussianNumbersZeroToOne();
+        }
+    }
 }
 
 void Network::replaceWithEvolution(const Network & rhs) {
@@ -275,7 +294,7 @@ void ai::setupNetworks(const vector<unsigned int>& dimensions, int numberOfNetwo
     std::cin.ignore();
 }
 
-NetworkWeightType gaussianNumbersZeroToOne() { // TODO: Make this return a Gaussian number
+NetworkWeightType ai::gaussianNumbersZeroToOne() { // TODO: Make this return a Gaussian number
     NetworkWeightType dummy = 1;
     return dummy;
 }
