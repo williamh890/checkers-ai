@@ -22,14 +22,6 @@ using std::ios;
 using std::cout;
 using std::endl;
 
-
-void ai::saveNetwork(size_t id, Network & network) {
-    auto filename = idToFilename(id);
-    NetworkFileWriter writer;
-
-    writer.save(filename, network);
-}
-
 void NetworkFileWriter::save(const string & filename, const Network & networkToSave) {
     networkFile.open(filename, ios::out | ios::binary);
 
@@ -38,10 +30,10 @@ void NetworkFileWriter::save(const string & filename, const Network & networkToS
     saveDimensions(networkToSave._layers);
 
     for (size_t i = 0; i < networkToSave._weights.size(); ++i) {
-        auto sigmas = networkToSave._sigmas[i];
         auto weights = networkToSave._weights[i];
-
         saveVector(weights);
+
+        auto sigmas = networkToSave._sigmas[i];
         saveVector(sigmas);
     }
 
@@ -60,17 +52,11 @@ void NetworkFileWriter::saveDimensions(const vector<vector<NetworkWeightType>> &
     size_t numLayers = layers.size();
     networkFile.write((char*)&numLayers, sizeof(size_t));
 
-    if (DEBUG)
-        cout << "dimensions: ";
 	for (const auto & layer : layers) {
         size_t layerSize = layer.size();
-        if (DEBUG)
-            cout << layerSize << " ";
+
         networkFile.write( (char*)&layerSize, sizeof(size_t));
 	}
-
-    if (DEBUG)
-        cout << endl;
 }
 
 void NetworkFileWriter::saveVector(const vector<NetworkWeightType> & toSave) {

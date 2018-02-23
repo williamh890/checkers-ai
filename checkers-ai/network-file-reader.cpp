@@ -23,14 +23,6 @@ using std::endl;
 #include <fstream>
 using std::ofstream;
 
-
-bool ai::loadNetwork(size_t id, Network & network) {
-    auto filename = idToFilename(id);
-    NetworkFileReader reader;
-
-    return reader.load(filename, network);
-}
-
 bool NetworkFileReader::load(const string & filename, Network & networkRecievingData) {
     networkFile.open(filename, ios::in | ios::binary);
 
@@ -46,10 +38,9 @@ bool NetworkFileReader::load(const string & filename, Network & networkRecieving
     auto nodes = getNodesFromDimensions(dimensions);
     networkRecievingData._layers = nodes;
 
-    // READ SIGMAS HERE
-
     vector<vector<NetworkWeightType>> weights;
     vector<vector<NetworkWeightType>> sigmas;
+
     size_t vectorSize = 0.;
     while(true) {
         networkFile.read( (char*)&vectorSize, sizeof(size_t));
@@ -89,7 +80,8 @@ NetworkWeightType NetworkFileReader::loadKingWeightFrom() {
     return kingWeight;
 }
 
-vector<size_t> NetworkFileReader::loadDimension() {
+vector<size_t>
+NetworkFileReader::loadDimension() {
     size_t numLayers = 0;
     networkFile.read((char*)&numLayers, sizeof(size_t));
 
@@ -104,7 +96,8 @@ vector<size_t> NetworkFileReader::loadDimension() {
     return dimensions;
 }
 
-vector<vector<NetworkWeightType>> NetworkFileReader::getNodesFromDimensions(const vector<size_t> & dimensions) {
+vector<vector<NetworkWeightType>>
+NetworkFileReader::getNodesFromDimensions(const vector<size_t> & dimensions) {
     vector<vector<NetworkWeightType>> nodes;
 
     for (auto size : dimensions) {
@@ -115,7 +108,8 @@ vector<vector<NetworkWeightType>> NetworkFileReader::getNodesFromDimensions(cons
     return nodes;
 }
 
-vector<NetworkWeightType> NetworkFileReader::loadVector(size_t currLayerDimension) {
+vector<NetworkWeightType>
+NetworkFileReader::loadVector(size_t currLayerDimension) {
     vector<NetworkWeightType> layerWeights;
 
     for (size_t i = 0; i < currLayerDimension; ++i) {

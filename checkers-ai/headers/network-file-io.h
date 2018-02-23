@@ -17,7 +17,6 @@
 namespace ai {
     class Network;
 
-	bool loadNetwork(size_t, Network &);
     class NetworkFileReader {
             std::ifstream networkFile;
         public:
@@ -34,7 +33,6 @@ namespace ai {
             std::vector<std::vector<Settings::NetworkWeightType>> getNodesFromDimensions(const std::vector<size_t> & dimensions);
     };
 
-	void saveNetwork(size_t, Network &);
     class NetworkFileWriter {
             std::ofstream networkFile;
 

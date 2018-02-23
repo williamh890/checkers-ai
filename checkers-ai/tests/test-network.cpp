@@ -3,13 +3,8 @@ using ai::Network;
 using ai::Settings::NetworkWeightType;
 using ai::setupNetworks;
 
-#include "../headers/network-file-io.h"
-using ai::loadNetwork;
-using ai::saveNetwork;
-
 #include "../headers/utils.h"
 using ai::getTime;
-
 
 #include "catch.hpp"
 
@@ -39,8 +34,8 @@ TEST_CASE("Test saving and loading consistency") {
     }
 
     SECTION ("Loading a saved object == object that was saved.") {
-        saveNetwork(0, player);
-        loadNetwork(0, playerAgain);
+        Network::save(0, player);
+        Network::load(0, playerAgain);
 
         REQUIRE(player == playerAgain);
     }
@@ -48,7 +43,7 @@ TEST_CASE("Test saving and loading consistency") {
     SECTION ("Loading an unavailable network fails") {
         ai::Network failLoadTest(0);
 
-        REQUIRE(loadNetwork(101, failLoadTest) == false);
+        REQUIRE(Network::load(101, failLoadTest) == false);
     }
 }
 
