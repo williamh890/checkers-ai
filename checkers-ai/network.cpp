@@ -23,6 +23,7 @@ using std::endl;
 #include <random>
 using std::mt19937;
 using std::uniform_real_distribution;
+using std::normal_distribution;
 
 #include <memory>
 using std::shared_ptr;
@@ -186,30 +187,40 @@ void Network::resetPerformance() {
 }
 
 void Network::evolve() { 	// *** TODO *** Required for Project 3
+    evolveKingWeight();
+    evolveSigmas();
+    evolveWeights();    
+}
+
+void Network::evolveKingWeight() {
+    uniform_real_distribution<NetworkWeightType> distribution(-1,1);
+    _kingWeight += distribution(randomNumGenerator);
+}
+
+NetworkWeightType Network::getTau() {
     NetworkWeightType numberofWeights = 0;
     for (unsigned int index = 0; index < _weights.size(); ++index) {
         numberofWeights += _weights[index].size();
     }
     NetworkWeightType tau = 1/(sqrt(2*sqrt(numberofWeights)));
-
-
-    // *** Evolve _kingWeight DONE
-    uniform_real_distribution<NetworkWeightType> distribution(-1,1);
-    _kingWeight += distribution(randomNumGenerator);
-    // *** Evolve sigmas
+    return tau;
+}
+void Network::evolveSigmas() {
+    auto tau = getTau();
     for (unsigned int i = 0; i < _sigmas.size(); ++i) {
         for (unsigned int ii = 0; ii < _sigmas[i].size(); ++ii) {
-            _sigmas[i][ii] = _sigmas[i][ii] * exp(tau * gaussianNumbersZeroToOne());
-        }
-    }
-    // *** Evolve _weights
-    for (unsigned int i = 0; i < _weights.size(); ++i) {
-        for (unsigned int ii = 0; ii < _weights[i].size(); ++ii) {
-            _weights[i][ii] = _weights[i][ii] + _sigmas[i][ii] * gaussianNumbersZeroToOne();
+            _sigmas[i][ii] = _sigmas[i][ii] * exp(tau * gaussianNumbersZeroToOne(randomNumGenerator));
         }
     }
 }
 
+void Network::evolveWeights() {
+    for (unsigned int i = 0; i < _weights.size(); ++i) {
+            for (unsigned int ii = 0; ii < _weights[i].size(); ++ii) {
+                _weights[i][ii] = _weights[i][ii] + _sigmas[i][ii] * gaussianNumbersZeroToOne(randomNumGenerator);
+            }
+        }
+}
 void Network::replaceWithEvolution(const Network & rhs) {
     _kingWeight = rhs._kingWeight;
     _weights = rhs._weights;
@@ -294,7 +305,7 @@ void ai::setupNetworks(const vector<unsigned int>& dimensions, int numberOfNetwo
     std::cin.ignore();
 }
 
-NetworkWeightType ai::gaussianNumbersZeroToOne() { // TODO: Make this return a Gaussian number
-    NetworkWeightType dummy = 1;
-    return dummy;
+NetworkWeightType ai::gaussianNumbersZeroToOne(std::mt19937 & randomNumGenerator) { // TODO: Make this return a Gaussian number
+    normal_distribution<NetworkWeightType> distribution(0, 1);
+    return distribution (randomNumGenerator);
 }

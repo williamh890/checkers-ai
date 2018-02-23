@@ -54,6 +54,11 @@ namespace ai {
             void setupKingWeight();
             void setupSigmas();
 
+            Settings::NetworkWeightType getTau();
+            void evolveKingWeight();
+            void evolveSigmas();
+            void evolveWeights();
+
             template <typename RandomNumberType>
                 std::vector<RandomNumberType> getRandomNumbersOfLength(const unsigned int length,
                                         std::uniform_real_distribution<RandomNumberType> & distribution);
@@ -76,6 +81,6 @@ namespace ai {
     bool operator== (const Network &lhs, const Network &rhs);
 
     void setupNetworks (const std::vector<unsigned int> & dimesions, int numberOfNetworks = 100);
-    Settings::NetworkWeightType gaussianNumbersZeroToOne(); // TODO: Make this return a Gaussian number
+    Settings::NetworkWeightType gaussianNumbersZeroToOne(std::mt19937 &); // TODO: Make this return a Gaussian number
 }
 #endif // NETWORK_H_INCLUDED
