@@ -127,7 +127,7 @@ bool NetworkFileReader::load(const string & filename, Network & networkRecieving
     auto dimensions = loadDimension();
     auto nodes = getNodesFromDimensions(dimensions);
     networkRecievingData._layers = nodes;
-
+    // READ SIGMAS HERE
     unsigned int currLayerDimension = 0.;
     while(true) {
         inFile.read( (char*)&currLayerDimension, sizeof(unsigned int));
