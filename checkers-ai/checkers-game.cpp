@@ -351,9 +351,9 @@ string CheckersGame::toString() {
 
 
 void CheckersGame::makeJump(const JumpPackage & jump){
-    try {
         board.make(jump);
         reactTo(jump);
+        cout<<toString()<<endl;
         vector<int> move = {jump.first, jump.second.through, jump.second.to};
         game_record.push_back(move);
         if (not areJumps()){
@@ -361,15 +361,13 @@ void CheckersGame::makeJump(const JumpPackage & jump){
             makeRandomValidAction();
             swapPlayers();
         }
-    } catch(length_error & e) {
-    }
 
 }
 
 void CheckersGame::makeMove(const MovePackage & move){
     board.make(move);
     reactTo(move);
-
+    cout<<toString()<<endl;
     vector<int> vec_move = {move.first, move.second};
     game_record.push_back(vec_move);
     swapPlayers();

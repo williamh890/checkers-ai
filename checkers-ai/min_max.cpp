@@ -116,12 +116,10 @@ BoardType MinMaxHelper::parseTree(){
         if (best_count == count){
             best_board = boards[i];
             best_index = i;
-            game.board.setBoardState(best_board);
-            cout<<" a better board was "<<endl<<game.board.toString()<<endl;
           }
         }
 
-    if (jumped) { nextJump = nextJumps[best_index];}
+    if (nextJumps.size()) { nextJump = nextJumps[best_index];}
     else { nextMove = nextMoves[best_index]; }
 
     cout<<"best count was "<<best_count<<endl;
@@ -209,13 +207,14 @@ vector<BoardType> MinMaxHelper::generateBoards(BoardType board){
   }
 
 BoardType MinMaxHelper::minMax(){
-    cout<<game.board.toString()<<endl;
+    cout<<" starting minMax "<<endl;
+    cout<<game.toString()<<endl;
     BoardType board = parseTree();
-    game.board.setBoardState(board);
-    cout<<game.board.toString()<<endl;
-    cout<<" did "<<boards_done<< " boards in this run "<<endl;
-    cout<<" looked at "<<legal_moves_looked_at<<" legal moves "<<endl;
-    cout<<" looked at "<<legal_jumps_looked_at<<" legal jumps "<<endl;
+    //game.board.setBoardState(board);
+    //cout<<game.board.toString()<<endl;
+    //cout<<" did "<<boards_done<< " boards in this run "<<endl;
+    //cout<<" looked at "<<legal_moves_looked_at<<" legal moves "<<endl;
+    //cout<<" looked at "<<legal_jumps_looked_at<<" legal jumps "<<endl;
     return board;
 }
  BoardJumpsType MinMaxHelper::parseBoardJumps(BoardType board){
@@ -351,3 +350,17 @@ void MinMaxHelper::setNextJumps(BoardJumpsType & Jumps){
             }
         }
     }
+
+void MinMaxHelper::makeJump(){
+    game.makeJump(nextJump);
+    nextJumps = {};
+    nextMoves = {};
+    nextJump = {};
+}
+
+void MinMaxHelper::makeMove(){
+    game.makeMove(nextMove);
+    nextJumps = {};
+    nextMoves = {};
+    nextMove = {};
+}

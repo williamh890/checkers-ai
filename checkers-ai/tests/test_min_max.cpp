@@ -27,7 +27,10 @@ using ai::JumpTableType;
 #include "../headers/network.h"
 using ai::Network;
 
-#include<utility>
+#include <exception>
+using std::length_error;
+
+#include <utility>
 using std::pair;
 using std::make_pair;
 
@@ -140,6 +143,7 @@ TEST_CASE("testing min max class"){
       auto run_time = finish-start;
       cout<<"a lookahead of "<<minmax.max_depth + 1<<" took "<<run_time<<" seconds "<<endl;
       cout<<" each board took "<<run_time/minmax.boards_done<<" seconds "<<endl;
+      cout<<" we can do "<<minmax.boards_done/run_time<<" board per second "<<endl;
     }
 
     SECTION("testing 10 turn lookahead (max_depth of 9)"){
@@ -164,7 +168,34 @@ TEST_CASE("testing min max class"){
       auto finish = get_minmax_time();
       auto run_time = finish-start;
       cout<<"a lookahead of "<<minmax.max_depth + 1<<" took "<<run_time<<" seconds "<<endl;
+      cout<<" there were "<<minmax.boards_done<<" board in this run "<<endl;
       cout<<" each board took "<<run_time/minmax.boards_done<<" seconds "<<endl;
+      cout<<" we can do "<<minmax.boards_done/run_time<<" board per second "<<endl;
     }
 
+  SECTION("testing full game"){
+    const char player_color = 'b';
+    Network network = Network(0);
+    auto game = ai::getCheckersGame();
+    cout<<" got game "<<endl;
+    cout<<game.toString();
+    MinMaxHelper minmax = getMinMaxHelper(player_color, network, game, 6);
+    while (true){
+      cout<<" a turn "<<endl;
+      try{
+          minmax.minMax();
+          if (minmax.nextJumps.size()){
+              cout<<" our jump is "<<minmax.nextJump.first<<" "<<minmax.nextJump.second.to<<" "<<minmax.nextJump.second.through<<endl;
+              minmax.makeJump();
+          }
+          else{
+              cout<<" our move is "<<minmax.nextMove.first<<" "<<minmax.nextMove.second<<endl;
+              minmax.makeMove();
+          }
+        }
+      catch(length_error & e) {
+          break;
+      }
+    }
   }
+}

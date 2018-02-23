@@ -58,6 +58,7 @@ namespace ai{
             MoveGenerator activeGenerator;
 
             bool jumped = false;
+            int jumped_to = 0;
             char active_player;
             char inactive_player;
 
@@ -80,6 +81,8 @@ namespace ai{
 
             BoardType minMax(); // the actual minMax function
 
+            void makeJump();
+            void makeMove();
 
         private:
              // recurse on boards //return is board score best on minmax of children
@@ -97,6 +100,8 @@ namespace ai{
             void swapActivePlayer();
             void setNextJumps(BoardJumpsType & jumps);
             void setNextMoves(BoardMovesType & moves);
+
+
           };
 
     MinMaxHelper getMinMaxHelper(const char & color, Network network, CheckersGame & game, int max_depth);
