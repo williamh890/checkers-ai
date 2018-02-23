@@ -151,6 +151,14 @@ TEST_CASE("Test Network Evaluation", "[network]") {
     }
 }
 
+TEST_CASE("Testing evolution") {
+    ai::Network player(0);
+    ai::Network playerZeroEvolved(1);
+
+    playerZeroEvolved.replaceWithEvolution(player);
+    playerZeroEvolved.outputCreationDebug();
+}
+
 void writeToLogs(double timeTaken, int loopIterations, double boardsPerSec) {
     ofstream outFile;
     auto logFilePath = "logs/nn.log";
