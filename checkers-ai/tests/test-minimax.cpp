@@ -203,6 +203,8 @@ TEST_CASE ("timing minimax at different depths", "[minimax],[timing]") {
     end = getTime();
 
     auto total = (end - start);
-    cout << MiniMaxHelper::totalNodes / total << " nodes / sec" << endl;
+    cout << "Nodes evaluated: " << MiniMaxHelper::totalNodes << " nodes" << endl;
+    cout << "Total time taken: " << total <<  " secs" << endl;
+    cout << "Time per node: " << MiniMaxHelper::totalNodes / total << " nodes / sec" << endl;
 }
 

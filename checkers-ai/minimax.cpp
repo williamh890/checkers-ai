@@ -49,7 +49,6 @@ CheckersGame::MovePackage ai::minimaxMove(CheckersGame & game, int depth) {
         }
     }
 
-    cout << "Nodes evaluated: " << MiniMaxHelper::totalNodes << endl;
     return bestMove;
 }
 
@@ -74,10 +73,7 @@ CheckersGame::JumpPackage ai::minimaxJump(CheckersGame & game, int depth) {
         }
     }
 
-    cout << "Nodes evaluated: " << MiniMaxHelper::totalNodes << endl;
-
     return bestJump;
-
 }
 
 
