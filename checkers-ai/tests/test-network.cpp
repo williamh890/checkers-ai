@@ -153,7 +153,7 @@ TEST_CASE("Testing evolution") {
     ai::Network player(0);
     ai::Network playerZeroEvolved(1);
 
-    playerZeroEvolved.replaceWithEvolution(player);
+    playerZeroEvolved.evolveUsingNetwork(player);
     player.outputCreationDebug();
     playerZeroEvolved.outputCreationDebug();
 }

@@ -34,8 +34,7 @@ namespace ai {
             int getPerformance() const;
             void resetPerformance();
 
-            void replaceWithEvolution(const ai::Network &);
-            void evolve(); // *** TODO *** Required for Project 3
+            void evolveUsingNetwork(const ai::Network &);
 
             void outputCreationDebug();
             void changeKingWeight(Settings::NetworkWeightType);
@@ -54,6 +53,7 @@ namespace ai {
             void setupKingWeight();
             void setupSigmas();
 
+            void evolve();
             Settings::NetworkWeightType getTau();
             void evolveKingWeight();
             void evolveSigmas();
@@ -81,6 +81,6 @@ namespace ai {
     bool operator== (const Network &lhs, const Network &rhs);
 
     void setupNetworks (const std::vector<unsigned int> & dimesions, int numberOfNetworks = 100);
-    Settings::NetworkWeightType gaussianNumbersZeroToOne(std::mt19937 &); // TODO: Make this return a Gaussian number
+    Settings::NetworkWeightType gaussianNumbersZeroToOne(std::mt19937 &); 
 }
 #endif // NETWORK_H_INCLUDED
