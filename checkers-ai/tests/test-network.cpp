@@ -52,8 +52,7 @@ TEST_CASE("Test saving and loading consistency") {
     }
 }
 
-ai::Network player(0);
-ai::Network playerAgain(0);
+
 vector<char> emptyBoard(32);
 vector<char> sampleBigBoard{
         'r',   'r',   'r',   'r',
@@ -77,6 +76,8 @@ vector<char> sampleSmallBoard{
     };
 
 TEST_CASE("Test Network Evaluation", "[network]") {
+    ai::Network player(0);
+    ai::Network playerAgain(0);
     SECTION("test network evaluation of empty board is 0.") {
         REQUIRE(player.evaluateBoard(emptyBoard) == Approx(0));
         REQUIRE(player.evaluateBoard(emptyBoard, true) == Approx(0));

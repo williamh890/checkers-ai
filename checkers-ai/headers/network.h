@@ -16,6 +16,7 @@
 namespace ai {
     class NetworkFileReader;
     class NetworkFileWriter;
+    
 
     class Network {
         public:
@@ -43,6 +44,7 @@ namespace ai {
             unsigned int _ID;
             std::vector<LayersContainingNodes> _layers;
             std::vector<NetworkWeights> _weights;
+            std::vector<std::vector<Settings::NetworkWeightType>> _sigmas;
             Settings::NetworkWeightType _kingWeight;
             int _performance;
             bool _gameCompleted = false;
@@ -51,6 +53,7 @@ namespace ai {
             void setupLayers(const std::vector<unsigned int> & LayerDimensions);
             void setupRandomWeights(const std::vector<unsigned int> & LayerDimensions);
             void setupKingWeight();
+            void setupSigmas();
 
             template <typename RandomNumberType>
                 std::vector<RandomNumberType> getRandomNumbersOfLength(const unsigned int length,
@@ -74,5 +77,6 @@ namespace ai {
     bool operator== (const Network &lhs, const Network &rhs);
 
     void setupNetworks (const std::vector<unsigned int> & dimesions, int numberOfNetworks = 100);
+    Settings::NetworkWeightType gaussianNumbersZeroToOne(); // TODO: Make this return a Gaussian number
 }
 #endif // NETWORK_H_INCLUDED

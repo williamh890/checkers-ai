@@ -45,6 +45,14 @@ void NetworkFileWriter::saveWeightsForLayerTo(const vector<NetworkWeightType> & 
     }
 }
 
+void NetworkFileWriter::saveSigmasForLayerTo(const vector<NetworkWeightType> & layer) {
+
+    saveLayerSize(layer);
+    for (auto & w : layer) {
+        outFile.write( (char*)&w, sizeof(NetworkWeightType));
+    }
+}
+
 void NetworkFileWriter::savePerformance(int networkPerormance) {
     outFile.write( (char*)&networkPerormance, sizeof(int));
 }
@@ -81,7 +89,9 @@ void NetworkFileWriter::save(const string & filename, const Network & networkToS
     for (auto & layer : networkToSave._weights) {
         saveWeightsForLayerTo(layer);
     }
-
+    for (auto & layer : networkToSave._sigmas) {
+        saveSigmasForLayerTo(layer);
+    }
     if (DEBUG)
         cout << endl;
 

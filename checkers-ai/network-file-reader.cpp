@@ -42,6 +42,18 @@ vector<NetworkWeightType> NetworkFileReader::loadWeightsForLayerFrom(unsigned in
     return layerWeights;
 }
 
+vector<NetworkWeightType> NetworkFileReader::loadSigmasForLayerFrom(unsigned int currLayerDimension) {
+    vector<NetworkWeightType> layerSigmas;
+
+    for (unsigned int i = 0; i < currLayerDimension; ++i) {
+        NetworkWeightType sigma = 0;
+        inFile.read( (char*)&sigma, sizeof(NetworkWeightType));
+        layerSigmas.push_back(sigma);
+    }
+
+    return layerSigmas;
+}
+
 bool inline NetworkFileReader::noMoreLayersIn() {
     return inFile.eof();
 }
