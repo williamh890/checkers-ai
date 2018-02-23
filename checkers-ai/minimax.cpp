@@ -150,7 +150,6 @@ int MiniMaxHelper::recurse(const JumpPackage & jump, int depth) {
         bestNumPieces = recursiveCase(depth);
     }
 
-
     setGameState(stateBeforeMove);
     return bestNumPieces;
 }
@@ -233,9 +232,9 @@ int MiniMaxHelper::baseCase() {
     auto numPieces = game.getNumPiecesFor(maximizingPlayer);
 
     char opponentColor = (maximizingPlayer == 'r') ? 'b' : 'r';
-    auto numEnemyPieces = -game.getNumPiecesFor(opponentColor);
+    auto numEnemyPieces = game.getNumPiecesFor(opponentColor);
 
-    return numPieces + numEnemyPieces;
+    return numPieces - numEnemyPieces;
 }
 
 void MiniMaxHelper::setGameState(GameState & gameState) {
