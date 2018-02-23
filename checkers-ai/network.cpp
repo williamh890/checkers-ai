@@ -20,6 +20,7 @@ using NetworkWeightType = ai::Settings::NetworkWeightType;
 using std::vector;
 
 #include <iostream>
+using std::cin;
 using std::cout;
 using std::endl;
 
@@ -56,7 +57,6 @@ Network::Network(unsigned int networkId,
                 shared_ptr<Seeder> & seeder) :  _ID(networkId),
                                                 _performance(0),
                                                 randomNumGenerator(mt19937(seeder->get())) {
-
     setupLayers(layerDimensions);
     setupRandomWeights(layerDimensions);
     setupKingWeight();
@@ -319,12 +319,12 @@ bool ai::operator== (const Network &lhs, const Network &rhs) {
         (lhs._weights == rhs._weights);
 }
 
-void ai::setupNetworks(const vector<unsigned int>& dimensions, int numberOfNetworks) { //numberOfNetworks = 100
-    std::cout << "You are about to setup a new set of networks. This operation will overwrite previous networks. \n" <<
+void ai::setupNetworks(const vector<unsigned int> & dimensions, int numberOfNetworks) { //numberOfNetworks = 100
+    cout << "You are about to setup a new set of networks. This operation will overwrite previous networks. \n" <<
         "Are you sure you want to continue? (y,n) ";
-    if (std::cin.get() == 'n') {
+    if (cin.get() == 'n') {
         cout << "Not overwriting files" << endl;
-        std::cin.ignore();
+        cin.ignore();
         return;
     }
 
@@ -332,7 +332,8 @@ void ai::setupNetworks(const vector<unsigned int>& dimensions, int numberOfNetwo
     for (auto index = 0; index < numberOfNetworks; ++index) {
         Network(index, dimensions, seeder);
     }
-    std::cin.ignore();
+
+    cin.ignore();
 }
 
 NetworkWeightType ai::getGaussianNumberFromZeroToOne(std::mt19937 & randomNumGenerator) {
