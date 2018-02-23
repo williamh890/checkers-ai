@@ -71,7 +71,7 @@ using std::mt19937;
 using std::uniform_int_distribution;
 #include <climits>
 
-int CheckersGame::MINIMAX_SEARCH_DEPTH = 10;
+int CheckersGame::MINIMAX_SEARCH_DEPTH = 6;
 
 CheckersGame ai::getCheckersGame() {
     auto table = loadMoveTableFrom("move-table.json");
