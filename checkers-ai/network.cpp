@@ -134,7 +134,7 @@ NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool t
 
                     auto total = total1 + total2 + total3 + total4;
 
-                    _layers[x][y] = total / (1 + abs(total));
+                    _layers[x][y] = (!testing) ? total / (1 + abs(total)) : total;
                 }
             }
         }
