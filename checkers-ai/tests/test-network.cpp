@@ -52,8 +52,7 @@ TEST_CASE("Test saving and loading consistency") {
     }
 }
 
-ai::Network player(0);
-ai::Network playerAgain(0);
+
 vector<char> emptyBoard(32);
 vector<char> sampleBigBoard{
         'r',   'r',   'r',   'r',
@@ -77,6 +76,8 @@ vector<char> sampleSmallBoard{
     };
 
 TEST_CASE("Test Network Evaluation", "[network]") {
+    ai::Network player(0);
+    ai::Network playerAgain(0);
     SECTION("test network evaluation of empty board is 0.") {
         REQUIRE(player.evaluateBoard(emptyBoard) == Approx(0));
         REQUIRE(player.evaluateBoard(emptyBoard, true) == Approx(0));
@@ -148,13 +149,22 @@ TEST_CASE("Test Network Evaluation", "[network]") {
     }
 }
 
+TEST_CASE("Testing evolution") {
+    ai::Network player(0);
+    ai::Network playerZeroEvolved(1);
+
+    playerZeroEvolved.evolveUsingNetwork(player);
+    player.outputCreationDebug();
+    playerZeroEvolved.outputCreationDebug();
+}
+
 void writeToLogs(double timeTaken, int loopIterations, double boardsPerSec) {
     ofstream outFile;
     auto logFilePath = "logs/nn.log";
     outFile.open(logFilePath, ios_base::app);
 
     ostringstream outStr;
-    outStr << "Timing Run:" << endl;
+    outStr << "Timing Network Eval:" << endl;
     outStr << "------------------------------------------------------------------" << endl;
     outStr << "Total board evaluations = " << timeTaken << " seconds" << endl;
     outStr << "Boards calculated = " << loopIterations << endl;
@@ -164,9 +174,9 @@ void writeToLogs(double timeTaken, int loopIterations, double boardsPerSec) {
     outFile << outStr.str();
 }
 
-TEST_CASE("Testing the speed of board evaluation.") {
+TEST_CASE("Testing the speed of board evaluation.", "[network-timing]") {
     const int LOOP_COUNTER = 1000;
-    vector<unsigned int> dimesionsLarge{32, 1000, 100, 1};
+    vector<unsigned int> dimesionsLarge{32, 40, 10, 1};
     cout << "\n\n\n\n\n**** To use blondie dimensions (which is faster), say no ****\n\n" << endl;
     setupNetworks(dimesionsLarge, 2);
     vector<char> sampleBigBoard{
@@ -183,7 +193,7 @@ TEST_CASE("Testing the speed of board evaluation.") {
 
     cout << "\n\n\n\n****** Getting average board evaluation time.. This could take a while ******" << endl;
     double averageTime = 0;
-    const unsigned int LOOPSFORAVERAGE = 10;
+    const unsigned int LOOPSFORAVERAGE = 1000;
     for (volatile unsigned int index = 0; index < LOOPSFORAVERAGE; ++index){
         double evaluationStart = getTime();
         for (volatile int i = 0; i < LOOP_COUNTER; ++i) {
@@ -206,6 +216,8 @@ TEST_CASE("Testing the speed of board evaluation.") {
     double averageBPS = 1/averageTime;
 
 
+    cout << endl << "Network Evaluation Timing: " << endl;
+    cout << "----------------------------------" << endl;
     cout << "Average time taken for board evaluation was: " << averageTime << " seconds" << endl;
     cout << "Number of boards calculated: " << LOOP_COUNTER << endl;
     cout << "Number of boards per second = " << averageBPS << endl;

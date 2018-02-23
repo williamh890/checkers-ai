@@ -25,6 +25,7 @@ namespace ai {
 
         private:
             std::vector<Settings::NetworkWeightType> loadWeightsForLayerFrom(unsigned int currLayerDimension);
+            std::vector<Settings::NetworkWeightType> loadSigmasForLayerFrom(unsigned int currLayerDimension);
 
             bool inline noMoreLayersIn();
             int loadPerformanceFrom();
@@ -44,6 +45,7 @@ namespace ai {
         private:
             void saveLayerSize(const std::vector<Settings::NetworkWeightType> & layer);
             void saveWeightsForLayerTo(const std::vector<Settings::NetworkWeightType> & layer);
+            void saveSigmasForLayerTo(const std::vector<Settings::NetworkWeightType> & layer);
             void savePerformance(int networkPerormance);
             void saveKingWeight(Settings::NetworkWeightType kingWeight);
             void saveDimensions(const std::vector<std::vector<Settings::NetworkWeightType>> & layers);

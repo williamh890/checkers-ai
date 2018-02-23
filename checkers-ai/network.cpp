@@ -23,9 +23,12 @@ using std::endl;
 #include <random>
 using std::mt19937;
 using std::uniform_real_distribution;
+using std::normal_distribution;
 
 #include <memory>
 using std::shared_ptr;
+
+#include <math.h>
 
 Network::Network(unsigned int networkId): _ID(networkId) {
 	loadNetwork(_ID, *this);
@@ -33,13 +36,14 @@ Network::Network(unsigned int networkId): _ID(networkId) {
 
 Network::Network(unsigned int networkId,
                 const vector<unsigned int> & layerDimensions,
-                shared_ptr<Seeder> & seeder) :  _ID(networkId), 
-                                                _performance(0), 
+                shared_ptr<Seeder> & seeder) :  _ID(networkId),
+                                                _performance(0),
                                                 randomNumGenerator(mt19937(seeder->get())) {
 
     setupLayers(layerDimensions);
     setupRandomWeights(layerDimensions);
     setupKingWeight();
+    setupSigmas();
 
     saveNetwork(_ID, *this);
 }
@@ -73,6 +77,15 @@ void Network::setupRandomWeights(const vector<unsigned int> & layerDimensions){
 void Network::setupKingWeight() {
     uniform_real_distribution<NetworkWeightType> distribution(1,3);
     _kingWeight = distribution(randomNumGenerator);
+}
+
+void Network::setupSigmas() {
+    _sigmas = _weights;
+    for(unsigned int i = 0; i < _sigmas.size(); ++ i) {
+        for (unsigned int ii = 0; ii < _sigmas[i].size(); ++ii) {
+            _sigmas[i][ii] = .05;
+        }
+    }
 }
 
 template <typename RandomNumberType>
@@ -118,7 +131,6 @@ NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool t
     }
     /*void feedForward()*/{
         for (unsigned int x = 1; x < _layers.size(); ++x) {
-            # pragma omp parallel for schedule(guided, 2) firstprivate(x, testing) default(none)
             for (unsigned int y = 0; y < _layers[x].size(); ++y) {
                 /*calculateNode(x, y)*/ {
                     NetworkWeightType total1 = 0, total2 = 0, total3 = 0, total4 = 0;
@@ -131,14 +143,9 @@ NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool t
                         total4 += _weights[x][y*previousLayerSize + i + 3] * _layers[x - 1][i + 3];
                     }
 
-                    _layers[x][y] = total1 + total2 + total3 + total4;
-                }
-                if (testing) {
-                    continue;
-                }
-                /*useActivationFunction*/ {
-                    NetworkWeightType var = _layers[x][y];
-                    _layers[x][y] = var / (1 + abs(var));
+                    auto total = total1 + total2 + total3 + total4;
+
+                    _layers[x][y] = (!testing) ? total / (1 + abs(total)) : total;
                 }
             }
         }
@@ -179,23 +186,51 @@ void Network::resetPerformance() {
     _performance = 0;
 }
 
-vector<Network::NetworkWeights> Network::evolve() const { 	// *** TODO *** Required for Project 3
-    vector<NetworkWeights> weights_to_pass = _weights;
-    NetworkWeightType tempKing = _kingWeight;
-    // *** Evolve tempKing
-    // *** Evolve sigma
-    // *** Evolve weights in weights_to_pass
-    
-    weights_to_pass.push_back(vector<NetworkWeightType>(tempKing)); //Add tempking to the back of the weights vector for passing
-    return weights_to_pass;
-}
+void Network::evolveUsingNetwork(const Network & rhs) {
+    _kingWeight = rhs._kingWeight;
+    _weights = rhs._weights;
+    _sigmas = rhs._sigmas;
+    this->evolve();
 
-void Network::replaceWithEvolution(vector<NetworkWeights> & inputWeights) {
-    _kingWeight = inputWeights[inputWeights.size()-1][0];
-    inputWeights.pop_back();
-    _weights = std::move(inputWeights);
     saveNetwork (_ID, *this);
 }
+
+void Network::evolve() {
+    evolveKingWeight();
+    evolveSigmas();
+    evolveWeights();    
+}
+
+void Network::evolveKingWeight() {
+    uniform_real_distribution<NetworkWeightType> distribution(-1,1);
+    _kingWeight += distribution(randomNumGenerator);
+}
+
+NetworkWeightType Network::getTau() {
+    NetworkWeightType numberofWeights = 0;
+    for (unsigned int index = 0; index < _weights.size(); ++index) {
+        numberofWeights += _weights[index].size();
+    }
+    NetworkWeightType tau = 1/(sqrt(2*sqrt(numberofWeights)));
+    return tau;
+}
+void Network::evolveSigmas() {
+    auto tau = getTau();
+    for (unsigned int i = 0; i < _sigmas.size(); ++i) {
+        for (unsigned int ii = 0; ii < _sigmas[i].size(); ++ii) {
+            _sigmas[i][ii] = _sigmas[i][ii] * exp(tau * gaussianNumbersZeroToOne(randomNumGenerator));
+        }
+    }
+}
+
+void Network::evolveWeights() {
+    for (unsigned int i = 0; i < _weights.size(); ++i) {
+            for (unsigned int ii = 0; ii < _weights[i].size(); ++ii) {
+                _weights[i][ii] = _weights[i][ii] + _sigmas[i][ii] * gaussianNumbersZeroToOne(randomNumGenerator);
+            }
+        }
+}
+
 
 void Network::outputCreationDebug() {
     cout << "Weight for the king: " << _kingWeight << endl;
@@ -212,6 +247,14 @@ void Network::outputCreationDebug() {
 
     cout << "_weights data: " << endl;
     for (auto & v : _weights) {
+        for (auto x : v) {
+            cout << x << " ";
+        }
+        cout << endl;
+    }
+
+    cout << "_sigmas data: " << endl;
+    for (auto & v : _sigmas) {
         for (auto x : v) {
             cout << x << " ";
         }
@@ -262,4 +305,9 @@ void ai::setupNetworks(const vector<unsigned int>& dimensions, int numberOfNetwo
         Network(index, dimensions, seeder);
     }
     std::cin.ignore();
+}
+
+NetworkWeightType ai::gaussianNumbersZeroToOne(std::mt19937 & randomNumGenerator) {
+    normal_distribution<NetworkWeightType> distribution(0, 1);
+    return distribution (randomNumGenerator);
 }

@@ -1,7 +1,6 @@
-// min_max.h
-
 #ifndef MIN_MAX_H
 #define MIN_MAX_H
+
 #include "checkers-game.h"
 // ai::CheckersGame
 
@@ -14,11 +13,11 @@
 
 static const std::vector<char> COLORS = {'r', 'b'};
 namespace ai {
-    CheckersGame::MovePackage minimaxMove(CheckersGame & game, int depth, char maximizingPlayer);
-    CheckersGame::JumpPackage minimaxJump(CheckersGame & game, int depth, char maximizingPlayer);
+    CheckersGame::MovePackage minimaxMove(CheckersGame & game, int depth);
+    CheckersGame::JumpPackage minimaxJump(CheckersGame & game, int depth);
 
-    int minimax(CheckersGame::MovePackage move, int depth, char maximizingPlayer, CheckersGame & game);
-    int minimax(CheckersGame::JumpPackage jump, int depth, char maximizingPlayer, CheckersGame & game);
+    int minimax(const CheckersGame::MovePackage & move, int depth, char maximizingPlayer, CheckersGame & game);
+    int minimax(const CheckersGame::JumpPackage & jump, int depth, char maximizingPlayer, CheckersGame & game);
 
     using Pieces = std::vector<Piece>;
     using BoardState = std::vector<char>;

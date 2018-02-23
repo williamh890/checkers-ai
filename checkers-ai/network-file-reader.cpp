@@ -23,6 +23,7 @@ using std::endl;
 #include <fstream>
 using std::ofstream;
 
+
 bool ai::loadNetwork(unsigned int id, Network & network) {
     auto filename = idToFilename(id);
     NetworkFileReader reader;
@@ -30,35 +31,59 @@ bool ai::loadNetwork(unsigned int id, Network & network) {
     return reader.load(filename, network);
 }
 
-vector<NetworkWeightType> NetworkFileReader::loadWeightsForLayerFrom(unsigned int currLayerDimension) {
-    vector<NetworkWeightType> layerWeights;
-
-    for (unsigned int i = 0; i < currLayerDimension; ++i) {
-        NetworkWeightType weight = 0;
-        inFile.read( (char*)&weight, sizeof(NetworkWeightType));
-        layerWeights.push_back(weight);
+bool NetworkFileReader::load(const string & filename, Network & networkRecievingData) {
+    inFile.open(filename, ios::in | ios::binary);
+    cout << "reading in network" << endl;
+    if (!static_cast<bool>(inFile)) {
+        cout << "Error opening nn file" << endl;
+        return false;
     }
 
-    return layerWeights;
-}
+    networkRecievingData._performance = loadPerformanceFrom();
+    networkRecievingData._kingWeight = loadKingWeightFrom();
 
-bool inline NetworkFileReader::noMoreLayersIn() {
-    return inFile.eof();
+    auto dimensions = loadDimension();
+    auto nodes = getNodesFromDimensions(dimensions);
+    networkRecievingData._layers = nodes;
+
+    // READ SIGMAS HERE
+
+    vector<vector<NetworkWeightType>> weights;
+    vector<vector<NetworkWeightType>> sigmas;
+    unsigned int currLayerDimension = 0.;
+    while(true) {
+        inFile.read( (char*)&currLayerDimension, sizeof(unsigned int));
+
+        if(noMoreLayersIn()) {
+            break;
+        }
+
+        auto layerWeights = loadWeightsForLayerFrom(currLayerDimension);
+
+        inFile.read( (char*)&currLayerDimension, sizeof(unsigned int));
+        auto sigmaValues = loadWeightsForLayerFrom(currLayerDimension);
+
+        weights.push_back(layerWeights);
+        sigmas.push_back(sigmaValues);
+    }
+
+    inFile.close();
+    networkRecievingData._weights = weights;
+    networkRecievingData._sigmas = sigmas;
+
+    return true;
 }
 
 int NetworkFileReader::loadPerformanceFrom() {
     int performace = 0;
     inFile.read( (char*)&performace, sizeof(int));
-    if (DEBUG)
-        cout << "Perfomance: " << performace << endl;
+
     return performace;
-};
+}
 
 NetworkWeightType NetworkFileReader::loadKingWeightFrom() {
     NetworkWeightType kingWeight = 0.;
     inFile.read( (char*)&kingWeight, sizeof(NetworkWeightType));
-    if (DEBUG)
-        cout << "King Weight: " << kingWeight << endl;
 
     return kingWeight;
 }
@@ -68,18 +93,12 @@ vector<unsigned int> NetworkFileReader::loadDimension() {
     inFile.read((char*)&numLayers, sizeof(unsigned int));
 
     vector<unsigned int> dimensions;
-    if (DEBUG)
-        cout << "loading dimensions: ";
 	for (unsigned int i = 0; i < numLayers; ++i) {
         unsigned int layerSize = 0;
         inFile.read( (char*)&layerSize, sizeof(unsigned int));
 
-        if (DEBUG)
-            cout << layerSize << " ";
         dimensions.push_back(layerSize);
 	}
-    if (DEBUG)
-        cout << endl;
 
     return dimensions;
 }
@@ -95,44 +114,26 @@ vector<vector<NetworkWeightType>> NetworkFileReader::getNodesFromDimensions(cons
     return nodes;
 }
 
+vector<NetworkWeightType> NetworkFileReader::loadWeightsForLayerFrom(unsigned int currLayerDimension) {
+    vector<NetworkWeightType> layerWeights;
 
-bool NetworkFileReader::load(const string & filename, Network & networkRecievingData) {
-    vector<vector<NetworkWeightType>> weights;
-
-    if (DEBUG)
-        cout << "loading network" << endl;
-
-    cout << filename << endl;
-    inFile.open(filename, ios::in | ios::binary);
-    if (!inFile) {
-        cout << "Error opening nn file" << endl;
-        return false;
+    for (unsigned int i = 0; i < currLayerDimension; ++i) {
+        NetworkWeightType weight = 0;
+        inFile.read( (char*)&weight, sizeof(NetworkWeightType));
+        layerWeights.push_back(weight);
     }
 
-    networkRecievingData._performance = loadPerformanceFrom();
-    networkRecievingData._kingWeight = loadKingWeightFrom();
-
-    auto dimensions = loadDimension();
-    auto nodes = getNodesFromDimensions(dimensions);
-    networkRecievingData._layers = nodes;
-
-    unsigned int currLayerDimension = 0.;
-    while(true) {
-        inFile.read( (char*)&currLayerDimension, sizeof(unsigned int));
-
-        if(noMoreLayersIn()) {
-            break;
-        }
-        if (DEBUG)
-            cout << "Layer Dimension: " << currLayerDimension << endl;
-
-        auto layerWeights = loadWeightsForLayerFrom(currLayerDimension);
-        weights.push_back(layerWeights);
-    }
-
-    inFile.close();
-    networkRecievingData._weights = weights;
-
-    return true;
+    return layerWeights;
 }
+
+
+bool inline NetworkFileReader::noMoreLayersIn() {
+    return inFile.eof();
+}
+
+
+
+
+
+
 

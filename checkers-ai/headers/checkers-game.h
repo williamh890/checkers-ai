@@ -35,6 +35,7 @@ namespace ai {
 
             using turn_type = std::pair<Board::BoardType, std::pair<std::vector<MovePackage>, std::vector<JumpPackage>>>;
 
+            static int MINIMAX_SEARCH_DEPTH;
             int moveCounter = 0;
 
             Board board;
@@ -104,14 +105,6 @@ namespace ai {
             MovePackage parseUserInput();
 
             JumpPackage getJumpFrom(const MovePackage & inputJump);
-
-            int minimaxSearch(
-                    Board passedBoard,
-                    RedPlayer red_player,
-                    BlackPlayer black_player,
-                    char playerColor,
-                    int depth,
-                    int init_depth);
 
             void reactTo(const MovePackage & move);
             void reactTo(const JumpPackage & jump);
