@@ -186,7 +186,16 @@ void Network::resetPerformance() {
     _performance = 0;
 }
 
-void Network::evolve() { 	// *** TODO *** Required for Project 3
+void Network::evolveUsingNetwork(const Network & rhs) {
+    _kingWeight = rhs._kingWeight;
+    _weights = rhs._weights;
+    _sigmas = rhs._sigmas;
+    this->evolve();
+
+    saveNetwork (_ID, *this);
+}
+
+void Network::evolve() {
     evolveKingWeight();
     evolveSigmas();
     evolveWeights();    
@@ -221,14 +230,7 @@ void Network::evolveWeights() {
             }
         }
 }
-void Network::replaceWithEvolution(const Network & rhs) {
-    _kingWeight = rhs._kingWeight;
-    _weights = rhs._weights;
-    _sigmas = rhs._sigmas;
-    this->evolve();
 
-    saveNetwork (_ID, *this);
-}
 
 void Network::outputCreationDebug() {
     cout << "Weight for the king: " << _kingWeight << endl;
@@ -305,7 +307,7 @@ void ai::setupNetworks(const vector<unsigned int>& dimensions, int numberOfNetwo
     std::cin.ignore();
 }
 
-NetworkWeightType ai::gaussianNumbersZeroToOne(std::mt19937 & randomNumGenerator) { // TODO: Make this return a Gaussian number
+NetworkWeightType ai::gaussianNumbersZeroToOne(std::mt19937 & randomNumGenerator) {
     normal_distribution<NetworkWeightType> distribution(0, 1);
     return distribution (randomNumGenerator);
 }
