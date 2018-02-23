@@ -154,7 +154,7 @@ void writeToLogs(double timeTaken, int loopIterations, double boardsPerSec) {
     outFile.open(logFilePath, ios_base::app);
 
     ostringstream outStr;
-    outStr << "Timing Run:" << endl;
+    outStr << "Timing Network Eval:" << endl;
     outStr << "------------------------------------------------------------------" << endl;
     outStr << "Total board evaluations = " << timeTaken << " seconds" << endl;
     outStr << "Boards calculated = " << loopIterations << endl;
@@ -206,6 +206,8 @@ TEST_CASE("Testing the speed of board evaluation.", "[network-timing]") {
     double averageBPS = 1/averageTime;
 
 
+    cout << endl << "Network Evaluation Timing: " << endl;
+    cout << "----------------------------------" << endl;
     cout << "Average time taken for board evaluation was: " << averageTime << " seconds" << endl;
     cout << "Number of boards calculated: " << LOOP_COUNTER << endl;
     cout << "Number of boards per second = " << averageBPS << endl;

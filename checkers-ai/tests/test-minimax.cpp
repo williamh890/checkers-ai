@@ -182,6 +182,9 @@ TEST_CASE ("minimax wrapper functions behave") {
 
 vector<MovePackage> moves;
 TEST_CASE ("timing minimax at different depths", "[minimax],[timing]") {
+    cout << endl << "Minimax timing: " << endl;
+    cout << "----------------------------------" << endl;
+
     auto game = getCheckersGame();
 
     const int ITERATIONS = 1;
@@ -200,7 +203,6 @@ TEST_CASE ("timing minimax at different depths", "[minimax],[timing]") {
     end = getTime();
 
     auto total = (end - start);
-
-    cout << "Total time per search: " << MiniMaxHelper::totalNodes / total << endl;
+    cout << MiniMaxHelper::totalNodes / total << " nodes / sec" << endl;
 }
 
