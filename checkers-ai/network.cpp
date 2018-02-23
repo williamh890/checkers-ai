@@ -42,6 +42,7 @@ Network::Network(unsigned int networkId,
     setupLayers(layerDimensions);
     setupRandomWeights(layerDimensions);
     setupKingWeight();
+    setupSigmas();
 
     saveNetwork(_ID, *this);
 }
@@ -75,6 +76,15 @@ void Network::setupRandomWeights(const vector<unsigned int> & layerDimensions){
 void Network::setupKingWeight() {
     uniform_real_distribution<NetworkWeightType> distribution(1,3);
     _kingWeight = distribution(randomNumGenerator);
+}
+
+void Network::setupSigmas() {
+    _sigmas = _weights;/*
+    for(auto & i: _sigmas) {
+        for (auto ii: i) {
+            ii = .05;
+        }
+    }*/
 }
 
 template <typename RandomNumberType>
@@ -213,6 +223,14 @@ void Network::outputCreationDebug() {
         }
         cout << endl;
     }
+/*
+    cout << "_sigmas data: " << endl;
+    for (auto & v : _sigmas) {
+        for (auto x : v) {
+            cout << x << " ";
+        }
+        cout << endl;
+    }*/
 }
 
 void Network::changeKingWeight(NetworkWeightType newWeight) {
@@ -258,4 +276,9 @@ void ai::setupNetworks(const vector<unsigned int>& dimensions, int numberOfNetwo
         Network(index, dimensions, seeder);
     }
     std::cin.ignore();
+}
+
+NetworkWeightType gaussianNumbersZeroToOne() { // TODO: Make this return a Gaussian number
+    NetworkWeightType dummy = 1;
+    return dummy;
 }
