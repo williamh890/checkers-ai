@@ -80,11 +80,11 @@ void Network::setupKingWeight() {
 
 void Network::setupSigmas() {
     _sigmas = _weights;
-    //for(auto & i: _sigmas) {
-        //for (auto ii: i) {
-            //ii = .05;
-        //}
-    //}
+    for(unsigned int i = 0; i < _sigmas.size(); ++ i) {
+        for (unsigned int ii = 0; ii < _sigmas[i].size(); ++ii) {
+            _sigmas[i][ii] = .05;
+        }
+    }
 }
 
 template <typename RandomNumberType>
@@ -224,14 +224,14 @@ void Network::outputCreationDebug() {
         }
         cout << endl;
     }
-/*
+
     cout << "_sigmas data: " << endl;
     for (auto & v : _sigmas) {
         for (auto x : v) {
             cout << x << " ";
         }
         cout << endl;
-    }*/
+    }
 }
 
 void Network::changeKingWeight(NetworkWeightType newWeight) {
