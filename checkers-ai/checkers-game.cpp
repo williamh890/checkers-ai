@@ -26,15 +26,12 @@ using ai::BlackPlayer;
 using ai::getPlayer;
 
 #include "headers/json-to-stl.h"
-using ai::loadMoveTableFrom;
-using ai::JsonToStlConverter;
 
 #include "headers/move-generator.h"
 using ai::getGeneratorFor;
 using ai::MoveGenerator;
 
 #include "headers/utils.h"
-using ai::spaceToPosition;
 
 #include "headers/models.h"
 using ai::Jump;
@@ -74,7 +71,7 @@ using std::mt19937;
 using std::uniform_int_distribution;
 #include <climits>
 
-int CheckersGame::MINIMAX_SEARCH_DEPTH = 7;
+int CheckersGame::MINIMAX_SEARCH_DEPTH = 6;
 
 CheckersGame ai::getCheckersGame() {
     auto table = loadMoveTableFrom("move-table.json");
@@ -180,11 +177,11 @@ JumpPackage CheckersGame::getJumpFromActivePlayer() {
 }
 
 MovePackage CheckersGame::getMinimaxMove() {
-    return minimaxMove(*this, MINIMAX_SEARCH_DEPTH, getActivePlayerColor());
+    return minimaxMove(*this, MINIMAX_SEARCH_DEPTH);
 }
 
 JumpPackage CheckersGame::getMinimaxJump() {
-    return minimaxJump(*this, MINIMAX_SEARCH_DEPTH, getActivePlayerColor());
+    return minimaxJump(*this, MINIMAX_SEARCH_DEPTH);
 }
 
 

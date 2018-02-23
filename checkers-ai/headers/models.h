@@ -2,6 +2,9 @@
 #define MODELS_H
 
 #include <sstream>
+// std::stringstream
+#include <string>
+// std::string
 
 namespace ai {
     struct Jump {
@@ -51,4 +54,4 @@ namespace ai {
     };
 }
 
-#endif
+#endif // HEADERS_MODELS_H

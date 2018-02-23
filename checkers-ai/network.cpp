@@ -27,6 +27,8 @@ using std::uniform_real_distribution;
 #include <memory>
 using std::shared_ptr;
 
+#include <math.h>
+
 Network::Network(unsigned int networkId): _ID(networkId) {
 	loadNetwork(_ID, *this);
 }
@@ -118,7 +120,6 @@ NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool t
     }
     /*void feedForward()*/{
         for (unsigned int x = 1; x < _layers.size(); ++x) {
-            # pragma omp parallel for schedule(guided, 2) firstprivate(x, testing) default(none)
             for (unsigned int y = 0; y < _layers[x].size(); ++y) {
                 /*calculateNode(x, y)*/ {
                     NetworkWeightType total1 = 0, total2 = 0, total3 = 0, total4 = 0;
@@ -131,14 +132,9 @@ NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool t
                         total4 += _weights[x][y*previousLayerSize + i + 3] * _layers[x - 1][i + 3];
                     }
 
-                    _layers[x][y] = total1 + total2 + total3 + total4;
-                }
-                if (testing) {
-                    continue;
-                }
-                /*useActivationFunction*/ {
-                    NetworkWeightType var = _layers[x][y];
-                    _layers[x][y] = var / (1 + abs(var));
+                    auto total = total1 + total2 + total3 + total4;
+
+                    _layers[x][y] = total / (1 + abs(total));
                 }
             }
         }

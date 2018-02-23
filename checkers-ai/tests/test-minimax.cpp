@@ -175,8 +175,8 @@ TEST_CASE ("minimax wrapper functions behave") {
     auto game = getCheckersGame();
 
     SECTION ("throws exception if depth == 0") {
-        REQUIRE_THROWS(minimaxMove(game, 0, 'b'));
-        REQUIRE_THROWS(minimaxJump(game, 0, 'b'));
+        REQUIRE_THROWS(minimaxMove(game, 0));
+        REQUIRE_THROWS(minimaxJump(game, 0));
     }
 }
 
@@ -196,13 +196,11 @@ TEST_CASE ("timing minimax at different depths", "[minimax],[timing]") {
 
     MiniMaxHelper::totalNodes = 0;
     start = getTime();
-    for (volatile int i = 0; i < ITERATIONS; ++i) {
-        moves.push_back(game.getMinimaxMove());
-    }
+    moves.push_back(game.getMinimaxMove());
     end = getTime();
 
-    auto total = (end - start) - pushBackTotal;
+    auto total = (end - start);
 
-    cout << "Total time per search: " << total / ITERATIONS << endl;
+    cout << "Total time per search: " << MiniMaxHelper::totalNodes / total << endl;
 }
 

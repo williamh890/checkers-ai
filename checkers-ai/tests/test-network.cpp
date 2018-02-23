@@ -164,9 +164,9 @@ void writeToLogs(double timeTaken, int loopIterations, double boardsPerSec) {
     outFile << outStr.str();
 }
 
-TEST_CASE("Testing the speed of board evaluation.") {
+TEST_CASE("Testing the speed of board evaluation.", "[network-timing]") {
     const int LOOP_COUNTER = 1000;
-    vector<unsigned int> dimesionsLarge{32, 1000, 100, 1};
+    vector<unsigned int> dimesionsLarge{32, 40, 10, 1};
     cout << "\n\n\n\n\n**** To use blondie dimensions (which is faster), say no ****\n\n" << endl;
     setupNetworks(dimesionsLarge, 2);
     vector<char> sampleBigBoard{
@@ -183,7 +183,7 @@ TEST_CASE("Testing the speed of board evaluation.") {
 
     cout << "\n\n\n\n****** Getting average board evaluation time.. This could take a while ******" << endl;
     double averageTime = 0;
-    const unsigned int LOOPSFORAVERAGE = 10;
+    const unsigned int LOOPSFORAVERAGE = 1000;
     for (volatile unsigned int index = 0; index < LOOPSFORAVERAGE; ++index){
         double evaluationStart = getTime();
         for (volatile int i = 0; i < LOOP_COUNTER; ++i) {
