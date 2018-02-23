@@ -141,6 +141,7 @@ int MiniMaxHelper::recurse(const JumpPackage & jump, int depth) {
 
     auto multiJumps = game.getValidJumpsAt(jumpDestination);
     int bestNumPieces;
+
     if (multiJumps.size() > 0) {
         bestNumPieces = recurseMultiJumpCase(multiJumps, depth);
     }
@@ -158,8 +159,9 @@ int MiniMaxHelper::recurseMultiJumpCase(const vector<JumpPackage> & multiJumps, 
     auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
     int bestNumPieces = (isMaximizingPlayer) ? INT_MIN : INT_MAX;
     int jumpVal;
+
     for (auto & jump : multiJumps) {
-        jumpVal = recurse(jump, depth - 1);
+        jumpVal = recurse(jump, depth);
 
         bestNumPieces = (isMaximizingPlayer) ?
             max(jumpVal, bestNumPieces) :
@@ -178,7 +180,7 @@ int MiniMaxHelper::recursiveCase(int depth) {
     if (jumps.size() != 0) {
         int jumpVal;
         for (auto & jump : jumps) {
-            jumpVal = recurse(jump, depth - 1);
+            jumpVal = recurse(jump, depth);
 
             bestNumPieces = (isMaximizingPlayer) ?
                 max(jumpVal, bestNumPieces) :
