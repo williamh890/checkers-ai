@@ -28,8 +28,6 @@ using std::endl;
 TEST_CASE("Testing setupNetworks") {
     vector<unsigned int> dimesions{32, 40, 10, 1};
     setupNetworks(dimesions, 2);
-    ai::Network testingCreation(0);
-    testingCreation.outputCreationDebug();
 }
 
 TEST_CASE("Test saving and loading consistency") {
@@ -156,6 +154,7 @@ TEST_CASE("Testing evolution") {
     ai::Network playerZeroEvolved(1);
 
     playerZeroEvolved.replaceWithEvolution(player);
+    player.outputCreationDebug();
     playerZeroEvolved.outputCreationDebug();
 }
 
