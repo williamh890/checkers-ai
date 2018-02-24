@@ -135,10 +135,10 @@ NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool t
                 _layers[0][index] = 0;
             else if (i == 'r')
                 _layers[0][index] = 1;
-            else if (i == 'R')
-                _layers[0][index] = 1 * _kingWeight;
             else if (i == 'b')
                 _layers[0][index] = -1;
+            else if (i == 'R')
+                _layers[0][index] = 1 * _kingWeight;
             else if (i == 'B')
                 _layers[0][index] = -1 * _kingWeight;
             else
