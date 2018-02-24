@@ -23,88 +23,10 @@ using std::endl;
 #include <fstream>
 using std::ofstream;
 
-bool ai::loadNetwork(unsigned int id, Network & network) {
-    auto filename = idToFilename(id);
-    NetworkFileReader reader;
-
-    return reader.load(filename, network);
-}
-
-vector<NetworkWeightType> NetworkFileReader::loadWeightsForLayerFrom(unsigned int currLayerDimension) {
-    vector<NetworkWeightType> layerWeights;
-
-    for (unsigned int i = 0; i < currLayerDimension; ++i) {
-        NetworkWeightType weight = 0;
-        inFile.read( (char*)&weight, sizeof(NetworkWeightType));
-        layerWeights.push_back(weight);
-    }
-
-    return layerWeights;
-}
-
-bool inline NetworkFileReader::noMoreLayersIn() {
-    return inFile.eof();
-}
-
-int NetworkFileReader::loadPerformanceFrom() {
-    int performace = 0;
-    inFile.read( (char*)&performace, sizeof(int));
-    if (DEBUG)
-        cout << "Perfomance: " << performace << endl;
-    return performace;
-};
-
-NetworkWeightType NetworkFileReader::loadKingWeightFrom() {
-    NetworkWeightType kingWeight = 0.;
-    inFile.read( (char*)&kingWeight, sizeof(NetworkWeightType));
-    if (DEBUG)
-        cout << "King Weight: " << kingWeight << endl;
-
-    return kingWeight;
-}
-
-vector<unsigned int> NetworkFileReader::loadDimension() {
-    unsigned int numLayers = 0;
-    inFile.read((char*)&numLayers, sizeof(unsigned int));
-
-    vector<unsigned int> dimensions;
-    if (DEBUG)
-        cout << "loading dimensions: ";
-	for (unsigned int i = 0; i < numLayers; ++i) {
-        unsigned int layerSize = 0;
-        inFile.read( (char*)&layerSize, sizeof(unsigned int));
-
-        if (DEBUG)
-            cout << layerSize << " ";
-        dimensions.push_back(layerSize);
-	}
-    if (DEBUG)
-        cout << endl;
-
-    return dimensions;
-}
-
-vector<vector<NetworkWeightType>> NetworkFileReader::getNodesFromDimensions(const vector<unsigned int> & dimensions) {
-    vector<vector<NetworkWeightType>> nodes;
-
-    for (auto size : dimensions) {
-        auto nodeLayer = vector<NetworkWeightType>(size, 0);
-        nodes.push_back(nodeLayer);
-    }
-
-    return nodes;
-}
-
-
 bool NetworkFileReader::load(const string & filename, Network & networkRecievingData) {
-    vector<vector<NetworkWeightType>> weights;
+    networkFile.open(filename, ios::in | ios::binary);
 
-    if (DEBUG)
-        cout << "loading network" << endl;
-
-    cout << filename << endl;
-    inFile.open(filename, ios::in | ios::binary);
-    if (!inFile) {
+    if (!static_cast<bool>(networkFile)) {
         cout << "Error opening nn file" << endl;
         return false;
     }
@@ -116,23 +38,90 @@ bool NetworkFileReader::load(const string & filename, Network & networkRecieving
     auto nodes = getNodesFromDimensions(dimensions);
     networkRecievingData._layers = nodes;
 
-    unsigned int currLayerDimension = 0.;
-    while(true) {
-        inFile.read( (char*)&currLayerDimension, sizeof(unsigned int));
+    vector<vector<NetworkWeightType>> weights;
+    vector<vector<NetworkWeightType>> sigmas;
 
-        if(noMoreLayersIn()) {
+    size_t vectorSize = 0.;
+    while(true) {
+        networkFile.read( (char*)&vectorSize, sizeof(size_t));
+
+        if(noMoreLayersInNetworkFile()) {
             break;
         }
-        if (DEBUG)
-            cout << "Layer Dimension: " << currLayerDimension << endl;
 
-        auto layerWeights = loadWeightsForLayerFrom(currLayerDimension);
+        auto layerWeights = loadVector(vectorSize);
+
+        networkFile.read( (char*)&vectorSize, sizeof(size_t));
+        auto sigmaValues = loadVector(vectorSize);
+
         weights.push_back(layerWeights);
+        sigmas.push_back(sigmaValues);
     }
 
-    inFile.close();
+    networkFile.close();
+
     networkRecievingData._weights = weights;
+    networkRecievingData._sigmas = sigmas;
 
     return true;
+}
+
+int NetworkFileReader::loadPerformanceFrom() {
+    int performace = 0;
+    networkFile.read( (char*)&performace, sizeof(int));
+
+    return performace;
+}
+
+NetworkWeightType NetworkFileReader::loadKingWeightFrom() {
+    NetworkWeightType kingWeight = 0.;
+    networkFile.read( (char*)&kingWeight, sizeof(NetworkWeightType));
+
+    return kingWeight;
+}
+
+vector<size_t>
+NetworkFileReader::loadDimension() {
+    size_t numLayers = 0;
+    networkFile.read((char*)&numLayers, sizeof(size_t));
+
+    vector<size_t> dimensions;
+	for (size_t i = 0; i < numLayers; ++i) {
+        size_t layerSize = 0;
+        networkFile.read( (char*)&layerSize, sizeof(size_t));
+
+        dimensions.push_back(layerSize);
+	}
+
+    return dimensions;
+}
+
+vector<vector<NetworkWeightType>>
+NetworkFileReader::getNodesFromDimensions(const vector<size_t> & dimensions) {
+    vector<vector<NetworkWeightType>> nodes;
+
+    for (auto size : dimensions) {
+        auto nodeLayer = vector<NetworkWeightType>(size, 0);
+        nodes.push_back(nodeLayer);
+    }
+
+    return nodes;
+}
+
+vector<NetworkWeightType>
+NetworkFileReader::loadVector(size_t currLayerDimension) {
+    vector<NetworkWeightType> layerWeights;
+
+    for (size_t i = 0; i < currLayerDimension; ++i) {
+        NetworkWeightType weight = 0;
+        networkFile.read( (char*)&weight, sizeof(NetworkWeightType));
+        layerWeights.push_back(weight);
+    }
+
+    return layerWeights;
+}
+
+bool inline NetworkFileReader::noMoreLayersInNetworkFile() {
+    return networkFile.eof();
 }
 

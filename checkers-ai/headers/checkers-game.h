@@ -106,14 +106,6 @@ namespace ai {
 
             JumpPackage getJumpFrom(const MovePackage & inputJump);
 
-            int minimaxSearch(
-                    Board passedBoard,
-                    RedPlayer red_player,
-                    BlackPlayer black_player,
-                    char playerColor,
-                    int depth,
-                    int init_depth);
-
             void reactTo(const MovePackage & move);
             void reactTo(const JumpPackage & jump);
 

@@ -19,9 +19,13 @@ namespace ai {
 
     class Network {
         public:
+            static void save(size_t id, Network & toSave);
+            static bool load(size_t id, Network & toLoad);
+
             using LayersContainingNodes = std::vector<Settings::NetworkWeightType>;
             using NetworkWeights = std::vector<Settings::NetworkWeightType>;
 
+            Network () = default;
             Network (unsigned int id);
             Network (unsigned int id,
                      const std::vector<unsigned int> & LayerDimension,
@@ -34,8 +38,7 @@ namespace ai {
             int getPerformance() const;
             void resetPerformance();
 
-            std::vector<NetworkWeights> evolve() const; // *** TODO *** Required for Project 3
-            void replaceWithEvolution(std::vector<NetworkWeights> &);
+            void evolveUsingNetwork(const ai::Network &);
 
             void outputCreationDebug();
             void changeKingWeight(Settings::NetworkWeightType);
@@ -43,6 +46,7 @@ namespace ai {
             unsigned int _ID;
             std::vector<LayersContainingNodes> _layers;
             std::vector<NetworkWeights> _weights;
+            std::vector<NetworkWeights> _sigmas;
             Settings::NetworkWeightType _kingWeight;
             int _performance;
             bool _gameCompleted = false;
@@ -51,6 +55,21 @@ namespace ai {
             void setupLayers(const std::vector<unsigned int> & LayerDimensions);
             void setupRandomWeights(const std::vector<unsigned int> & LayerDimensions);
             void setupKingWeight();
+            void setupSigmas();
+
+            void evolve();
+            Settings::NetworkWeightType getTau();
+            void evolveKingWeight();
+
+            void evolveSigmas();
+
+            Settings::NetworkWeightType
+            inline evolveSigmaAt(size_t i, size_t ii, size_t tau);
+
+            void evolveWeights();
+
+            Settings::NetworkWeightType
+            inline evolveWeightAt(size_t i, size_t ii);
 
             template <typename RandomNumberType>
                 std::vector<RandomNumberType> getRandomNumbersOfLength(const unsigned int length,
@@ -74,5 +93,6 @@ namespace ai {
     bool operator== (const Network &lhs, const Network &rhs);
 
     void setupNetworks (const std::vector<unsigned int> & dimesions, int numberOfNetworks = 100);
+    Settings::NetworkWeightType getGaussianNumberFromZeroToOne(std::mt19937 &);
 }
 #endif // NETWORK_H_INCLUDED

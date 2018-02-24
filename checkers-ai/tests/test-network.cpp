@@ -3,13 +3,8 @@ using ai::Network;
 using ai::Settings::NetworkWeightType;
 using ai::setupNetworks;
 
-#include "../headers/network-file-io.h"
-using ai::loadNetwork;
-using ai::saveNetwork;
-
 #include "../headers/utils.h"
 using ai::getTime;
-
 
 #include "catch.hpp"
 
@@ -39,8 +34,8 @@ TEST_CASE("Test saving and loading consistency") {
     }
 
     SECTION ("Loading a saved object == object that was saved.") {
-        saveNetwork(0, player);
-        loadNetwork(0, playerAgain);
+        Network::save(0, player);
+        Network::load(0, playerAgain);
 
         REQUIRE(player == playerAgain);
     }
@@ -48,12 +43,10 @@ TEST_CASE("Test saving and loading consistency") {
     SECTION ("Loading an unavailable network fails") {
         ai::Network failLoadTest(0);
 
-        REQUIRE(loadNetwork(101, failLoadTest) == false);
+        REQUIRE_FALSE(Network::load(101, failLoadTest));
     }
 }
 
-ai::Network player(0);
-ai::Network playerAgain(0);
 vector<char> emptyBoard(32);
 vector<char> sampleBigBoard{
         'r',   'r',   'r',   'r',
@@ -77,6 +70,9 @@ vector<char> sampleSmallBoard{
     };
 
 TEST_CASE("Test Network Evaluation", "[network]") {
+    ai::Network player(0);
+    ai::Network playerAgain(0);
+
     SECTION("test network evaluation of empty board is 0.") {
         REQUIRE(player.evaluateBoard(emptyBoard) == Approx(0));
         REQUIRE(player.evaluateBoard(emptyBoard, true) == Approx(0));
@@ -86,14 +82,15 @@ TEST_CASE("Test Network Evaluation", "[network]") {
         SECTION("testing == true") {
             auto run1 = player.evaluateBoard(sampleBigBoard, true);
             auto run2 = player.evaluateBoard(sampleBigBoard, true);
+
             REQUIRE(run1 - run2 == Approx(0));
         }
 
         SECTION("testing == false") {
             auto run1 = player.evaluateBoard(sampleBigBoard);
             auto run2 = player.evaluateBoard(sampleBigBoard);
-            REQUIRE(run1 - run2 == Approx(0));
 
+            REQUIRE(run1 - run2 == Approx(0));
         }
     }
 
@@ -106,6 +103,7 @@ TEST_CASE("Test Network Evaluation", "[network]") {
 
             auto run1 = player.evaluateBoard(sampleLoopBoard, true);
             auto run2 = player.evaluateBoard(sampleLoopBoard, true);
+
             REQUIRE(run1 - run2 == Approx(0));
         }
     }
@@ -148,13 +146,22 @@ TEST_CASE("Test Network Evaluation", "[network]") {
     }
 }
 
+TEST_CASE("Testing evolution") {
+    ai::Network player(0);
+    ai::Network playerZeroEvolved(1);
+
+    playerZeroEvolved.evolveUsingNetwork(player);
+    player.outputCreationDebug();
+    playerZeroEvolved.outputCreationDebug();
+}
+
 void writeToLogs(double timeTaken, int loopIterations, double boardsPerSec) {
     ofstream outFile;
     auto logFilePath = "logs/nn.log";
     outFile.open(logFilePath, ios_base::app);
 
     ostringstream outStr;
-    outStr << "Timing Run:" << endl;
+    outStr << "Timing Network Eval:" << endl;
     outStr << "------------------------------------------------------------------" << endl;
     outStr << "Total board evaluations = " << timeTaken << " seconds" << endl;
     outStr << "Boards calculated = " << loopIterations << endl;
@@ -164,9 +171,9 @@ void writeToLogs(double timeTaken, int loopIterations, double boardsPerSec) {
     outFile << outStr.str();
 }
 
-TEST_CASE("Testing the speed of board evaluation.") {
+TEST_CASE("Testing the speed of board evaluation.", "[network-timing]") {
     const int LOOP_COUNTER = 1000;
-    vector<unsigned int> dimesionsLarge{32, 1000, 100, 1};
+    vector<unsigned int> dimesionsLarge{32, 40, 10, 1};
     cout << "\n\n\n\n\n**** To use blondie dimensions (which is faster), say no ****\n\n" << endl;
     setupNetworks(dimesionsLarge, 2);
     vector<char> sampleBigBoard{
@@ -183,7 +190,7 @@ TEST_CASE("Testing the speed of board evaluation.") {
 
     cout << "\n\n\n\n****** Getting average board evaluation time.. This could take a while ******" << endl;
     double averageTime = 0;
-    const unsigned int LOOPSFORAVERAGE = 10;
+    const unsigned int LOOPSFORAVERAGE = 1000;
     for (volatile unsigned int index = 0; index < LOOPSFORAVERAGE; ++index){
         double evaluationStart = getTime();
         for (volatile int i = 0; i < LOOP_COUNTER; ++i) {
@@ -206,6 +213,8 @@ TEST_CASE("Testing the speed of board evaluation.") {
     double averageBPS = 1/averageTime;
 
 
+    cout << endl << "Network Evaluation Timing: " << endl;
+    cout << "----------------------------------" << endl;
     cout << "Average time taken for board evaluation was: " << averageTime << " seconds" << endl;
     cout << "Number of boards calculated: " << LOOP_COUNTER << endl;
     cout << "Number of boards per second = " << averageBPS << endl;

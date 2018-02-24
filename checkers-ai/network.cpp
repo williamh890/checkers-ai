@@ -2,12 +2,15 @@
 using ai::getSeeder;
 using ai::Seeder;
 
+#include "headers/utils.h"
+using ai::idToFilename;
+
 #include "headers/network.h"
 using ai::Network;
 
 #include "headers/network-file-io.h"
-using ai::loadNetwork;
-using ai::saveNetwork;
+using ai::NetworkFileWriter;
+using ai::NetworkFileReader;
 
 #include "headers/consts.h"
 using ai::DEBUG;
@@ -17,18 +20,36 @@ using NetworkWeightType = ai::Settings::NetworkWeightType;
 using std::vector;
 
 #include <iostream>
+using std::cin;
 using std::cout;
 using std::endl;
 
 #include <random>
 using std::mt19937;
 using std::uniform_real_distribution;
+using std::normal_distribution;
 
 #include <memory>
 using std::shared_ptr;
 
+#include <math.h>
+
+void Network::save(size_t networkId, Network & network) {
+    auto filename = idToFilename(networkId);
+    NetworkFileWriter writer;
+
+    writer.save(filename, network);
+}
+
+bool Network::load(size_t networkId, Network & network) {
+    auto filename = idToFilename(networkId);
+    NetworkFileReader reader;
+
+    return reader.load(filename, network);
+}
+
 Network::Network(unsigned int networkId): _ID(networkId) {
-	loadNetwork(_ID, *this);
+	load(_ID, *this);
 }
 
 Network::Network(unsigned int networkId,
@@ -36,12 +57,12 @@ Network::Network(unsigned int networkId,
                 shared_ptr<Seeder> & seeder) :  _ID(networkId),
                                                 _performance(0),
                                                 randomNumGenerator(mt19937(seeder->get())) {
-
     setupLayers(layerDimensions);
     setupRandomWeights(layerDimensions);
     setupKingWeight();
+    setupSigmas();
 
-    saveNetwork(_ID, *this);
+    save(_ID, *this);
 }
 
 void Network::setupLayers(const vector<unsigned int> & layerDimensions) {
@@ -75,6 +96,15 @@ void Network::setupKingWeight() {
     _kingWeight = distribution(randomNumGenerator);
 }
 
+void Network::setupSigmas() {
+    _sigmas = _weights;
+    for(unsigned int i = 0; i < _sigmas.size(); ++ i) {
+        for (unsigned int ii = 0; ii < _sigmas[i].size(); ++ii) {
+            _sigmas[i][ii] = .05;
+        }
+    }
+}
+
 template <typename RandomNumberType>
 vector<RandomNumberType> Network::getRandomNumbersOfLength( const unsigned int length,
                                                             uniform_real_distribution<RandomNumberType> & distribution) {
@@ -89,7 +119,7 @@ vector<RandomNumberType> Network::getRandomNumbersOfLength( const unsigned int l
 
 Network::~Network() {
     if (_gameCompleted) {
-        saveNetwork(_ID, *this);
+        save(_ID, *this);
     }
 }
 
@@ -118,7 +148,6 @@ NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool t
     }
     /*void feedForward()*/{
         for (unsigned int x = 1; x < _layers.size(); ++x) {
-            # pragma omp parallel for schedule(guided, 2) firstprivate(x, testing) default(none)
             for (unsigned int y = 0; y < _layers[x].size(); ++y) {
                 /*calculateNode(x, y)*/ {
                     NetworkWeightType total1 = 0, total2 = 0, total3 = 0, total4 = 0;
@@ -131,14 +160,9 @@ NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool t
                         total4 += _weights[x][y*previousLayerSize + i + 3] * _layers[x - 1][i + 3];
                     }
 
-                    _layers[x][y] = total1 + total2 + total3 + total4;
-                }
-                if (testing) {
-                    continue;
-                }
-                /*useActivationFunction*/ {
-                    NetworkWeightType var = _layers[x][y];
-                    _layers[x][y] = var / (1 + abs(var));
+                    auto total = total1 + total2 + total3 + total4;
+
+                    _layers[x][y] = (!testing) ? total / (1 + abs(total)) : total;
                 }
             }
         }
@@ -179,22 +203,61 @@ void Network::resetPerformance() {
     _performance = 0;
 }
 
-vector<Network::NetworkWeights> Network::evolve() const { 	// *** TODO *** Required for Project 3
-    vector<NetworkWeights> weights_to_pass = _weights;
-    NetworkWeightType tempKing = _kingWeight;
-    // *** Evolve tempKing
-    // *** Evolve sigma
-    // *** Evolve weights in weights_to_pass
+void Network::evolveUsingNetwork(const Network & rhs) {
+    _kingWeight = rhs._kingWeight;
+    _weights = rhs._weights;
+    _sigmas = rhs._sigmas;
+    this->evolve();
 
-    weights_to_pass.push_back(vector<NetworkWeightType>(tempKing)); //Add tempking to the back of the weights vector for passing
-    return weights_to_pass;
+    save(_ID, *this);
 }
 
-void Network::replaceWithEvolution(vector<NetworkWeights> & inputWeights) {
-    _kingWeight = inputWeights[inputWeights.size()-1][0];
-    inputWeights.pop_back();
-    _weights = std::move(inputWeights);
-    saveNetwork (_ID, *this);
+void Network::evolve() {
+    evolveKingWeight();
+    evolveSigmas();
+    evolveWeights();
+}
+
+void Network::evolveKingWeight() {
+    uniform_real_distribution<NetworkWeightType> distribution(-1,1);
+    _kingWeight += distribution(randomNumGenerator);
+}
+
+NetworkWeightType Network::getTau() {
+    NetworkWeightType numberofWeights = 0;
+
+    for (unsigned int index = 0; index < _weights.size(); ++index) {
+        numberofWeights += _weights[index].size();
+    }
+
+    NetworkWeightType tau = 1/(sqrt(2*sqrt(numberofWeights)));
+    return tau;
+}
+
+void Network::evolveSigmas() {
+    auto tau = getTau();
+
+    for (size_t i = 0; i < _sigmas.size(); ++i) {
+        for (size_t ii = 0; ii < _sigmas[i].size(); ++ii) {
+            _sigmas[i][ii] = evolveSigmaAt(i, ii, tau);
+        }
+    }
+}
+
+NetworkWeightType inline Network::evolveSigmaAt(size_t i, size_t ii, size_t tau) {
+    return _sigmas[i][ii] * exp(tau * getGaussianNumberFromZeroToOne(randomNumGenerator));
+}
+
+void Network::evolveWeights() {
+    for (size_t i = 0; i < _weights.size(); ++i) {
+        for (size_t ii = 0; ii < _weights[i].size(); ++ii) {
+            _weights[i][ii] = evolveWeightAt(i, ii) ;
+        }
+    }
+}
+
+NetworkWeightType inline Network::evolveWeightAt(size_t i, size_t ii) {
+    return _weights[i][ii] + _sigmas[i][ii] * getGaussianNumberFromZeroToOne(randomNumGenerator);
 }
 
 void Network::outputCreationDebug() {
@@ -212,6 +275,14 @@ void Network::outputCreationDebug() {
 
     cout << "_weights data: " << endl;
     for (auto & v : _weights) {
+        for (auto x : v) {
+            cout << x << " ";
+        }
+        cout << endl;
+    }
+
+    cout << "_sigmas data: " << endl;
+    for (auto & v : _sigmas) {
         for (auto x : v) {
             cout << x << " ";
         }
@@ -248,12 +319,12 @@ bool ai::operator== (const Network &lhs, const Network &rhs) {
         (lhs._weights == rhs._weights);
 }
 
-void ai::setupNetworks(const vector<unsigned int>& dimensions, int numberOfNetworks) { //numberOfNetworks = 100
-    std::cout << "You are about to setup a new set of networks. This operation will overwrite previous networks. \n" <<
+void ai::setupNetworks(const vector<unsigned int> & dimensions, int numberOfNetworks) { //numberOfNetworks = 100
+    cout << "You are about to setup a new set of networks. This operation will overwrite previous networks. \n" <<
         "Are you sure you want to continue? (y,n) ";
-    if (std::cin.get() == 'n') {
+    if (cin.get() == 'n') {
         cout << "Not overwriting files" << endl;
-        std::cin.ignore();
+        cin.ignore();
         return;
     }
 
@@ -261,5 +332,12 @@ void ai::setupNetworks(const vector<unsigned int>& dimensions, int numberOfNetwo
     for (auto index = 0; index < numberOfNetworks; ++index) {
         Network(index, dimensions, seeder);
     }
-    std::cin.ignore();
+
+    cin.ignore();
+}
+
+NetworkWeightType ai::getGaussianNumberFromZeroToOne(std::mt19937 & randomNumGenerator) {
+    normal_distribution<NetworkWeightType> distribution(0, 1);
+
+    return distribution (randomNumGenerator);
 }

@@ -2,6 +2,9 @@
 #define MODELS_H
 
 #include <sstream>
+// std::stringstream
+#include <string>
+// std::string
 
 namespace ai {
     struct Jump {
@@ -24,7 +27,6 @@ namespace ai {
     struct Position {
         int row;
         int col;
-
         Position(int r, int c): row(r), col(c) {
         }
 
@@ -40,6 +42,7 @@ namespace ai {
         int space;
         bool isKing = false;
 
+        Piece(){}
         Piece(char color, int space): color(color), space(space) {
         }
         friend bool operator==(const Piece & rhs, const Piece & lhs) {
@@ -51,4 +54,4 @@ namespace ai {
     };
 }
 
-#endif
+#endif // HEADERS_MODELS_H

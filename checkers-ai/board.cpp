@@ -1,6 +1,5 @@
 #include "headers/board.h"
 using ai::Board;
-using ai::Action;
 
 #include "headers/player.h"
 using ai::Player;
@@ -35,7 +34,8 @@ using std::swap;
 
 Board::Board(): boardState(vector<char>(32, ' ')) {};
 
-void Board::addPiecesFor(const shared_ptr<Player> & player) {
+void Board::addPiecesFor(
+        const shared_ptr<Player> & player) {
     for (const auto & piece: player->getPieces()) {
         boardState[piece.space] = piece.color;
     }
@@ -77,7 +77,8 @@ bool Board::destinationIsNotEmpty(const Jump & jump) const {
 }
 
 
-const vector<pair<int, int>> Board::getValidMovesFor(const shared_ptr<Player> & player) const {
+const vector<pair<int, int>>
+Board::getValidMovesFor(const shared_ptr<Player> & player) const {
     vector<pair<int, int>> validMoves;
 
     for(const auto & piece : player->getPieces()) {
@@ -96,11 +97,11 @@ const vector<pair<int, int>> Board::getValidMovesFor(const shared_ptr<Player> & 
     return validMoves;
 }
 
-void Board::make(const pair<int, int> move) {
+void Board::make(const pair<int, int> & move) {
     swap(boardState[move.first],boardState[move.second]);
 }
 
-void Board::make(const pair<int, Jump> jump) {
+void Board::make(const pair<int, Jump> & jump) {
     swap(boardState[jump.second.to],boardState[jump.first]);
     boardState[jump.second.through] = ' ';
 }

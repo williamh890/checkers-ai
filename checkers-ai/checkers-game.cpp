@@ -26,15 +26,12 @@ using ai::BlackPlayer;
 using ai::getPlayer;
 
 #include "headers/json-to-stl.h"
-using ai::loadMoveTableFrom;
-using ai::JsonToStlConverter;
 
 #include "headers/move-generator.h"
 using ai::getGeneratorFor;
 using ai::MoveGenerator;
 
 #include "headers/utils.h"
-using ai::spaceToPosition;
 
 #include "headers/models.h"
 using ai::Jump;
@@ -74,7 +71,7 @@ using std::mt19937;
 using std::uniform_int_distribution;
 #include <climits>
 
-int CheckersGame::MINIMAX_SEARCH_DEPTH = 7;
+int CheckersGame::MINIMAX_SEARCH_DEPTH = 6;
 
 CheckersGame ai::getCheckersGame() {
     auto table = loadMoveTableFrom("move-table.json");
@@ -180,11 +177,11 @@ JumpPackage CheckersGame::getJumpFromActivePlayer() {
 }
 
 MovePackage CheckersGame::getMinimaxMove() {
-    return minimaxMove(*this, MINIMAX_SEARCH_DEPTH, getActivePlayerColor());
+    return minimaxMove(*this, MINIMAX_SEARCH_DEPTH);
 }
 
 JumpPackage CheckersGame::getMinimaxJump() {
-    return minimaxJump(*this, MINIMAX_SEARCH_DEPTH, getActivePlayerColor());
+    return minimaxJump(*this, MINIMAX_SEARCH_DEPTH);
 }
 
 
@@ -352,9 +349,9 @@ string CheckersGame::toString() {
 
 
 void CheckersGame::makeJump(const JumpPackage & jump){
-    try {
         board.make(jump);
         reactTo(jump);
+        cout<<toString()<<endl;
         vector<int> move = {jump.first, jump.second.through, jump.second.to};
         game_record.push_back(move);
         if (not areJumps()){
@@ -362,15 +359,13 @@ void CheckersGame::makeJump(const JumpPackage & jump){
             makeRandomValidAction();
             swapPlayers();
         }
-    } catch(length_error & e) {
-    }
 
 }
 
 void CheckersGame::makeMove(const MovePackage & move){
     board.make(move);
     reactTo(move);
-
+    cout<<toString()<<endl;
     vector<int> vec_move = {move.first, move.second};
     game_record.push_back(vec_move);
     swapPlayers();
@@ -416,67 +411,6 @@ void CheckersGame::replayMove(const MovePackage & move){
 
 vector<std::vector<int>> CheckersGame::getGame(){
     return game_record;
-}
-
-int CheckersGame::minimaxSearch(Board passedBoard, RedPlayer red_player, BlackPlayer black_player,char playerColor, int depth, int init_depth = 0)
-{
-    if(depth == init_depth)
-    {
-        return passedBoard.pieceCount(playerColor);
-    }
-    auto boardCopy = passedBoard;
-    auto redCopy = red_player;
-    auto blackCopy = black_player;
-    auto shared_black = make_shared<BlackPlayer>(blackCopy);
-    auto shared_red = make_shared<RedPlayer>(redCopy);
-    vector<MovePackage> player_moves;
-    vector<JumpPackage> player_jumps;
-    int best_move;
-    int loop_move;
-
-    if(playerColor == 'b')
-    {
-        player_moves = boardCopy.getValidMovesFor(shared_black);
-        player_jumps = boardCopy.getValidJumpsFor(shared_black);
-    }
-    if(playerColor == 'r')
-    {
-        player_moves = boardCopy.getValidMovesFor(shared_red);
-        player_jumps = boardCopy.getValidJumpsFor(shared_red);
-    }
-    if(player_jumps.size())
-    {
-        boardCopy.make(player_jumps[0]);
-        best_move = minimaxSearch(boardCopy, redCopy, blackCopy, playerColor == 'b' ? 'r' : 'b', depth, init_depth+1);
-        for(auto i = 1; i < (int) player_jumps.size(); ++i)
-        {
-            boardCopy = passedBoard;
-            boardCopy.make(player_jumps[i]);
-            loop_move = minimaxSearch(boardCopy, redCopy, blackCopy, playerColor == 'b' ? 'r' : 'b', depth, init_depth+1);
-            if (best_move < loop_move)
-            {
-                best_move = loop_move;
-            }
-        }
-        return best_move;
-    }
-    if(player_moves.size())
-    {
-        boardCopy.make(player_moves[0]);
-        best_move = minimaxSearch(boardCopy, redCopy, blackCopy, playerColor == 'b' ? 'r' : 'b', depth, init_depth+1);
-        for(auto i = 1; i < (int) player_moves.size(); ++i)
-        {
-            boardCopy = passedBoard;
-            boardCopy.make(player_moves[i]);
-            loop_move = minimaxSearch(boardCopy, redCopy, blackCopy, playerColor == 'b' ? 'r' : 'b', depth, init_depth+1);
-            if (best_move < loop_move)
-            {
-                best_move = loop_move;
-            }
-        }
-        return best_move;
-    }
-    return 0;
 }
 
 int CheckersGame::getNumPiecesFor(char color) {
