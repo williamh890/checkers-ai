@@ -21,5 +21,5 @@ else
         ../board.cpp ../utils.cpp ../player.cpp  \
         ../network.cpp ../seeder.cpp \
         ../network-file-reader.cpp ../network-file-writer.cpp \
-        -lpython$1m -std=c++14 
+        -lpython$1m -std=c++14
 fi

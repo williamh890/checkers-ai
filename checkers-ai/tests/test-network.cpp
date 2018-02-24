@@ -3,13 +3,8 @@ using ai::Network;
 using ai::Settings::NetworkWeightType;
 using ai::setupNetworks;
 
-#include "../headers/network-file-io.h"
-using ai::loadNetwork;
-using ai::saveNetwork;
-
 #include "../headers/utils.h"
 using ai::getTime;
-
 
 #include "catch.hpp"
 
@@ -39,8 +34,8 @@ TEST_CASE("Test saving and loading consistency") {
     }
 
     SECTION ("Loading a saved object == object that was saved.") {
-        saveNetwork(0, player);
-        loadNetwork(0, playerAgain);
+        Network::save(0, player);
+        Network::load(0, playerAgain);
 
         REQUIRE(player == playerAgain);
     }
@@ -48,10 +43,9 @@ TEST_CASE("Test saving and loading consistency") {
     SECTION ("Loading an unavailable network fails") {
         ai::Network failLoadTest(0);
 
-        REQUIRE(loadNetwork(101, failLoadTest) == false);
+        REQUIRE_FALSE(Network::load(101, failLoadTest));
     }
 }
-
 
 vector<char> emptyBoard(32);
 vector<char> sampleBigBoard{
@@ -78,6 +72,7 @@ vector<char> sampleSmallBoard{
 TEST_CASE("Test Network Evaluation", "[network]") {
     ai::Network player(0);
     ai::Network playerAgain(0);
+
     SECTION("test network evaluation of empty board is 0.") {
         REQUIRE(player.evaluateBoard(emptyBoard) == Approx(0));
         REQUIRE(player.evaluateBoard(emptyBoard, true) == Approx(0));
@@ -87,14 +82,15 @@ TEST_CASE("Test Network Evaluation", "[network]") {
         SECTION("testing == true") {
             auto run1 = player.evaluateBoard(sampleBigBoard, true);
             auto run2 = player.evaluateBoard(sampleBigBoard, true);
+
             REQUIRE(run1 - run2 == Approx(0));
         }
 
         SECTION("testing == false") {
             auto run1 = player.evaluateBoard(sampleBigBoard);
             auto run2 = player.evaluateBoard(sampleBigBoard);
-            REQUIRE(run1 - run2 == Approx(0));
 
+            REQUIRE(run1 - run2 == Approx(0));
         }
     }
 
@@ -107,6 +103,7 @@ TEST_CASE("Test Network Evaluation", "[network]") {
 
             auto run1 = player.evaluateBoard(sampleLoopBoard, true);
             auto run2 = player.evaluateBoard(sampleLoopBoard, true);
+
             REQUIRE(run1 - run2 == Approx(0));
         }
     }
