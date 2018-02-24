@@ -27,7 +27,7 @@ namespace ai {
         Pieces redPieces;
         Pieces blackPieces;
         char activePlayerColor;
-
+        GameState() = default;
         GameState(const BoardState & board, const Pieces & red, const Pieces & black, char activePlayerColor);
     };
 

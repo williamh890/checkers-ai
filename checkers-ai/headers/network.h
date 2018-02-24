@@ -22,6 +22,7 @@ namespace ai {
             using LayersContainingNodes = std::vector<Settings::NetworkWeightType>;
             using NetworkWeights = std::vector<Settings::NetworkWeightType>;
 
+            Network () = default;
             Network (unsigned int id);
             Network (unsigned int id,
                      const std::vector<unsigned int> & LayerDimension,
@@ -81,6 +82,6 @@ namespace ai {
     bool operator== (const Network &lhs, const Network &rhs);
 
     void setupNetworks (const std::vector<unsigned int> & dimesions, int numberOfNetworks = 100);
-    Settings::NetworkWeightType gaussianNumbersZeroToOne(std::mt19937 &); 
+    Settings::NetworkWeightType gaussianNumbersZeroToOne(std::mt19937 &);
 }
 #endif // NETWORK_H_INCLUDED
