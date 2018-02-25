@@ -29,15 +29,9 @@ using BoardState = vector<char>;
 
 int MiniMaxHelper::totalNodes = 0;
 
-<<<<<<< HEAD
-CheckersGame::MovePackage ai::minimaxMove(CheckersGame & game, int depth, char maximizingPlayer) {
-    int bestMoveVal = INT_MIN, moveVal;
-    MovePackage bestMove, move;
-=======
 CheckersGame::MovePackage ai::minimaxMove(CheckersGame & game, int depth) {
     int bestMoveVal = INT_MIN;
     MovePackage bestMove;
->>>>>>> 74493fe7accbade0dba451b8fda30c09f5dfffa9
 
     if (depth == 0) {
         throw invalid_argument("Search depth must be > 0");
