@@ -30,6 +30,7 @@ cdef extern from "../headers/network.h" namespace "ai":
     cdef cppclass Network:
         Network() except +
         Network(unsigned int id) except +
+        void evolve() except +
 
     void setupNetworks(vector[unsigned int] dimensions,
                        int numberOfNetworks);
@@ -72,8 +73,12 @@ cdef extern from "../headers/minimax.h" namespace "ai":
     int minimax(JumpPackage & jump,
                 int depth, char maximizingPlayer,
                 CheckersGame & game)
+
     struct GameState:
         GameState(BoardState & board,
                   Pieces & red,
                   Pieces & black,
                   char activePlayerColor)
+
+    cdef cppclass MiniMaxHelper:
+        MiniMaxHelper(char maximizingPlayer, CheckersGame game)

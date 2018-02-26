@@ -38,6 +38,7 @@ namespace ai {
             CheckersGame game;
             char maximizingPlayer;
 
+            MiniMaxHelper() = default;
             MiniMaxHelper(char maximizingPlayer, CheckersGame & game);
 
             int recurse(const CheckersGame::MovePackage & move, int depth);

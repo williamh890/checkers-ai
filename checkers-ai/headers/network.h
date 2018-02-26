@@ -38,6 +38,7 @@ namespace ai {
             int getPerformance() const;
             void resetPerformance();
 
+            void evolve();
             void evolveUsingNetwork(const ai::Network &);
 
             void outputCreationDebug();
@@ -57,7 +58,6 @@ namespace ai {
             void setupKingWeight();
             void setupSigmas();
 
-            void evolve();
             Settings::NetworkWeightType getTau();
             void evolveKingWeight();
 
