@@ -13,7 +13,6 @@ int main() {
     game.play();
 
     cout << "gameover" << endl;
-    //std::mt19937 rander;
-    //ai::distribution_out(rander);
+    //ai::distribution_out(100000);
     return 0;
 }

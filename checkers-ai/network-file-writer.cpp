@@ -73,14 +73,15 @@ void NetworkFileWriter::saveVectorSize(const vector<NetworkWeightType> & layer) 
     networkFile.write( (char*)&size, sizeof(size_t));
 }
 
-void ai::distribution_out(std::mt19937 & randomNumGenerator)
+void ai::distribution_out(int out_num)
 {
+    std::mt19937 randomNumGenerator;
     std::ofstream output;
     output.open("gaussian_out.txt", ios::out | ios::trunc);
-    for(auto i = 0; i<1000 ; ++i)
+    for(auto i = 0; i<out_num ; ++i)
     {
         auto num = getGaussianNumberFromZeroToOne(randomNumGenerator);
-        output << num <<','<< '\n';
+        output << num <<'\n';
     }
     output.close();
 }

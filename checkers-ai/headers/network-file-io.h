@@ -46,7 +46,7 @@ namespace ai {
             void saveKingWeight(Settings::NetworkWeightType kingWeight);
             void saveDimensions(const std::vector<std::vector<Settings::NetworkWeightType>> & layers);
     };
-    void distribution_out(std::mt19937 & randomNumGenerator);
+    void distribution_out(int out_num);
 }
 
 #endif
