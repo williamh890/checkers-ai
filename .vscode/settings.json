@@ -57,6 +57,15 @@
         "xstring": "cpp",
         "xtr1common": "cpp",
         "xtree": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "cctype": "cpp",
+        "chrono": "cpp",
+        "locale": "cpp",
+        "random": "cpp",
+        "ratio": "cpp",
+        "regex": "cpp",
+        "set": "cpp",
+        "xlocbuf": "cpp",
+        "xlocmes": "cpp"
     }
 }

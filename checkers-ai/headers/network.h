@@ -25,6 +25,7 @@ namespace ai {
             using LayersContainingNodes = std::vector<Settings::NetworkWeightType>;
             using NetworkWeights = std::vector<Settings::NetworkWeightType>;
 
+            Network () = default;
             Network (unsigned int id);
             Network (unsigned int id,
                      const std::vector<unsigned int> & LayerDimension,
@@ -37,6 +38,7 @@ namespace ai {
             int getPerformance() const;
             void resetPerformance();
 
+            void evolve();
             void evolveUsingNetwork(const ai::Network &);
 
             void outputCreationDebug();
@@ -56,7 +58,6 @@ namespace ai {
             void setupKingWeight();
             void setupSigmas();
 
-            void evolve();
             Settings::NetworkWeightType getTau();
             void evolveKingWeight();
 
@@ -82,6 +83,7 @@ namespace ai {
             friend class NetworkFileWriter;
 
             friend bool operator==(const Network &, const Network &);
+            friend void weightChangeOut(Network parent, Network child);
     }; // end class AI_Network
 
     // Global operators to allow sorting of networks based on their performance
@@ -91,6 +93,7 @@ namespace ai {
     bool operator>= (const Network &lhs, const Network &rhs);
     bool operator== (const Network &lhs, const Network &rhs);
 
+    void weightChangeOut(Network parent, Network child);
     void setupNetworks (const std::vector<unsigned int> & dimesions, int numberOfNetworks = 100);
     Settings::NetworkWeightType getGaussianNumberFromZeroToOne(std::mt19937 &);
 }

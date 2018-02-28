@@ -27,7 +27,7 @@ namespace ai {
         Pieces redPieces;
         Pieces blackPieces;
         char activePlayerColor;
-
+        GameState() = default;
         GameState(const BoardState & board, const Pieces & red, const Pieces & black, char activePlayerColor);
     };
 
@@ -38,6 +38,7 @@ namespace ai {
             CheckersGame game;
             char maximizingPlayer;
 
+            MiniMaxHelper() = default;
             MiniMaxHelper(char maximizingPlayer, CheckersGame & game);
 
             int recurse(const CheckersGame::MovePackage & move, int depth);

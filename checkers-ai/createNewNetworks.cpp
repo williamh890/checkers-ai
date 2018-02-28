@@ -8,7 +8,7 @@ using std::vector;
 int main() {
     vector <unsigned int> networkCreationInput = {32, 40, 10, 1 };
 
-    ai::setupNetworks(networkCreationInput);
+    ai::setupNetworks(networkCreationInput, 100);
 
     // Wait for user
     std::cin.ignore();
