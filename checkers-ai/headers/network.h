@@ -83,6 +83,7 @@ namespace ai {
             friend class NetworkFileWriter;
 
             friend bool operator==(const Network &, const Network &);
+            friend void weightChangeOut(Network parent, Network child);
     }; // end class AI_Network
 
     // Global operators to allow sorting of networks based on their performance
@@ -92,6 +93,7 @@ namespace ai {
     bool operator>= (const Network &lhs, const Network &rhs);
     bool operator== (const Network &lhs, const Network &rhs);
 
+    void weightChangeOut(Network parent, Network child);
     void setupNetworks (const std::vector<unsigned int> & dimesions, int numberOfNetworks = 100);
     Settings::NetworkWeightType getGaussianNumberFromZeroToOne(std::mt19937 &);
 }

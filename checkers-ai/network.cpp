@@ -23,6 +23,7 @@ using std::vector;
 using std::cin;
 using std::cout;
 using std::endl;
+using std::ios;
 
 #include <random>
 using std::mt19937;
@@ -340,4 +341,18 @@ NetworkWeightType ai::getGaussianNumberFromZeroToOne(std::mt19937 & randomNumGen
     normal_distribution<NetworkWeightType> distribution(0, 1);
 
     return distribution (randomNumGenerator);
+}
+
+void ai::weightChangeOut(Network parent, Network child)
+{
+    std::ofstream output;
+    output.open("weight_change_out.txt", ios::out | ios::trunc);
+    for (size_t i = 0; i < parent._weights.size(); i++)
+    {
+        for (size_t j = 0; j < parent._weights[i].size(); j++)
+        {
+            output << (parent._weights[i][j]-child._weights[i][j]) << endl;
+        }
+    }
+    output.close();
 }
