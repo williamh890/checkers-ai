@@ -9,6 +9,15 @@ using std::to_string;
 
 #include <chrono>
 
+#include <fstream>
+using std::ofstream;
+using std::ifstream;
+#include <iostream>
+using std::cout;
+using std::endl;
+using std::cin;
+using std::ios;
+
 /*         0   1   2   3   4   5   6   7
          +---+---+---+---+---+---+---+---+
      0   | X | 0 |   | 1 |   | 2 |   | 3 |
@@ -46,6 +55,26 @@ int ai::positionToSpace(const Position & pos) {
     space += (pos.col / 2);
 
     return space;
+}
+
+string ai::getUsername () {
+    ifstream usernameFile;
+    usernameFile.open("user.me", ios::out | ios::binary);
+    if(!usernameFile) {
+        ofstream placingUsernameFile;
+        placingUsernameFile.open("user.me", ios::out | ios::binary);
+        cout << "Give me your username: ";
+        char inputName[25];
+        std::cin.getline(inputName, 25);
+        placingUsernameFile << inputName;
+        placingUsernameFile.close();
+        usernameFile.clear();
+        usernameFile.open("user.me", ios::out | ios::binary);
+    }
+    string nameOut;
+    usernameFile >> nameOut;
+    cout << "You're name is: " << nameOut << endl;
+    return nameOut;
 }
 
 string ai::idToFilename(int ID) {

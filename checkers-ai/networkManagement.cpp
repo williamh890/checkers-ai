@@ -11,28 +11,29 @@ using std::experimental::filesystem::remove;
 using std::string;
 // #include <sstream>
 // using std::istringstream;
+#include "headers/utils.h"
+using ai::getUsername;
 
 int main(int argc, char *argv[]) {
-    int returnVal = 0;
     if (argc == 1) {
         cout << "You called me without any input" << endl;
-        returnVal = -1;
+        return -1;
     }
-
-    else if (*argv[1] == '0') {
+    string username(getUsername());
+    if (*argv[1] == '0') {
         cout << "You want me to setup networks." << endl;
         if (argc <3) {
             cout << "You didn't give me a username. " << endl;
-            returnVal = -1;
+            return -1;
         }
         else {
-            string username(argv[2]);
             string path = "./networks/" + username;
             cout << "the path I created for your directory was: " << path << endl;
             create_directories(path) ? cout << "Your directory was created" << endl : 
-                                    (cout << "Couldn't create directory" << endl);
-            //remove(path) ? (cout << "I removed it to clean up" << endl) : 
-            //                (cout << "Couldn't remove the directory" << endl);
+                                    cout << "Couldn't create directory" << endl;
+            //remove(path) ? cout << "I removed it to clean up" << endl : 
+            //                cout << "Couldn't remove the directory" << endl;
+            
         }
     }
     else if (*argv[1] == '1') {
@@ -41,5 +42,5 @@ int main(int argc, char *argv[]) {
     else if (*argv[1] == '2') {
         cout << "You want me to evolve your networks" << endl;
     }
-    return returnVal;
+    return 0;
 }
