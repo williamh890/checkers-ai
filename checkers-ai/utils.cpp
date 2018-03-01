@@ -78,9 +78,9 @@ string ai::getUsername () {
 }
 
 string ai::idToFilename(int ID) {
-	string filename = to_string(ID) + ".network";
+	//string filename = to_string(ID) + ".network";
 	// The following implementation will be used once we begin to get the network integrated.
-	//string filename = ".\\networks\\" + to_string(ID) + ".network"; //creates filenames that scope to a folder called networks
+	string filename = "./networks/" + getUsername() + "/" + to_string(ID) + ".network"; //creates filenames that scope to a folder called networks
 	return filename;
 }
 
