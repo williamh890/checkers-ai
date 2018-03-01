@@ -1,18 +1,25 @@
-// run this to setup 100 new networks
-#include "headers/network.h"
+//#include "headers/network.h"
 #include <iostream>
-#include <chrono>
+using std::cout;
+using std::endl;
 #include <vector>
 using std::vector;
 
-int main() {
-    vector <unsigned int> networkCreationInput = {32, 40, 10, 1 };
+int main(int argc, char *argv[]) {
+    int returnVal = 0;
+    if (argc == 1) {
+        cout << "You called me without any input" << endl;
+        returnVal = -1;
+    }
 
-    ai::setupNetworks(networkCreationInput, 100);
-
-    // Wait for user
-    std::cin.ignore();
-    std::cout << "Press ENTER to quit ";
-    while (std::cin.get() != '\n');
-    return 0;
+    else if (*argv[1] == '0') {
+        cout << "You want me to setup networks." << endl;
+    }
+    else if (*argv[1] == '1') {
+        cout << "You want me to store performances." << endl;
+    }
+    else if (*argv[1] == '2') {
+        cout << "You want me to evolve your networks" << endl;
+    }
+    return returnVal;
 }
