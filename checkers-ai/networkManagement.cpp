@@ -82,16 +82,33 @@ int main(int argc, char *argv[]) {
         cout << "You want me to evolve your networks" << endl;
 
         const std::string s = "./networks";
-            std::vector<std::string> r;
-            for(auto& p : recursive_directory_iterator(s)){
-                if(p.status().type() == std::experimental::filesystem::file_type::directory)
-                    r.push_back(p.path().string());
-            }
-        for (auto i: r) {
+        std::vector<std::string> folderPaths;
+        for(auto& p : recursive_directory_iterator(s)){
+            if(p.status().type() == std::experimental::filesystem::file_type::directory)
+                folderPaths.push_back(p.path().string());
+        }
+
+        //debug
+        cout << "List of directories: " << endl;
+        for (auto i: folderPaths) {
             cout << i << endl;
         }
 
+        cout << "There are: " << folderPaths.size() << " networks in development" << endl;
 
+        std::vector<vector<std::string>> networkPathsContainer;
+        for (auto& folders : folderPaths) {
+            vector<string> networkPaths;
+            for(auto& p : recursive_directory_iterator(folders)){
+                if(p.status().type() == std::experimental::filesystem::file_type::regular)
+                    networkPaths.push_back(p.path().string());
+            }
+            networkPathsContainer.push_back(networkPaths);
+        }
+        for (auto i: networkPathsContainer) {
+            for (auto j: i)
+                cout << j << endl;
+        }
     }
     return 0;
 }
