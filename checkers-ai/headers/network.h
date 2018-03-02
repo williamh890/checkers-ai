@@ -82,6 +82,7 @@ namespace ai {
             friend class NetworkFileReader;
             friend class NetworkFileWriter;
 
+            friend bool nothingSimilar(const Network &, const Network &);
             friend bool operator==(const Network &, const Network &);
             friend void weightChangeOut(Network parent, Network child);
     }; // end class AI_Network
@@ -93,6 +94,7 @@ namespace ai {
     bool operator>= (const Network &lhs, const Network &rhs);
     bool operator== (const Network &lhs, const Network &rhs);
 
+    bool nothingSimilar(const Network &, const Network &);
     void weightChangeOut(Network parent, Network child);
     void setupNetworks (const std::vector<unsigned int> & dimesions, int numberOfNetworks = 100);
     Settings::NetworkWeightType getGaussianNumberFromZeroToOne(std::mt19937 &);
