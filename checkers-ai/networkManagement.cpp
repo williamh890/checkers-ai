@@ -37,7 +37,8 @@ int main(int argc, char *argv[]) {
         //remove(path) ? cout << "I removed it to clean up" << endl : 
         //                cout << "Couldn't remove the directory" << endl;
         vector<unsigned int> blondieDimensions{32, 40, 10, 1};
-        setupNetworks(blondieDimensions, 30);
+        int blondiePopulation = 30;
+        setupNetworks(blondieDimensions, blondiePopulation);
     }
     else if (*argv[1] == STORE_PERFORMANCES) {
         cout << "You want me to store performances." << endl;
