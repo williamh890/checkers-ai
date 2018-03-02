@@ -55,7 +55,7 @@ CheckersGame::MovePackage ai::minimaxMove(CheckersGame & game, int depth) {
 }
 
 
-CheckersGame::JumpPackage ai::minimaxJump(CheckersGame & game, int depth) {
+CheckersGame::JumpPackage ai::minimaxJump(CheckersGame & game, int depth, int space) {
     int bestJumpVal = INT_MIN;
     JumpPackage bestJump;
 
@@ -63,7 +63,7 @@ CheckersGame::JumpPackage ai::minimaxJump(CheckersGame & game, int depth) {
         throw invalid_argument("Search depth must be > 0");
     }
 
-    auto jumps = game.getValidJumps();
+    auto jumps = space == -1 ? game.getValidJumps() : game.getValidJumpsAt(space);
     JumpPackage jump;
     int jumpVal;
 
