@@ -176,7 +176,7 @@ TEST_CASE ("minimax wrapper functions behave") {
 
     SECTION ("throws exception if depth == 0") {
         REQUIRE_THROWS(minimaxMove(game, 0));
-        REQUIRE_THROWS(minimaxJump(game, 0));
+        REQUIRE_THROWS(minimaxJump(game, 0, -1)); 
     }
 }
 
