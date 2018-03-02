@@ -109,9 +109,9 @@ void CheckersGame::play() {
 
         try {
             if (areJumps()) {
-                jump = getJumpFromActivePlayer();
+                jump = getMinimaxJump();
             } else {
-                move = getMoveFromActivePlayer();
+                move = getMinimaxMove();
             }
         }
         catch(length_error & e) {
@@ -133,7 +133,7 @@ void CheckersGame::play() {
                 auto jump = make_pair(-1, Jump(-1, -1));
 
                 try {
-                    jump = getJumpFromActivePlayer();
+                    jump = getMinimaxJump();
                 }
                 catch(runtime_error & e) {
                     continue;
@@ -169,13 +169,8 @@ bool CheckersGame::areMoves(){
 }
 
 JumpPackage CheckersGame::getJumpFromActivePlayer() {
-    if (activePlayer->getColor() == 'r') {
-        return getMinimaxJump();
+      return getMinimaxJump();
     }
-
-    return getRandomValidJump();
-}
-
 MovePackage CheckersGame::getMinimaxMove() {
     return minimaxMove(*this, MINIMAX_SEARCH_DEPTH);
 }
@@ -216,11 +211,8 @@ JumpPackage CheckersGame::getJumpFrom(const MovePackage & inputJump) {
 }
 
 MovePackage CheckersGame::getMoveFromActivePlayer() {
-    if (activePlayer->getColor() == 'r') {
-        return getMinimaxMove();
-    }
+      return getMinimaxMove();
 
-    return getRandomValidMove();
 }
 
 MovePackage CheckersGame::getRandomValidMove() {
@@ -416,4 +408,3 @@ vector<std::vector<int>> CheckersGame::getGame(){
 int CheckersGame::getNumPiecesFor(char color) {
     return (color == 'r') ? red->getPieces().size() : black->getPieces().size();
 }
-

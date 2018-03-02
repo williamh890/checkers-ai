@@ -12,7 +12,7 @@ using ai::weightChangeOut;
 
 int main() {
     auto game = getCheckersGame();
-    //game.play();
+    game.play();
 
     Network net1(0), net2(1);
     net2.evolveUsingNetwork(net1);
