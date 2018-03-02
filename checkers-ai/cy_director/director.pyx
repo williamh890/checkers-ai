@@ -1,12 +1,17 @@
 import json
 cimport director
-INITIAL_PERFORMANCE = 0
 
+from libcpp.vector cimport vector
+
+INITIAL_PERFORMANCE = 0
 ctypedef pair[int, int] move_type
 ctypedef pair[int, Jump] jump_type
 
+cdef void py_setup_networks(vector[unsigned int] dimensions,
+                            int num_networks):
+          setupNetworks(dimensions, num_networks)
 
-cdef int pymoveminimax(int start, int to,
+cdef int py_move_minimax(int start, int to,
                  int depth, char maximizingPlayer,
                  CheckersGame game):
       cdef move_type move = move_type(start, to)
@@ -15,7 +20,7 @@ cdef int pymoveminimax(int start, int to,
                      game)
       return result
 
-cdef int pyjumpminimax(int start, int to, int through,
+cdef int py_jump_minimax(int start, int to, int through,
                        int depth, char maximizingPlayer,
                        CheckersGame game):
       cdef Jump jump

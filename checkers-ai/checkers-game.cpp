@@ -71,7 +71,7 @@ using std::mt19937;
 using std::uniform_int_distribution;
 #include <climits>
 
-int CheckersGame::MINIMAX_SEARCH_DEPTH = 6;
+int CheckersGame::MINIMAX_SEARCH_DEPTH = 4;
 
 CheckersGame ai::getCheckersGame() {
     auto table = loadMoveTableFrom("move-table.json");
@@ -356,10 +356,23 @@ void CheckersGame::makeJump(const JumpPackage & jump){
         game_record.push_back(move);
         if (not areJumps()){
             swapPlayers();
-            makeRandomValidAction();
+            if (areJumps()){
+              JumpPackage jump = getMinimaxJump();
+              board.make(jump);
+              reactTo(jump);
+              while(getValidJumpsAt(jump.second.to).size()){
+                  jump = getMinimaxJump();
+                  board.make(jump);
+                  reactTo(jump);
+              }
+            }
+            else{
+              auto move = getMinimaxMove();
+              board.make(move);
+              reactTo(move);
+            }
             swapPlayers();
-        }
-
+    }
 }
 
 void CheckersGame::makeMove(const MovePackage & move){
@@ -369,7 +382,21 @@ void CheckersGame::makeMove(const MovePackage & move){
     vector<int> vec_move = {move.first, move.second};
     game_record.push_back(vec_move);
     swapPlayers();
-    makeRandomValidAction();
+    if (areJumps()){
+      JumpPackage jump = getMinimaxJump();
+      board.make(jump);
+      reactTo(jump);
+      while(getValidJumpsAt(jump.second.to).size()){
+          jump = getMinimaxJump(jump.second.to);
+          board.make(jump);
+          reactTo(jump);
+      }
+    }
+    else{
+      auto move = getMinimaxMove();
+      board.make(move);
+      reactTo(move);
+    }
     swapPlayers();
 }
 
@@ -416,4 +443,3 @@ vector<std::vector<int>> CheckersGame::getGame(){
 int CheckersGame::getNumPiecesFor(char color) {
     return (color == 'r') ? red->getPieces().size() : black->getPieces().size();
 }
-

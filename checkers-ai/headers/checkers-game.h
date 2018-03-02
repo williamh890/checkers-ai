@@ -12,7 +12,6 @@
 #include "models.h"
 // ai::Piece
 // ai::Position
-
 #include <iostream>
 // std::cout;
 // std::endl;
@@ -116,5 +115,4 @@ namespace ai {
 
     CheckersGame getCheckersGame();
 }
-
 #endif
