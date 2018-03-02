@@ -80,12 +80,35 @@ namespace ai {
             void calculateNode(unsigned int, unsigned int);
             inline Settings::NetworkWeightType activationFunction(Settings::NetworkWeightType x);
 
+            void networkSwap(Network& rhs) {
+                std::swap(_weights, rhs._weights);
+                std::swap(_sigmas, rhs._sigmas);
+                std::swap(_kingWeight, rhs._kingWeight);
+            }
+
         public:
             friend class NetworkFileReader;
             friend class NetworkFileWriter;
 
             friend bool operator==(const Network &, const Network &);
             friend void weightChangeOut(Network parent, Network child);
+
+            Network(const Network & other) = default;
+            Network(Network && other) = default;
+            Network & operator= (const Network &rhs) {
+                if (this == &rhs)
+                    return *this;
+                Network copy_of_rhs(rhs._ID);
+                networkSwap(copy_of_rhs);
+                return *this;
+            }
+
+            Network & operator= (Network && rhs) noexcept {
+                if (this == &rhs) // Check for self-assignment
+                    return *this;
+                networkSwap(rhs);
+                return *this;
+            }
     }; // end class AI_Network
 
     // Global operators to allow sorting of networks based on their performance
