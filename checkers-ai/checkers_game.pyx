@@ -135,10 +135,14 @@ class PyBoard():
 #********** GUI SETUP AND RUNNING **********#
     def run(self):
       while True:
-        board = self.game.get_board()
-        self.compare_and_update_board(board)
-        self.window.update_idletasks()
-        self.window.update()
+        try:
+          board = self.game.get_board()
+          self.compare_and_update_board(board)
+          self.window.update_idletasks()
+          self.window.update()
+        except Exception as e:
+          print(str(e))
+          self.run_end_game()
 
     def run_without_interface(self):
       while True:
