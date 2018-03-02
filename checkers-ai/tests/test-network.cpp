@@ -154,6 +154,7 @@ TEST_CASE("Testing evolution") {
     playerZeroEvolved.evolveUsingNetwork(player);
     player.outputCreationDebug();
     playerZeroEvolved.outputCreationDebug();
+    REQUIRE(nothingSimilar(player, playerZeroEvolved));
 }
 
 void writeToLogs(double timeTaken, int loopIterations, double boardsPerSec) {

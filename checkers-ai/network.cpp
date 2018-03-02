@@ -349,6 +349,23 @@ NetworkWeightType ai::getGaussianNumberFromZeroToOne(std::mt19937 & randomNumGen
     normal_distribution<NetworkWeightType> distribution(0, 1);
 
     return distribution (randomNumGenerator);
+}   
+
+bool ai::nothingSimilar(const Network & lhs, const Network & rhs) {
+    bool val = true;
+     if(lhs._weights == rhs._weights) {
+         cout << "Weights were the same" << endl;
+         val = false;
+     }
+     else if (lhs._sigmas == rhs._sigmas) {
+         cout << "Sigmas were the same" << endl;
+         val = false;
+     }
+     else if (lhs._ID == rhs._ID) {
+         cout << "ID's were the same" << endl;
+         val = false;
+     }
+    return val;
 }
 
 void ai::weightChangeOut(Network parent, Network child)
