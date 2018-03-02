@@ -1,5 +1,6 @@
 #include "headers/network.h"
 using ai::setupNetworks;
+using ai::Network;
 #include "headers/consts.h"
 using ai::NETWORK_DIMENSIONS;
 using ai::NETWORKPOPSIZE;
@@ -19,7 +20,9 @@ using std::string;
 using ai::getUsername;
 #include <vector>
 using std::vector;
-
+#include <sstream>
+using std::stringstream;
+// #include <string.h>
 
 int main(int argc, char *argv[]) {
     const auto SETUP_NETWORKS = '0';
@@ -43,8 +46,36 @@ int main(int argc, char *argv[]) {
     }
     else if (*argv[1] == STORE_PERFORMANCES) {
         cout << "You want me to store performances." << endl;
+
         vector<int> performances;
+        string input(argv[2]);
+        stringstream iss (input);
+
+        int temp;
+        while(iss >> temp){
+            performances.push_back(temp);
+        }
+
+        //debug
+        for (auto i: performances) {
+            cout << i << endl;
+        }
+
+        if (performances.size() != NETWORKPOPSIZE) {
+            cout << "*** Incorrect Number of Weights! ***" << endl;
+            return -1;
+        }
         
+        for (unsigned int i = 0; i < NETWORKPOPSIZE; ++i) {
+            Network netPerformanceAdjust(i);
+            netPerformanceAdjust.adjustPerformance(performances[i]);
+            ai::Network::save(i, netPerformanceAdjust);
+        }
+        cout << "---- Performances reloaded ----" << endl;
+        for (unsigned int i = 0; i < NETWORKPOPSIZE; ++i) {
+            Network getPer(i);
+            cout << getPer.getPerformance() << endl;
+        }
     }
     else if (*argv[1] == EVOLVE_NETWORKS) {
         cout << "You want me to evolve your networks" << endl;
