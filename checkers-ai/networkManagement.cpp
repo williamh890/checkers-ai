@@ -15,20 +15,20 @@ using std::experimental::filesystem::remove;
 using std::experimental::filesystem::recursive_directory_iterator;
 #include <string>
 using std::string;
-// #include <sstream>
-// using std::istringstream;
 #include "headers/utils.h"
 using ai::getUsername;
 #include <vector>
 using std::vector;
 #include <sstream>
 using std::stringstream;
-// #include <string.h>
+#include <algorithm>
+using std::sort;
 
 int main(int argc, char *argv[]) {
     const auto SETUP_NETWORKS = '0';
     const auto STORE_PERFORMANCES = '1';
-    const auto EVOLVE_NETWORKS = '2';
+    const auto EVOLVE_NETWORKS_ALL = '2';
+    const auto EVOLVE_USER_NETWORKS = '3';
 
     if (argc == 1) {
         cout << "You called me without any input" << endl;
@@ -45,6 +45,7 @@ int main(int argc, char *argv[]) {
 
         setupNetworks(NETWORK_DIMENSIONS, NETWORKPOPSIZE);
     }
+    
     else if (*argv[1] == STORE_PERFORMANCES) {
         cout << "You want me to store performances." << endl;
 
@@ -58,9 +59,9 @@ int main(int argc, char *argv[]) {
         }
 
         //debug
-        for (auto i: performances) {
-            cout << i << endl;
-        }
+        // for (auto i: performances) {
+        //     cout << i << endl;
+        // }
 
         if (performances.size() != NETWORKPOPSIZE) {
             cout << "*** Incorrect Number of Weights! ***" << endl;
@@ -72,15 +73,19 @@ int main(int argc, char *argv[]) {
             netPerformanceAdjust.adjustPerformance(performances[i]);
             ai::Network::save(i, netPerformanceAdjust);
         }
-        cout << "---- Performances reloaded ----" << endl;
-        for (unsigned int i = 0; i < NETWORKPOPSIZE; ++i) {
-            Network getPer(i);
-            cout << getPer.getPerformance() << endl;
-        }
+        // cout << "---- Performances reloaded ----" << endl;
+        // for (unsigned int i = 0; i < NETWORKPOPSIZE; ++i) {
+        //     Network getPer(i);
+        //     cout << getPer.getPerformance() << endl;
+        // }
     }
-    else if (*argv[1] == EVOLVE_NETWORKS) {
-        cout << "You want me to evolve your networks" << endl;
 
+    else if (*argv[1] == EVOLVE_NETWORKS_ALL) {
+        cout << "You want me to evolve all networks" << endl;
+
+        ////////////////////////////////////////////////////////////////
+        // Get all current folders
+        /////////////////////////////////
         const std::string s = "./networks";
         std::vector<std::string> folderPaths;
         for(auto& p : recursive_directory_iterator(s)){
@@ -95,7 +100,10 @@ int main(int argc, char *argv[]) {
         }
 
         cout << "There are: " << folderPaths.size() << " networks in development" << endl;
-
+        
+        ////////////////////////////////////////////////////////////////
+        // Get all current networks
+        /////////////////////////////////
         std::vector<vector<std::string>> networkPathsContainer;
         for (auto& folders : folderPaths) {
             vector<string> networkPaths;
@@ -105,10 +113,67 @@ int main(int argc, char *argv[]) {
             }
             networkPathsContainer.push_back(networkPaths);
         }
-        for (auto i: networkPathsContainer) {
-            for (auto j: i)
+        for (auto i : networkPathsContainer) {
+            for (auto j : i)
                 cout << j << endl;
+        }
+        
+        ////////////////////////////////////////////////////////////////
+        // Begin process of sorting all networks for stealing
+        /////////////////////////////////
+        string myFilePath = "./networks/" + getUsername() + "/0.network";
+        cout << "Username: " << getUsername() << endl;
+        vector<Network> myNetworks;
+        for (unsigned int i = 0; i < NETWORKPOPSIZE; ++i) {
+            myNetworks.push_back(Network(i));
+        }
+        sort(myNetworks.begin(), myNetworks.end(), [](Network first, Network second) {return first > second;});
+        // for (auto i : myNetworks) {
+        //     cout << i.getPerformance() << endl;
+        // }
+
+        std::vector<vector<Network>> networksContainer;
+        for (auto i : networkPathsContainer) {
+            if ( i[0] == myFilePath) {
+                cout << "Not opening my own networks here" << endl;
+                continue;
+            }
+
+        }
+        // TODO: Take networks from other folders (sort them first)
+
+        
+        ////////////////////////////////////////////////////////////////
+        // Evolve all of 'my' networks
+        /////////////////////////////////
+        for (unsigned int i = 0; i < NETWORKPOPSIZE/2; ++i) {
+            myNetworks[i+NETWORKPOPSIZE/2].evolveUsingNetwork(myNetworks[i]);
+            Network::save(i, myNetworks[i]);
+            Network::save(i+NETWORKPOPSIZE/2, myNetworks[i+NETWORKPOPSIZE/2]);
+            cout << "Done" << endl;
+        }
+        cout << "*** Performances should all be zero ***" << endl;
+        for (auto i : myNetworks) {
+            cout << i.getPerformance() << endl;
+        }
+
+    } // end evolve networks
+
+    else if (*argv[1] == EVOLVE_USER_NETWORKS){
+        cout << "You want me to evolve just your networks" << endl;
+        vector<Network> myNetworks;
+        for (unsigned int i = 0; i < NETWORKPOPSIZE; ++i) {
+            myNetworks.push_back(Network(i));
+        }
+
+        sort(myNetworks.begin(), myNetworks.end(), [](Network first, Network second) {return first > second;});
+
+        for (unsigned int i = 0; i < NETWORKPOPSIZE/2; ++i) {
+            myNetworks[i+NETWORKPOPSIZE/2].evolveUsingNetwork(myNetworks[i]);
+            Network::save(i, myNetworks[i]);
+            Network::save(i+NETWORKPOPSIZE/2, myNetworks[i+NETWORKPOPSIZE/2]);
+            cout << "Done" << endl;
         }
     }
     return 0;
-}
+}// end of main
