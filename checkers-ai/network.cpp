@@ -245,10 +245,9 @@ NetworkWeightType Network::getTau() {
 
 void Network::evolveSigmas() {
     auto tau = getTau();
-
     for (size_t i = 0; i < _sigmas.size(); ++i) {
         for (size_t ii = 0; ii < _sigmas[i].size(); ++ii) {
-            _sigmas[i][ii] = evolveSigmaAt(i, ii, tau);
+            _sigmas[i][ii] = _sigmas[i][ii] * exp(tau * getGaussianNumberFromZeroToOne(randomNumGenerator));
         }
     }
 }
