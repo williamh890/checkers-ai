@@ -100,7 +100,7 @@ namespace ai {
 
             JumpPackage getJumpFromUser();
             JumpPackage getRandomValidJump();
-            JumpPackage getMinimaxJump();
+            JumpPackage getMinimaxJump(int space=-1);
 
             MovePackage parseUserInput();
 
