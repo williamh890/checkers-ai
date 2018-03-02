@@ -12,6 +12,7 @@
 // std::uniform_real_distribution
 #include <vector>
 // std::vector
+#include <string>
 
 namespace ai {
     class NetworkFileReader;
@@ -21,6 +22,7 @@ namespace ai {
         public:
             static void save(size_t id, Network & toSave);
             static bool load(size_t id, Network & toLoad);
+            static bool load(std::string & filename, Network & toLoad);
 
             using LayersContainingNodes = std::vector<Settings::NetworkWeightType>;
             using NetworkWeights = std::vector<Settings::NetworkWeightType>;

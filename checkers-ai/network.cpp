@@ -35,6 +35,9 @@ using std::shared_ptr;
 
 #include <math.h>
 
+#include <string>
+using std::string;
+
 void Network::save(size_t networkId, Network & network) {
     auto filename = idToFilename(networkId);
     NetworkFileWriter writer;
@@ -46,6 +49,11 @@ bool Network::load(size_t networkId, Network & network) {
     auto filename = idToFilename(networkId);
     NetworkFileReader reader;
 
+    return reader.load(filename, network);
+}
+
+bool Network::load(string & filename, Network & network) {
+    NetworkFileReader reader;
     return reader.load(filename, network);
 }
 
@@ -191,9 +199,8 @@ void Network::calculateNode(unsigned int x, unsigned int y) {
 		cout << _layers[x][y] << endl;
 }
 
-void Network::adjustPerformance(int resultFromGame) {
-    _performance += resultFromGame;
-    _gameCompleted = true;
+void Network::adjustPerformance(int adjustment) {
+    _performance = adjustment;
 }
 
 int Network::getPerformance() const {
