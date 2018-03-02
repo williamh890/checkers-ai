@@ -6,3 +6,4 @@ gui-checkers
 *.network
 game*.json
 board*.json
+user.me
