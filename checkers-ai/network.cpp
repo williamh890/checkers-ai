@@ -211,13 +211,14 @@ void Network::resetPerformance() {
     _performance = 0;
 }
 
-void Network::evolveUsingNetwork(const Network & rhs) {
-    _kingWeight = rhs._kingWeight;
-    _weights = rhs._weights;
-    _sigmas = rhs._sigmas;
+void Network::evolveUsingNetwork(Network & rhs) {
+    *this = rhs;
     this->evolve();
-
-    save(_ID, *this);
+    
+    this->_performance = 0;
+    rhs._performance = 0;
+    
+    //save(_ID, *this);
 }
 
 void Network::evolve() {
@@ -244,16 +245,15 @@ NetworkWeightType Network::getTau() {
 
 void Network::evolveSigmas() {
     auto tau = getTau();
-
     for (size_t i = 0; i < _sigmas.size(); ++i) {
         for (size_t ii = 0; ii < _sigmas[i].size(); ++ii) {
-            _sigmas[i][ii] = evolveSigmaAt(i, ii, tau);
-        }
+            evolveSigmaAt(i, ii, tau);
+            }
     }
 }
 
-NetworkWeightType inline Network::evolveSigmaAt(size_t i, size_t ii, size_t tau) {
-    return _sigmas[i][ii] * exp(tau * getGaussianNumberFromZeroToOne(randomNumGenerator));
+void inline Network::evolveSigmaAt(size_t i, size_t ii, NetworkWeightType tau) {
+    _sigmas[i][ii] =_sigmas[i][ii] * exp(tau * getGaussianNumberFromZeroToOne(randomNumGenerator));
 }
 
 void Network::evolveWeights() {
