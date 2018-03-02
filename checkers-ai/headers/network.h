@@ -83,6 +83,7 @@ namespace ai {
                 std::swap(_weights, rhs._weights);
                 std::swap(_sigmas, rhs._sigmas);
                 std::swap(_kingWeight, rhs._kingWeight);
+                std::swap(_performance, rhs._performance);
             }
 
         public:
