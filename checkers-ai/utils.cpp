@@ -73,7 +73,6 @@ string ai::getUsername () {
     }
     string nameOut;
     usernameFile >> nameOut;
-    cout << "You're name is: " << nameOut << endl;
     return nameOut;
 }
 
