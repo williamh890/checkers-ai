@@ -12,6 +12,7 @@ using std::vector;
 #include <experimental/filesystem>
 using std::experimental::filesystem::create_directories;
 using std::experimental::filesystem::remove;
+using std::experimental::filesystem::recursive_directory_iterator;
 #include <string>
 using std::string;
 // #include <sstream>
@@ -79,6 +80,18 @@ int main(int argc, char *argv[]) {
     }
     else if (*argv[1] == EVOLVE_NETWORKS) {
         cout << "You want me to evolve your networks" << endl;
+
+        const std::string s = "./networks";
+            std::vector<std::string> r;
+            for(auto& p : recursive_directory_iterator(s)){
+                if(p.status().type() == std::experimental::filesystem::file_type::directory)
+                    r.push_back(p.path().string());
+            }
+        for (auto i: r) {
+            cout << i << endl;
+        }
+
+
     }
     return 0;
 }
