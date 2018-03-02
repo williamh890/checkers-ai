@@ -94,10 +94,10 @@ int main(int argc, char *argv[]) {
         }
 
         //debug
-        cout << "List of directories: " << endl;
-        for (auto i: folderPaths) {
-            cout << i << endl;
-        }
+        // cout << "List of directories: " << endl;
+        // for (auto i: folderPaths) {
+        //     cout << i << endl;
+        // }
 
         cout << "There are: " << folderPaths.size() << " networks in development" << endl;
         
@@ -113,10 +113,11 @@ int main(int argc, char *argv[]) {
             }
             networkPathsContainer.push_back(networkPaths);
         }
-        for (auto i : networkPathsContainer) {
-            for (auto j : i)
-                cout << j << endl;
-        }
+        // cout << "*** All paths stored in networkPathsContainer" << endl;
+        // for (auto i : networkPathsContainer) {
+        //     for (auto j : i)
+        //         cout << j << endl;
+        // }
         
         ////////////////////////////////////////////////////////////////
         // Begin process of sorting all networks for stealing
@@ -127,20 +128,52 @@ int main(int argc, char *argv[]) {
         for (unsigned int i = 0; i < NETWORKPOPSIZE; ++i) {
             myNetworks.push_back(Network(i));
         }
-        sort(myNetworks.begin(), myNetworks.end(), [](Network first, Network second) {return first > second;});
+        cout << "sorting for myNetworks is off" << endl;
+        //sort(myNetworks.begin(), myNetworks.end(), [](Network first, Network second) {return first > second;});
+
         // for (auto i : myNetworks) {
         //     cout << i.getPerformance() << endl;
         // }
 
+
+        // Begin getting other networks
         std::vector<vector<Network>> networksContainer;
         for (auto i : networkPathsContainer) {
-            if ( i[0] == myFilePath) {
+            if (i[0] == myFilePath) {
                 cout << "Not opening my own networks here" << endl;
                 continue;
             }
+            vector<Network> networks_in_one_folder;
 
+            /////////////////debug
+            // cout << "Here's the paths i'm using: " << endl;
+            // for (auto j : i) {
+            //     Network temp;
+            //     cout << j << endl;
+            //     Network::load(j, temp);
+            //     networks_in_one_folder.push_back(temp);
+            // }
+            /////////////////////////////////////////
+            
+            /////////////////debug
+            // cout << "*** This should be performances in Duane folder" << endl;
+            // for (auto k : networks_in_one_folder) {
+            //     cout << k.getPerformance() << endl;
+            // }
+            /////////////////////////////////////////
+
+            sort(networks_in_one_folder.begin(), networks_in_one_folder.end(), 
+                    [](Network first, Network second) {return first > second;});
+
+            /////////////////debug
+            // cout << "*** This should be performances in Duane folder SORTED" << endl;
+            // for (auto a : networks_in_one_folder) {
+            //     cout << a.getPerformance() << endl;
+            // }
+            /////////////////////////////////////////
+            networksContainer.push_back(networks_in_one_folder);
         }
-        // TODO: Take networks from other folders (sort them first)
+        // TODO: Move best networks from other folders into myNetworks
 
         
         ////////////////////////////////////////////////////////////////
@@ -150,12 +183,12 @@ int main(int argc, char *argv[]) {
             myNetworks[i+NETWORKPOPSIZE/2].evolveUsingNetwork(myNetworks[i]);
             Network::save(i, myNetworks[i]);
             Network::save(i+NETWORKPOPSIZE/2, myNetworks[i+NETWORKPOPSIZE/2]);
-            cout << "Done" << endl;
+            //cout << "Done" << endl;
         }
-        cout << "*** Performances should all be zero ***" << endl;
-        for (auto i : myNetworks) {
-            cout << i.getPerformance() << endl;
-        }
+        //cout << "*** Performances should all be zero ***" << endl;
+        // for (auto i : myNetworks) {
+        //     cout << i.getPerformance() << endl;
+        // }
 
     } // end evolve networks
 
