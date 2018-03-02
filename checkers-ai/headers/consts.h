@@ -6,14 +6,23 @@
 
 #include <string>
 
+#include <vector>
+
 namespace ai {
+    static int blondiePopulation = 30; 
+    static std::vector<unsigned int> blondieDimensions{32, 40, 10, 1}; 
+
     static const int INIT_NUM_PIECES = 12;
     static const int TOTAL_NUM_SPACES = 32;
     static const int NUM_PIECES_IN_ROW = 4;
     static const int ROWS = 8;
-    static const int COLS = 8;
+    static const int COLS = 8;  
     static const int MINIMAX_SEARCH_DEPTH = 8;
     static const int DEBUG = false;
+
+    static const int NETWORKPOPSIZE = blondiePopulation;
+
+    static const std::vector<unsigned int> NETWORK_DIMENSIONS = blondieDimensions;
 
     namespace Settings {
         static const std::string SEEDING_METHOD = "random_device"; // Options are random_device and time
