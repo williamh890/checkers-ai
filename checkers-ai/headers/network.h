@@ -57,7 +57,7 @@ namespace ai {
             void resetPerformance();
 
             void evolve();
-            void evolveUsingNetwork(ai::Network &);
+            void evolveUsingNetwork(const ai::Network &);
 
             void outputCreationDebug();
             void changeKingWeight(Settings::NetworkWeightType);
@@ -81,7 +81,8 @@ namespace ai {
 
             void evolveSigmas();
 
-            void inline evolveSigmaAt(size_t i, size_t ii, Settings::NetworkWeightType tau);
+            Settings::NetworkWeightType
+            inline evolveSigmaAt(size_t i, size_t ii, size_t tau);
 
             void evolveWeights();
 
