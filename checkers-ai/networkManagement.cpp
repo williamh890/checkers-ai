@@ -147,14 +147,14 @@ int main(int argc, char *argv[]) {
 
             /////////////////debug
             // cout << "Here's the paths i'm using: " << endl;
-            // for (auto j : i) {
-            //     Network temp;
+             for (auto j : i) {
+                 Network temp;
             //     cout << j << endl;
-            //     Network::load(j, temp);
-            //     networks_in_one_folder.push_back(temp);
-            // }
+                 Network::load(j, temp);
+                 networks_in_one_folder.push_back(temp);
+            }
             /////////////////////////////////////////
-            
+
             /////////////////debug
             // cout << "*** This should be performances in Duane folder" << endl;
             // for (auto k : networks_in_one_folder) {
@@ -165,27 +165,47 @@ int main(int argc, char *argv[]) {
             sort(networks_in_one_folder.begin(), networks_in_one_folder.end(), 
                     [](Network first, Network second) {return first > second;});
 
-            /////////////////debug
-            // cout << "*** This should be performances in Duane folder SORTED" << endl;
+            ///////////////debug
+            // cout << "*** This should be performances in all folders SORTED" << endl;
             // for (auto a : networks_in_one_folder) {
             //     cout << a.getPerformance() << endl;
             // }
-            /////////////////////////////////////////
+            ///////////////////////////////////////
             networksContainer.push_back(networks_in_one_folder);
         }
         // TODO: Move best networks from other folders into myNetworks
+        int leftovers = NETWORKPOPSIZE % networkPathsContainer.size();
+        int numMyNetworksToKeep = leftovers + (NETWORKPOPSIZE/networkPathsContainer.size());
+        int numNetworksToSteal = (NETWORKPOPSIZE-leftovers)/networkPathsContainer.size();
+        cout << "Leftovers: " << leftovers << endl;
+        cout << "Networks to keep: " << numMyNetworksToKeep << endl;
+        cout << "Networks to steal: " << numNetworksToSteal << endl;
+        auto startingPlaceToSave = numMyNetworksToKeep;
+        for (auto i : networksContainer) {
+            for (unsigned int j = 0; j < numNetworksToSteal; ++j) {
+                cout << "For: " << startingPlaceToSave << " -- ";
+                cout << "Taking: " << i[j].getPerformance();
+                myNetworks[startingPlaceToSave] = std::move(i[j]);
+                cout << " --- " << myNetworks[startingPlaceToSave].getPerformance() <<
+                        " My networks should have same " << endl;
+                ++startingPlaceToSave;
+            }
+        }
+        for (auto i : myNetworks) {
+            cout << i.getPerformance() << endl;
+        }
 
-        
         ////////////////////////////////////////////////////////////////
         // Evolve all of 'my' networks
         /////////////////////////////////
-        for (unsigned int i = 0; i < NETWORKPOPSIZE/2; ++i) {
-            myNetworks[i+NETWORKPOPSIZE/2].evolveUsingNetwork(myNetworks[i]);
-            Network::save(i, myNetworks[i]);
-            Network::save(i+NETWORKPOPSIZE/2, myNetworks[i+NETWORKPOPSIZE/2]);
-            //cout << "Done" << endl;
-        }
-        //cout << "*** Performances should all be zero ***" << endl;
+        cout << "evolving is off" << endl;
+        // for (unsigned int i = 0; i < NETWORKPOPSIZE/2; ++i) {
+        //     myNetworks[i+NETWORKPOPSIZE/2].evolveUsingNetwork(myNetworks[i]);
+        //     Network::save(i, myNetworks[i]);
+        //     Network::save(i+NETWORKPOPSIZE/2, myNetworks[i+NETWORKPOPSIZE/2]);
+        //     //cout << "Done" << endl;
+        // }
+        // cout << "*** Performances should all be zero ***" << endl;
         // for (auto i : myNetworks) {
         //     cout << i.getPerformance() << endl;
         // }
