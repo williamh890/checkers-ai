@@ -128,7 +128,7 @@ vector<RandomNumberType> Network::getRandomNumbersOfLength( const unsigned int l
 
 Network::~Network() {
     if (_gameCompleted) {
-        save(_ID, *this);
+        //save(_ID, *this);
     }
 }
 

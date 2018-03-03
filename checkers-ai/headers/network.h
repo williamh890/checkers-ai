@@ -35,6 +35,22 @@ namespace ai {
             Network (unsigned int id,
                      const std::vector<unsigned int> & LayerDimension,
                      std::shared_ptr<Seeder> & seeder);
+            Network(const Network & other) = default;
+            Network(Network && other) = default;
+            Network & operator= (const Network &rhs) {
+                if (this == &rhs)
+                    return *this;
+                Network copy_of_rhs(rhs._ID);
+                networkSwap(copy_of_rhs);
+                return *this;
+            }
+
+            Network & operator= (Network && rhs) noexcept {
+                if (this == &rhs) // Check for self-assignment
+                    return *this;
+                networkSwap(rhs);
+                return *this;
+            }
             ~Network();
 
             Settings::NetworkWeightType evaluateBoard(const std::vector<char> &, bool leave_Out_Activator = false);
@@ -95,23 +111,6 @@ namespace ai {
 
             friend bool operator==(const Network &, const Network &);
             friend void weightChangeOut(Network parent, Network child);
-
-            Network(const Network & other) = default;
-            Network(Network && other) = default;
-            Network & operator= (const Network &rhs) {
-                if (this == &rhs)
-                    return *this;
-                Network copy_of_rhs(rhs._ID);
-                networkSwap(copy_of_rhs);
-                return *this;
-            }
-
-            Network & operator= (Network && rhs) noexcept {
-                if (this == &rhs) // Check for self-assignment
-                    return *this;
-                networkSwap(rhs);
-                return *this;
-            }
     }; // end class AI_Network
 
     // Global operators to allow sorting of networks based on their performance
