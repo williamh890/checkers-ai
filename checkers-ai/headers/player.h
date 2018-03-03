@@ -51,7 +51,7 @@ namespace ai {
 
             std::string jumpsToString() const;
             std::string movesToString() const;
-            friend std::function<int(MiniMaxHelper&)> baseCase();
+            std::function<int(MiniMaxHelper&)> baseCase;
 
         protected:
             void initPieces();

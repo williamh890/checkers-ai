@@ -228,11 +228,14 @@ bool MiniMaxHelper::isBaseCase(int depth) {
     return depth == 0 or !(game.areJumps() or game.areMoves());
 }
 int MiniMaxHelper::baseCase() {
+  //auto val = game.activePlayer->baseCase(*this);
+  //return val;
   auto numPieces = game.getNumPiecesFor(maximizingPlayer);
   char opponentColor = (maximizingPlayer == 'r') ? 'b' : 'r';
    auto numEnemyPieces = game.getNumPiecesFor(opponentColor);
 
   return numPieces - numEnemyPieces;
+
 }
 
 void MiniMaxHelper::setGameState(GameState & gameState) {
