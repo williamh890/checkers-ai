@@ -1,2 +1,1 @@
-import multiprocessing
-import subprocess
+# manager of tournament

@@ -1,6 +1,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "consts.h"
+// ai::PlayerType
 #include "models.h"
 // ai::Piece
 // ai::Jump
@@ -11,29 +13,30 @@
 #include "move-generator.h"
 // ai::MoveGenerator
 
+#include "network.h"
+//using ai::Network;
 #include <vector>
 // std::vector
 
+
 namespace ai {
-    enum class PlayerType {
-        Human, Computer
-    };
 
     class Board;//forward declaration
+    class Network;
+    class MiniMaxHelper;
     class Player {
         private:
+            PlayerType playerType;
             char color;
+            ai::Network network;
             std::vector<Piece> pieces;
-
             MoveGenerator generator;
             MoveGenerator kingGenerator;
-
-            PlayerType playerType;
 
         public:
             Player() = default;
             Player(char color, const MoveGenerator & generator, const MoveGenerator & kingGenerator, PlayerType type);
-
+            Player(char color, const MoveGenerator & generator, const MoveGenerator & kingGenerator, ai::Network & network, PlayerType type);
             const std::vector<Piece> getPieces() const;
             void setPieces(const std::vector<Piece> & pieces);
             const char getColor() const;
@@ -48,6 +51,7 @@ namespace ai {
 
             std::string jumpsToString() const;
             std::string movesToString() const;
+            friend std::function<int(MiniMaxHelper&)> baseCase();
 
         protected:
             void initPieces();

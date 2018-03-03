@@ -1,13 +1,16 @@
 #ifndef NETWORK_H_INCLUDED
 #define NETWORK_H_INCLUDED
 
+#include "consts.h"
+// ai::Settings::NetworkWeightType
+
 #include "seeder.h"
 // ai::Seeder
+
 #include "network-file-io.h"
 // ai::NetworkFileReader
 // ai::NetworkFileWriter
-#include "consts.h"
-// ai::Settings::NetworkWeightType
+
 #include <random>
 // std::uniform_real_distribution
 #include <vector>

@@ -214,10 +214,10 @@ void Network::resetPerformance() {
 void Network::evolveUsingNetwork(Network & rhs) {
     *this = rhs;
     this->evolve();
-    
+
     this->_performance = 0;
     rhs._performance = 0;
-    
+
     //save(_ID, *this);
 }
 

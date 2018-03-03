@@ -1,5 +1,5 @@
 CXXFLAGS=-std=c++14
-CMP=g++ -std=c++14 -Wall -fopenmp -O3
+CMP=g++ -std=c++14 -Wall -fopenmp -fpermissive -O3
 
 BUILD_DIR=build
 GENERATOR=move-generator

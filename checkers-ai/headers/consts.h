@@ -1,22 +1,22 @@
 #ifndef CONSTS_H
 #define CONSTS_H
 
-#include "player.h"
-// PlayerType
-
 #include <string>
 
 #include <vector>
 
 namespace ai {
-    static int blondiePopulation = 30; 
-    static std::vector<unsigned int> blondieDimensions{32, 40, 10, 1}; 
+    enum class PlayerType {
+        Human, Computer
+    };
+    static int blondiePopulation = 30;
+    static std::vector<unsigned int> blondieDimensions{32, 40, 10, 1};
 
     static const int INIT_NUM_PIECES = 12;
     static const int TOTAL_NUM_SPACES = 32;
     static const int NUM_PIECES_IN_ROW = 4;
     static const int ROWS = 8;
-    static const int COLS = 8;  
+    static const int COLS = 8;
     static const int MINIMAX_SEARCH_DEPTH = 8;
     static const int DEBUG = false;
 
