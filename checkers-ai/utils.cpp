@@ -92,13 +92,15 @@ double ai::getTime() {
 ai::NetworkTestingNamechange::NetworkTestingNamechange() {
     _previousName = getUsername();
     changeUsername("TestingNetworks");
+    cout << "Username Changed" << endl;
 }
 
 ai::NetworkTestingNamechange::~NetworkTestingNamechange () {
     changeUsername(_previousName);
+    cout << "NTNC OBJ destroyed. Current name: " << getUsername() << endl;
 }
 
-void ai::NetworkTestingNamechange::changeUsername(std::string s) {
+void ai::NetworkTestingNamechange::changeUsername(const std::string & s) {
     ofstream placingUsernameFile;
     placingUsernameFile.open("user.me", ios::out | ios::binary);
     placingUsernameFile << s;

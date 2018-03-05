@@ -29,7 +29,7 @@ namespace ai {
         private: 
         std::string _previousName;
 
-        void changeUsername(std::string);
+        void changeUsername(const std::string &);
     };
 }
 
