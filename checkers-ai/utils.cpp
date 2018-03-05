@@ -89,3 +89,19 @@ double ai::getTime() {
             ).count();
 }
 
+ai::NetworkTestingNamechange::NetworkTestingNamechange() {
+    _previousName = getUsername();
+    changeUsername("TestingNetworks");
+}
+
+ai::NetworkTestingNamechange::~NetworkTestingNamechange () {
+    changeUsername(_previousName);
+}
+
+void ai::NetworkTestingNamechange::changeUsername(std::string s) {
+    ofstream placingUsernameFile;
+    placingUsernameFile.open("user.me", ios::out | ios::binary);
+    placingUsernameFile << s;
+    placingUsernameFile.close();
+}
+
