@@ -60,7 +60,7 @@ namespace ai {
             void resetPerformance();
 
             void evolve();
-            void evolveUsingNetwork(const ai::Network &);
+            void evolveUsingNetwork(ai::Network &);
 
             void outputCreationDebug();
             void changeKingWeight(Settings::NetworkWeightType);

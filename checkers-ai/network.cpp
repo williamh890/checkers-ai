@@ -211,12 +211,13 @@ void Network::resetPerformance() {
     _performance = 0;
 }
 
-void Network::evolveUsingNetwork(const Network & rhs) {
+void Network::evolveUsingNetwork(Network & rhs) {
     _kingWeight = rhs._kingWeight;
     _weights = rhs._weights;
     _sigmas = rhs._sigmas;
     this->evolve();
-
+    this->resetPerformance();
+    rhs.resetPerformance();
     save(_ID, *this);
 }
 
@@ -320,10 +321,10 @@ bool ai::operator>=(const Network & lhs, const Network & rhs) {
 
 bool ai::operator== (const Network &lhs, const Network &rhs) {
     return
-        (lhs._ID == rhs._ID) and
-        (lhs._kingWeight == rhs. _kingWeight) and
-        (lhs._performance == rhs._performance) and
-        (lhs._layers == rhs._layers) and
+        (lhs._ID == rhs._ID) && 
+        (lhs._kingWeight == rhs. _kingWeight) &&
+        (lhs._performance == rhs._performance) &&
+        (lhs._layers == rhs._layers) &&
         (lhs._weights == rhs._weights);
 }
 
