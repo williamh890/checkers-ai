@@ -1,12 +1,12 @@
 #ifndef NETWORK_FILE_IO_H_INCLUDED
 #define NETWORK_FILE_IO_H_INCLUDED
 
+#include "consts.h"
+// Settings::NetworkWeightType
+
 #include "network.h"
 // ai::NetworkWeightType
 // ai::Network
-
-#include "consts.h"
-// Settings::NetworkWeightType
 
 #include <fstream>
 // std::ofstream;
@@ -15,6 +15,9 @@
 // std::vector
 
 namespace ai {
+    namespace Settings {
+      using NetworkWeightType = float;
+    }
     class Network;
 
     class NetworkFileReader {
@@ -47,7 +50,7 @@ namespace ai {
             void saveDimensions(const std::vector<std::vector<Settings::NetworkWeightType>> & layers);
     };
     void distribution_out(int out_num);
-    
+
 }
 
 #endif

@@ -1,3 +1,6 @@
+#include "headers/minimax.h"
+using ai::MiniMaxHelper;
+
 #include "headers/player.h"
 using ai::Player;
 using ai::RedPlayer;
@@ -48,7 +51,28 @@ Player::Player(
         const MoveGenerator & generator,
         const MoveGenerator & kingGenerator,
         PlayerType type=PlayerType::Computer) : color(color), generator(generator), kingGenerator(kingGenerator), playerType(type) {
+        this->baseCase=[](MiniMaxHelper& help){
+          auto numPieces = help.game.getNumPiecesFor(help.maximizingPlayer);
+
+          char opponentColor = (help.maximizingPlayer == 'r') ? 'b' : 'r';
+          auto numEnemyPieces = help.game.getNumPiecesFor(opponentColor);
+
+          return numPieces - numEnemyPieces;
+        };
 }
+
+Player::Player(
+        char color,
+        const MoveGenerator & generator,
+        const MoveGenerator & kingGenerator,
+        Network & network,
+        PlayerType type=PlayerType::Computer) : color(color), generator(generator), kingGenerator(kingGenerator), playerType(type){
+            this->baseCase=[network](MiniMaxHelper& helper){
+            int value = network.evaluateBoard(helper.game.board.getBoardState());
+            return value;
+          };
+        }
+
 
 void Player::initPieces() {
     for (auto space = 0; space < TOTAL_NUM_SPACES; ++space) {
