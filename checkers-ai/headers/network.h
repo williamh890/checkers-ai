@@ -122,7 +122,7 @@ namespace ai {
     bool operator== (const Network &lhs, const Network &rhs);
 
     void weightChangeOut(Network parent, Network child);
-    void setupNetworks (const std::vector<unsigned int> & dimesions, int numberOfNetworks = 100);
+    void setupNetworks (const std::vector<unsigned int> & dimesions, int numberOfNetworks = NETWORKPOPSIZE);
     Settings::NetworkWeightType getGaussianNumberFromZeroToOne(std::mt19937 &);
 }
 #endif // NETWORK_H_INCLUDED
