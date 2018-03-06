@@ -17,6 +17,7 @@ using std::experimental::filesystem::recursive_directory_iterator;
 using std::string;
 #include "headers/utils.h"
 using ai::getUsername;
+using ai::NetworkTestingNamechange;
 #include <vector>
 using std::vector;
 #include <sstream>
@@ -29,6 +30,8 @@ int main(int argc, char *argv[]) {
     const auto STORE_PERFORMANCES = '1';
     const auto EVOLVE_NETWORKS_ALL = '2';
     const auto EVOLVE_USER_NETWORKS = '3';
+    NetworkTestingNamechange testing;
+    cout << "Username: " << getUsername() << endl;
 
     if (argc == 1) {
         cout << "You called me without any input" << endl;
@@ -48,6 +51,11 @@ int main(int argc, char *argv[]) {
     
     else if (*argv[1] == STORE_PERFORMANCES) {
         cout << "You want me to store performances." << endl;
+
+        if (argv[2] == nullptr) {
+            cout << "You didn't give me performances!" << endl;
+            return -1;
+        }
 
         vector<int> performances;
         string input(argv[2]);

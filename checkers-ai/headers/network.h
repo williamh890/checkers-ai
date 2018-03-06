@@ -60,7 +60,7 @@ namespace ai {
             void resetPerformance();
 
             void evolve();
-            void evolveUsingNetwork(const ai::Network &);
+            void evolveUsingNetwork(ai::Network &);
 
             void outputCreationDebug();
             void changeKingWeight(Settings::NetworkWeightType);
@@ -84,8 +84,7 @@ namespace ai {
 
             void evolveSigmas();
 
-            Settings::NetworkWeightType
-            inline evolveSigmaAt(size_t i, size_t ii, size_t tau);
+            void inline evolveSigmaAt(size_t i, size_t ii, Settings::NetworkWeightType tau);
 
             void evolveWeights();
 
@@ -110,6 +109,7 @@ namespace ai {
             friend class NetworkFileReader;
             friend class NetworkFileWriter;
 
+            friend bool nothingSimilar(const Network &, const Network &);
             friend bool operator==(const Network &, const Network &);
             friend void weightChangeOut(Network parent, Network child);
     }; // end class AI_Network
@@ -121,8 +121,9 @@ namespace ai {
     bool operator>= (const Network &lhs, const Network &rhs);
     bool operator== (const Network &lhs, const Network &rhs);
 
+    bool nothingSimilar(const Network &, const Network &);
     void weightChangeOut(Network parent, Network child);
-    void setupNetworks (const std::vector<unsigned int> & dimesions, int numberOfNetworks = 100);
+    void setupNetworks (const std::vector<unsigned int> & dimesions, int numberOfNetworks = NETWORKPOPSIZE);
     Settings::NetworkWeightType getGaussianNumberFromZeroToOne(std::mt19937 &);
 }
 #endif // NETWORK_H_INCLUDED

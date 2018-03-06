@@ -19,6 +19,7 @@ using std::ostringstream;
 using std::cout;
 using std::endl;
 
+ai::NetworkTestingNamechange t;
 
 TEST_CASE("Testing setupNetworks") {
     vector<unsigned int> dimesions{32, 40, 10, 1};
@@ -151,8 +152,9 @@ TEST_CASE("Testing evolution") {
     ai::Network playerZeroEvolved(1);
 
     playerZeroEvolved.evolveUsingNetwork(player);
-    player.outputCreationDebug();
-    playerZeroEvolved.outputCreationDebug();
+    //player.outputCreationDebug();
+    //playerZeroEvolved.outputCreationDebug();
+    REQUIRE(nothingSimilar(player, playerZeroEvolved));
 }
 
 void writeToLogs(double timeTaken, int loopIterations, double boardsPerSec) {
