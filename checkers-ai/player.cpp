@@ -1,3 +1,7 @@
+
+//#include "headers/network.h"
+//using ai::Network;
+
 #include "headers/minimax.h"
 using ai::MiniMaxHelper;
 
@@ -44,6 +48,8 @@ using std::cout;
 using std::endl;
 #include <utility>
 using std::pair;
+#include<functional>
+using std::function;
 
 
 Player::Player(
@@ -51,11 +57,11 @@ Player::Player(
         const MoveGenerator & generator,
         const MoveGenerator & kingGenerator,
         PlayerType type=PlayerType::Computer) : color(color), generator(generator), kingGenerator(kingGenerator), playerType(type) {
-        this->baseCase=[](MiniMaxHelper& help){
-          auto numPieces = help.game.getNumPiecesFor(help.maximizingPlayer);
+          this->baseCase=[this](MiniMaxHelper& helper)->int{
+          auto numPieces = helper.game.getNumPiecesFor(helper.maximizingPlayer);
 
-          char opponentColor = (help.maximizingPlayer == 'r') ? 'b' : 'r';
-          auto numEnemyPieces = help.game.getNumPiecesFor(opponentColor);
+          char opponentColor = (helper.maximizingPlayer == 'r') ? 'b' : 'r';
+          auto numEnemyPieces = helper.game.getNumPiecesFor(opponentColor);
 
           return numPieces - numEnemyPieces;
         };
@@ -67,8 +73,8 @@ Player::Player(
         const MoveGenerator & kingGenerator,
         Network & network,
         PlayerType type=PlayerType::Computer) : color(color), generator(generator), kingGenerator(kingGenerator), playerType(type){
-            this->baseCase=[network](MiniMaxHelper& helper){
-            int value = network.evaluateBoard(helper.game.board.getBoardState());
+            this->baseCase=[this](MiniMaxHelper& helper)->int{
+            int value = this->network.evaluateBoard(helper.game.board.getBoardState());
             return value;
           };
         }

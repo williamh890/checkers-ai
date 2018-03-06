@@ -18,6 +18,7 @@ else
         -o gui-checkers.out                                          \
         checkers_game_obj.cpp json-to-stl.cpp move-generator.cpp     \
         checkers-game.cpp board.cpp utils.cpp player.cpp seeder.cpp  \
-        gui-cpp-interface.cpp minimax.cpp                                      \
-        -lpython$1m -std=c++14
+        network-file-reader.cpp network-file-writer.cpp network.cpp \
+        gui-cpp-interface.cpp minimax.cpp                 \
+        -lpython$1m -std=c++14 -fpermissive -fopenmp
 fi

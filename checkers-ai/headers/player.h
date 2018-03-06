@@ -8,27 +8,30 @@
 // ai::Jump
 
 #include "board.h"
-//using ai::Board;
+// ai::Board;
 
 #include "move-generator.h"
 // ai::MoveGenerator
 
 #include "network.h"
-//using ai::Network;
+// ai::Network;
+
 #include <vector>
 // std::vector
 
+#include<functional>
+//std::function
+
 
 namespace ai {
-
     class Board;//forward declaration
-    class Network;
-    class MiniMaxHelper;
+    class Network; //forward declaration
+    class MiniMaxHelper;//forward declaration
     class Player {
         private:
             PlayerType playerType;
             char color;
-            ai::Network network;
+            Network network;
             std::vector<Piece> pieces;
             MoveGenerator generator;
             MoveGenerator kingGenerator;
@@ -36,14 +39,15 @@ namespace ai {
         public:
             Player() = default;
             Player(char color, const MoveGenerator & generator, const MoveGenerator & kingGenerator, PlayerType type);
-            Player(char color, const MoveGenerator & generator, const MoveGenerator & kingGenerator, ai::Network & network, PlayerType type);
+            Player(char color, const MoveGenerator & generator, const MoveGenerator & kingGenerator, Network & network, PlayerType type);
+            std::function<int(MiniMaxHelper&)> baseCase;
             const std::vector<Piece> getPieces() const;
             void setPieces(const std::vector<Piece> & pieces);
             const char getColor() const;
             const PlayerType getPlayerType() const;
 
-            void updatePieces(const std::pair<int, int> & move, ai::Board & board);
-            void updatePieces(const std::pair<int, Jump> & jump, ai::Board & board);
+            void updatePieces(const std::pair<int, int> & move, Board & board);
+            void updatePieces(const std::pair<int, Jump> & jump, Board & board);
             void removePieceAt(int space);
 
             std::vector<Jump> getJumpsFor(const Piece & piece) const;
@@ -51,7 +55,6 @@ namespace ai {
 
             std::string jumpsToString() const;
             std::string movesToString() const;
-            std::function<int(MiniMaxHelper&)> baseCase;
 
         protected:
             void initPieces();
