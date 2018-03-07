@@ -2,17 +2,21 @@
 using ai::getCheckersGame;
 using ai::getNetworkedCheckersGame;
 
-#include <iostream>
-using std::cout;
-using std::endl;
-
 #include "headers/network.h"
 using ai::Network;
 using ai::weightChangeOut;
 
+#include <iostream>
+using std::cout;
+using std::endl;
 
-int main() {
-    auto game = getNetworkedCheckersGame(0, 1);
+
+
+
+int main(int argc, char *argv[]) {
+    unsigned int red_id = *argv[1];
+    unsigned int black_id = *argv[2];
+    auto game = getNetworkedCheckersGame(red_id, black_id);
     game.play();
 
     Network net1(0), net2(1);
