@@ -10,12 +10,18 @@ using ai::weightChangeOut;
 using std::cout;
 using std::endl;
 
+#include <string>
+using std::string;
+using std::stoi;
+
 
 
 
 int main(int argc, char *argv[]) {
-    unsigned int red_id = *argv[1];
-    unsigned int black_id = *argv[2];
+    unsigned int red_id = stoi(string(1, *argv[1]));
+    unsigned int black_id = stoi(string(1,*argv[2]));
+    cout<<"got id's"<<endl;
+    cout<<"id 1 is "<<red_id<<endl;
     auto game = getNetworkedCheckersGame(red_id, black_id);
     game.play();
 
