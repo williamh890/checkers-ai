@@ -106,4 +106,3 @@ void ai::NetworkTestingNamechange::changeUsername(const std::string & s) {
     placingUsernameFile << s;
     placingUsernameFile.close();
 }
-

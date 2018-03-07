@@ -67,6 +67,7 @@ namespace ai {
     class RedPlayer: public Player {
         public:
             RedPlayer(char color, const MoveGenerator & generator, const MoveGenerator & kingGenerator, PlayerType type);
+            RedPlayer(char color, const MoveGenerator & generator, const MoveGenerator & kingGenerator, Network & network, PlayerType type);
         private:
             bool isInitialSpace(int space) const override;
             bool shouldBeCrowned(const Piece & piece) const override ;
@@ -75,12 +76,14 @@ namespace ai {
     class BlackPlayer: public Player {
         public:
             BlackPlayer(char color, const MoveGenerator & generator, const MoveGenerator & kingGenerator, PlayerType type);
+            BlackPlayer(char color, const MoveGenerator & generator, const MoveGenerator & kingGenerator, Network & network, PlayerType type);
         private:
             bool isInitialSpace(int space) const override;
             bool shouldBeCrowned(const Piece & piece) const override ;
     };
 
     std::shared_ptr<Player> getPlayer(const std::string & color, JsonToStlConverter converter);
+    std::shared_ptr<Player> getNetworkedPlayer(const std::string & color, JsonToStlConverter converter, uint network_id);
 }
 
 #endif

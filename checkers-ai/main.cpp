@@ -1,5 +1,6 @@
 #include "headers/checkers-game.h"
 using ai::getCheckersGame;
+using ai::getNetworkedCheckersGame;
 
 #include <iostream>
 using std::cout;
@@ -11,7 +12,7 @@ using ai::weightChangeOut;
 
 
 int main() {
-    auto game = getCheckersGame();
+    auto game = getNetworkedCheckersGame(0, 1);
     game.play();
 
     Network net1(0), net2(1);

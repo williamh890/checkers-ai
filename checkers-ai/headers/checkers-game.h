@@ -115,6 +115,7 @@ namespace ai {
     };
 
     CheckersGame getCheckersGame();
+    CheckersGame getNetworkedCheckersGame(uint red_id, uint black_id);
 }
 
 #endif

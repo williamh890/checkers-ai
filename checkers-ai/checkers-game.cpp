@@ -24,6 +24,7 @@ using ai::Player;
 using ai::RedPlayer;
 using ai::BlackPlayer;
 using ai::getPlayer;
+using ai::getNetworkedPlayer;
 
 #include "headers/json-to-stl.h"
 
@@ -84,6 +85,21 @@ CheckersGame ai::getCheckersGame() {
     auto seeder = getSeeder();
 
     return CheckersGame(board, red, black, seeder);
+}
+
+CheckersGame ai::getNetworkedCheckersGame(uint red_id, uint black_id){
+    auto table = loadMoveTableFrom("move-table.json");
+    auto converter = JsonToStlConverter{table};
+
+    auto red = getNetworkedPlayer("red", converter, red_id);
+    auto black = getNetworkedPlayer("black", converter, black_id);
+    auto board = getBoard();
+
+    auto seeder = getSeeder();
+
+    return CheckersGame(board, red, black, seeder);
+
+
 }
 
 CheckersGame::CheckersGame() { };
