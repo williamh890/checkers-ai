@@ -22,3 +22,4 @@ class Options:
         network_manager = self.config.get('functions', 'network_manager')
         self.network_manager = os.path.join(self.checkers_path,
                                             network_manager)
+        self.max_processes = int(self.config.get('processes', 'max_processes'))
