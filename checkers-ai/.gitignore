@@ -5,8 +5,8 @@ gui-checkers
 *.gch
 game*.json
 board*.json
-user.me
+*.me
 cy_director
 *.network
-tournament/tournament.cfg
+**/tournament.cfg
 
