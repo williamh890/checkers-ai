@@ -31,7 +31,7 @@ class Director:
         print("\n result was: {}".format(result[0]))
 
     def run(self):
-        for id in range(2):
+        for id in range(30):
             opponent_ids = sample(range(NETWORK_COUNT), k=3)
             wins = self.children.run(id, opponent_ids)
             self.networks[id] += wins

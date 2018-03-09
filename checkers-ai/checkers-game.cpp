@@ -117,6 +117,10 @@ CheckersGame::CheckersGame(
 }
 
 const char CheckersGame::play() {
+    for (int i = 0; i<3; i++){
+        makeRandomValidAction();
+        swapPlayers();
+    }
     while (moveCounter++ < 100 && (areMoves() || areJumps())) {
         //cout << toString() << endl;
 
