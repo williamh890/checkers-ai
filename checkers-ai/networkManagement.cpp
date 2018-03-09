@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
     const auto STORE_PERFORMANCES = '1';
     const auto EVOLVE_NETWORKS_ALL = '2';
     const auto EVOLVE_USER_NETWORKS = '3';
-    NetworkTestingNamechange testing;
+    //NetworkTestingNamechange testing;
     cout << "Username: " << getUsername() << endl;
 
     if (argc == 1) {
