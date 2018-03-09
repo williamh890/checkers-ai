@@ -58,6 +58,7 @@ CheckersGame::MovePackage ai::minimaxMove(CheckersGame & game, int depth) {
 
 CheckersGame::JumpPackage ai::minimaxJump(CheckersGame & game, int depth, int space) {
     int bestJumpVal = INT_MIN;
+
     JumpPackage bestJump;
 
     if (depth == 0) {
@@ -83,15 +84,17 @@ CheckersGame::JumpPackage ai::minimaxJump(CheckersGame & game, int depth, int sp
 
 
 int ai::minimax(const MovePackage & move, int depth, char maximizingPlayer, CheckersGame & game) {
+    int alpha=INT_MIN, beta=INT_MAX;
     MiniMaxHelper minimax(maximizingPlayer, game);
 
-    return minimax.recurse(move, depth);
+    return minimax.recurse(move, depth, alpha, beta);
 }
 
 int ai::minimax(const JumpPackage & jump, int depth, char maximizingPlayer, CheckersGame & game) {
+    int alpha=INT_MIN, beta=INT_MAX;
     MiniMaxHelper minimax(maximizingPlayer, game);
 
-    return minimax.recurse(jump, depth);
+    return minimax.recurse(jump, depth, alpha, beta);
 }
 
 MiniMaxHelper::MiniMaxHelper(char maximizingPlayer, CheckersGame & game) :
@@ -110,7 +113,7 @@ GameState::GameState(
     activePlayerColor(activePlayerColor) {
     }
 
-int MiniMaxHelper::recurse(const MovePackage & move, int depth) {
+int MiniMaxHelper::recurse(const MovePackage & move, int depth, int alpha, int beta) {
     ++totalNodes;
     auto stateBeforeMove = getCurrentGameState();
 
@@ -118,14 +121,14 @@ int MiniMaxHelper::recurse(const MovePackage & move, int depth) {
 
     int bestNumPieces = isBaseCase(depth) ?
         game.activePlayer->baseCase(*this) :
-        recursiveCase(depth);
+        recursiveCase(depth, alpha, beta);
 
     setGameState(stateBeforeMove);
 
     return bestNumPieces;
 }
 
-int MiniMaxHelper::recurse(const JumpPackage & jump, int depth) {
+int MiniMaxHelper::recurse(const JumpPackage & jump, int depth, int alpha, int beta) {
     ++totalNodes;
     auto stateBeforeMove = getCurrentGameState();
 
@@ -146,24 +149,24 @@ int MiniMaxHelper::recurse(const JumpPackage & jump, int depth) {
 
     auto multiJumps = game.getValidJumpsAt(jumpDestination);
     if (!wasPieceCrowned && multiJumps.size() > 0) {
-        bestNumPieces = recurseMultiJumpCase(multiJumps, depth);
+        bestNumPieces = recurseMultiJumpCase(multiJumps, depth, alpha, beta);
     }
     else {
         game.swapPlayers();
-        bestNumPieces = recursiveCase(depth);
+        bestNumPieces = recursiveCase(depth, alpha, beta);
     }
 
     setGameState(stateBeforeMove);
     return bestNumPieces;
 }
 
-int MiniMaxHelper::recurseMultiJumpCase(const vector<JumpPackage> & multiJumps, int depth) {
+int MiniMaxHelper::recurseMultiJumpCase(const vector<JumpPackage> & multiJumps, int depth, int alpha, int beta) {
     auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
     int bestNumPieces = (isMaximizingPlayer) ? INT_MIN : INT_MAX;
     int jumpVal;
 
     for (auto & jump : multiJumps) {
-        jumpVal = recurse(jump, depth);
+        jumpVal = recurse(jump, depth, alpha, beta);
 
         bestNumPieces = (isMaximizingPlayer) ?
             max(jumpVal, bestNumPieces) :
@@ -173,7 +176,7 @@ int MiniMaxHelper::recurseMultiJumpCase(const vector<JumpPackage> & multiJumps, 
     return bestNumPieces;
 }
 
-int MiniMaxHelper::recursiveCase(int depth) {
+int MiniMaxHelper::recursiveCase(int depth, int alpha, int beta) {
     auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
     int bestNumPieces = (isMaximizingPlayer) ? INT_MIN : INT_MAX;
 
@@ -182,7 +185,7 @@ int MiniMaxHelper::recursiveCase(int depth) {
     if (jumps.size() != 0) {
         int jumpVal;
         for (auto & jump : jumps) {
-            jumpVal = recurse(jump, depth);
+            jumpVal = recurse(jump, depth, alpha, beta);
 
             bestNumPieces = (isMaximizingPlayer) ?
                 max(jumpVal, bestNumPieces) :
@@ -192,7 +195,7 @@ int MiniMaxHelper::recursiveCase(int depth) {
     else {
         int moveVal;
         for (auto & move : game.getValidMoves()) {
-            moveVal = recurse(move, depth - 1);
+            moveVal = recurse(move, depth - 1, alpha, beta);
 
             bestNumPieces = (isMaximizingPlayer) ?
                 max(moveVal, bestNumPieces) :
