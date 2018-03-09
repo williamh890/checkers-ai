@@ -87,7 +87,7 @@ namespace ai {
             std::vector<JumpPackage> getOpponentValidJumps();
             std::vector<MovePackage> getOpponentValidMoves();
 
-            void play();
+            const char play();
 
             MovePackage getMoveFromActivePlayer();
 
@@ -114,5 +114,6 @@ namespace ai {
     };
 
     CheckersGame getCheckersGame();
+    CheckersGame getNetworkedCheckersGame(unsigned int red_id, unsigned int black_id);
 }
 #endif

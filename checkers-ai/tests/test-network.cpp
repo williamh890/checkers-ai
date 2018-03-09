@@ -19,6 +19,7 @@ using std::ostringstream;
 using std::cout;
 using std::endl;
 
+ai::NetworkTestingNamechange t;
 
 TEST_CASE("Testing setupNetworks") {
     vector<unsigned int> dimesions{32, 40, 10, 1};

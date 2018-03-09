@@ -9,6 +9,15 @@ using std::to_string;
 
 #include <chrono>
 
+#include <fstream>
+using std::ofstream;
+using std::ifstream;
+#include <iostream>
+using std::cout;
+using std::endl;
+using std::cin;
+using std::ios;
+
 /*         0   1   2   3   4   5   6   7
          +---+---+---+---+---+---+---+---+
      0   | X | 0 |   | 1 |   | 2 |   | 3 |
@@ -48,10 +57,29 @@ int ai::positionToSpace(const Position & pos) {
     return space;
 }
 
+string ai::getUsername () {
+    ifstream usernameFile;
+    usernameFile.open("user.me", ios::out | ios::binary);
+    if(!usernameFile) {
+        ofstream placingUsernameFile;
+        placingUsernameFile.open("user.me", ios::out | ios::binary);
+        cout << "Give me your username: ";
+        char inputName[25];
+        std::cin.getline(inputName, 25);
+        placingUsernameFile << inputName;
+        placingUsernameFile.close();
+        usernameFile.clear();
+        usernameFile.open("user.me", ios::out | ios::binary);
+    }
+    string nameOut;
+    usernameFile >> nameOut;
+    return nameOut;
+}
+
 string ai::idToFilename(int ID) {
-	string filename = to_string(ID) + ".network";
+	//string filename = to_string(ID) + ".network";
 	// The following implementation will be used once we begin to get the network integrated.
-	//string filename = ".\\networks\\" + to_string(ID) + ".network"; //creates filenames that scope to a folder called networks
+	string filename = "./networks/" + getUsername() + "/" + to_string(ID) + ".network"; //creates filenames that scope to a folder called networks
 	return filename;
 }
 
@@ -61,3 +89,20 @@ double ai::getTime() {
             ).count();
 }
 
+ai::NetworkTestingNamechange::NetworkTestingNamechange() {
+    _previousName = getUsername();
+    changeUsername("TestingNetworks");
+    cout << "Username Changed" << endl;
+}
+
+ai::NetworkTestingNamechange::~NetworkTestingNamechange () {
+    changeUsername(_previousName);
+    cout << "NTNC OBJ destroyed. Current name: " << getUsername() << endl;
+}
+
+void ai::NetworkTestingNamechange::changeUsername(const std::string & s) {
+    ofstream placingUsernameFile;
+    placingUsernameFile.open("user.me", ios::out | ios::binary);
+    placingUsernameFile << s;
+    placingUsernameFile.close();
+}

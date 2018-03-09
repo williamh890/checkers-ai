@@ -1,17 +1,21 @@
 #ifndef NETWORK_H_INCLUDED
 #define NETWORK_H_INCLUDED
 
+#include "consts.h"
+// ai::Settings::NetworkWeightType
+
 #include "seeder.h"
 // ai::Seeder
+
 #include "network-file-io.h"
 // ai::NetworkFileReader
 // ai::NetworkFileWriter
-#include "consts.h"
-// ai::Settings::NetworkWeightType
+
 #include <random>
 // std::uniform_real_distribution
 #include <vector>
 // std::vector
+#include <string>
 
 namespace ai {
     class NetworkFileReader;
@@ -21,6 +25,7 @@ namespace ai {
         public:
             static void save(size_t id, Network & toSave);
             static bool load(size_t id, Network & toLoad);
+            static bool load(std::string & filename, Network & toLoad);
 
             using LayersContainingNodes = std::vector<Settings::NetworkWeightType>;
             using NetworkWeights = std::vector<Settings::NetworkWeightType>;
@@ -30,16 +35,32 @@ namespace ai {
             Network (unsigned int id,
                      const std::vector<unsigned int> & LayerDimension,
                      std::shared_ptr<Seeder> & seeder);
+            Network(const Network & other) = default;
+            Network(Network && other) = default;
+            Network & operator= (const Network &rhs) {
+                if (this == &rhs)
+                    return *this;
+                Network copy_of_rhs(rhs._ID);
+                networkSwap(copy_of_rhs);
+                return *this;
+            }
+
+            Network & operator= (Network && rhs) noexcept {
+                if (this == &rhs) // Check for self-assignment
+                    return *this;
+                networkSwap(rhs);
+                return *this;
+            }
             ~Network();
 
-            Settings::NetworkWeightType evaluateBoard(const std::vector<char> &, bool leave_Out_Activator = false);
+            Settings::NetworkWeightType evaluateBoard(const std::vector<char> &, bool leave_Out_Activator = false, int red_factor = 1);
 
             void adjustPerformance(int result);
             int getPerformance() const;
             void resetPerformance();
 
             void evolve();
-            void evolveUsingNetwork(const ai::Network &);
+            void evolveUsingNetwork(ai::Network &);
 
             void outputCreationDebug();
             void changeKingWeight(Settings::NetworkWeightType);
@@ -77,6 +98,13 @@ namespace ai {
             void calculateNode(unsigned int, unsigned int);
             inline Settings::NetworkWeightType activationFunction(Settings::NetworkWeightType x);
 
+            void networkSwap(Network& rhs) {
+                std::swap(_weights, rhs._weights);
+                std::swap(_sigmas, rhs._sigmas);
+                std::swap(_kingWeight, rhs._kingWeight);
+                std::swap(_performance, rhs._performance);
+            }
+
         public:
             friend class NetworkFileReader;
             friend class NetworkFileWriter;
@@ -95,7 +123,7 @@ namespace ai {
 
     bool nothingSimilar(const Network &, const Network &);
     void weightChangeOut(Network parent, Network child);
-    void setupNetworks (const std::vector<unsigned int> & dimesions, int numberOfNetworks = 100);
+    void setupNetworks (const std::vector<unsigned int> & dimesions, int numberOfNetworks = NETWORKPOPSIZE);
     Settings::NetworkWeightType getGaussianNumberFromZeroToOne(std::mt19937 &);
 }
 #endif // NETWORK_H_INCLUDED
