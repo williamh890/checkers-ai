@@ -152,8 +152,8 @@ TEST_CASE("Testing evolution") {
     ai::Network playerZeroEvolved(1);
 
     playerZeroEvolved.evolveUsingNetwork(player);
-    player.outputCreationDebug();
-    playerZeroEvolved.outputCreationDebug();
+    // player.outputCreationDebug();
+    // playerZeroEvolved.outputCreationDebug();
     REQUIRE(nothingSimilar(player, playerZeroEvolved));
 }
 
