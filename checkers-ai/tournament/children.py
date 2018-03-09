@@ -20,7 +20,7 @@ class Children:
 
     def get_children(self):
         self.children = Pool(processes=self.options.max_processes,
-                             maxtasksperchild=1)
+                             maxtasksperchild=30)
 
     def run(self, id, opponent_ids):
         self.get_children()
@@ -30,8 +30,8 @@ class Children:
             [(self.options.checkers_game,
               id, opponent_id) for opponent_id in opponent_ids]
         )
-        self.children.close()
-        self.children.join()
+        # self.children.close()
+        # self.children.join()
         wins = sum(wins.get())
         print(wins)
         return wins

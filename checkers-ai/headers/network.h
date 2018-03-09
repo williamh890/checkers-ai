@@ -63,7 +63,7 @@ namespace ai {
             void evolve();
             void evolveUsingNetwork(ai::Network &);
 
-            void outputCreationDebug();
+            void outputCreationDebug() const;
             void changeKingWeight(Settings::NetworkWeightType);
         private:
             unsigned int _ID;

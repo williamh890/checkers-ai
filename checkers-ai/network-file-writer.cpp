@@ -85,6 +85,3 @@ void ai::distribution_out(int out_num)
     }
     output.close();
 }
-
-
-

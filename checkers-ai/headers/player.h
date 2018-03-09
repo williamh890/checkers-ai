@@ -114,8 +114,12 @@ namespace ai {
             bool shouldBeCrowned(const Piece & piece) const override;
     };
 
-    std::shared_ptr<Player> getPlayer(const std::string & color, JsonToStlConverter converter);
-    std::shared_ptr<Player> getNetworkedPlayer(const std::string & color, JsonToStlConverter converter, uint network_id);
+    std::shared_ptr<Player> getPlayer(const std::string & color,
+                                      JsonToStlConverter converter);
+    std::shared_ptr<Player> getNetworkedPlayer(
+                                               const std::string & color,
+                                               JsonToStlConverter converter,
+                                               uint network_id);
 }
 
 #endif
