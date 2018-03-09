@@ -211,7 +211,6 @@ int MiniMaxHelper::recursiveCase(int depth, int alpha, int beta) {
                 bestNumPieces = max(jumpVal, bestNumPieces);
                 alpha = max(alpha, bestNumPieces);
 
-
                 if (beta <= alpha) {
                     ++prunedNodes;
                     break;
@@ -223,7 +222,6 @@ int MiniMaxHelper::recursiveCase(int depth, int alpha, int beta) {
 
                 bestNumPieces = min(jumpVal, bestNumPieces);
                 beta = min(beta, bestNumPieces);
-
 
                 if (beta <= alpha) {
                     ++prunedNodes;
