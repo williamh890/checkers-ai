@@ -45,17 +45,24 @@ namespace ai {
             int recurse(const CheckersGame::JumpPackage & jump, int depth);
 
             GameState getCurrentGameState();
-            int changeGameState(const CheckersGame::JumpPackage & jump);
+            PostJumpInformation changeGameState(const CheckersGame::JumpPackage & jump);
             void changeGameState(const CheckersGame::MovePackage & move);
 
             bool isBaseCase(int depth);
             int baseCase();
 
-            int recurseMultiJumpCase(const std::vector<CheckersGame::JumpPackage> & multiJumps, int depth);
+            bool isMultiJumpCase(
+                    bool wasPieceCrowned,
+                    const std::vector<CheckersGame::JumpPackage> & multiJumps
+                    );
+            int recurseMultiJumpCase(
+                    const std::vector<CheckersGame::JumpPackage> & multiJumps,
+                    int depth
+                    );
             int recursiveCase(int depth);
 
             void setGameState(GameState & gameState);
-   };
+    };
 };
 
 #endif

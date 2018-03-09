@@ -6,6 +6,7 @@ using ai::GameState;
 #include "headers/models.h"
 using ai::Piece;
 using ai::Jump;
+using ai::PostJumpInformation;
 
 #include "headers/checkers-game.h"
 using ai::CheckersGame;
@@ -128,7 +129,9 @@ int MiniMaxHelper::recurse(const JumpPackage & jump, int depth) {
     ++totalNodes;
     auto stateBeforeMove = getCurrentGameState();
 
-    auto jumpDestination = changeGameState(jump);
+    auto postJumpInfo = changeGameState(jump);
+    auto wasPieceCrowned = postJumpInfo.wasPieceCrowned;
+    auto jumpDestination = postJumpInfo.spaceJumpedTo;
 
     game.swapPlayers();
     if (isBaseCase(depth)) {
@@ -139,10 +142,10 @@ int MiniMaxHelper::recurse(const JumpPackage & jump, int depth) {
     }
     game.swapPlayers();
 
-    auto multiJumps = game.getValidJumpsAt(jumpDestination);
     int bestNumPieces;
 
-    if (multiJumps.size() > 0) {
+    auto multiJumps = game.getValidJumpsAt(jumpDestination);
+    if (!wasPieceCrowned && multiJumps.size() > 0) {
         bestNumPieces = recurseMultiJumpCase(multiJumps, depth);
     }
     else {
@@ -216,11 +219,11 @@ void MiniMaxHelper::changeGameState(const MovePackage & move) {
     game.swapPlayers();
 }
 
-int MiniMaxHelper::changeGameState(const JumpPackage & jump) {
+PostJumpInformation MiniMaxHelper::changeGameState(const JumpPackage & jump) {
     game.board.make(jump);
-    game.reactTo(jump);
+    auto wasPieceCrowned = game.reactTo(jump);
 
-    return jump.second.to;
+    return PostJumpInformation(wasPieceCrowned, jump.second.to);
 }
 
 bool MiniMaxHelper::isBaseCase(int depth) {

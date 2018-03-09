@@ -335,13 +335,20 @@ const char CheckersGame::getInactivePlayerColor(){
     return inactivePlayer->getColor();
 }
 
-void CheckersGame::reactTo(const JumpPackage & jump) {
-    activePlayer->updatePieces(jump, board);
+bool CheckersGame::reactTo(const JumpPackage & jump) {
+    auto wasPieceCrowned =
+        activePlayer->updatePieces(jump, board);
+
     inactivePlayer->removePieceAt(jump.second.through);
+
+    return wasPieceCrowned;
 }
 
-void CheckersGame::reactTo(const MovePackage & move) {
-    activePlayer->updatePieces(move, board);
+bool CheckersGame::reactTo(const MovePackage & move) {
+    auto wasPieceCrowned =
+        activePlayer->updatePieces(move, board);
+
+    return wasPieceCrowned;
 }
 
 string CheckersGame::toString() {

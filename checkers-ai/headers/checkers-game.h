@@ -105,8 +105,8 @@ namespace ai {
 
             JumpPackage getJumpFrom(const MovePackage & inputJump);
 
-            void reactTo(const MovePackage & move);
-            void reactTo(const JumpPackage & jump);
+            bool reactTo(const MovePackage & move);
+            bool reactTo(const JumpPackage & jump);
 
             std::string toString();
 

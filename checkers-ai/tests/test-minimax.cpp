@@ -143,31 +143,36 @@ TEST_CASE("minimax jumps recursion", "[minimax], [minimax-jumps]") {
 
         auto setupJumpForRed = make_pair(24, 21);
 
-        REQUIRE(minimax(setupJumpForRed, 1, 'b', game) == -1);
+        SECTION("jump was taken") {
+            REQUIRE(minimax(setupJumpForRed, 1, 'b', game) == -1);
+        }
     }
 
     SECTION("will recursively jump the same piece") {
+        game.swapPlayers();
         game.board.setBoardState({
                 ' ',   ' ',   ' ',   ' ',
-             ' ',   'r',   'r',   ' ',
-                'b',   ' ',   ' ',   ' ',
+             ' ',   ' ',   'r',   ' ',
+                'r',   ' ',   ' ',   ' ',
              ' ',   ' ',   ' ',   ' ',
-                ' ',   ' ',   ' ',   ' ',
+                'b',   ' ',   ' ',   ' ',
              ' ',   ' ',   ' ',   ' ',
                 ' ',   ' ',   ' ',   ' ',
              ' ',   ' ',   ' ',   ' '
         });
         game.red->setPieces({
-            Piece('r', 14)
+            Piece('r', 8),
+            Piece('r', 6)
         });
         game.black->setPieces({
-            Piece('b', 24),
-            Piece('b', 22)
+            Piece('b', 16)
         });
 
-        auto doubleJumpSetupMove = make_pair(22, 17);
+        auto doubleJumpSetupMove = make_pair(8, 13);
 
-        REQUIRE(minimax(doubleJumpSetupMove, 3, 'b', game) == -1);
+        SECTION("both pieces were jumped") {
+            REQUIRE(minimax(doubleJumpSetupMove, 3, 'b', game) == 1);
+        }
     }
 
     SECTION("jumping stops when piece is crowned") {
@@ -190,13 +195,11 @@ TEST_CASE("minimax jumps recursion", "[minimax], [minimax-jumps]") {
             Piece('b', 8)
         });
 
-        auto redCrowningSetupMove = make_pair(22, 17);
+        auto crowningSetupMove = make_pair(0, 5);
 
-        auto blackDoesntJumpBothPieces = [&] {
-            return minimax(redCrowningSetupMove, 3, 'b', game) == -1;
-        };
-
-        REQUIRE(blackDoesntJumpBothPieces());
+        SECTION("only one piece was jumped") {
+            REQUIRE(minimax(crowningSetupMove, 3, 'b', game) == 0);
+        }
     }
 }
 

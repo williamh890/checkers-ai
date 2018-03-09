@@ -92,7 +92,8 @@ void Player::Crown(Piece & piece)
     piece.color = toupper(piece.color);
 }
 
-void Player::updatePieces(const pair<int, int> & move, Board & board) {
+bool Player::updatePieces(const pair<int, int> & move, Board & board) {
+    auto wasCrowned = false;
     for (auto & piece : pieces) {
         if (piece.space == move.first) {
             piece.space = move.second;
@@ -100,14 +101,19 @@ void Player::updatePieces(const pair<int, int> & move, Board & board) {
             if(shouldBeCrowned(piece)) {
                 Crown(piece);
                 board.updatePiece(piece.space, piece.color);
+
+                wasCrowned = true;
             }
 
-            return;
+            break;
         }
     }
+
+    return wasCrowned;
 }
 
-void Player::updatePieces(const pair<int, Jump> & jump, Board & board) {
+bool Player::updatePieces(const pair<int, Jump> & jump, Board & board) {
+    auto wasCrowned = false;
     for (auto & piece : pieces) {
         if (piece.space == jump.first) {
             piece.space = jump.second.to;
@@ -115,11 +121,14 @@ void Player::updatePieces(const pair<int, Jump> & jump, Board & board) {
             if(shouldBeCrowned(piece)) {
                 Crown(piece);
                 board.updatePiece(piece.space, piece.color);
+                wasCrowned = true;
             }
 
-            return;
+            break;
         }
     }
+
+    return wasCrowned;
 }
 
 vector<Jump> Player::getJumpsFor(const Piece & piece) const {
