@@ -37,20 +37,21 @@ namespace ai {
                      std::shared_ptr<Seeder> & seeder);
             Network(const Network & other) = default;
             Network(Network && other) = default;
-            Network & operator= (const Network &rhs) {
-                if (this == &rhs)
-                    return *this;
-                Network copy_of_rhs(rhs._ID);
-                networkSwap(copy_of_rhs);
-                return *this;
-            }
-
-            Network & operator= (Network && rhs) noexcept {
-                if (this == &rhs) // Check for self-assignment
-                    return *this;
-                networkSwap(rhs);
-                return *this;
-            }
+            Network & operator= (const Network &rhs) = default;
+            // Network & operator= (const Network &rhs) {
+            //     if (this == &rhs)
+            //         return *this;
+            //     Network copy_of_rhs(rhs._ID);
+            //     networkSwap(copy_of_rhs);
+            //     return *this;
+            // }
+            Network & operator= (Network && rhs) = default;
+            // Network & operator= (Network && rhs) noexcept {
+            //     if (this == &rhs) // Check for self-assignment
+            //         return *this;
+            //     networkSwap(rhs);
+            //     return *this;
+            // }
             ~Network();
 
             Settings::NetworkWeightType evaluateBoard(const std::vector<char> &, bool leave_Out_Activator = false, int red_factor = 1);
