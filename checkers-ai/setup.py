@@ -10,5 +10,5 @@ setup(name="cython_checkers",
                     "network.cpp", "network-file-reader.cpp",
                     "network-file-writer.cpp", "minimax.cpp"],
            language="c++",
-           extra_compile_args=["-std=c++14"],
+           extra_compile_args=["-std=c++14", "-fopenmp"],
       )))

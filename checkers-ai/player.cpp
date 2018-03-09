@@ -1,8 +1,16 @@
+
+//#include "headers/network.h"
+//using ai::Network;
+
+#include "headers/minimax.h"
+using ai::MiniMaxHelper;
+
 #include "headers/player.h"
 using ai::Player;
 using ai::RedPlayer;
 using ai::BlackPlayer;
 using ai::getPlayer;
+using ai::getNetworkedPlayer;
 using ai::PlayerType;
 
 #include "headers/json-to-stl.h"
@@ -41,6 +49,8 @@ using std::cout;
 using std::endl;
 #include <utility>
 using std::pair;
+#include<functional>
+using std::function;
 
 
 Player::Player(
@@ -48,7 +58,31 @@ Player::Player(
         const MoveGenerator & generator,
         const MoveGenerator & kingGenerator,
         PlayerType type=PlayerType::Computer) : color(color), generator(generator), kingGenerator(kingGenerator), playerType(type) {
+          this->baseCase=[this](MiniMaxHelper& helper)->int{
+          auto numPieces = helper.game.getNumPiecesFor(helper.maximizingPlayer);
+
+          char opponentColor = (helper.maximizingPlayer == 'r') ? 'b' : 'r';
+          auto numEnemyPieces = helper.game.getNumPiecesFor(opponentColor);
+
+          return numPieces - numEnemyPieces;
+        };
 }
+
+Player::Player(
+        char color,
+        const MoveGenerator & generator,
+        const MoveGenerator & kingGenerator,
+        Network & network,
+        PlayerType type=PlayerType::Computer) : color(color), generator(generator), kingGenerator(kingGenerator), network(network), playerType(type){
+            this->base_case_color_factor = (color == 'r') ? -1 : 1;
+            cout<<"color factor was "<<this->base_case_color_factor<<endl;
+            this->baseCase=[this](MiniMaxHelper& helper)->int{
+            const vector<char> board = helper.game.board.getBoardState();
+            auto value = this->network.evaluateBoard(board, false, this->base_case_color_factor);
+            return value;
+          };
+        }
+
 
 void Player::initPieces() {
     for (auto space = 0; space < TOTAL_NUM_SPACES; ++space) {
@@ -179,6 +213,16 @@ BlackPlayer::BlackPlayer(
     initPieces();
 }
 
+BlackPlayer::BlackPlayer(
+        char color,
+        const MoveGenerator & generator,
+        const MoveGenerator & kingGenerator,
+        Network & network,
+        PlayerType type): Player(color, generator, kingGenerator, network, type) {
+
+    initPieces();
+}
+
 bool BlackPlayer::isInitialSpace(int space) const {
     return space >= (TOTAL_NUM_SPACES - INIT_NUM_PIECES);
 }
@@ -195,6 +239,14 @@ RedPlayer::RedPlayer(char color,
                      const MoveGenerator & generator,
                      const MoveGenerator & kingGenerator,
                      PlayerType type): Player(color, generator, kingGenerator, type) {
+    initPieces();
+}
+
+RedPlayer::RedPlayer(char color,
+                     const MoveGenerator & generator,
+                     const MoveGenerator & kingGenerator,
+                     Network & network,
+                     PlayerType type): Player(color, generator, kingGenerator, network, type) {
     initPieces();
 }
 
@@ -222,4 +274,16 @@ shared_ptr<Player> ai::getPlayer(const string & color, JsonToStlConverter conver
     auto blackGenerator = getGeneratorFor("black", converter);
 
     return make_shared<BlackPlayer>('b', blackGenerator, kingGenerator, Settings::BLACK_PLAYER_TYPE);
+}
+shared_ptr<Player> ai::getNetworkedPlayer(const string & color, JsonToStlConverter converter, uint network_id){
+  auto kingGenerator = getKingGenerator(converter);
+  Network network = Network(network_id);
+  if (color == "red") {
+      auto redGenerator = getGeneratorFor("red", converter);
+      return make_shared<RedPlayer>('r', redGenerator, kingGenerator, network, Settings::RED_PLAYER_TYPE);
+  }
+
+  auto blackGenerator = getGeneratorFor("black", converter);
+
+  return make_shared<BlackPlayer>('b', blackGenerator, kingGenerator, network, Settings::BLACK_PLAYER_TYPE);
 }

@@ -93,6 +93,8 @@ gui:
 	cython3 --embed checkers_game.pyx -o checkers_game_obj.cpp -3 --cplus -f
 	$(CMP) -I$(PYPATH) -o $(GUI_OUT) checkers_game_obj.cpp $(CPP_FILES) -l$(PYVERSION)
 
+manager:
+	g++ -std=c++14 -o manager.out networkManagement.cpp utils.cpp network.cpp seeder.cpp network-file-reader.cpp network-file-writer.cpp -lstdc++fs
 # For making and running tests
 
 TESTING_DIR=tests

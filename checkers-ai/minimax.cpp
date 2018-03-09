@@ -116,7 +116,7 @@ int MiniMaxHelper::recurse(const MovePackage & move, int depth) {
     changeGameState(move);
 
     int bestNumPieces = isBaseCase(depth) ?
-        baseCase() :
+        game.activePlayer->baseCase(*this) :
         recursiveCase(depth);
 
     setGameState(stateBeforeMove);
@@ -132,7 +132,7 @@ int MiniMaxHelper::recurse(const JumpPackage & jump, int depth) {
 
     game.swapPlayers();
     if (isBaseCase(depth)) {
-        int numPieces = baseCase();
+        int numPieces = game.activePlayer->baseCase(*this);
         setGameState(stateBeforeMove);
 
         return numPieces;
@@ -227,14 +227,15 @@ bool MiniMaxHelper::isBaseCase(int depth) {
     ++totalNodes;
     return depth == 0 or !(game.areJumps() or game.areMoves());
 }
-
 int MiniMaxHelper::baseCase() {
-    auto numPieces = game.getNumPiecesFor(maximizingPlayer);
+  //auto val = game.activePlayer->baseCase(*this);
+  //return val;
+  auto numPieces = game.getNumPiecesFor(maximizingPlayer);
+  char opponentColor = (maximizingPlayer == 'r') ? 'b' : 'r';
+   auto numEnemyPieces = game.getNumPiecesFor(opponentColor);
 
-    char opponentColor = (maximizingPlayer == 'r') ? 'b' : 'r';
-    auto numEnemyPieces = game.getNumPiecesFor(opponentColor);
+  return numPieces - numEnemyPieces;
 
-    return numPieces - numEnemyPieces;
 }
 
 void MiniMaxHelper::setGameState(GameState & gameState) {

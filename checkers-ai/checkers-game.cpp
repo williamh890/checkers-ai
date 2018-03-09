@@ -24,6 +24,7 @@ using ai::Player;
 using ai::RedPlayer;
 using ai::BlackPlayer;
 using ai::getPlayer;
+using ai::getNetworkedPlayer;
 
 #include "headers/json-to-stl.h"
 
@@ -86,6 +87,21 @@ CheckersGame ai::getCheckersGame() {
     return CheckersGame(board, red, black, seeder);
 }
 
+CheckersGame ai::getNetworkedCheckersGame(unsigned int red_id, unsigned int black_id){
+    auto table = loadMoveTableFrom("move-table.json");
+    auto converter = JsonToStlConverter{table};
+
+    auto red = getNetworkedPlayer("red", converter, red_id);
+    auto black = getNetworkedPlayer("black", converter, black_id);
+    auto board = getBoard();
+
+    auto seeder = getSeeder();
+
+    return CheckersGame(board, red, black, seeder);
+
+
+}
+
 CheckersGame::CheckersGame() { };
 
 CheckersGame::CheckersGame(
@@ -100,9 +116,9 @@ CheckersGame::CheckersGame(
     this->board.addPiecesFor(black);
 }
 
-void CheckersGame::play() {
-    while (moveCounter++ < 100) {
-        cout << toString() << endl;
+const char CheckersGame::play() {
+    while (moveCounter++ < 100 && (areMoves() || areJumps())) {
+        //cout << toString() << endl;
 
         MovePackage move = make_pair(-1, -1);
         JumpPackage jump = make_pair(-1, Jump(-1, -1));
@@ -129,11 +145,11 @@ void CheckersGame::play() {
 
 
             while (validJumps.size()) {
-                cout << board.toString() << endl;
+                //cout << board.toString() << endl;
                 auto jump = make_pair(-1, Jump(-1, -1));
 
                 try {
-                    jump = getJumpFromActivePlayer();
+                    jump = getMinimaxJump();
                 }
                 catch(runtime_error & e) {
                     continue;
@@ -152,8 +168,9 @@ void CheckersGame::play() {
 
         swapPlayers();
     }
-
+    cout << toString() << endl;
     cout << "moves in game " << moveCounter << endl;
+    return getInactivePlayerColor();
 }
 
 void CheckersGame::swapPlayers(){
@@ -169,13 +186,8 @@ bool CheckersGame::areMoves(){
 }
 
 JumpPackage CheckersGame::getJumpFromActivePlayer() {
-    if (activePlayer->getColor() == 'r') {
-        return getMinimaxJump();
+      return getMinimaxJump();
     }
-
-    return getRandomValidJump();
-}
-
 MovePackage CheckersGame::getMinimaxMove() {
     return minimaxMove(*this, MINIMAX_SEARCH_DEPTH);
 }
@@ -217,11 +229,8 @@ JumpPackage CheckersGame::getJumpFrom(const MovePackage & inputJump) {
 }
 
 MovePackage CheckersGame::getMoveFromActivePlayer() {
-    if (activePlayer->getColor() == 'r') {
-        return getMinimaxMove();
-    }
+      return getMinimaxMove();
 
-    return getRandomValidMove();
 }
 
 MovePackage CheckersGame::getRandomValidMove() {
