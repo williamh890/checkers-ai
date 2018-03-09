@@ -149,12 +149,12 @@ TEST_CASE("minimax jumps recursion", "[minimax], [minimax-jumps]") {
     SECTION("will recursively jump the same piece") {
         game.board.setBoardState({
                 ' ',   ' ',   ' ',   ' ',
+             ' ',   'r',   'r',   ' ',
+                'b',   ' ',   ' ',   ' ',
              ' ',   ' ',   ' ',   ' ',
                 ' ',   ' ',   ' ',   ' ',
-             ' ',   ' ',   'r',   ' ',
+             ' ',   ' ',   ' ',   ' ',
                 ' ',   ' ',   ' ',   ' ',
-             ' ',   ' ',   'b',   ' ',
-                'b',   ' ',   ' ',   ' ',
              ' ',   ' ',   ' ',   ' '
         });
         game.red->setPieces({
@@ -169,6 +169,35 @@ TEST_CASE("minimax jumps recursion", "[minimax], [minimax-jumps]") {
 
         REQUIRE(minimax(doubleJumpSetupMove, 3, 'b', game) == -1);
     }
+
+    SECTION("jumping stops when piece is crowned") {
+        game.swapPlayers();
+        game.board.setBoardState({
+                'r',   ' ',   ' ',   ' ',
+             ' ',   ' ',   'r',   ' ',
+                'b',   ' ',   ' ',   ' ',
+             ' ',   ' ',   ' ',   ' ',
+                ' ',   ' ',   ' ',   ' ',
+             ' ',   ' ',   ' ',   ' ',
+                ' ',   ' ',   ' ',   ' ',
+             ' ',   ' ',   ' ',   ' '
+        });
+        game.red->setPieces({
+            Piece('r', 0),
+            Piece('r', 6)
+        });
+        game.black->setPieces({
+            Piece('b', 8)
+        });
+
+        auto redCrowningSetupMove = make_pair(22, 17);
+
+        auto blackDoesntJumpBothPieces = [&] {
+            return minimax(redCrowningSetupMove, 3, 'b', game) == -1;
+        };
+
+        REQUIRE(blackDoesntJumpBothPieces());
+    }
 }
 
 TEST_CASE ("minimax wrapper functions behave") {
@@ -176,7 +205,7 @@ TEST_CASE ("minimax wrapper functions behave") {
 
     SECTION ("throws exception if depth == 0") {
         REQUIRE_THROWS(minimaxMove(game, 0));
-        REQUIRE_THROWS(minimaxJump(game, 0, -1)); 
+        REQUIRE_THROWS(minimaxJump(game, 0, -1));
     }
 }
 
