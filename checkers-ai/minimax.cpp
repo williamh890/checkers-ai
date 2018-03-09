@@ -165,12 +165,28 @@ int MiniMaxHelper::recurseMultiJumpCase(const vector<JumpPackage> & multiJumps, 
     int bestNumPieces = (isMaximizingPlayer) ? INT_MIN : INT_MAX;
     int jumpVal;
 
-    for (auto & jump : multiJumps) {
-        jumpVal = recurse(jump, depth, alpha, beta);
+    if (isMaximizingPlayer) {
+        for (auto & jump : multiJumps) {
+            jumpVal = recurse(jump, depth, alpha, beta);
 
-        bestNumPieces = (isMaximizingPlayer) ?
-            max(jumpVal, bestNumPieces) :
-            min(jumpVal, bestNumPieces);
+            bestNumPieces = max(jumpVal, bestNumPieces);
+            alpha = max(alpha, bestNumPieces);
+
+            if (beta <= alpha) {
+                break;
+            }
+        }
+    } else {
+        for (auto & jump : multiJumps) {
+            jumpVal = recurse(jump, depth, alpha, beta);
+
+            bestNumPieces = min(jumpVal, bestNumPieces);
+            beta = min(beta, bestNumPieces);
+
+            if (beta <= alpha) {
+                break;
+            }
+        }
     }
 
     return bestNumPieces;
@@ -184,22 +200,56 @@ int MiniMaxHelper::recursiveCase(int depth, int alpha, int beta) {
 
     if (jumps.size() != 0) {
         int jumpVal;
-        for (auto & jump : jumps) {
-            jumpVal = recurse(jump, depth, alpha, beta);
 
-            bestNumPieces = (isMaximizingPlayer) ?
-                max(jumpVal, bestNumPieces) :
-                min(jumpVal, bestNumPieces);
+        if (isMaximizingPlayer) {
+            for (auto & jump : jumps) {
+                jumpVal = recurse(jump, depth, alpha, beta);
+
+                bestNumPieces = max(jumpVal, bestNumPieces);
+                alpha = max(alpha, bestNumPieces);
+
+
+                if (beta <= alpha) {
+                    break;
+                }
+            }
+        } else {
+            for (auto & jump : jumps) {
+                jumpVal = recurse(jump, depth, alpha, beta);
+
+                bestNumPieces = min(jumpVal, bestNumPieces);
+                beta = min(beta, bestNumPieces);
+
+
+                if (beta <= alpha) {
+                    break;
+                }
+            }
         }
     }
     else {
         int moveVal;
-        for (auto & move : game.getValidMoves()) {
-            moveVal = recurse(move, depth - 1, alpha, beta);
+        if (isMaximizingPlayer) {
+            for (auto & move : game.getValidMoves()) {
+                moveVal = recurse(move, depth - 1, alpha, beta);
 
-            bestNumPieces = (isMaximizingPlayer) ?
-                max(moveVal, bestNumPieces) :
-                min(moveVal, bestNumPieces);
+                bestNumPieces = max(moveVal, bestNumPieces);
+                alpha = max(alpha, bestNumPieces);
+                if (beta <= alpha) {
+                    break;
+                }
+            }
+        } else {
+            for (auto & move : game.getValidMoves()) {
+                moveVal = recurse(move, depth - 1, alpha, beta);
+
+                bestNumPieces = min(moveVal, bestNumPieces);
+                beta = min(beta, bestNumPieces);
+
+                if (beta <= alpha) {
+                    break;
+                }
+            }
         }
     }
 
@@ -230,18 +280,15 @@ PostJumpInformation MiniMaxHelper::changeGameState(const JumpPackage & jump) {
 }
 
 bool MiniMaxHelper::isBaseCase(int depth) {
-    ++totalNodes;
     return depth == 0 or !(game.areJumps() or game.areMoves());
 }
+
 int MiniMaxHelper::baseCase() {
-  //auto val = game.activePlayer->baseCase(*this);
-  //return val;
-  auto numPieces = game.getNumPiecesFor(maximizingPlayer);
-  char opponentColor = (maximizingPlayer == 'r') ? 'b' : 'r';
-   auto numEnemyPieces = game.getNumPiecesFor(opponentColor);
+    auto numPieces = game.getNumPiecesFor(maximizingPlayer);
+    char opponentColor = (maximizingPlayer == 'r') ? 'b' : 'r';
+    auto numEnemyPieces = game.getNumPiecesFor(opponentColor);
 
-  return numPieces - numEnemyPieces;
-
+    return numPieces - numEnemyPieces;
 }
 
 void MiniMaxHelper::setGameState(GameState & gameState) {
