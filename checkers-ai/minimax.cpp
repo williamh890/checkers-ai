@@ -29,6 +29,7 @@ using Pieces = vector<Piece>;
 using BoardState = vector<char>;
 
 int MiniMaxHelper::totalNodes = 0;
+int MiniMaxHelper::prunedNodes = 0;
 
 CheckersGame::MovePackage ai::minimaxMove(CheckersGame & game, int depth) {
     int bestMoveVal = INT_MIN;
@@ -173,6 +174,7 @@ int MiniMaxHelper::recurseMultiJumpCase(const vector<JumpPackage> & multiJumps, 
             alpha = max(alpha, bestNumPieces);
 
             if (beta <= alpha) {
+                ++prunedNodes;
                 break;
             }
         }
@@ -184,6 +186,7 @@ int MiniMaxHelper::recurseMultiJumpCase(const vector<JumpPackage> & multiJumps, 
             beta = min(beta, bestNumPieces);
 
             if (beta <= alpha) {
+                ++prunedNodes;
                 break;
             }
         }
@@ -210,6 +213,7 @@ int MiniMaxHelper::recursiveCase(int depth, int alpha, int beta) {
 
 
                 if (beta <= alpha) {
+                    ++prunedNodes;
                     break;
                 }
             }
@@ -222,6 +226,7 @@ int MiniMaxHelper::recursiveCase(int depth, int alpha, int beta) {
 
 
                 if (beta <= alpha) {
+                    ++prunedNodes;
                     break;
                 }
             }
@@ -236,6 +241,7 @@ int MiniMaxHelper::recursiveCase(int depth, int alpha, int beta) {
                 bestNumPieces = max(moveVal, bestNumPieces);
                 alpha = max(alpha, bestNumPieces);
                 if (beta <= alpha) {
+                    ++prunedNodes;
                     break;
                 }
             }
@@ -247,6 +253,7 @@ int MiniMaxHelper::recursiveCase(int depth, int alpha, int beta) {
                 beta = min(beta, bestNumPieces);
 
                 if (beta <= alpha) {
+                    ++prunedNodes;
                     break;
                 }
             }

@@ -47,6 +47,7 @@ namespace ai {
     class MiniMaxHelper {
         public:
             static int totalNodes;
+            static int prunedNodes;
 
             CheckersGame game;
             char maximizingPlayer;

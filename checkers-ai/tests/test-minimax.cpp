@@ -230,13 +230,15 @@ TEST_CASE ("timing minimax at different depths", "[minimax],[timing]") {
     auto pushBackTotal = end - start;
 
     MiniMaxHelper::totalNodes = 0;
+    MiniMaxHelper::prunedNodes = 0;
     start = getTime();
     moves.push_back(game.getMinimaxMove());
     end = getTime();
 
     auto total = (end - start);
     cout << "Nodes evaluated: " << MiniMaxHelper::totalNodes << " nodes" << endl;
+    cout << "Nodes pruned: " << MiniMaxHelper::prunedNodes << " nodes" << endl;
     cout << "Total time taken: " << total <<  " secs" << endl;
-    cout << "Time per node: " << MiniMaxHelper::totalNodes / total << " nodes / sec" << endl;
+    cout << "Nodes per second: " << MiniMaxHelper::totalNodes / total << " nodes / sec" << endl;
 }
 

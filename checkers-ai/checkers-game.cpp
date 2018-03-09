@@ -192,7 +192,6 @@ MovePackage CheckersGame::getMinimaxMove() {
     return minimaxMove(*this, MINIMAX_SEARCH_DEPTH);
 }
 
-
 JumpPackage CheckersGame::getMinimaxJump(int space) {
     return minimaxJump(*this, MINIMAX_SEARCH_DEPTH, space);
 }
