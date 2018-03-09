@@ -231,6 +231,7 @@ TEST_CASE ("timing minimax at different depths", "[minimax],[timing]") {
 
     MiniMaxHelper::totalNodes = 0;
     MiniMaxHelper::prunedNodes = 0;
+    CheckersGame::MINIMAX_SEARCH_DEPTH = 10;
     start = getTime();
     moves.push_back(game.getMinimaxMove());
     end = getTime();

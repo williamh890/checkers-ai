@@ -1,0 +1,6 @@
+Alpha Beta Timing:
+----------------------------------
+Nodes evaluated: 3897628 nodes
+Nodes pruned: 918742 nodes
+Total time taken: 2.90581 secs
+Nodes per second: 1.34132e+06 nodes / sec
