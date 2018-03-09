@@ -22,6 +22,8 @@ using ai::NetworkTestingNamechange;
 using std::vector;
 #include <sstream>
 using std::stringstream;
+#include <iterator>
+using std::istream_iterator;
 #include <algorithm>
 using std::sort;
 
@@ -43,12 +45,12 @@ int main(int argc, char *argv[]) {
 
         cout << "You want me to setup networks." << endl;
         cout << "the path I created for your directory was: " << path << endl;
-        create_directories(path) ? cout << "Your directory was created" << endl : 
+        create_directories(path) ? cout << "Your directory was created" << endl :
                                 cout << "Couldn't create directory (is it already created?)" << endl;
 
         setupNetworks(NETWORK_DIMENSIONS, NETWORKPOPSIZE);
     }
-    
+
     else if (*argv[1] == STORE_PERFORMANCES) {
         cout << "You want me to store performances." << endl;
 
@@ -59,13 +61,16 @@ int main(int argc, char *argv[]) {
 
         vector<int> performances;
         string input(argv[2]);
+        cout<<"input was "<<input<<endl;
         stringstream iss (input);
 
         int temp;
         while(iss >> temp){
             performances.push_back(temp);
+            if (iss.peek() == ','){
+              iss.ignore();
+            }
         }
-
         //debug
         // for (auto i: performances) {
         //     cout << i << endl;
@@ -75,7 +80,7 @@ int main(int argc, char *argv[]) {
             cout << "*** Incorrect Number of Weights! ***" << endl;
             return -1;
         }
-        
+
         for (unsigned int i = 0; i < NETWORKPOPSIZE; ++i) {
             Network netPerformanceAdjust(i);
             netPerformanceAdjust.adjustPerformance(performances[i]);
@@ -108,7 +113,7 @@ int main(int argc, char *argv[]) {
         // }
 
         cout << "There are: " << folderPaths.size() << " networks in development" << endl;
-        
+
         ////////////////////////////////////////////////////////////////
         // Get all current networks
         /////////////////////////////////
@@ -126,7 +131,7 @@ int main(int argc, char *argv[]) {
         //     for (auto j : i)
         //         cout << j << endl;
         // }
-        
+
         ////////////////////////////////////////////////////////////////
         // Begin process of sorting all networks for stealing
         /////////////////////////////////
@@ -170,7 +175,7 @@ int main(int argc, char *argv[]) {
             // }
             /////////////////////////////////////////
 
-            sort(networks_in_one_folder.begin(), networks_in_one_folder.end(), 
+            sort(networks_in_one_folder.begin(), networks_in_one_folder.end(),
                     [](Network first, Network second) {return first > second;});
 
             ///////////////debug

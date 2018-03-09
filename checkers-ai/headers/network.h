@@ -53,7 +53,7 @@ namespace ai {
             }
             ~Network();
 
-            Settings::NetworkWeightType evaluateBoard(const std::vector<char> &, bool leave_Out_Activator = false);
+            Settings::NetworkWeightType evaluateBoard(const std::vector<char> &, bool leave_Out_Activator = false, int red_factor = 1);
 
             void adjustPerformance(int result);
             int getPerformance() const;

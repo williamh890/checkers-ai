@@ -35,6 +35,7 @@ namespace ai {
             std::vector<Piece> pieces;
             MoveGenerator generator;
             MoveGenerator kingGenerator;
+            int base_case_color_factor;
 
         public:
             Player() = default;
@@ -70,7 +71,7 @@ namespace ai {
             RedPlayer(char color, const MoveGenerator & generator, const MoveGenerator & kingGenerator, Network & network, PlayerType type);
         private:
             bool isInitialSpace(int space) const override;
-            bool shouldBeCrowned(const Piece & piece) const override ;
+            bool shouldBeCrowned(const Piece & piece) const override;
     };
 
     class BlackPlayer: public Player {
@@ -79,7 +80,7 @@ namespace ai {
             BlackPlayer(char color, const MoveGenerator & generator, const MoveGenerator & kingGenerator, Network & network, PlayerType type);
         private:
             bool isInitialSpace(int space) const override;
-            bool shouldBeCrowned(const Piece & piece) const override ;
+            bool shouldBeCrowned(const Piece & piece) const override;
     };
 
     std::shared_ptr<Player> getPlayer(const std::string & color, JsonToStlConverter converter);

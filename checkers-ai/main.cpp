@@ -17,18 +17,24 @@ using std::stoi;
 
 
 
-int main(int argc, char *argv[]) {
-    unsigned int red_id = stoi(string(1, *argv[1]));
-    unsigned int black_id = stoi(string(1,*argv[2]));
+int main(int argc, char** argv) {
+    unsigned int red_id = stoi(argv[1]);
+    unsigned int black_id = stoi(argv[2]);
     cout<<"got id's"<<endl;
-    cout<<"id 1 is "<<red_id<<endl;
+    cout<<"red id is "<<red_id<<endl;
+    cout<<"black id is "<<black_id<<endl;
     auto game = getNetworkedCheckersGame(red_id, black_id);
-    game.play();
-
-    Network net1(0), net2(1);
-    net2.evolveUsingNetwork(net1);
-    weightChangeOut(net1,net2);
-
+    const char winner = game.play();
     cout << "gameover" << endl;
+    cout<<"winner was "<<winner<<endl;
+    if (winner == 'r'){
+      return 1;
+    }
+
+    //Network net1(0), net2(1);
+    //net2.evolveUsingNetwork(net1);
+    //weightChangeOut(net1,net2);
+
+
     return 0;
 }

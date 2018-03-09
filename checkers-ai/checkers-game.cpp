@@ -87,7 +87,7 @@ CheckersGame ai::getCheckersGame() {
     return CheckersGame(board, red, black, seeder);
 }
 
-CheckersGame ai::getNetworkedCheckersGame(uint red_id, uint black_id){
+CheckersGame ai::getNetworkedCheckersGame(unsigned int red_id, unsigned int black_id){
     auto table = loadMoveTableFrom("move-table.json");
     auto converter = JsonToStlConverter{table};
 
@@ -116,18 +116,18 @@ CheckersGame::CheckersGame(
     this->board.addPiecesFor(black);
 }
 
-void CheckersGame::play() {
-    while (moveCounter++ < 100) {
-        cout << toString() << endl;
+const char CheckersGame::play() {
+    while (moveCounter++ < 100 && (areMoves() || areJumps())) {
+        //cout << toString() << endl;
 
         MovePackage move = make_pair(-1, -1);
         JumpPackage jump = make_pair(-1, Jump(-1, -1));
 
         try {
             if (areJumps()) {
-                jump = getMinimaxJump();
+                jump = getJumpFromActivePlayer();
             } else {
-                move = getMinimaxMove();
+                move = getMoveFromActivePlayer();
             }
         }
         catch(length_error & e) {
@@ -145,7 +145,7 @@ void CheckersGame::play() {
 
 
             while (validJumps.size()) {
-                cout << board.toString() << endl;
+                //cout << board.toString() << endl;
                 auto jump = make_pair(-1, Jump(-1, -1));
 
                 try {
@@ -168,8 +168,9 @@ void CheckersGame::play() {
 
         swapPlayers();
     }
-
+    cout << toString() << endl;
     cout << "moves in game " << moveCounter << endl;
+    return getInactivePlayerColor();
 }
 
 void CheckersGame::swapPlayers(){
