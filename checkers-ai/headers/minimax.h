@@ -13,11 +13,22 @@
 
 static const std::vector<char> COLORS = {'r', 'b'};
 namespace ai {
+    using MiniMaxReturnType = float;
+
     CheckersGame::MovePackage minimaxMove(CheckersGame & game, int depth);
     CheckersGame::JumpPackage minimaxJump(CheckersGame & game, int depth, int space=-1);
 
-    int minimax(const CheckersGame::MovePackage & move, int depth, char maximizingPlayer, CheckersGame & game);
-    int minimax(const CheckersGame::JumpPackage & jump, int depth, char maximizingPlayer, CheckersGame & game);
+    MiniMaxReturnType minimax(
+            const CheckersGame::MovePackage & move,
+            int depth,
+            char maximizingPlayer,
+            CheckersGame & game);
+
+    MiniMaxReturnType minimax(
+            const CheckersGame::JumpPackage & jump,
+            int depth,
+            char maximizingPlayer,
+            CheckersGame & game);
 
     using Pieces = std::vector<Piece>;
     using BoardState = std::vector<char>;
@@ -41,25 +52,25 @@ namespace ai {
             MiniMaxHelper() = default;
             MiniMaxHelper(char maximizingPlayer, CheckersGame & game);
 
-            int recurse(const CheckersGame::MovePackage & move, int depth);
-            int recurse(const CheckersGame::JumpPackage & jump, int depth);
+            MiniMaxReturnType recurse(const CheckersGame::MovePackage & move, int depth);
+            MiniMaxReturnType recurse(const CheckersGame::JumpPackage & jump, int depth);
 
             GameState getCurrentGameState();
             PostJumpInformation changeGameState(const CheckersGame::JumpPackage & jump);
             void changeGameState(const CheckersGame::MovePackage & move);
 
             bool isBaseCase(int depth);
-            int baseCase();
 
             bool isMultiJumpCase(
                     bool wasPieceCrowned,
                     const std::vector<CheckersGame::JumpPackage> & multiJumps
                     );
-            int recurseMultiJumpCase(
+            MiniMaxReturnType recurseMultiJumpCase(
                     const std::vector<CheckersGame::JumpPackage> & multiJumps,
                     int depth
                     );
-            int recursiveCase(int depth);
+
+            MiniMaxReturnType recursiveCase(int depth);
 
             void setGameState(GameState & gameState);
     };

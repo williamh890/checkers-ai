@@ -78,13 +78,13 @@ Player::Player(
                                                 generator(generator), kingGenerator(kingGenerator) {
             this->base_case_color_factor = (color == 'r') ? -1 : 1;
             cout<<"color factor was "<<this->base_case_color_factor<<endl;
-            this->baseCase=[=](MiniMaxHelper& helper)->int{
-            const vector<char> board = helper.game.board.getBoardState();
-            auto value = this->network.evaluateBoard(board, false, this->base_case_color_factor);
-            return value;
+
+            this->baseCase=[&](MiniMaxHelper& helper)->float{
+                const vector<char> board = helper.game.board.getBoardState();
+                float value = this->network.evaluateBoard(board, false, this->base_case_color_factor);
+                return value;
           };
         }
-
 
 void Player::initPieces() {
     for (auto space = 0; space < TOTAL_NUM_SPACES; ++space) {

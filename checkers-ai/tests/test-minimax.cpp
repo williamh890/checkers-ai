@@ -203,6 +203,31 @@ TEST_CASE("minimax jumps recursion", "[minimax], [minimax-jumps]") {
     }
 }
 
+TEST_CASE("networked checkers game") {
+    int networkRedId=0, networkBlackId=1;
+    auto game = getNetworkedCheckersGame(networkRedId, networkBlackId);
+
+    game.board.setBoardState({
+            'r',   ' ',   ' ',   ' ',
+         ' ',   ' ',   'r',   ' ',
+            'b',   ' ',   ' ',   ' ',
+         ' ',   ' ',   ' ',   ' ',
+            ' ',   ' ',   ' ',   ' ',
+         ' ',   ' ',   ' ',   ' ',
+            ' ',   ' ',   ' ',   ' ',
+         ' ',   ' ',   ' ',   ' '
+    });
+    game.red->setPieces({
+        Piece('r', 0),
+        Piece('r', 6)
+    });
+    game.black->setPieces({
+        Piece('b', 8)
+    });
+
+    REQUIRE(minimax(crowningSetupMove, 3, 'b', game));
+}
+
 TEST_CASE ("minimax wrapper functions behave") {
     auto game = getCheckersGame();
 

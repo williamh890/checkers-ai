@@ -117,10 +117,10 @@ CheckersGame::CheckersGame(
 }
 
 const char CheckersGame::play() {
-    for (int i = 0; i<3; i++){
-        makeRandomValidAction();
-        swapPlayers();
-    }
+    //for (int i = 0; i<3; i++){
+        //makeRandomValidAction();
+        //swapPlayers();
+    //}
     while (moveCounter++ < 100 && (areMoves() || areJumps())) {
         //cout << toString() << endl;
 
@@ -191,16 +191,15 @@ bool CheckersGame::areMoves(){
 
 JumpPackage CheckersGame::getJumpFromActivePlayer() {
       return getMinimaxJump();
-    }
+}
+
 MovePackage CheckersGame::getMinimaxMove() {
     return minimaxMove(*this, MINIMAX_SEARCH_DEPTH);
 }
 
-
 JumpPackage CheckersGame::getMinimaxJump(int space) {
     return minimaxJump(*this, MINIMAX_SEARCH_DEPTH, space);
 }
-
 
 JumpPackage CheckersGame::getRandomValidJump() {
     auto jumps = getValidJumps();

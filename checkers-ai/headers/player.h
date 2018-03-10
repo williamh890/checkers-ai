@@ -53,7 +53,7 @@ namespace ai {
                     PlayerType type
                   );
 
-            std::function<int(MiniMaxHelper&)> baseCase;
+            std::function<float(MiniMaxHelper&)> baseCase;
 
             const std::vector<Piece> getPieces() const;
             void setPieces(const std::vector<Piece> & pieces);

@@ -6,12 +6,21 @@ import subprocess
 
 def run_child(args):
     os.chdir(os.path.dirname(args[0]))
-    print("id is {} opponent id is {}".format(args[1], args[2]))
-    run_str = "{} {} {}".format(args[0], args[1], args[2])
+    prog_name, redId, blackId = args
+
+    print("id is {} opponent id is {}".format(redId, blackId))
+    run_str = "{} {} {}".format(prog_name, redId, blackId)
     result = subprocess.getstatusoutput(run_str)
-    print(result[1])
-    print("\n result was: {}".format(result[0]))
-    return result[0]
+    prog_output, winner = result[:2]
+
+    print(prog_output)
+    print("\n result was: {}".format(winner))
+
+    return {
+        "red": redId,
+        "black": blackId,
+        "winner": blackId if result[0] == 1 else redId
+    }
 
 
 class Children:
@@ -27,11 +36,13 @@ class Children:
         print("opponents are {}".format(opponent_ids))
         wins = self.children.map_async(
             run_child,
-            [(self.options.checkers_game,
-              id, opponent_id) for opponent_id in opponent_ids]
+            [
+                (self.options.checkers_game, id, opponent_id)
+                for opponent_id in opponent_ids
+            ]
         )
-        # self.children.close()
-        # self.children.join()
-        wins = sum(wins.get())
+
+        wins = sum([game['winner'] for game in wins.get()])
+
         print(wins)
         return wins
