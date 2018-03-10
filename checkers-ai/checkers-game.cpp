@@ -121,7 +121,7 @@ const char CheckersGame::play() {
         //makeRandomValidAction();
         //swapPlayers();
     //}
-    while (moveCounter++ < 100 && (areMoves() || areJumps())) {
+    while (++moveCounter < MOVE_LIMIT && (areMoves() || areJumps())) {
         //cout << toString() << endl;
 
         MovePackage move = make_pair(-1, -1);

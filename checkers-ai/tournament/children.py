@@ -8,18 +8,23 @@ def run_child(args):
     os.chdir(os.path.dirname(args[0]))
     prog_name, redId, blackId = args
 
-    print("id is {} opponent id is {}".format(redId, blackId))
     run_str = "{} {} {}".format(prog_name, redId, blackId)
     result = subprocess.getstatusoutput(run_str)
     prog_output, winner = result[:2]
 
-    print(prog_output)
-    print("\n result was: {}".format(winner))
+    print(result[0])
+    game_result = {
+        1: redId,
+        0: None,
+        255: blackId
+    }[result[0]]
+
+    print(result[1])
 
     return {
         "red": redId,
         "black": blackId,
-        "winner": blackId if result[0] == 1 else redId
+        "winner": game_result
     }
 
 
@@ -33,8 +38,7 @@ class Children:
 
     def run(self, id, opponent_ids):
         self.get_children()
-        print("opponents are {}".format(opponent_ids))
-        wins = self.children.map_async(
+        match_results = self.children.map_async(
             run_child,
             [
                 (self.options.checkers_game, id, opponent_id)
@@ -42,7 +46,4 @@ class Children:
             ]
         )
 
-        wins = sum([game['winner'] for game in wins.get()])
-
-        print(wins)
-        return wins
+        return match_results.get()

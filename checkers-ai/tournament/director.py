@@ -33,8 +33,14 @@ class Director:
     def run(self):
         for id in range(self.options.network_count):
             opponent_ids = sample(range(self.options.network_count), k=3)
-            wins = self.children.run(id, opponent_ids)
-            self.networks[id] += wins
+            match_results = self.children.run(id, opponent_ids)
+
+            for game in match_results:
+                winner = game['winner']
+                if winner is None:
+                    continue
+
+                self.networks[winner] += 1
         self.wins = list_to_str(self.networks)
         print("performance string is {}".format(self.wins))
         print(self.networks)

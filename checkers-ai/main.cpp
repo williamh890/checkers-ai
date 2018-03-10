@@ -31,14 +31,13 @@ int main(int argc, char** argv) {
     //float out = game.activePlayer->baseCase(h);
     //cout << "bef output: " << out << endl;
 
-    //if (winner == 'r'){
-      //return 1;
-    //}
+    if (game.moveCounter >= game.MOVE_LIMIT) {
+        return 0;
+    }
 
-    //Network net1(0), net2(1);
-    //net2.evolveUsingNetwork(net1);
-    //weightChangeOut(net1,net2);
-
-
-    return 0;
+    if (winner == 'r'){
+        return 1;
+    } else  {
+        return 255;
+    }
 }

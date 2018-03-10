@@ -27,6 +27,7 @@
 namespace ai {
     class CheckersGame {
         public:
+            const int MOVE_LIMIT = 100;
             using MovePackage = std::pair<int, int>;
             using JumpPackage = std::pair<int, Jump>;
             using PlayerPtr = std::shared_ptr<Player>;
