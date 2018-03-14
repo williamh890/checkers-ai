@@ -44,15 +44,18 @@ class Director:
         self.wins = list_to_str(self.networks)
         print("performance string is {}".format(self.wins))
         print(self.networks)
-        self.store_performances()
-        self.evolve_networks()
 
     def idle(self):
+        self.children.get_children()
         while self.options.run == 1:
             print(" directing a tournament \n")
             self.run()
             print(" finished that tournament \n")
+            print(" storing performances and evolving \n")
+            self.store_performances()
+            self.evolve_networks()
             self.options.check_run()
+            print("run is {} \n".format(self.options.run))
             print(" looping \n")
 
 

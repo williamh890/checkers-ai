@@ -28,4 +28,4 @@ class Options:
 
     def check_run(self):
         self.config.read(self.config_file)
-        self.run = self.config.get('general', 'run')
+        self.run = int(self.config.get('general', 'run'))

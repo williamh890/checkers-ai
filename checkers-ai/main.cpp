@@ -1,4 +1,5 @@
 #include "headers/checkers-game.h"
+using ai::CheckersGame;
 using ai::getCheckersGame;
 using ai::getNetworkedCheckersGame;
 
@@ -8,6 +9,9 @@ using ai::weightChangeOut;
 
 #include "headers/minimax.h"
 using ai::MiniMaxHelper;
+
+#include "headers/consts.h"
+using ai::MOVE_LIMIT;
 
 #include <iostream>
 using std::cout;
@@ -31,7 +35,7 @@ int main(int argc, char** argv) {
     //float out = game.activePlayer->baseCase(h);
     //cout << "bef output: " << out << endl;
 
-    if (game.moveCounter >= game.MOVE_LIMIT) {
+    if (game.moveCounter >= MOVE_LIMIT) {
         return 0;
     }
 

@@ -33,11 +33,9 @@ class Children:
         self.options = options
 
     def get_children(self):
-        self.children = Pool(processes=self.options.max_processes,
-                             maxtasksperchild=30)
+        self.children = Pool(processes=self.options.max_processes)
 
     def run(self, id, opponent_ids):
-        self.get_children()
         match_results = self.children.map_async(
             run_child,
             [
@@ -47,3 +45,7 @@ class Children:
         )
 
         return match_results.get()
+
+    def destroy_children(self):
+        self.children.close()
+        self.children.join()
