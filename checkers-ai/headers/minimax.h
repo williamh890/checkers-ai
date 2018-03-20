@@ -13,15 +13,18 @@
 
 static const std::vector<char> COLORS = {'r', 'b'};
 namespace ai {
+    using MiniMaxReturnType = float;
+
     CheckersGame::MovePackage minimaxMove(CheckersGame & game, int depth);
     CheckersGame::JumpPackage minimaxJump(CheckersGame & game, int depth, int space=-1);
 
-    int minimax(
+    MiniMaxReturnType minimax(
             const CheckersGame::MovePackage & move,
             int depth,
             char maximizingPlayer,
             CheckersGame & game);
-    int minimax(
+
+    MiniMaxReturnType minimax(
             const CheckersGame::JumpPackage & jump,
             int depth,
             char maximizingPlayer,
@@ -55,25 +58,24 @@ namespace ai {
             MiniMaxHelper() = default;
             MiniMaxHelper(char maximizingPlayer, CheckersGame & game);
 
-            int recurse(const CheckersGame::MovePackage & move, int depth, int alpha, int beta);
-            int recurse(const CheckersGame::JumpPackage & jump, int depth, int alpha, int beta);
+            MiniMaxReturnType recurse(const CheckersGame::MovePackage & move, int depth, MiniMaxReturnType alpha, MiniMaxReturnType beta);
+            MiniMaxReturnType recurse(const CheckersGame::JumpPackage & jump, int depth, MiniMaxReturnType alpha, MiniMaxReturnType beta);
 
             GameState getCurrentGameState();
             PostJumpInformation changeGameState(const CheckersGame::JumpPackage & jump);
             void changeGameState(const CheckersGame::MovePackage & move);
 
             bool isBaseCase(int depth);
-            int baseCase();
 
             bool isMultiJumpCase(
                     bool wasPieceCrowned,
                     const std::vector<CheckersGame::JumpPackage> & multiJumps
                     );
-            int recurseMultiJumpCase(
+            MiniMaxReturnType recurseMultiJumpCase(
                     const std::vector<CheckersGame::JumpPackage> & multiJumps,
-                    int depth, int alpha, int beta
+                    int depth, MiniMaxReturnType alpha, MiniMaxReturnType beta
                     );
-            int recursiveCase(int depth, int alpha, int beta);
+            MiniMaxReturnType recursiveCase(int depth, MiniMaxReturnType alpha, MiniMaxReturnType beta);
 
             void setGameState(GameState & gameState);
     };

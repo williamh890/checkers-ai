@@ -57,8 +57,9 @@ Player::Player(
         char color,
         const MoveGenerator & generator,
         const MoveGenerator & kingGenerator,
-        PlayerType type=PlayerType::Computer) : color(color), generator(generator), kingGenerator(kingGenerator), playerType(type) {
-          this->baseCase=[this](MiniMaxHelper& helper)->int{
+        PlayerType type=PlayerType::Computer) : playerType(type), color(color), generator(generator),
+                                                kingGenerator(kingGenerator)  {
+          this->baseCase=[=](MiniMaxHelper& helper)->int{
           auto numPieces = helper.game.getNumPiecesFor(helper.maximizingPlayer);
 
           char opponentColor = (helper.maximizingPlayer == 'r') ? 'b' : 'r';
@@ -73,16 +74,17 @@ Player::Player(
         const MoveGenerator & generator,
         const MoveGenerator & kingGenerator,
         Network & network,
-        PlayerType type=PlayerType::Computer) : color(color), generator(generator), kingGenerator(kingGenerator), network(network), playerType(type){
+        PlayerType type=PlayerType::Computer) : playerType(type), color(color), network(network),
+                                                generator(generator), kingGenerator(kingGenerator) {
             this->base_case_color_factor = (color == 'r') ? -1 : 1;
             cout<<"color factor was "<<this->base_case_color_factor<<endl;
-            this->baseCase=[this](MiniMaxHelper& helper)->int{
-            const vector<char> board = helper.game.board.getBoardState();
-            auto value = this->network.evaluateBoard(board, false, this->base_case_color_factor);
-            return value;
+
+            this->baseCase=[&](MiniMaxHelper& helper)->float{
+                const vector<char> board = helper.game.board.getBoardState();
+                float value = this->network.evaluateBoard(board, false, this->base_case_color_factor);
+                return value;
           };
         }
-
 
 void Player::initPieces() {
     for (auto space = 0; space < TOTAL_NUM_SPACES; ++space) {

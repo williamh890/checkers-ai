@@ -4,7 +4,7 @@ import children
 import subprocess
 from random import sample
 import os
-NETWORK_COUNT = 30
+from time import sleep as wait
 
 
 def list_to_str(list):
@@ -15,7 +15,7 @@ class Director:
     def __init__(self):
         self.options = options.Options()
         self.children = children.Children(self.options)
-        self.networks = [0 for x in range(NETWORK_COUNT)]
+        self.networks = [0 for x in range(self.options.network_count)]
 
     def store_performances(self):
         os.chdir(os.path.dirname(self.options.network_manager))
@@ -31,18 +31,34 @@ class Director:
         print("\n result was: {}".format(result[0]))
 
     def run(self):
-        for id in range(1):
-            opponent_ids = sample(range(NETWORK_COUNT), k=3)
-            wins = self.children.run(id, opponent_ids)
-            self.networks[id] += wins
+        for id in range(self.options.network_count):
+            opponent_ids = sample(range(self.options.network_count), k=3)
+            match_results = self.children.run(id, opponent_ids)
+
+            for game in match_results:
+                winner = game['winner']
+                if winner is None:
+                    continue
+
+                self.networks[winner] += 1
         self.wins = list_to_str(self.networks)
         print("performance string is {}".format(self.wins))
         print(self.networks)
-        self.store_performances()
-        self.evolve_networks()
+
+    def idle(self):
+        self.children.get_children()
+        while self.options.run == 1:
+            print(" directing a tournament \n")
+            self.run()
+            print(" finished that tournament \n")
+            print(" storing performances and evolving \n")
+            self.store_performances()
+            self.evolve_networks()
+            self.options.check_run()
+            print("run is {} \n".format(self.options.run))
+            print(" looping \n")
 
 
 if __name__ == "__main__":
     director = Director()
-    director.run()
-    print(director.options.checkers_game)
+    director.idle()

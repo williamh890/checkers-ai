@@ -53,7 +53,7 @@ namespace ai {
                     PlayerType type
                   );
 
-            std::function<int(MiniMaxHelper&)> baseCase;
+            std::function<float(MiniMaxHelper&)> baseCase;
 
             const std::vector<Piece> getPieces() const;
             void setPieces(const std::vector<Piece> & pieces);
@@ -114,8 +114,12 @@ namespace ai {
             bool shouldBeCrowned(const Piece & piece) const override;
     };
 
-    std::shared_ptr<Player> getPlayer(const std::string & color, JsonToStlConverter converter);
-    std::shared_ptr<Player> getNetworkedPlayer(const std::string & color, JsonToStlConverter converter, uint network_id);
+    std::shared_ptr<Player> getPlayer(const std::string & color,
+                                      JsonToStlConverter converter);
+    std::shared_ptr<Player> getNetworkedPlayer(
+                                               const std::string & color,
+                                               JsonToStlConverter converter,
+                                               uint network_id);
 }
 
 #endif

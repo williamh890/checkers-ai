@@ -43,6 +43,7 @@ using ai::Piece;
 using ai::TOTAL_NUM_SPACES;
 using ai::INIT_NUM_PIECES;
 using ai::MINIMAX_SEARCH_DEPTH;
+using ai::MOVE_LIMIT;
 
 #include "headers/table-types.h"
 using ai::MoveTableType;
@@ -72,7 +73,7 @@ using std::mt19937;
 using std::uniform_int_distribution;
 #include <climits>
 
-int CheckersGame::MINIMAX_SEARCH_DEPTH = 4;
+int CheckersGame::MINIMAX_SEARCH_DEPTH = 6;
 
 CheckersGame ai::getCheckersGame() {
     auto table = loadMoveTableFrom("move-table.json");
@@ -117,7 +118,11 @@ CheckersGame::CheckersGame(
 }
 
 const char CheckersGame::play() {
-    while (moveCounter++ < 100 && (areMoves() || areJumps())) {
+    //for (int i = 0; i<3; i++){
+        //makeRandomValidAction();
+        //swapPlayers();
+    //}
+    while (++moveCounter < MOVE_LIMIT && (areMoves() || areJumps())) {
         //cout << toString() << endl;
 
         MovePackage move = make_pair(-1, -1);
@@ -187,7 +192,8 @@ bool CheckersGame::areMoves(){
 
 JumpPackage CheckersGame::getJumpFromActivePlayer() {
       return getMinimaxJump();
-    }
+}
+
 MovePackage CheckersGame::getMinimaxMove() {
     return minimaxMove(*this, MINIMAX_SEARCH_DEPTH);
 }
@@ -195,7 +201,6 @@ MovePackage CheckersGame::getMinimaxMove() {
 JumpPackage CheckersGame::getMinimaxJump(int space) {
     return minimaxJump(*this, MINIMAX_SEARCH_DEPTH, space);
 }
-
 
 JumpPackage CheckersGame::getRandomValidJump() {
     auto jumps = getValidJumps();
@@ -370,14 +375,14 @@ void CheckersGame::makeJump(const JumpPackage & jump){
         cout<<toString()<<endl;
         vector<int> move = {jump.first, jump.second.through, jump.second.to};
         game_record.push_back(move);
-        if (not areJumps()){
+        if (not getValidJumpsAt(jump.second.to).size()){
             swapPlayers();
             if (areJumps()){
               JumpPackage jump = getMinimaxJump();
               board.make(jump);
               reactTo(jump);
               while(getValidJumpsAt(jump.second.to).size()){
-                  jump = getMinimaxJump();
+                  jump = getMinimaxJump(jump.second.to);
                   board.make(jump);
                   reactTo(jump);
               }

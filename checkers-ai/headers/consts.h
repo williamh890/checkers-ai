@@ -19,6 +19,7 @@ namespace ai {
     static const int COLS = 8;
     static const int MINIMAX_SEARCH_DEPTH = 8;
     static const int DEBUG = false;
+    static const int MOVE_LIMIT = 100;
 
     static const int NETWORKPOPSIZE = blondiePopulation;
 

@@ -268,7 +268,7 @@ NetworkWeightType inline Network::evolveWeightAt(size_t i, size_t ii) {
     return _weights[i][ii] + _sigmas[i][ii] * getGaussianNumberFromZeroToOne(randomNumGenerator);
 }
 
-void Network::outputCreationDebug() {
+void Network::outputCreationDebug() const {
     cout << "Weight for the king: " << _kingWeight << endl;
     cout << "Number of layers: " << _layers.size() << endl;
 

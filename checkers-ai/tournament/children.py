@@ -6,12 +6,26 @@ import subprocess
 
 def run_child(args):
     os.chdir(os.path.dirname(args[0]))
-    print("id is {} opponent id is {}".format(args[1], args[2]))
-    run_str = "{} {} {}".format(args[0], args[1], args[2])
+    prog_name, redId, blackId = args
+
+    run_str = "{} {} {}".format(prog_name, redId, blackId)
     result = subprocess.getstatusoutput(run_str)
+    prog_output, winner = result[:2]
+
+    print(result[0])
+    game_result = {
+        1: redId,
+        0: None,
+        255: blackId
+    }[result[0]]
+
     print(result[1])
-    print("\n result was: {}".format(result[0]))
-    return result[0]
+
+    return {
+        "red": redId,
+        "black": blackId,
+        "winner": game_result
+    }
 
 
 class Children:
@@ -19,19 +33,19 @@ class Children:
         self.options = options
 
     def get_children(self):
-        self.children = Pool(processes=self.options.max_processes,
-                             maxtasksperchild=1)
+        self.children = Pool(processes=self.options.max_processes)
 
     def run(self, id, opponent_ids):
-        self.get_children()
-        print("opponents are {}".format(opponent_ids))
-        wins = self.children.map_async(
+        match_results = self.children.map_async(
             run_child,
-            [(self.options.checkers_game,
-              id, opponent_id) for opponent_id in opponent_ids]
+            [
+                (self.options.checkers_game, id, opponent_id)
+                for opponent_id in opponent_ids
+            ]
         )
+
+        return match_results.get()
+
+    def destroy_children(self):
         self.children.close()
         self.children.join()
-        wins = sum(wins.get())
-        print(wins)
-        return wins

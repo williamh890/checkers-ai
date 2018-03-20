@@ -12,13 +12,49 @@ using ai::Board;
 #include <vector>
 using std::vector;
 
+#include <utility>
+using std::pair;
+using std::make_pair;
+
 GuiCppInterface::GuiCppInterface(const CheckersGame & game): game(game) {
 }
 
 void GuiCppInterface::play(){
-    game.makeRandomValidAction();
-    game.swapPlayers();
-    usleep(10000);
+  auto move = make_pair(-1, -1);
+  auto jump = make_pair(-1, Jump(-1, -1));
+  if (game.areJumps()) {
+      jump = game.getJumpFromActivePlayer();
+  } else {
+      move = game.getMoveFromActivePlayer();
+  }
+  if (move.first == -1) {
+      game.board.make(jump);
+      game.reactTo(jump);
+
+      auto validJumps = game.getValidJumpsAt(jump.second.to);
+
+      while (validJumps.size()) {
+          auto jump = make_pair(-1, Jump(-1, -1));
+
+          jump = game.getMinimaxJump();
+
+          game.board.make(jump);
+          game.reactTo(jump);
+
+          validJumps = game.getValidJumpsAt(jump.second.to);
+      }
+  }
+  else {
+      game.board.make(move);
+      game.reactTo(move);
+  }
+
+  swapPlayers();
+  usleep(10000);
+  game.makeRandomValidAction();
+  usleep(10000);
+  swapPlayers();
+
 }
 
 bool GuiCppInterface::isInvalid(const CheckersGame::MovePackage & move) {
