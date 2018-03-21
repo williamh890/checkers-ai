@@ -58,6 +58,9 @@ namespace ai {
                     );
 
             const char play();
+            void turn();
+            void makeAnyMultiJumps(int space);
+
             void makeRandomValidAction();
 
             bool isInvalid(const MovePackage & move);

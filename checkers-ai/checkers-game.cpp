@@ -139,16 +139,10 @@ CheckersGame::CheckersGame(
 
 const char CheckersGame::play() {
     while (++moveCounter < MOVE_LIMIT && (areMoves() || areJumps())) {
-
-        MovePackage move = make_pair(-1, -1);
-        JumpPackage jump = make_pair(-1, Jump(-1, -1));
+        cout << toString() << endl;
 
         try {
-            if (areJumps()) {
-                jump = getJumpFromActivePlayer();
-            } else {
-                move = getMoveFromActivePlayer();
-            }
+            turn();
         }
         catch(length_error & e) {
             break;
@@ -156,36 +150,6 @@ const char CheckersGame::play() {
         catch(runtime_error & e) {
             continue;
         }
-
-        if (move.first == -1) {
-            board.make(jump);
-            reactTo(jump);
-
-            auto validJumps = getValidJumpsAt(jump.second.to);
-
-            while (validJumps.size()) {
-                //cout << board.toString() << endl;
-                auto jump = make_pair(-1, Jump(-1, -1));
-
-                try {
-                    jump = getBestJump();
-                }
-                catch(runtime_error & e) {
-                    continue;
-                }
-
-                board.make(jump);
-                reactTo(jump);
-
-                validJumps = getValidJumpsAt(jump.second.to);
-            }
-        }
-        else {
-            board.make(move);
-            reactTo(move);
-        }
-
-        swapPlayers();
     }
     cout << toString() << endl;
     cout << "moves in game " << moveCounter << endl;
@@ -193,7 +157,51 @@ const char CheckersGame::play() {
     return getInactivePlayerColor();
 }
 
-void CheckersGame::swapPlayers(){
+void CheckersGame::turn() {
+    MovePackage move = make_pair(-1, -1);
+    JumpPackage jump = make_pair(-1, Jump(-1, -1));
+
+    if (areJumps()) {
+        jump = getJumpFromActivePlayer();
+    } else {
+        move = getMoveFromActivePlayer();
+    }
+
+    if (move.first == -1) {
+        board.make(jump);
+        reactTo(jump);
+
+        makeAnyMultiJumps(jump.second.to);
+    }
+    else {
+        board.make(move);
+        reactTo(move);
+    }
+
+    swapPlayers();
+}
+
+void CheckersGame::makeAnyMultiJumps(int space) {
+    auto validJumps = getValidJumpsAt(space);
+
+    while (validJumps.size()) {
+        auto jump = make_pair(-1, Jump(-1, -1));
+
+        try {
+            jump = getBestJump();
+        }
+        catch(runtime_error & e) {
+            continue;
+        }
+
+        board.make(jump);
+        reactTo(jump);
+
+        validJumps = getValidJumpsAt(jump.second.to);
+    }
+}
+
+void CheckersGame::swapPlayers() {
     swap(activePlayer, inactivePlayer);
 }
 
