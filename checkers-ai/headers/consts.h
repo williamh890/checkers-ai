@@ -26,8 +26,7 @@ namespace ai {
 
     static const int NETWORKPOPSIZE = blondiePopulation;
 
-    using EvalType = float;
-    static const EvalType INFINITY = FLT_MAX;
+    const float INF = FLT_MAX;
 
     static const std::vector<unsigned int> NETWORK_DIMENSIONS = blondieDimensions;
 

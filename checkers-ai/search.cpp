@@ -32,7 +32,7 @@ int SearchHelper::totalNodes = 0;
 int SearchHelper::prunedNodes = 0;
 
 CheckersGame::MovePackage ai::getBestMove(CheckersGame & game, int depth) {
-    EvaluationType bestMoveVal = -INFINITY;
+    EvaluationType bestMoveVal = -INF;
     MovePackage bestMove;
 
     if (depth == 0) {
@@ -57,7 +57,7 @@ CheckersGame::MovePackage ai::getBestMove(CheckersGame & game, int depth) {
 }
 
 CheckersGame::JumpPackage ai::getBestJump(CheckersGame & game, int depth, int space) {
-    EvaluationType bestJumpVal = -INFINITY;
+    EvaluationType bestJumpVal = -INF;
 
     JumpPackage bestJump;
 
@@ -80,30 +80,6 @@ CheckersGame::JumpPackage ai::getBestJump(CheckersGame & game, int depth, int sp
     }
 
     return bestJump;
-}
-
-
-EvaluationType ai::search(
-        const MovePackage & move,
-        int depth,
-        char maximizingPlayer,
-        CheckersGame & game) {
-    SearchHelper search(maximizingPlayer, game);
-
-    EvaluationType alpha=-INFINITY, beta=INFINITY;
-    return search.recurse(move, depth, alpha, beta);
-}
-
-EvaluationType ai::search(
-        const JumpPackage & jump,
-        int depth,
-        char maximizingPlayer,
-        CheckersGame & game) {
-
-    SearchHelper search(maximizingPlayer, game);
-
-    EvaluationType alpha=-INFINITY, beta=INFINITY;
-    return search.recurse(jump, depth, alpha, beta);
 }
 
 SearchHelper::SearchHelper(char maximizingPlayer, CheckersGame & game) :
@@ -179,7 +155,7 @@ EvaluationType SearchHelper::recurse(
 
 #define SETUP_SEACH_VARIABLES()                                                      \
     auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;     \
-    EvaluationType bestOverallVal = (isMaximizingPlayer) ? -INFINITY : INFINITY;     \
+    EvaluationType bestOverallVal = (isMaximizingPlayer) ? -INF : INF;     \
     EvaluationType bestVal;\
 
 #define SEARCH_ACTIONS(actions, depthExpression, cmpFunc, toUpdate)                  \
@@ -194,7 +170,6 @@ EvaluationType SearchHelper::recurse(
             break;                                                                   \
         }                                                                            \
     }                                                                                \
-
 
 EvaluationType SearchHelper::recurseMultiJumpCase(
         const vector<JumpPackage> & multiJumps,

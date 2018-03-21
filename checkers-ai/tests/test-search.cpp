@@ -32,7 +32,7 @@ TEST_CASE("test search function", "[search]") {
     SECTION("test base case") {
         SECTION("all base cases from init board") {
             for ( auto & move : game.getValidMoves() ) {
-                REQUIRE(search(move, 0, 'r', game) == 0);
+                REQUIRE(search<CheckersGame::MovePackage>(move, 0, 'r', game) == 0);
                 REQUIRE(search(move, 0, 'b', game) == 0);
             }
         }
