@@ -12,13 +12,10 @@ else
 
     cython3 --embed checkers_game.pyx -o checkers_game_obj.cpp -3 --cplus -f
 
-
     echo looking for python in /usr/include/python$1m
+    echo building gui
     g++ -I/usr/include/python$1m                                     \
         -o gui-checkers.out                                          \
-        checkers_game_obj.cpp json-to-stl.cpp move-generator.cpp     \
-        checkers-game.cpp board.cpp utils.cpp player.cpp seeder.cpp  \
-        network-file-reader.cpp network-file-writer.cpp network.cpp \
-        gui-cpp-interface.cpp search.cpp game-state.cpp                 \
+        $(cat gui-cpp-files.txt)                                     \
         -lpython$1m -std=c++14 -fpermissive -fopenmp
 fi
