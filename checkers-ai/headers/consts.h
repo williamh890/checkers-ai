@@ -2,8 +2,11 @@
 #define CONSTS_H
 
 #include <string>
-
+// std::string
 #include <vector>
+// std::vector
+#include <cfloat>
+// FLT_MAX
 
 namespace ai {
     enum class PlayerType {
@@ -22,6 +25,9 @@ namespace ai {
     static const int MOVE_LIMIT = 100;
 
     static const int NETWORKPOPSIZE = blondiePopulation;
+
+    using EvalType = float;
+    static const EvalType INFINITY = FLT_MAX;
 
     static const std::vector<unsigned int> NETWORK_DIMENSIONS = blondieDimensions;
 

@@ -14,8 +14,6 @@ using ai::CheckersGame;
 using JumpPackage = CheckersGame::JumpPackage;
 using MovePackage = CheckersGame::MovePackage;
 
-#include <climits>
-#include <cfloat>
 #include <algorithm>
 using std::max;
 using std::min;
@@ -34,7 +32,7 @@ int SearchHelper::totalNodes = 0;
 int SearchHelper::prunedNodes = 0;
 
 CheckersGame::MovePackage ai::getBestMove(CheckersGame & game, int depth) {
-    EvaluationType bestMoveVal = -FLT_MAX;
+    EvaluationType bestMoveVal = -INFINITY;
     MovePackage bestMove;
 
     if (depth == 0) {
@@ -58,9 +56,8 @@ CheckersGame::MovePackage ai::getBestMove(CheckersGame & game, int depth) {
     return bestMove;
 }
 
-
 CheckersGame::JumpPackage ai::getBestJump(CheckersGame & game, int depth, int space) {
-    EvaluationType bestJumpVal = -FLT_MAX;
+    EvaluationType bestJumpVal = -INFINITY;
 
     JumpPackage bestJump;
 
@@ -93,7 +90,7 @@ EvaluationType ai::search(
         CheckersGame & game) {
     SearchHelper search(maximizingPlayer, game);
 
-    EvaluationType alpha=-FLT_MAX, beta=FLT_MAX;
+    EvaluationType alpha=-INFINITY, beta=INFINITY;
     return search.recurse(move, depth, alpha, beta);
 }
 
@@ -105,7 +102,7 @@ EvaluationType ai::search(
 
     SearchHelper search(maximizingPlayer, game);
 
-    EvaluationType alpha=-FLT_MAX, beta=FLT_MAX;
+    EvaluationType alpha=-INFINITY, beta=INFINITY;
     return search.recurse(jump, depth, alpha, beta);
 }
 
@@ -186,7 +183,7 @@ EvaluationType SearchHelper::recurseMultiJumpCase(
         EvaluationType alpha,
         EvaluationType beta) {
     auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
-    EvaluationType bestNumPieces = (isMaximizingPlayer) ? -FLT_MAX : FLT_MAX;
+    EvaluationType bestNumPieces = (isMaximizingPlayer) ? -INFINITY : INFINITY;
     EvaluationType jumpVal;
 
     if (isMaximizingPlayer) {
@@ -218,52 +215,47 @@ EvaluationType SearchHelper::recurseMultiJumpCase(
     return bestNumPieces;
 }
 
+#define SEARCH_ACTIONS(actions, cmpFunc)  \
+    for (auto & jump : actions) {\
+        bestVal = recurse(jump, depth, alpha, beta); \
+\
+        bestNumPieces = cmpFunc(bestVal, bestNumPieces);\
+        alpha = cmpFunc(alpha, bestNumPieces);\
+\
+    \
+        if (beta <= alpha) { \
+            ++prunedNodes;\
+            break;\
+        }\
+    }\
+
 EvaluationType SearchHelper::recursiveCase(
         int depth,
         EvaluationType alpha,
         EvaluationType beta) {
     auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
-    EvaluationType bestNumPieces = (isMaximizingPlayer) ? -FLT_MAX : FLT_MAX;
+    EvaluationType bestNumPieces = (isMaximizingPlayer) ? -INFINITY : INFINITY;
 
     auto jumps = game.getValidJumps();
 
     if (jumps.size() != 0) {
-        EvaluationType jumpVal;
+        EvaluationType bestVal;
 
         if (isMaximizingPlayer) {
-            for (auto & jump : jumps) {
-                jumpVal = recurse(jump, depth, alpha, beta);
-
-                bestNumPieces = max(jumpVal, bestNumPieces);
-                alpha = max(alpha, bestNumPieces);
-
-                if (beta <= alpha) {
-                    ++prunedNodes;
-                    break;
-                }
-            }
+            SEARCH_ACTIONS(jumps, max);
         } else {
-            for (auto & jump : jumps) {
-                jumpVal = recurse(jump, depth, alpha, beta);
-
-                bestNumPieces = min(jumpVal, bestNumPieces);
-                beta = min(beta, bestNumPieces);
-
-                if (beta <= alpha) {
-                    ++prunedNodes;
-                    break;
-                }
-            }
+            SEARCH_ACTIONS(jumps, min);
         }
     }
     else {
-        EvaluationType moveVal;
+        EvaluationType bestEval;
         if (isMaximizingPlayer) {
             for (auto & move : game.getValidMoves()) {
-                moveVal = recurse(move, depth - 1, alpha, beta);
+                bestEval = recurse(move, depth - 1, alpha, beta);
 
-                bestNumPieces = max(moveVal, bestNumPieces);
+                bestNumPieces = max(bestEval, bestNumPieces);
                 alpha = max(alpha, bestNumPieces);
+
                 if (beta <= alpha) {
                     ++prunedNodes;
                     break;
@@ -271,9 +263,9 @@ EvaluationType SearchHelper::recursiveCase(
             }
         } else {
             for (auto & move : game.getValidMoves()) {
-                moveVal = recurse(move, depth - 1, alpha, beta);
+                bestEval = recurse(move, depth - 1, alpha, beta);
 
-                bestNumPieces = min(moveVal, bestNumPieces);
+                bestNumPieces = min(bestEval, bestNumPieces);
                 beta = min(beta, bestNumPieces);
 
                 if (beta <= alpha) {
