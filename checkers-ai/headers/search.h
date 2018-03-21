@@ -4,6 +4,9 @@
 #include "checkers-game.h"
 // ai::CheckersGame
 
+#include "game-state.h"
+// ai::GameState
+
 #include <utility>
 // std::make_pair
 // std::pair
@@ -24,23 +27,6 @@ namespace ai {
             int depth,
             char maximizingPlayer,
             CheckersGame & game);
-
-    using Pieces = std::vector<Piece>;
-    using BoardState = std::vector<char>;
-
-    struct GameState {
-        BoardState boardState;
-        Pieces redPieces;
-        Pieces blackPieces;
-        char activePlayerColor;
-
-        GameState() = default;
-        GameState(
-            const BoardState & board,
-            const Pieces & red,
-            const Pieces & black,
-            char activePlayerColor);
-    };
 
     class SearchHelper {
         public:

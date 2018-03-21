@@ -2,6 +2,8 @@
 using ai::EvaluationType;
 using ai::search;
 using ai::SearchHelper;
+
+#include "headers/game-state.h"
 using ai::GameState;
 
 #include "headers/models.h"
@@ -85,17 +87,6 @@ CheckersGame::JumpPackage ai::getBestJump(CheckersGame & game, int depth, int sp
 SearchHelper::SearchHelper(char maximizingPlayer, CheckersGame & game) :
     game(game),
     maximizingPlayer(maximizingPlayer) {
-    }
-
-GameState::GameState(
-        const BoardState & board,
-        const Pieces & red,
-        const Pieces & black,
-        char activePlayerColor):
-    boardState(board),
-    redPieces(red),
-    blackPieces(black),
-    activePlayerColor(activePlayerColor) {
     }
 
 EvaluationType SearchHelper::recurse(
@@ -186,7 +177,6 @@ EvaluationType SearchHelper::recurseMultiJumpCase(
 
     return bestOverallVal;
 }
-
 
 EvaluationType SearchHelper::recursiveCase(
         int depth,
