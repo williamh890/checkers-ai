@@ -26,7 +26,7 @@
 namespace ai {
     class Board;//forward declaration
     class Network; //forward declaration
-    class MiniMaxHelper;//forward declaration
+    class SearchHelper;//forward declaration
     class Player {
         private:
             PlayerType playerType;
@@ -53,7 +53,7 @@ namespace ai {
                     PlayerType type
                   );
 
-            std::function<float(MiniMaxHelper&)> baseCase;
+            std::function<float(SearchHelper&)> baseCase;
 
             const std::vector<Piece> getPieces() const;
             void setPieces(const std::vector<Piece> & pieces);

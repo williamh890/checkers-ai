@@ -34,7 +34,7 @@ namespace ai {
 
             using turn_type = std::pair<Board::BoardType, std::pair<std::vector<MovePackage>, std::vector<JumpPackage>>>;
 
-            static int MINIMAX_SEARCH_DEPTH;
+            static int SEARCH_DEPTH;
             int moveCounter = 0;
 
             Board board;
@@ -59,7 +59,6 @@ namespace ai {
                     );
 
             void makeRandomValidAction();
-            void makeMinimaxMove(int depth);
 
             bool isInvalid(const MovePackage & move);
             bool isInvalid(const JumpPackage & jump);
@@ -93,13 +92,13 @@ namespace ai {
 
             MovePackage getMoveFromUser();
             MovePackage getRandomValidMove();
-            MovePackage getMinimaxMove();
+            MovePackage getBestMove();
 
             JumpPackage getJumpFromActivePlayer();
 
             JumpPackage getJumpFromUser();
             JumpPackage getRandomValidJump();
-            JumpPackage getMinimaxJump(int space=-1);
+            JumpPackage getBestJump(int space=-1);
 
             MovePackage parseUserInput();
 

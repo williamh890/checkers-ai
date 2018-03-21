@@ -1,7 +1,7 @@
-#include "headers/minimax.h"
-using ai::MiniMaxReturnType;
-using ai::minimax;
-using ai::MiniMaxHelper;
+#include "headers/search.h"
+using ai::EvaluationType;
+using ai::search;
+using ai::SearchHelper;
 using ai::GameState;
 
 #include "headers/models.h"
@@ -30,11 +30,11 @@ using std::invalid_argument;
 using Pieces = vector<Piece>;
 using BoardState = vector<char>;
 
-int MiniMaxHelper::totalNodes = 0;
-int MiniMaxHelper::prunedNodes = 0;
+int SearchHelper::totalNodes = 0;
+int SearchHelper::prunedNodes = 0;
 
-CheckersGame::MovePackage ai::minimaxMove(CheckersGame & game, int depth) {
-    MiniMaxReturnType bestMoveVal = -FLT_MAX;
+CheckersGame::MovePackage ai::getBestMove(CheckersGame & game, int depth) {
+    EvaluationType bestMoveVal = -FLT_MAX;
     MovePackage bestMove;
 
     if (depth == 0) {
@@ -43,11 +43,11 @@ CheckersGame::MovePackage ai::minimaxMove(CheckersGame & game, int depth) {
 
     auto moves = game.getValidMoves();
     MovePackage move;
-    MiniMaxReturnType moveVal;
+    EvaluationType moveVal;
 
     for (auto i = 0; i < (int) moves.size(); ++i) {
         move = moves[i];
-        moveVal = minimax(move, depth - 1, game.getActivePlayerColor(), game);
+        moveVal = search(move, depth - 1, game.getActivePlayerColor(), game);
 
         if (moveVal > bestMoveVal) {
             bestMoveVal = moveVal;
@@ -59,8 +59,8 @@ CheckersGame::MovePackage ai::minimaxMove(CheckersGame & game, int depth) {
 }
 
 
-CheckersGame::JumpPackage ai::minimaxJump(CheckersGame & game, int depth, int space) {
-    MiniMaxReturnType bestJumpVal = -FLT_MAX;
+CheckersGame::JumpPackage ai::getBestJump(CheckersGame & game, int depth, int space) {
+    EvaluationType bestJumpVal = -FLT_MAX;
 
     JumpPackage bestJump;
 
@@ -70,11 +70,11 @@ CheckersGame::JumpPackage ai::minimaxJump(CheckersGame & game, int depth, int sp
 
     auto jumps = space == -1 ? game.getValidJumps() : game.getValidJumpsAt(space);
     JumpPackage jump;
-    MiniMaxReturnType jumpVal;
+    EvaluationType jumpVal;
 
     for (auto i = 0; i < (int) jumps.size(); ++i) {
         jump = jumps[i] ;
-        jumpVal = minimax(jump, depth - 1, game.getActivePlayerColor(), game);
+        jumpVal = search(jump, depth - 1, game.getActivePlayerColor(), game);
 
         if (jumpVal > bestJumpVal) {
             bestJumpVal = jumpVal;
@@ -86,30 +86,30 @@ CheckersGame::JumpPackage ai::minimaxJump(CheckersGame & game, int depth, int sp
 }
 
 
-MiniMaxReturnType ai::minimax(
+EvaluationType ai::search(
         const MovePackage & move,
         int depth,
         char maximizingPlayer,
         CheckersGame & game) {
-    MiniMaxHelper minimax(maximizingPlayer, game);
+    SearchHelper search(maximizingPlayer, game);
 
-    MiniMaxReturnType alpha=-FLT_MAX, beta=FLT_MAX;
-    return minimax.recurse(move, depth, alpha, beta);
+    EvaluationType alpha=-FLT_MAX, beta=FLT_MAX;
+    return search.recurse(move, depth, alpha, beta);
 }
 
-MiniMaxReturnType ai::minimax(
+EvaluationType ai::search(
         const JumpPackage & jump,
         int depth,
         char maximizingPlayer,
         CheckersGame & game) {
 
-    MiniMaxHelper minimax(maximizingPlayer, game);
+    SearchHelper search(maximizingPlayer, game);
 
-    MiniMaxReturnType alpha=-FLT_MAX, beta=FLT_MAX;
-    return minimax.recurse(jump, depth, alpha, beta);
+    EvaluationType alpha=-FLT_MAX, beta=FLT_MAX;
+    return search.recurse(jump, depth, alpha, beta);
 }
 
-MiniMaxHelper::MiniMaxHelper(char maximizingPlayer, CheckersGame & game) :
+SearchHelper::SearchHelper(char maximizingPlayer, CheckersGame & game) :
     game(game),
     maximizingPlayer(maximizingPlayer) {
     }
@@ -125,17 +125,17 @@ GameState::GameState(
     activePlayerColor(activePlayerColor) {
     }
 
-MiniMaxReturnType MiniMaxHelper::recurse(
+EvaluationType SearchHelper::recurse(
         const MovePackage & move,
         int depth,
-        MiniMaxReturnType alpha,
-        MiniMaxReturnType beta) {
+        EvaluationType alpha,
+        EvaluationType beta) {
     ++totalNodes;
     auto stateBeforeMove = getCurrentGameState();
 
     changeGameState(move);
 
-    MiniMaxReturnType bestNumPieces = isBaseCase(depth) ?
+    EvaluationType bestNumPieces = isBaseCase(depth) ?
         game.activePlayer->baseCase(*this) :
         recursiveCase(depth, alpha, beta);
 
@@ -144,11 +144,11 @@ MiniMaxReturnType MiniMaxHelper::recurse(
     return bestNumPieces;
 }
 
-MiniMaxReturnType MiniMaxHelper::recurse(
+EvaluationType SearchHelper::recurse(
         const JumpPackage & jump,
         int depth,
-        MiniMaxReturnType alpha,
-        MiniMaxReturnType beta) {
+        EvaluationType alpha,
+        EvaluationType beta) {
     ++totalNodes;
     auto stateBeforeMove = getCurrentGameState();
 
@@ -165,7 +165,7 @@ MiniMaxReturnType MiniMaxHelper::recurse(
     }
     game.swapPlayers();
 
-    MiniMaxReturnType bestNumPieces;
+    EvaluationType bestNumPieces;
 
     auto multiJumps = game.getValidJumpsAt(jumpDestination);
     if (!wasPieceCrowned && multiJumps.size() > 0) {
@@ -180,14 +180,14 @@ MiniMaxReturnType MiniMaxHelper::recurse(
     return bestNumPieces;
 }
 
-MiniMaxReturnType MiniMaxHelper::recurseMultiJumpCase(
+EvaluationType SearchHelper::recurseMultiJumpCase(
         const vector<JumpPackage> & multiJumps,
         int depth,
-        MiniMaxReturnType alpha,
-        MiniMaxReturnType beta) {
+        EvaluationType alpha,
+        EvaluationType beta) {
     auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
-    MiniMaxReturnType bestNumPieces = (isMaximizingPlayer) ? -FLT_MAX : FLT_MAX;
-    MiniMaxReturnType jumpVal;
+    EvaluationType bestNumPieces = (isMaximizingPlayer) ? -FLT_MAX : FLT_MAX;
+    EvaluationType jumpVal;
 
     if (isMaximizingPlayer) {
         for (auto & jump : multiJumps) {
@@ -218,17 +218,17 @@ MiniMaxReturnType MiniMaxHelper::recurseMultiJumpCase(
     return bestNumPieces;
 }
 
-MiniMaxReturnType MiniMaxHelper::recursiveCase(
+EvaluationType SearchHelper::recursiveCase(
         int depth,
-        MiniMaxReturnType alpha,
-        MiniMaxReturnType beta) {
+        EvaluationType alpha,
+        EvaluationType beta) {
     auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
-    MiniMaxReturnType bestNumPieces = (isMaximizingPlayer) ? -FLT_MAX : FLT_MAX;
+    EvaluationType bestNumPieces = (isMaximizingPlayer) ? -FLT_MAX : FLT_MAX;
 
     auto jumps = game.getValidJumps();
 
     if (jumps.size() != 0) {
-        MiniMaxReturnType jumpVal;
+        EvaluationType jumpVal;
 
         if (isMaximizingPlayer) {
             for (auto & jump : jumps) {
@@ -257,7 +257,7 @@ MiniMaxReturnType MiniMaxHelper::recursiveCase(
         }
     }
     else {
-        MiniMaxReturnType moveVal;
+        EvaluationType moveVal;
         if (isMaximizingPlayer) {
             for (auto & move : game.getValidMoves()) {
                 moveVal = recurse(move, depth - 1, alpha, beta);
@@ -288,7 +288,7 @@ MiniMaxReturnType MiniMaxHelper::recursiveCase(
 }
 
 
-GameState MiniMaxHelper::getCurrentGameState() {
+GameState SearchHelper::getCurrentGameState() {
     return GameState(
             game.board.getBoardState(),
             game.red->getPieces(),
@@ -297,24 +297,24 @@ GameState MiniMaxHelper::getCurrentGameState() {
             );
 }
 
-void MiniMaxHelper::changeGameState(const MovePackage & move) {
+void SearchHelper::changeGameState(const MovePackage & move) {
     game.board.make(move);
     game.reactTo(move);
     game.swapPlayers();
 }
 
-PostJumpInformation MiniMaxHelper::changeGameState(const JumpPackage & jump) {
+PostJumpInformation SearchHelper::changeGameState(const JumpPackage & jump) {
     game.board.make(jump);
     auto wasPieceCrowned = game.reactTo(jump);
 
     return PostJumpInformation(wasPieceCrowned, jump.second.to);
 }
 
-bool MiniMaxHelper::isBaseCase(int depth) {
+bool SearchHelper::isBaseCase(int depth) {
     return depth == 0 or !(game.areJumps() or game.areMoves());
 }
 
-void MiniMaxHelper::setGameState(GameState & gameState) {
+void SearchHelper::setGameState(GameState & gameState) {
     game.board.setBoardState(gameState.boardState);
     game.red->setPieces(gameState.redPieces);
     game.black->setPieces(gameState.blackPieces);
