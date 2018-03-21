@@ -83,9 +83,10 @@ Player::Player(
             this->base_case_color_factor = (color == 'r') ? 1 : -1;
             cout<<"color was "<<color<<" and color factor was "<<this->base_case_color_factor<<endl;
 
-            this->baseCase=[&](SearchHelper& helper)->float{
+            this->baseCase= [&] (SearchHelper & helper)->float{
                 const vector<char> board = helper.game.board.getBoardState();
                 float value = this->network.evaluateBoard(board, false, this->base_case_color_factor);
+
                 return value;
           };
         }
@@ -126,8 +127,7 @@ void Player::removePieceAt(int space) {
     }
 }
 
-void Player::Crown(Piece & piece)
-{
+void Player::Crown(Piece & piece) {
     piece.isKing = true;
     piece.color = toupper(piece.color);
 }

@@ -207,7 +207,6 @@ TEST_CASE("search jumps recursion", "[search], [search-jumps]") {
 TEST_CASE("networked checkers game") {
     int networkRedId=0, networkBlackId=1;
     auto game = getNetworkedCheckersGame(networkRedId, networkBlackId);
-    auto crowningSetupMove = make_pair(0, 5);
 
     game.board.setBoardState({
             'r',   ' ',   ' ',   ' ',
@@ -227,7 +226,10 @@ TEST_CASE("networked checkers game") {
         Piece('b', 8)
     });
 
-    REQUIRE(search(crowningSetupMove, 3, 'b', game) == 0);
+    game.swapPlayers();
+    auto crowningSetupMove = make_pair(0, 5);
+
+    REQUIRE(search(crowningSetupMove, 3, 'b', game));
     auto helper = SearchHelper('b', game);
     REQUIRE(game.activePlayer->baseCase(helper) != 0);
 }
