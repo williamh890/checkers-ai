@@ -89,17 +89,15 @@ $(GAME_STATE_OBJ): $(GAME_STATE).cpp
 	$(CMP) -o $(GAME_STATE_OBJ) -c $(GAME_STATE).cpp
 
 
-PYVERSION=python3.5m
-PYPATH=/usr/include/$(PYVERSION)
-GUI_OUT=gui.out
-
-gui:
-	python3 setup.py build_ext --inplace
-	cython3 --embed checkers_game.pyx -o checkers_game_obj.cpp -3 --cplus -f
-	$(CMP) -I$(PYPATH) -o $(GUI_OUT) checkers_game_obj.cpp $(CPP_FILES) -l$(PYVERSION)
-
 manager:
-	g++ -std=c++14 -o manager.out networkManagement.cpp utils.cpp network.cpp seeder.cpp network-file-reader.cpp network-file-writer.cpp -lstdc++fs
+	g++ -std=c++14 -o manager.out 	\
+		networkManagement.cpp 		\
+		utils.cpp 					\
+		network.cpp 				\
+		seeder.cpp 					\
+		network-file-reader.cpp 	\
+		network-file-writer.cpp 	\
+		-lstdc++fs
 # For making and running tests
 
 TESTING_DIR=tests
@@ -159,12 +157,6 @@ install:
 VERSION=3.5.5
 PYTHON_SRC_DIR=Python-$(VERSION)
 PYDIR=python
-
-install-gui:
-	find $(PYTHON_SRC_DIR) -type d | xargs chmod 0755
-	$(PYTHON_SRC_DIR)/configure --prefix=$(shell pwd)
-	cd $(PYTHON_SRC_DIR)
-	make && make install
 
 clean:
 	rm $(OBJ_FILES) $(MAIN).o *.out
