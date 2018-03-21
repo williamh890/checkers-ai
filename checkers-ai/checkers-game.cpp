@@ -11,9 +11,9 @@ using ai::Seeder;
 using ai::SRandSeeder;
 using ai::getSeeder;
 
-#include "headers/minimax.h"
-using ai::minimaxJump;
-using ai::minimaxMove;
+#include "headers/search.h"
+using ai::getBestJump;
+using ai::getBestMove;
 
 #include "headers/board.h"
 using ai::getBoard;
@@ -42,7 +42,6 @@ using ai::Piece;
 #include "headers/consts.h"
 using ai::TOTAL_NUM_SPACES;
 using ai::INIT_NUM_PIECES;
-using ai::MINIMAX_SEARCH_DEPTH;
 using ai::MOVE_LIMIT;
 
 #include "headers/table-types.h"
@@ -73,7 +72,7 @@ using std::mt19937;
 using std::uniform_int_distribution;
 #include <climits>
 
-int CheckersGame::MINIMAX_SEARCH_DEPTH = 5;
+int CheckersGame::SEARCH_DEPTH = 6;
 
 CheckersGame ai::getCheckersGame() {
     auto table = loadMoveTableFrom("move-table.json");
@@ -169,7 +168,7 @@ const char CheckersGame::play() {
                 auto jump = make_pair(-1, Jump(-1, -1));
 
                 try {
-                    jump = getMinimaxJump();
+                    jump = getBestJump();
                 }
                 catch(runtime_error & e) {
                     continue;
@@ -206,15 +205,15 @@ bool CheckersGame::areMoves(){
 }
 
 JumpPackage CheckersGame::getJumpFromActivePlayer() {
-      return getMinimaxJump();
+      return this->getBestJump();
 }
 
-MovePackage CheckersGame::getMinimaxMove() {
-    return minimaxMove(*this, MINIMAX_SEARCH_DEPTH);
+MovePackage CheckersGame::getBestMove() {
+    return ai::getBestMove(*this, SEARCH_DEPTH);
 }
 
-JumpPackage CheckersGame::getMinimaxJump(int space) {
-    return minimaxJump(*this, MINIMAX_SEARCH_DEPTH, space);
+JumpPackage CheckersGame::getBestJump(int space) {
+    return ai::getBestJump(*this, SEARCH_DEPTH, space);
 }
 
 JumpPackage CheckersGame::getRandomValidJump() {
@@ -248,8 +247,7 @@ JumpPackage CheckersGame::getJumpFrom(const MovePackage & inputJump) {
 }
 
 MovePackage CheckersGame::getMoveFromActivePlayer() {
-      return getMinimaxMove();
-
+      return getBestMove();
 }
 
 MovePackage CheckersGame::getRandomValidMove() {
@@ -393,17 +391,17 @@ void CheckersGame::makeJump(const JumpPackage & jump){
         if (not getValidJumpsAt(jump.second.to).size()){
             swapPlayers();
             if (areJumps()){
-              JumpPackage jump = getMinimaxJump();
+              JumpPackage jump = getBestJump();
               board.make(jump);
               reactTo(jump);
               while(getValidJumpsAt(jump.second.to).size()){
-                  jump = getMinimaxJump(jump.second.to);
+                  jump = getBestJump(jump.second.to);
                   board.make(jump);
                   reactTo(jump);
               }
             }
             else{
-              auto move = getMinimaxMove();
+              auto move = getBestMove();
               board.make(move);
               reactTo(move);
             }
@@ -419,17 +417,17 @@ void CheckersGame::makeMove(const MovePackage & move){
     game_record.push_back(vec_move);
     swapPlayers();
     if (areJumps()){
-      JumpPackage jump = getMinimaxJump();
+      JumpPackage jump = getBestJump();
       board.make(jump);
       reactTo(jump);
       while(getValidJumpsAt(jump.second.to).size()){
-          jump = getMinimaxJump(jump.second.to);
+          jump = getBestJump(jump.second.to);
           board.make(jump);
           reactTo(jump);
       }
     }
     else{
-      auto move = getMinimaxMove();
+      auto move = getBestMove();
       board.make(move);
       reactTo(move);
     }

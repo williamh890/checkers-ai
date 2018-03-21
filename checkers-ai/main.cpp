@@ -7,9 +7,6 @@ using ai::getNetworkedCheckersGame;
 using ai::Network;
 using ai::weightChangeOut;
 
-#include "headers/minimax.h"
-using ai::MiniMaxHelper;
-
 #include "headers/consts.h"
 using ai::MOVE_LIMIT;
 
@@ -24,9 +21,11 @@ using std::stoi;
 int main(int argc, char** argv) {
     unsigned int red_id = stoi(argv[1]);
     unsigned int black_id = stoi(argv[2]);
+
     auto game = getNetworkedCheckersGame(red_id, black_id);
     const char winner = game.play();
     cout << "gameover" << endl;
+    cout<<"winner was "<<winner<<endl;
 
     if (game.moveCounter >= MOVE_LIMIT) {
         cout<<"we have a draw"<<endl;

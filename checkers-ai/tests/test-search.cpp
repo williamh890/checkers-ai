@@ -1,8 +1,8 @@
 #include "catch.hpp"
 
-#include "../headers/minimax.h"
-using ai::minimax;
-using ai::MiniMaxHelper;
+#include "../headers/search.h"
+using ai::search;
+using ai::SearchHelper;
 
 #include "../headers/checkers-game.h"
 using ai::getCheckersGame;
@@ -27,14 +27,14 @@ using std::vector;
 #include <chrono>
 
 
-TEST_CASE("test minimax search function", "[minimax]") {
+TEST_CASE("test search function", "[search]") {
     auto game = getCheckersGame();
 
     SECTION("test base case") {
         SECTION("all base cases from init board") {
             for ( auto & move : game.getValidMoves() ) {
-                REQUIRE(minimax(move, 0, 'r', game) == 0);
-                REQUIRE(minimax(move, 0, 'b', game) == 0);
+                REQUIRE(search(move, 0, 'r', game) == 0);
+                REQUIRE(search(move, 0, 'b', game) == 0);
             }
         }
 
@@ -58,16 +58,16 @@ TEST_CASE("test minimax search function", "[minimax]") {
                 Piece('b', 30)
             });
 
-            REQUIRE(minimax(make_pair(17, Jump(10, 14)), 10, 'b', game) == 3);
+            REQUIRE(search(make_pair(17, Jump(10, 14)), 10, 'b', game) == 3);
         }
 
-        SECTION("minimax doesn't change the game state when run") {
+        SECTION("search doesn't change the game state when run") {
             auto redPieces = game.red->getPieces();
             auto blackPieces = game.black->getPieces();
             auto boardState = game.board.getBoardState();
 
             for ( auto & move : game.getValidMoves() ) {
-                minimax(move, 3, 'r', game);
+                search(move, 3, 'r', game);
 
                 REQUIRE(game.red->getPieces() == redPieces);
                 REQUIRE(game.black->getPieces() == blackPieces);
@@ -76,7 +76,7 @@ TEST_CASE("test minimax search function", "[minimax]") {
             }
 
             for ( auto & move : game.getValidMoves() ) {
-                minimax(move, 3, 'b', game);
+                search(move, 3, 'b', game);
 
                 REQUIRE(game.red->getPieces() == redPieces);
                 REQUIRE(game.black->getPieces() == blackPieces);
@@ -87,8 +87,8 @@ TEST_CASE("test minimax search function", "[minimax]") {
 
     SECTION("test recursion depth of 1") {
         for ( auto & move : game.getValidMoves() ) {
-            REQUIRE(minimax(move, 1, 'r', game) == 0);
-            REQUIRE(minimax(move, 1, 'b', game) == 0);
+            REQUIRE(search(move, 1, 'r', game) == 0);
+            REQUIRE(search(move, 1, 'b', game) == 0);
         }
     }
 
@@ -114,14 +114,14 @@ TEST_CASE("test minimax search function", "[minimax]") {
 
         REQUIRE(game.getValidJumps().size() > 0);
         for (auto & jump : game.getValidJumps() ) {
-            REQUIRE(minimax(jump, 1, 'r', game) == -1);
-            REQUIRE(minimax(jump, 1, 'b', game) == 1);
+            REQUIRE(search(jump, 1, 'r', game) == -1);
+            REQUIRE(search(jump, 1, 'b', game) == 1);
         }
     }
 
 }
 
-TEST_CASE("minimax jumps recursion", "[minimax], [minimax-jumps]") {
+TEST_CASE("search jumps recursion", "[search], [search-jumps]") {
     auto game = getCheckersGame();
 
     SECTION("handle jumps before moves in move recurse") {
@@ -145,7 +145,7 @@ TEST_CASE("minimax jumps recursion", "[minimax], [minimax-jumps]") {
         auto setupJumpForRed = make_pair(24, 21);
 
         SECTION("jump was taken") {
-            REQUIRE(minimax(setupJumpForRed, 1, 'b', game) == -1);
+            REQUIRE(search(setupJumpForRed, 1, 'b', game) == -1);
         }
     }
 
@@ -172,7 +172,7 @@ TEST_CASE("minimax jumps recursion", "[minimax], [minimax-jumps]") {
         auto doubleJumpSetupMove = make_pair(8, 13);
 
         SECTION("both pieces were jumped") {
-            REQUIRE(minimax(doubleJumpSetupMove, 3, 'b', game) == 1);
+            REQUIRE(search(doubleJumpSetupMove, 3, 'b', game) == 1);
         }
     }
 
@@ -199,7 +199,7 @@ TEST_CASE("minimax jumps recursion", "[minimax], [minimax-jumps]") {
         auto crowningSetupMove = make_pair(0, 5);
 
         SECTION("only one piece was jumped") {
-            REQUIRE(minimax(crowningSetupMove, 3, 'b', game) == 0);
+            REQUIRE(search(crowningSetupMove, 3, 'b', game) == 0);
         }
     }
 }
@@ -227,8 +227,8 @@ TEST_CASE("networked checkers game") {
         Piece('b', 8)
     });
 
-    REQUIRE(minimax(crowningSetupMove, 3, 'b', game) == 0);
-    auto helper = MiniMaxHelper('b', game);
+    REQUIRE(search(crowningSetupMove, 3, 'b', game) == 0);
+    auto helper = SearchHelper('b', game);
     REQUIRE(game.activePlayer->baseCase(helper) != 0);
 }
 
@@ -236,35 +236,38 @@ TEST_CASE ("minimax wrapper functions behave") {
     auto game = getCheckersGame();
 
     SECTION ("throws exception if depth == 0") {
-        REQUIRE_THROWS(minimaxMove(game, 0));
-        REQUIRE_THROWS(minimaxJump(game, 0, -1));
+        REQUIRE_THROWS(getBestMove(game, 0));
+        REQUIRE_THROWS(getBestJump(game, 0, -1));
     }
 }
 
 vector<MovePackage> moves;
-TEST_CASE ("timing minimax at different depths", "[minimax],[timing]") {
-    cout << endl << "Minimax timing: " << endl;
+void runSearch(CheckersGame & game, int depth) {
+    const int ITERATIONS = 1;
+
+    SearchHelper::totalNodes = 0;
+    SearchHelper::prunedNodes = 0;
+    CheckersGame::SEARCH_DEPTH = depth;
+    auto start = getTime();
+    moves.push_back(game.getBestMove());
+    auto end = getTime();
+
+    auto total = (end - start);
+    cout << "Nodes evaluated: " << SearchHelper::totalNodes << " nodes" << endl;
+    cout << "Nodes with pruning: " << SearchHelper::prunedNodes << " nodes" << endl;
+    cout << "Total time taken: " << total <<  " secs" << endl;
+    cout << "Time per node: " << SearchHelper::totalNodes / total << " nodes / sec" << endl;
+    cout << endl;
+}
+
+TEST_CASE ("timing search at different depths", "[search],[timing]") {
+    cout << endl << "search timing: " << endl;
     cout << "----------------------------------" << endl;
 
     auto game = getCheckersGame();
 
-    const int ITERATIONS = 1;
-
-    vector<int> dummy;
-    auto start = getTime();
-    for (volatile int i = 0; i < ITERATIONS; ++i) {
-        dummy.push_back((int)i);
+    for (size_t d = 2; d <= 8; ++d) {
+        runSearch(game, d);
     }
-    auto end = getTime();
-    auto pushBackTotal = end - start;
 
-    MiniMaxHelper::totalNodes = 0;
-    start = getTime();
-    moves.push_back(game.getMinimaxMove());
-    end = getTime();
-
-    auto total = (end - start);
-    cout << "Nodes evaluated: " << MiniMaxHelper::totalNodes << " nodes" << endl;
-    cout << "Total time taken: " << total <<  " secs" << endl;
-    cout << "Time per node: " << MiniMaxHelper::totalNodes / total << " nodes / sec" << endl;
 }

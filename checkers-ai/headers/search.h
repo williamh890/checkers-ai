@@ -13,18 +13,18 @@
 
 static const std::vector<char> COLORS = {'r', 'b'};
 namespace ai {
-    using MiniMaxReturnType = float;
+    using EvaluationType = float;
 
-    CheckersGame::MovePackage minimaxMove(CheckersGame & game, int depth);
-    CheckersGame::JumpPackage minimaxJump(CheckersGame & game, int depth, int space=-1);
+    CheckersGame::MovePackage getBestMove(CheckersGame & game, int depth);
+    CheckersGame::JumpPackage getBestJump(CheckersGame & game, int depth, int space=-1);
 
-    MiniMaxReturnType minimax(
+    EvaluationType search(
             const CheckersGame::MovePackage & move,
             int depth,
             char maximizingPlayer,
             CheckersGame & game);
 
-    MiniMaxReturnType minimax(
+    EvaluationType search(
             const CheckersGame::JumpPackage & jump,
             int depth,
             char maximizingPlayer,
@@ -38,22 +38,28 @@ namespace ai {
         Pieces redPieces;
         Pieces blackPieces;
         char activePlayerColor;
+
         GameState() = default;
-        GameState(const BoardState & board, const Pieces & red, const Pieces & black, char activePlayerColor);
+        GameState(
+            const BoardState & board,
+            const Pieces & red,
+            const Pieces & black,
+            char activePlayerColor);
     };
 
-    class MiniMaxHelper {
+    class SearchHelper {
         public:
             static int totalNodes;
+            static int prunedNodes;
 
             CheckersGame game;
             char maximizingPlayer;
 
-            MiniMaxHelper() = default;
-            MiniMaxHelper(char maximizingPlayer, CheckersGame & game);
+            SearchHelper() = default;
+            SearchHelper(char maximizingPlayer, CheckersGame & game);
 
-            MiniMaxReturnType recurse(const CheckersGame::MovePackage & move, int depth);
-            MiniMaxReturnType recurse(const CheckersGame::JumpPackage & jump, int depth);
+            EvaluationType recurse(const CheckersGame::MovePackage & move, int depth, EvaluationType alpha, EvaluationType beta);
+            EvaluationType recurse(const CheckersGame::JumpPackage & jump, int depth, EvaluationType alpha, EvaluationType beta);
 
             GameState getCurrentGameState();
             PostJumpInformation changeGameState(const CheckersGame::JumpPackage & jump);
@@ -65,12 +71,11 @@ namespace ai {
                     bool wasPieceCrowned,
                     const std::vector<CheckersGame::JumpPackage> & multiJumps
                     );
-            MiniMaxReturnType recurseMultiJumpCase(
+            EvaluationType recurseMultiJumpCase(
                     const std::vector<CheckersGame::JumpPackage> & multiJumps,
-                    int depth
+                    int depth, EvaluationType alpha, EvaluationType beta
                     );
-
-            MiniMaxReturnType recursiveCase(int depth);
+            EvaluationType recursiveCase(int depth, EvaluationType alpha, EvaluationType beta);
 
             void setGameState(GameState & gameState);
     };

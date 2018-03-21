@@ -10,3 +10,4 @@ cy_director
 *.network
 tournament/tournament.cfg
 user.me
+log.txt
