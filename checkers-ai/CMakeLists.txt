@@ -2,12 +2,10 @@
 cmake_minimum_required(VERSION 2.8.9)
 project(CheckersAi)
 
-#Bring the headers, such as Student.h into the project
-set(CMAKE_CXX_FLAGS "-lstdc++fs -O3 -Wall")
+# Compiler Options
+set(CMAKE_CXX_FLAGS "-O3 -Wall")
 set (CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-
 
 #Can manually add the sources using the set command as follows:
 set(SOURCES
