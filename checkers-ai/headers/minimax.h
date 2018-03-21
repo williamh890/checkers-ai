@@ -38,13 +38,19 @@ namespace ai {
         Pieces redPieces;
         Pieces blackPieces;
         char activePlayerColor;
+
         GameState() = default;
-        GameState(const BoardState & board, const Pieces & red, const Pieces & black, char activePlayerColor);
+        GameState(
+            const BoardState & board,
+            const Pieces & red,
+            const Pieces & black,
+            char activePlayerColor);
     };
 
     class MiniMaxHelper {
         public:
             static int totalNodes;
+            static int prunedNodes;
 
             CheckersGame game;
             char maximizingPlayer;
@@ -52,8 +58,8 @@ namespace ai {
             MiniMaxHelper() = default;
             MiniMaxHelper(char maximizingPlayer, CheckersGame & game);
 
-            MiniMaxReturnType recurse(const CheckersGame::MovePackage & move, int depth);
-            MiniMaxReturnType recurse(const CheckersGame::JumpPackage & jump, int depth);
+            MiniMaxReturnType recurse(const CheckersGame::MovePackage & move, int depth, MiniMaxReturnType alpha, MiniMaxReturnType beta);
+            MiniMaxReturnType recurse(const CheckersGame::JumpPackage & jump, int depth, MiniMaxReturnType alpha, MiniMaxReturnType beta);
 
             GameState getCurrentGameState();
             PostJumpInformation changeGameState(const CheckersGame::JumpPackage & jump);
@@ -67,10 +73,9 @@ namespace ai {
                     );
             MiniMaxReturnType recurseMultiJumpCase(
                     const std::vector<CheckersGame::JumpPackage> & multiJumps,
-                    int depth
+                    int depth, MiniMaxReturnType alpha, MiniMaxReturnType beta
                     );
-
-            MiniMaxReturnType recursiveCase(int depth);
+            MiniMaxReturnType recursiveCase(int depth, MiniMaxReturnType alpha, MiniMaxReturnType beta);
 
             void setGameState(GameState & gameState);
     };

@@ -238,30 +238,33 @@ TEST_CASE ("minimax wrapper functions behave") {
 }
 
 vector<MovePackage> moves;
+void runMinimax(CheckersGame & game, int depth) {
+    const int ITERATIONS = 1;
+
+    MiniMaxHelper::totalNodes = 0;
+    MiniMaxHelper::prunedNodes = 0;
+    CheckersGame::MINIMAX_SEARCH_DEPTH = depth;
+    auto start = getTime();
+    moves.push_back(game.getMinimaxMove());
+    auto end = getTime();
+
+    auto total = (end - start);
+    cout << "Nodes evaluated: " << MiniMaxHelper::totalNodes << " nodes" << endl;
+    cout << "Nodes with pruning: " << MiniMaxHelper::prunedNodes << " nodes" << endl;
+    cout << "Total time taken: " << total <<  " secs" << endl;
+    cout << "Time per node: " << MiniMaxHelper::totalNodes / total << " nodes / sec" << endl;
+    cout << endl;
+}
+
 TEST_CASE ("timing minimax at different depths", "[minimax],[timing]") {
     cout << endl << "Minimax timing: " << endl;
     cout << "----------------------------------" << endl;
 
     auto game = getCheckersGame();
 
-    const int ITERATIONS = 1;
-
-    vector<int> dummy;
-    auto start = getTime();
-    for (volatile int i = 0; i < ITERATIONS; ++i) {
-        dummy.push_back((int)i);
+    for (size_t d = 2; d <= 8; ++d) {
+        runMinimax(game, d);
     }
-    auto end = getTime();
-    auto pushBackTotal = end - start;
 
-    MiniMaxHelper::totalNodes = 0;
-    start = getTime();
-    moves.push_back(game.getMinimaxMove());
-    end = getTime();
-
-    auto total = (end - start);
-    cout << "Nodes evaluated: " << MiniMaxHelper::totalNodes << " nodes" << endl;
-    cout << "Total time taken: " << total <<  " secs" << endl;
-    cout << "Time per node: " << MiniMaxHelper::totalNodes / total << " nodes / sec" << endl;
 }
 
