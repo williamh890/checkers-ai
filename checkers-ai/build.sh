@@ -1,1 +1,2 @@
-make -f Makefile -j8
+cmake .
+make -f Makefile -j 8
