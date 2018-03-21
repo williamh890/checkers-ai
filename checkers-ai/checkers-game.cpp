@@ -73,7 +73,6 @@ using std::length_error;
 using std::random_device;
 using std::mt19937;
 using std::uniform_int_distribution;
-#include <climits>
 
 int CheckersGame::SEARCH_DEPTH = 6;
 
@@ -213,26 +212,6 @@ JumpPackage CheckersGame::getRandomValidJump() {
     return jumps[rngVal];
 }
 
-JumpPackage CheckersGame::getJumpFromUser() {
-    auto inputJump = parseUserInput();
-
-    return getJumpFrom(inputJump);
-}
-
-JumpPackage CheckersGame::getJumpFrom(const MovePackage & inputJump) {
-    auto validJumps = getValidJumps();
-
-    for (const auto & checkJump: validJumps) {
-        if (checkJump.first == inputJump.first and
-                checkJump.second.to == inputJump.second) {
-
-            return checkJump;
-        }
-    }
-
-    throw runtime_error("invalid jump input.");
-}
-
 MovePackage CheckersGame::getMoveFromActivePlayer() {
     return getBestMove();
 }
@@ -249,35 +228,6 @@ MovePackage CheckersGame::getRandomValidMove() {
     auto rngVal = distribution(generator);
 
     return moves[rngVal];
-}
-
-MovePackage CheckersGame::parseUserInput() {
-    string in;
-    getline(cin, in);
-    istringstream iss(in);
-
-    int startRow, startCol, endRow, endCol;
-    iss >> startRow >> startCol >> endRow >> endCol;
-
-    auto startPos = Position(startRow, startCol);
-    auto endPos = Position(endRow, endCol);
-
-    auto start = positionToSpace(startPos);
-    auto end = positionToSpace(endPos);
-
-    return make_pair(start, end);
-}
-
-MovePackage CheckersGame::getMoveFromUser() {
-    auto move = parseUserInput();
-
-    for (auto piece : activePlayer->getPieces()) {
-        if (piece.space == move.second) {
-            throw runtime_error("cannot move over own piece.");
-        }
-    }
-
-    return move;
 }
 
 bool CheckersGame::isInvalid(const MovePackage & move) {

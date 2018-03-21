@@ -24,9 +24,10 @@
 
 
 namespace ai {
-    class Board;//forward declaration
-    class Network; //forward declaration
-    class SearchHelper;//forward declaration
+    class Board;
+    class Network;
+    class SearchHelper;
+
     class Player {
         private:
             PlayerType playerType;

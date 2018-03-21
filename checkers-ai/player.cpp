@@ -131,8 +131,7 @@ void Player::removePieceAt(int space) {
     }
 }
 
-void Player::Crown(Piece & piece)
-{
+void Player::Crown(Piece & piece) {
     piece.isKing = true;
     piece.color = toupper(piece.color);
 }

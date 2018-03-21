@@ -79,19 +79,13 @@ namespace ai {
 
             MovePackage getMoveFromActivePlayer();
 
-            MovePackage getMoveFromUser();
             MovePackage getRandomValidMove();
             MovePackage getBestMove();
 
             JumpPackage getJumpFromActivePlayer();
 
-            JumpPackage getJumpFromUser();
             JumpPackage getRandomValidJump();
             JumpPackage getBestJump(int space=-1);
-
-            MovePackage parseUserInput();
-
-            JumpPackage getJumpFrom(const MovePackage & inputJump);
 
             bool reactTo(const MovePackage & move);
             bool reactTo(const JumpPackage & jump);
