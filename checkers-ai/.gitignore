@@ -11,3 +11,15 @@ cy_director
 tournament/tournament.cfg
 user.me
 log.txt
+
+
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+test
