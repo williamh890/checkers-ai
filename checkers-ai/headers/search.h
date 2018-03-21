@@ -51,6 +51,7 @@ namespace ai {
         public:
             static int totalNodes;
             static int prunedNodes;
+            static int leafNodes;
 
             CheckersGame game;
             char maximizingPlayer;

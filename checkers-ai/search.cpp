@@ -162,121 +162,83 @@ EvaluationType SearchHelper::recurse(
     }
     game.swapPlayers();
 
-    EvaluationType bestNumPieces;
+    EvaluationType bestOverallValue;
 
     auto multiJumps = game.getValidJumpsAt(jumpDestination);
     if (!wasPieceCrowned && multiJumps.size() > 0) {
-        bestNumPieces = recurseMultiJumpCase(multiJumps, depth, alpha, beta);
+        bestOverallValue = recurseMultiJumpCase(multiJumps, depth, alpha, beta);
     }
     else {
         game.swapPlayers();
-        bestNumPieces = recursiveCase(depth, alpha, beta);
+        bestOverallValue = recursiveCase(depth, alpha, beta);
     }
 
     setGameState(stateBeforeMove);
-    return bestNumPieces;
+    return bestOverallValue;
 }
+
+#define SETUP_SEACH_VARIABLES()                                                      \
+    auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;     \
+    EvaluationType bestOverallVal = (isMaximizingPlayer) ? -INFINITY : INFINITY;     \
+    EvaluationType bestVal;\
+
+#define SEARCH_ACTIONS(actions, depthExpression, cmpFunc, toUpdate)                  \
+    for (auto & action : actions) {                                                  \
+        bestVal = recurse(action, depthExpression, alpha, beta);                     \
+                                                                                     \
+        bestOverallVal = cmpFunc(bestVal, bestOverallVal);                           \
+        toUpdate = cmpFunc(toUpdate, bestOverallVal);                                \
+                                                                                     \
+        if (beta <= alpha) {                                                         \
+            ++prunedNodes;                                                           \
+            break;                                                                   \
+        }                                                                            \
+    }                                                                                \
+
 
 EvaluationType SearchHelper::recurseMultiJumpCase(
         const vector<JumpPackage> & multiJumps,
         int depth,
         EvaluationType alpha,
         EvaluationType beta) {
-    auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
-    EvaluationType bestNumPieces = (isMaximizingPlayer) ? -INFINITY : INFINITY;
-    EvaluationType jumpVal;
+    SETUP_SEACH_VARIABLES()
 
     if (isMaximizingPlayer) {
-        for (auto & jump : multiJumps) {
-            jumpVal = recurse(jump, depth, alpha, beta);
-
-            bestNumPieces = max(jumpVal, bestNumPieces);
-            alpha = max(alpha, bestNumPieces);
-
-            if (beta <= alpha) {
-                ++prunedNodes;
-                break;
-            }
-        }
+        SEARCH_ACTIONS(multiJumps, depth, max, alpha);
     } else {
-        for (auto & jump : multiJumps) {
-            jumpVal = recurse(jump, depth, alpha, beta);
-
-            bestNumPieces = min(jumpVal, bestNumPieces);
-            beta = min(beta, bestNumPieces);
-
-            if (beta <= alpha) {
-                ++prunedNodes;
-                break;
-            }
-        }
+        SEARCH_ACTIONS(multiJumps, depth, min, beta);
     }
 
-    return bestNumPieces;
+    return bestOverallVal;
 }
 
-#define SEARCH_ACTIONS(actions, cmpFunc)  \
-    for (auto & jump : actions) {\
-        bestVal = recurse(jump, depth, alpha, beta); \
-\
-        bestNumPieces = cmpFunc(bestVal, bestNumPieces);\
-        alpha = cmpFunc(alpha, bestNumPieces);\
-\
-    \
-        if (beta <= alpha) { \
-            ++prunedNodes;\
-            break;\
-        }\
-    }\
 
 EvaluationType SearchHelper::recursiveCase(
         int depth,
         EvaluationType alpha,
         EvaluationType beta) {
-    auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
-    EvaluationType bestNumPieces = (isMaximizingPlayer) ? -INFINITY : INFINITY;
+    SETUP_SEACH_VARIABLES()
 
     auto jumps = game.getValidJumps();
 
     if (jumps.size() != 0) {
-        EvaluationType bestVal;
-
         if (isMaximizingPlayer) {
-            SEARCH_ACTIONS(jumps, max);
+            SEARCH_ACTIONS(jumps, depth, max, alpha);
         } else {
-            SEARCH_ACTIONS(jumps, min);
+            SEARCH_ACTIONS(jumps, depth, min, beta);
         }
     }
     else {
-        EvaluationType bestEval;
+        auto moves = game.getValidMoves();
+
         if (isMaximizingPlayer) {
-            for (auto & move : game.getValidMoves()) {
-                bestEval = recurse(move, depth - 1, alpha, beta);
-
-                bestNumPieces = max(bestEval, bestNumPieces);
-                alpha = max(alpha, bestNumPieces);
-
-                if (beta <= alpha) {
-                    ++prunedNodes;
-                    break;
-                }
-            }
+            SEARCH_ACTIONS(moves, depth-1, max, alpha);
         } else {
-            for (auto & move : game.getValidMoves()) {
-                bestEval = recurse(move, depth - 1, alpha, beta);
-
-                bestNumPieces = min(bestEval, bestNumPieces);
-                beta = min(beta, bestNumPieces);
-
-                if (beta <= alpha) {
-                    ++prunedNodes;
-                    break;
-                }
-            }
+            SEARCH_ACTIONS(moves, depth-1, min, beta);
         }
     }
 
-    return bestNumPieces;
+    return bestOverallVal;
 }
 
 
