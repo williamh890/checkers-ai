@@ -33,7 +33,7 @@ set(MANAGER_SOURCES
     network-file-writer.cpp
 )
 add_library(stdc++fs UNKNOWN IMPORTED)
-set_property(TARGET stdc++fs PROPERTY IMPORTED_LOCATION "/usr/lib/gcc/x86_64-linux-gnu/7/libstdc++fs.a")
+set_property(TARGET stdc++fs PROPERTY IMPORTED_LOCATION "/usr/lib/gcc/x86_64-linux-gnu/5/libstdc++fs.a")
 
 add_executable(manager.out ${MANAGER_SOURCES})
 target_link_libraries(manager.out stdc++fs)
