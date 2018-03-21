@@ -35,8 +35,6 @@ namespace ai {
             using PlayerPtr = std::shared_ptr<Player>;
             using SeederPtr = std::shared_ptr<Seeder>;
 
-            using turn_type = std::pair<Board::BoardType, std::pair<std::vector<MovePackage>, std::vector<JumpPackage>>>;
-
             static int SEARCH_DEPTH;
             int moveCounter = 0;
 
@@ -47,8 +45,6 @@ namespace ai {
 
             PlayerPtr activePlayer;
             PlayerPtr inactivePlayer;
-
-            std::vector<std::vector<int>> game_record{};
 
             std::mt19937 generator;
 
@@ -61,6 +57,7 @@ namespace ai {
                     SeederPtr & seeder
                     );
 
+            const char play();
             void makeRandomValidAction();
 
             bool isInvalid(const MovePackage & move);
@@ -69,24 +66,13 @@ namespace ai {
             const char getActivePlayerColor();
             const char getInactivePlayerColor();
 
-            void makeJump(const JumpPackage & jump);
-            void makeMove(const MovePackage & move);
-
-            void replayJump(const JumpPackage & jump);
-            void replayMove(const MovePackage & move);
-
             void swapPlayers();
             bool areJumps();
             bool areMoves();
 
-            std::vector<std::vector<int>> getGame();
-            // end gui/cython wrapper functions
-
             std::vector<MovePackage> getValidMoves();
             std::vector<JumpPackage> getValidJumps();
             std::vector<JumpPackage> getValidJumpsAt(int space);
-
-            const char play();
 
             GameState getState();
             void setState(GameState & state);
