@@ -208,12 +208,7 @@ EvaluationType SearchHelper::recursiveCase(
 
 
 GameState SearchHelper::getCurrentGameState() {
-    return GameState(
-            game.board.getBoardState(),
-            game.red->getPieces(),
-            game.black->getPieces(),
-            game.activePlayer->getColor()
-            );
+    return game.getState();
 }
 
 void SearchHelper::changeGameState(const MovePackage & move) {
@@ -233,10 +228,6 @@ bool SearchHelper::isBaseCase(int depth) {
     return depth == 0 or !(game.areJumps() or game.areMoves());
 }
 
-void SearchHelper::setGameState(GameState & gameState) {
-    game.board.setBoardState(gameState.boardState);
-    game.red->setPieces(gameState.redPieces);
-    game.black->setPieces(gameState.blackPieces);
-    game.activePlayer = gameState.activePlayerColor == 'r' ? game.red : game.black;
-    game.inactivePlayer = gameState.activePlayerColor == 'r' ? game.black : game.red;
+void SearchHelper::setGameState(GameState & state) {
+    game.setState(state);
 }

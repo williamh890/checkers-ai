@@ -39,6 +39,9 @@ using ai::Jump;
 using ai::Position;
 using ai::Piece;
 
+#include "headers/game-state.h"
+using ai::GameState;
+
 #include "headers/consts.h"
 using ai::TOTAL_NUM_SPACES;
 using ai::INIT_NUM_PIECES;
@@ -366,6 +369,22 @@ string CheckersGame::toString() {
     return board.toString();
 }
 
+GameState CheckersGame::getState() {
+    return GameState(
+            board.getBoardState(),
+            red->getPieces(),
+            black->getPieces(),
+            activePlayer->getColor()
+            );
+}
+
+void CheckersGame::setState(GameState & state) {
+    board.setBoardState(state.boardState);
+    red->setPieces(state.redPieces);
+    black->setPieces(state.blackPieces);
+    activePlayer = state.activePlayerColor == 'r' ? red : black;
+    inactivePlayer = state.activePlayerColor == 'r' ? black : red;
+}
 
 void CheckersGame::makeJump(const JumpPackage & jump){
         board.make(jump);

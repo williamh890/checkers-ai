@@ -12,6 +12,9 @@
 #include "models.h"
 // ai::Piece
 // ai::Position
+#include "game-state.h"
+// ai::GameState
+
 #include <iostream>
 // std::cout;
 // std::endl;
@@ -83,10 +86,10 @@ namespace ai {
             std::vector<JumpPackage> getValidJumps();
             std::vector<JumpPackage> getValidJumpsAt(int space);
 
-            std::vector<JumpPackage> getOpponentValidJumps();
-            std::vector<MovePackage> getOpponentValidMoves();
-
             const char play();
+
+            GameState getState();
+            void setState(GameState & state);
 
             MovePackage getMoveFromActivePlayer();
 
