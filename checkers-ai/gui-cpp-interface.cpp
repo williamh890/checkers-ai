@@ -3,6 +3,8 @@ using ai::GuiCppInterface;
 
 #include "headers/checkers-game.h"
 using ai::CheckersGame;
+using MovePackage = CheckersGame::MovePackage;
+using JumpPackage = CheckersGame::JumpPackage;
 
 #include "headers/board.h"
 using ai::Board;
@@ -15,7 +17,7 @@ using std::vector;
 #include <utility>
 using std::pair;
 using std::make_pair;
-#include <cout>
+#include <iostream>
 using std::cout;
 using std::endl;
 
@@ -83,7 +85,7 @@ const char GuiCppInterface::getInactivePlayerColor() {
 void GuiCppInterface::makeJump(const CheckersGame::JumpPackage & jump) {
     game.board.make(jump);
     game.reactTo(jump);
-    cout<<toString()<<endl;
+    cout<<game.toString()<<endl;
     vector<int> move = {jump.first, jump.second.through, jump.second.to};
     game_record.push_back(move);
     if (not game.getValidJumpsAt(jump.second.to).size()){
@@ -110,7 +112,7 @@ void GuiCppInterface::makeJump(const CheckersGame::JumpPackage & jump) {
 void GuiCppInterface::makeMove(const CheckersGame::MovePackage & move) {
     game.board.make(move);
     game.reactTo(move);
-    cout<<toString()<<endl;
+    cout<<game.toString()<<endl;
     vector<int> vec_move = {move.first, move.second};
     game_record.push_back(vec_move);
     game.swapPlayers();
