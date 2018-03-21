@@ -6,6 +6,7 @@ using ai::MiniMaxHelper;
 
 #include "../headers/checkers-game.h"
 using ai::getCheckersGame;
+using ai::getNetworkedCheckersGame;
 using ai::CheckersGame;
 using MovePackage = CheckersGame::MovePackage;
 
@@ -206,6 +207,7 @@ TEST_CASE("minimax jumps recursion", "[minimax], [minimax-jumps]") {
 TEST_CASE("networked checkers game") {
     int networkRedId=0, networkBlackId=1;
     auto game = getNetworkedCheckersGame(networkRedId, networkBlackId);
+    auto crowningSetupMove = make_pair(0, 5);
 
     game.board.setBoardState({
             'r',   ' ',   ' ',   ' ',
@@ -225,7 +227,9 @@ TEST_CASE("networked checkers game") {
         Piece('b', 8)
     });
 
-    REQUIRE(minimax(crowningSetupMove, 3, 'b', game));
+    REQUIRE(minimax(crowningSetupMove, 3, 'b', game) == 0);
+    auto helper = MiniMaxHelper('b', game);
+    REQUIRE(game.activePlayer->baseCase(helper) != 0);
 }
 
 TEST_CASE ("minimax wrapper functions behave") {
@@ -264,4 +268,3 @@ TEST_CASE ("timing minimax at different depths", "[minimax],[timing]") {
     cout << "Total time taken: " << total <<  " secs" << endl;
     cout << "Time per node: " << MiniMaxHelper::totalNodes / total << " nodes / sec" << endl;
 }
-
