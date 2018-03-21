@@ -95,11 +95,26 @@ CheckersGame ai::getNetworkedCheckersGame(unsigned int red_id, unsigned int blac
 
     auto red = getNetworkedPlayer("red", converter, red_id);
     auto black = getNetworkedPlayer("black", converter, black_id);
-    auto board = getBoard();
 
+    auto board = getBoard();
     auto seeder = getSeeder();
 
     return CheckersGame(board, red, black, seeder);
+}
+
+CheckersGame ai::getNetworkVPieceCountCheckersGame(unsigned int network_id, char networked_player){
+  auto table = loadMoveTableFrom("move-table.json");
+  auto converter = JsonToStlConverter{table};
+
+  auto red = (networked_player == 'r') ? getNetworkedPlayer("red", converter, network_id) :
+                                         getPlayer("red", converter);
+  auto black = (networked_player == 'b') ? getNetworkedPlayer("black", converter, network_id) :
+                                           getPlayer("black", converter);
+
+  auto board = getBoard();
+  auto seeder = getSeeder();
+
+  return CheckersGame(board, red, black, seeder);
 }
 
 CheckersGame::CheckersGame() { };

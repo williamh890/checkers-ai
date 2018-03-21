@@ -43,7 +43,7 @@ class Director:
                 self.networks[winner] += 1
         self.wins = list_to_str(self.networks)
         print("performance string is {}".format(self.wins))
-        print(self.networks)
+        self.networks = [0 for x in range(self.options.network_count)]
 
     def idle(self):
         self.children.get_children()

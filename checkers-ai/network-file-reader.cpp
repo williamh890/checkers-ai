@@ -36,7 +36,6 @@ bool NetworkFileReader::load(const string & filename, Network & networkRecieving
 
     auto dimensions = loadDimension();
     auto nodes = getNodesFromDimensions(dimensions);
-    cout<<" LOADING NETWORK, WE HAVE "<<nodes.size()<<" LAYERS"<<endl;
     networkRecievingData._layers = nodes;
 
     vector<vector<NetworkWeightType>> weights;

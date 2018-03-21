@@ -28,12 +28,15 @@ int main(int argc, char** argv) {
     cout<<"winner was "<<winner<<endl;
 
     if (game.moveCounter >= MOVE_LIMIT) {
+        cout<<"we have a draw"<<endl;
         return 0;
     }
 
     if (winner == 'r'){
+        cout<<"winner was red"<<endl;
         return 1;
     } else  {
+        cout<<"winner was black"<<endl;
         return 255;
     }
 }

@@ -6,6 +6,7 @@ using ai::SearchHelper;
 
 #include "../headers/checkers-game.h"
 using ai::getCheckersGame;
+using ai::getNetworkedCheckersGame;
 using ai::CheckersGame;
 using MovePackage = CheckersGame::MovePackage;
 
@@ -203,7 +204,37 @@ TEST_CASE("search jumps recursion", "[search], [search-jumps]") {
     }
 }
 
-TEST_CASE ("search wrapper functions behave") {
+TEST_CASE("networked checkers game") {
+    int networkRedId=0, networkBlackId=1;
+    auto game = getNetworkedCheckersGame(networkRedId, networkBlackId);
+
+    game.board.setBoardState({
+            'r',   ' ',   ' ',   ' ',
+         ' ',   ' ',   'r',   ' ',
+            'b',   ' ',   ' ',   ' ',
+         ' ',   ' ',   ' ',   ' ',
+            ' ',   ' ',   ' ',   ' ',
+         ' ',   ' ',   ' ',   ' ',
+            ' ',   ' ',   ' ',   ' ',
+         ' ',   ' ',   ' ',   ' '
+    });
+    game.red->setPieces({
+        Piece('r', 0),
+        Piece('r', 6)
+    });
+    game.black->setPieces({
+        Piece('b', 8)
+    });
+
+    game.swapPlayers();
+    auto crowningSetupMove = make_pair(0, 5);
+
+    REQUIRE(search(crowningSetupMove, 3, 'b', game));
+    auto helper = SearchHelper('b', game);
+    REQUIRE(game.activePlayer->baseCase(helper) != 0);
+}
+
+TEST_CASE ("minimax wrapper functions behave") {
     auto game = getCheckersGame();
 
     SECTION ("throws exception if depth == 0") {
@@ -242,4 +273,3 @@ TEST_CASE ("timing search at different depths", "[search],[timing]") {
     }
 
 }
-

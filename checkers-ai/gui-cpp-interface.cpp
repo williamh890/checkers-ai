@@ -56,10 +56,9 @@ void GuiCppInterface::play(){
 
     swapPlayers();
     usleep(10000);
-    game.makeRandomValidAction();
-    usleep(10000);
-    swapPlayers();
-
+    //game.makeRandomValidAction();
+    //usleep(10000);
+    //swapPlayers();
 }
 
 bool GuiCppInterface::isInvalid(const CheckersGame::MovePackage & move) {
