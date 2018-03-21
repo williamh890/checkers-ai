@@ -2,6 +2,8 @@
 using ai::EvaluationType;
 using ai::search;
 using ai::SearchHelper;
+
+#include "headers/game-state.h"
 using ai::GameState;
 
 #include "headers/models.h"
@@ -14,8 +16,6 @@ using ai::CheckersGame;
 using JumpPackage = CheckersGame::JumpPackage;
 using MovePackage = CheckersGame::MovePackage;
 
-#include <climits>
-#include <cfloat>
 #include <algorithm>
 using std::max;
 using std::min;
@@ -34,7 +34,7 @@ int SearchHelper::totalNodes = 0;
 int SearchHelper::prunedNodes = 0;
 
 CheckersGame::MovePackage ai::getBestMove(CheckersGame & game, int depth) {
-    EvaluationType bestMoveVal = -FLT_MAX;
+    EvaluationType bestMoveVal = -INF;
     MovePackage bestMove;
 
     if (depth == 0) {
@@ -58,9 +58,8 @@ CheckersGame::MovePackage ai::getBestMove(CheckersGame & game, int depth) {
     return bestMove;
 }
 
-
 CheckersGame::JumpPackage ai::getBestJump(CheckersGame & game, int depth, int space) {
-    EvaluationType bestJumpVal = -FLT_MAX;
+    EvaluationType bestJumpVal = -INF;
 
     JumpPackage bestJump;
 
@@ -85,44 +84,9 @@ CheckersGame::JumpPackage ai::getBestJump(CheckersGame & game, int depth, int sp
     return bestJump;
 }
 
-
-EvaluationType ai::search(
-        const MovePackage & move,
-        int depth,
-        char maximizingPlayer,
-        CheckersGame & game) {
-    SearchHelper search(maximizingPlayer, game);
-
-    EvaluationType alpha=-FLT_MAX, beta=FLT_MAX;
-    return search.recurse(move, depth, alpha, beta);
-}
-
-EvaluationType ai::search(
-        const JumpPackage & jump,
-        int depth,
-        char maximizingPlayer,
-        CheckersGame & game) {
-
-    SearchHelper search(maximizingPlayer, game);
-
-    EvaluationType alpha=-FLT_MAX, beta=FLT_MAX;
-    return search.recurse(jump, depth, alpha, beta);
-}
-
 SearchHelper::SearchHelper(char maximizingPlayer, CheckersGame & game) :
     game(game),
     maximizingPlayer(maximizingPlayer) {
-    }
-
-GameState::GameState(
-        const BoardState & board,
-        const Pieces & red,
-        const Pieces & black,
-        char activePlayerColor):
-    boardState(board),
-    redPieces(red),
-    blackPieces(black),
-    activePlayerColor(activePlayerColor) {
     }
 
 EvaluationType SearchHelper::recurse(
@@ -165,136 +129,86 @@ EvaluationType SearchHelper::recurse(
     }
     game.swapPlayers();
 
-    EvaluationType bestNumPieces;
+    EvaluationType bestOverallValue;
 
     auto multiJumps = game.getValidJumpsAt(jumpDestination);
     if (!wasPieceCrowned && multiJumps.size() > 0) {
-        bestNumPieces = recurseMultiJumpCase(multiJumps, depth, alpha, beta);
+        bestOverallValue = recurseMultiJumpCase(multiJumps, depth, alpha, beta);
     }
     else {
         game.swapPlayers();
-        bestNumPieces = recursiveCase(depth, alpha, beta);
+        bestOverallValue = recursiveCase(depth, alpha, beta);
     }
 
     setGameState(stateBeforeMove);
-    return bestNumPieces;
+    return bestOverallValue;
 }
+
+#define SETUP_SEACH_VARIABLES()                                                      \
+    auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;     \
+    EvaluationType bestOverallVal = (isMaximizingPlayer) ? -INF : INF;     \
+    EvaluationType bestVal;\
+
+#define SEARCH_ACTIONS(actions, depthExpression, cmpFunc, toUpdate)                  \
+    for (auto & action : actions) {                                                  \
+        bestVal = recurse(action, depthExpression, alpha, beta);                     \
+                                                                                     \
+        bestOverallVal = cmpFunc(bestVal, bestOverallVal);                           \
+        toUpdate = cmpFunc(toUpdate, bestOverallVal);                                \
+                                                                                     \
+        if (beta <= alpha) {                                                         \
+            ++prunedNodes;                                                           \
+            break;                                                                   \
+        }                                                                            \
+    }                                                                                \
 
 EvaluationType SearchHelper::recurseMultiJumpCase(
         const vector<JumpPackage> & multiJumps,
         int depth,
         EvaluationType alpha,
         EvaluationType beta) {
-    auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
-    EvaluationType bestNumPieces = (isMaximizingPlayer) ? -FLT_MAX : FLT_MAX;
-    EvaluationType jumpVal;
+    SETUP_SEACH_VARIABLES()
 
     if (isMaximizingPlayer) {
-        for (auto & jump : multiJumps) {
-            jumpVal = recurse(jump, depth, alpha, beta);
-
-            bestNumPieces = max(jumpVal, bestNumPieces);
-            alpha = max(alpha, bestNumPieces);
-
-            if (beta <= alpha) {
-                ++prunedNodes;
-                break;
-            }
-        }
+        SEARCH_ACTIONS(multiJumps, depth, max, alpha);
     } else {
-        for (auto & jump : multiJumps) {
-            jumpVal = recurse(jump, depth, alpha, beta);
-
-            bestNumPieces = min(jumpVal, bestNumPieces);
-            beta = min(beta, bestNumPieces);
-
-            if (beta <= alpha) {
-                ++prunedNodes;
-                break;
-            }
-        }
+        SEARCH_ACTIONS(multiJumps, depth, min, beta);
     }
 
-    return bestNumPieces;
+    return bestOverallVal;
 }
 
 EvaluationType SearchHelper::recursiveCase(
         int depth,
         EvaluationType alpha,
         EvaluationType beta) {
-    auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
-    EvaluationType bestNumPieces = (isMaximizingPlayer) ? -FLT_MAX : FLT_MAX;
+    SETUP_SEACH_VARIABLES()
 
     auto jumps = game.getValidJumps();
 
     if (jumps.size() != 0) {
-        EvaluationType jumpVal;
-
         if (isMaximizingPlayer) {
-            for (auto & jump : jumps) {
-                jumpVal = recurse(jump, depth, alpha, beta);
-
-                bestNumPieces = max(jumpVal, bestNumPieces);
-                alpha = max(alpha, bestNumPieces);
-
-                if (beta <= alpha) {
-                    ++prunedNodes;
-                    break;
-                }
-            }
+            SEARCH_ACTIONS(jumps, depth, max, alpha);
         } else {
-            for (auto & jump : jumps) {
-                jumpVal = recurse(jump, depth, alpha, beta);
-
-                bestNumPieces = min(jumpVal, bestNumPieces);
-                beta = min(beta, bestNumPieces);
-
-                if (beta <= alpha) {
-                    ++prunedNodes;
-                    break;
-                }
-            }
+            SEARCH_ACTIONS(jumps, depth, min, beta);
         }
     }
     else {
-        EvaluationType moveVal;
+        auto moves = game.getValidMoves();
+
         if (isMaximizingPlayer) {
-            for (auto & move : game.getValidMoves()) {
-                moveVal = recurse(move, depth - 1, alpha, beta);
-
-                bestNumPieces = max(moveVal, bestNumPieces);
-                alpha = max(alpha, bestNumPieces);
-                if (beta <= alpha) {
-                    ++prunedNodes;
-                    break;
-                }
-            }
+            SEARCH_ACTIONS(moves, depth-1, max, alpha);
         } else {
-            for (auto & move : game.getValidMoves()) {
-                moveVal = recurse(move, depth - 1, alpha, beta);
-
-                bestNumPieces = min(moveVal, bestNumPieces);
-                beta = min(beta, bestNumPieces);
-
-                if (beta <= alpha) {
-                    ++prunedNodes;
-                    break;
-                }
-            }
+            SEARCH_ACTIONS(moves, depth-1, min, beta);
         }
     }
 
-    return bestNumPieces;
+    return bestOverallVal;
 }
 
 
 GameState SearchHelper::getCurrentGameState() {
-    return GameState(
-            game.board.getBoardState(),
-            game.red->getPieces(),
-            game.black->getPieces(),
-            game.activePlayer->getColor()
-            );
+    return game.getState();
 }
 
 void SearchHelper::changeGameState(const MovePackage & move) {
@@ -314,10 +228,6 @@ bool SearchHelper::isBaseCase(int depth) {
     return depth == 0 or !(game.areJumps() or game.areMoves());
 }
 
-void SearchHelper::setGameState(GameState & gameState) {
-    game.board.setBoardState(gameState.boardState);
-    game.red->setPieces(gameState.redPieces);
-    game.black->setPieces(gameState.blackPieces);
-    game.activePlayer = gameState.activePlayerColor == 'r' ? game.red : game.black;
-    game.inactivePlayer = gameState.activePlayerColor == 'r' ? game.black : game.red;
+void SearchHelper::setGameState(GameState & state) {
+    game.setState(state);
 }

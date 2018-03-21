@@ -6,8 +6,13 @@
 
 namespace ai {
     class GuiCppInterface {
+            using turn_type = std::pair<
+                Board::BoardType,
+                std::pair<std::vector<CheckersGame::MovePackage>, std::vector<CheckersGame::JumpPackage>>>;
         private:
             CheckersGame game;
+            std::vector<std::vector<int>> game_record{};
+
         public:
             GuiCppInterface() = default;
             GuiCppInterface(const CheckersGame & game);
