@@ -139,7 +139,6 @@ CheckersGame::CheckersGame(
 
 const char CheckersGame::play() {
     while (++moveCounter < MOVE_LIMIT && (areMoves() || areJumps())) {
-        cout << toString() << endl;
 
         try {
             turn();
@@ -151,8 +150,6 @@ const char CheckersGame::play() {
             continue;
         }
     }
-    cout << toString() << endl;
-    cout << "moves in game " << moveCounter << endl;
 
     return getInactivePlayerColor();
 }

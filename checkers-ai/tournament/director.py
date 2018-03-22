@@ -14,11 +14,16 @@ class Director:
     def __init__(self):
         self.options = options.Options()
         self.children = children.Children(self.options)
-        self.networks = [0 for x in range(self.options.network_count)]
+        self.networks = list(range(self.options.network_count))
+        self.generations = 0
 
     def idle(self):
         self.children.get_children()
 
+        while True:
+            self.run_generation()
+
+    def run_generation(self):
         print(" directing a tournament")
         self.run()
         print(" finished that tournament")
@@ -28,6 +33,8 @@ class Director:
         self.options.check_run()
         print("run is {}".format(self.options.run))
         print(" looping")
+
+        self.generations += 1
 
     def run(self):
         ids = range(self.options.network_count)
@@ -44,7 +51,12 @@ class Director:
 
         self.wins = list_to_str(self.networks)
         print("performance string is {}".format(self.wins))
-        self.networks = [0 for x in range(self.options.network_count)]
+
+        log_str = "session gen {}: {} \n".format(self.generations, self.wins)
+        with open("tournements.log", "a") as f:
+            f.write(log_str)
+
+        self.networks = list(range(self.options.network_count))
 
     def get_matchups(self, ids):
         matchups = []
@@ -57,7 +69,7 @@ class Director:
             ]
 
             matchups += network_matchups
-        print(matchups)
+
         return matchups
 
     def store_performances(self):
@@ -79,4 +91,4 @@ if __name__ == "__main__":
     start = time.time()
     director.idle()
     end = time.time()
-    print(f"total time was {end - start}")
+    print("total runtime time was {}".format(end - start))
