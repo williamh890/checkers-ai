@@ -35,6 +35,9 @@ using std::shared_ptr;
 
 #include <math.h>
 
+#include <string>
+using std::string;
+
 void Network::save(size_t networkId, Network & network) {
     auto filename = idToFilename(networkId);
     NetworkFileWriter writer;
@@ -46,6 +49,11 @@ bool Network::load(size_t networkId, Network & network) {
     auto filename = idToFilename(networkId);
     NetworkFileReader reader;
 
+    return reader.load(filename, network);
+}
+
+bool Network::load(string & filename, Network & network) {
+    NetworkFileReader reader;
     return reader.load(filename, network);
 }
 
@@ -120,12 +128,12 @@ vector<RandomNumberType> Network::getRandomNumbersOfLength( const unsigned int l
 
 Network::~Network() {
     if (_gameCompleted) {
-        save(_ID, *this);
+        //save(_ID, *this);
     }
 }
 
 // evaluateBoard returns an answer for red. Flip the sign for black.
-NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool testing) { // testing defaults false
+NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool testing, int red_factor) { // testing defaults false
     /*void inputBoardIntoFirstLayer(inputBoard)*/ {
         int index = 0;
         for (const auto & i : inputBoard) {
@@ -135,13 +143,13 @@ NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool t
             if (i == ' ' || i == 0)
                 _layers[0][index] = 0;
             else if (i == 'r')
-                _layers[0][index] = 1;
+                _layers[0][index] = 1 * red_factor;
             else if (i == 'b')
-                _layers[0][index] = -1;
+                _layers[0][index] = -1 * red_factor;
             else if (i == 'R')
-                _layers[0][index] = 1 * _kingWeight;
+                _layers[0][index] = 1 * _kingWeight * red_factor;
             else if (i == 'B')
-                _layers[0][index] = -1 * _kingWeight;
+                _layers[0][index] = -1 * _kingWeight * red_factor;
             else
                 cout << "Unrecognized character in board: " << i << endl;
             ++index;
@@ -191,9 +199,8 @@ void Network::calculateNode(unsigned int x, unsigned int y) {
 		cout << _layers[x][y] << endl;
 }
 
-void Network::adjustPerformance(int resultFromGame) {
-    _performance += resultFromGame;
-    _gameCompleted = true;
+void Network::adjustPerformance(int adjustment) {
+    _performance = adjustment;
 }
 
 int Network::getPerformance() const {
@@ -204,12 +211,13 @@ void Network::resetPerformance() {
     _performance = 0;
 }
 
-void Network::evolveUsingNetwork(const Network & rhs) {
+void Network::evolveUsingNetwork(Network & rhs) {
     _kingWeight = rhs._kingWeight;
     _weights = rhs._weights;
     _sigmas = rhs._sigmas;
     this->evolve();
-
+    this->resetPerformance();
+    rhs.resetPerformance();
     save(_ID, *this);
 }
 
@@ -260,7 +268,7 @@ NetworkWeightType inline Network::evolveWeightAt(size_t i, size_t ii) {
     return _weights[i][ii] + _sigmas[i][ii] * getGaussianNumberFromZeroToOne(randomNumGenerator);
 }
 
-void Network::outputCreationDebug() {
+void Network::outputCreationDebug() const {
     cout << "Weight for the king: " << _kingWeight << endl;
     cout << "Number of layers: " << _layers.size() << endl;
 
@@ -312,35 +320,35 @@ bool ai::operator>=(const Network & lhs, const Network & rhs) {
 
 bool ai::operator== (const Network &lhs, const Network &rhs) {
     return
-        (lhs._ID == rhs._ID) and
-        (lhs._kingWeight == rhs. _kingWeight) and
-        (lhs._performance == rhs._performance) and
-        (lhs._layers == rhs._layers) and
+        (lhs._ID == rhs._ID) &&
+        (lhs._kingWeight == rhs. _kingWeight) &&
+        (lhs._performance == rhs._performance) &&
+        (lhs._layers == rhs._layers) &&
         (lhs._weights == rhs._weights);
 }
 
 void ai::setupNetworks(const vector<unsigned int> & dimensions, int numberOfNetworks) { //numberOfNetworks = 100
-    cout << "You are about to setup a new set of networks. This operation will overwrite previous networks. \n" <<
-        "Are you sure you want to continue? (y,n) ";
-    if (cin.get() == 'n') {
-        cout << "Not overwriting files" << endl;
-        cin.ignore();
-        return;
-    }
+    //cout << "You are about to setup a new set of networks. This operation will overwrite previous networks. \n" <<
+        //"Are you sure you want to continue? (y,n) ";
+    //if (cin.get() == 'n') {
+        //cout << "Not overwriting files" << endl;
+        //cin.ignore();
+        //return;
+    //}
 
     auto seeder = getSeeder();
     for (auto index = 0; index < numberOfNetworks; ++index) {
         Network(index, dimensions, seeder);
     }
 
-    cin.ignore();
+    //cin.ignore();
 }
 
 NetworkWeightType ai::getGaussianNumberFromZeroToOne(std::mt19937 & randomNumGenerator) {
     normal_distribution<NetworkWeightType> distribution(0, 1);
 
     return distribution (randomNumGenerator);
-}   
+}
 
 bool ai::nothingSimilar(const Network & lhs, const Network & rhs) {
     bool val = true;

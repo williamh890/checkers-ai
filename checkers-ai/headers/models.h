@@ -6,6 +6,7 @@
 #include <string>
 // std::string
 
+
 namespace ai {
     struct Jump {
         int to;
@@ -35,6 +36,15 @@ namespace ai {
             s << "[" << row << ", " << col << "]";
             return s.str();
         }
+    };
+
+    struct PostJumpInformation {
+        bool wasPieceCrowned;
+        int spaceJumpedTo;
+
+        PostJumpInformation(bool wasPieceCrowned, int spaceJumpedTo):
+            wasPieceCrowned(wasPieceCrowned),
+            spaceJumpedTo(spaceJumpedTo) {}
     };
 
     struct Piece {

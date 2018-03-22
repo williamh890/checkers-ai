@@ -12,6 +12,9 @@
 #include "models.h"
 // ai::Piece
 // ai::Position
+#include "game-state.h"
+// ai::GameState
+
 #include <iostream>
 // std::cout;
 // std::endl;
@@ -32,9 +35,7 @@ namespace ai {
             using PlayerPtr = std::shared_ptr<Player>;
             using SeederPtr = std::shared_ptr<Seeder>;
 
-            using turn_type = std::pair<Board::BoardType, std::pair<std::vector<MovePackage>, std::vector<JumpPackage>>>;
-
-            static int MINIMAX_SEARCH_DEPTH;
+            static int SEARCH_DEPTH;
             int moveCounter = 0;
 
             Board board;
@@ -44,8 +45,6 @@ namespace ai {
 
             PlayerPtr activePlayer;
             PlayerPtr inactivePlayer;
-
-            std::vector<std::vector<int>> game_record{};
 
             std::mt19937 generator;
 
@@ -58,8 +57,11 @@ namespace ai {
                     SeederPtr & seeder
                     );
 
+            const char play();
+            void turn();
+            void makeAnyMultiJumps(int space);
+
             void makeRandomValidAction();
-            void makeMinimaxMove(int depth);
 
             bool isInvalid(const MovePackage & move);
             bool isInvalid(const JumpPackage & jump);
@@ -67,46 +69,29 @@ namespace ai {
             const char getActivePlayerColor();
             const char getInactivePlayerColor();
 
-            void makeJump(const JumpPackage & jump);
-            void makeMove(const MovePackage & move);
-
-            void replayJump(const JumpPackage & jump);
-            void replayMove(const MovePackage & move);
-
             void swapPlayers();
             bool areJumps();
             bool areMoves();
-
-            std::vector<std::vector<int>> getGame();
-            // end gui/cython wrapper functions
 
             std::vector<MovePackage> getValidMoves();
             std::vector<JumpPackage> getValidJumps();
             std::vector<JumpPackage> getValidJumpsAt(int space);
 
-            std::vector<JumpPackage> getOpponentValidJumps();
-            std::vector<MovePackage> getOpponentValidMoves();
-
-            void play();
+            GameState getState();
+            void setState(GameState & state);
 
             MovePackage getMoveFromActivePlayer();
 
-            MovePackage getMoveFromUser();
             MovePackage getRandomValidMove();
-            MovePackage getMinimaxMove();
+            MovePackage getBestMove();
 
             JumpPackage getJumpFromActivePlayer();
 
-            JumpPackage getJumpFromUser();
             JumpPackage getRandomValidJump();
-            JumpPackage getMinimaxJump(int space=-1);
+            JumpPackage getBestJump(int space=-1);
 
-            MovePackage parseUserInput();
-
-            JumpPackage getJumpFrom(const MovePackage & inputJump);
-
-            void reactTo(const MovePackage & move);
-            void reactTo(const JumpPackage & jump);
+            bool reactTo(const MovePackage & move);
+            bool reactTo(const JumpPackage & jump);
 
             std::string toString();
 
@@ -114,5 +99,7 @@ namespace ai {
     };
 
     CheckersGame getCheckersGame();
+    CheckersGame getNetworkedCheckersGame(unsigned int red_id, unsigned int black_id);
+    CheckersGame getNetworkVPieceCountCheckersGame(unsigned int network_id, char networked_player);
 }
 #endif

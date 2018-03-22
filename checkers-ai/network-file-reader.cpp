@@ -62,7 +62,6 @@ bool NetworkFileReader::load(const string & filename, Network & networkRecieving
 
     networkRecievingData._weights = weights;
     networkRecievingData._sigmas = sigmas;
-
     return true;
 }
 
@@ -124,4 +123,3 @@ NetworkFileReader::loadVector(size_t currLayerDimension) {
 bool inline NetworkFileReader::noMoreLayersInNetworkFile() {
     return networkFile.eof();
 }
-

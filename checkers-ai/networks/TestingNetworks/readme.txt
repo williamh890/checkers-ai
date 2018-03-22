@@ -1,0 +1,1 @@
+This folder holds all networks that are used in testing.

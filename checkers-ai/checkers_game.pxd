@@ -79,6 +79,8 @@ cdef extern from "headers/checkers-game.h" namespace "ai":
     void makeMove(MovePackage & move) except +
     void makeJump(JumpPackage & jump) except +
   CheckersGame getCheckersGame() except +
+  CheckersGame getNetworkedCheckersGame(int red_id, int black_id) except +
+  CheckersGame getNetworkVPieceCountCheckersGame(unsigned int network_id, char networked_player) except +
 
 cdef extern from "headers/gui-cpp-interface.h" namespace "ai":
   ctypedef pair[int, int] MovePackage

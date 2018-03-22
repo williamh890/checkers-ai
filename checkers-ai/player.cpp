@@ -1,8 +1,16 @@
+
+//#include "headers/network.h"
+//using ai::Network;
+
+#include "headers/search.h"
+using ai::SearchHelper;
+
 #include "headers/player.h"
 using ai::Player;
 using ai::RedPlayer;
 using ai::BlackPlayer;
 using ai::getPlayer;
+using ai::getNetworkedPlayer;
 using ai::PlayerType;
 
 #include "headers/json-to-stl.h"
@@ -41,14 +49,48 @@ using std::cout;
 using std::endl;
 #include <utility>
 using std::pair;
+#include<functional>
+using std::function;
 
 
 Player::Player(
         char color,
         const MoveGenerator & generator,
         const MoveGenerator & kingGenerator,
-        PlayerType type=PlayerType::Computer) : color(color), generator(generator), kingGenerator(kingGenerator), playerType(type) {
+        PlayerType type=PlayerType::Computer) :
+    playerType(type),
+    color(color),
+    generator(generator),
+    kingGenerator(kingGenerator)
+{
+    this->baseCase = [&](SearchHelper & helper)->int{
+        ++SearchHelper::leafNodes;
+        auto numPieces = helper.game.getNumPiecesFor(helper.maximizingPlayer);
+
+        char opponentColor = (helper.maximizingPlayer == 'r') ? 'b' : 'r';
+        auto numEnemyPieces = helper.game.getNumPiecesFor(opponentColor);
+
+        return numPieces - numEnemyPieces;
+    };
 }
+
+Player::Player(
+        char color,
+        const MoveGenerator & generator,
+        const MoveGenerator & kingGenerator,
+        Network & network,
+        PlayerType type=PlayerType::Computer) : playerType(type), color(color), network(network),
+                                                generator(generator), kingGenerator(kingGenerator) {
+            this->base_case_color_factor = (color == 'r') ? 1 : -1;
+            cout<<"color was "<<color<<" and color factor was "<<this->base_case_color_factor<<endl;
+
+            this->baseCase= [&] (SearchHelper & helper)->float{
+                const vector<char> board = helper.game.board.getBoardState();
+                float value = this->network.evaluateBoard(board, false, this->base_case_color_factor);
+
+                return value;
+          };
+        }
 
 void Player::initPieces() {
     for (auto space = 0; space < TOTAL_NUM_SPACES; ++space) {
@@ -86,13 +128,13 @@ void Player::removePieceAt(int space) {
     }
 }
 
-void Player::Crown(Piece & piece)
-{
+void Player::Crown(Piece & piece) {
     piece.isKing = true;
     piece.color = toupper(piece.color);
 }
 
-void Player::updatePieces(const pair<int, int> & move, Board & board) {
+bool Player::updatePieces(const pair<int, int> & move, Board & board) {
+    auto wasCrowned = false;
     for (auto & piece : pieces) {
         if (piece.space == move.first) {
             piece.space = move.second;
@@ -100,14 +142,19 @@ void Player::updatePieces(const pair<int, int> & move, Board & board) {
             if(shouldBeCrowned(piece)) {
                 Crown(piece);
                 board.updatePiece(piece.space, piece.color);
+
+                wasCrowned = true;
             }
 
-            return;
+            break;
         }
     }
+
+    return wasCrowned;
 }
 
-void Player::updatePieces(const pair<int, Jump> & jump, Board & board) {
+bool Player::updatePieces(const pair<int, Jump> & jump, Board & board) {
+    auto wasCrowned = false;
     for (auto & piece : pieces) {
         if (piece.space == jump.first) {
             piece.space = jump.second.to;
@@ -115,11 +162,14 @@ void Player::updatePieces(const pair<int, Jump> & jump, Board & board) {
             if(shouldBeCrowned(piece)) {
                 Crown(piece);
                 board.updatePiece(piece.space, piece.color);
+                wasCrowned = true;
             }
 
-            return;
+            break;
         }
     }
+
+    return wasCrowned;
 }
 
 vector<Jump> Player::getJumpsFor(const Piece & piece) const {
@@ -179,22 +229,40 @@ BlackPlayer::BlackPlayer(
     initPieces();
 }
 
+BlackPlayer::BlackPlayer(
+        char color,
+        const MoveGenerator & generator,
+        const MoveGenerator & kingGenerator,
+        Network & network,
+        PlayerType type): Player(color, generator, kingGenerator, network, type) {
+
+    initPieces();
+}
+
 bool BlackPlayer::isInitialSpace(int space) const {
     return space >= (TOTAL_NUM_SPACES - INIT_NUM_PIECES);
 }
 
 bool BlackPlayer::shouldBeCrowned(const Piece & piece) const {
     if (not piece.isKing){
-      return piece.space < NUM_PIECES_IN_ROW;
+        return piece.space < NUM_PIECES_IN_ROW;
     }
 
     return false;
 }
 
 RedPlayer::RedPlayer(char color,
-                     const MoveGenerator & generator,
-                     const MoveGenerator & kingGenerator,
-                     PlayerType type): Player(color, generator, kingGenerator, type) {
+        const MoveGenerator & generator,
+        const MoveGenerator & kingGenerator,
+        PlayerType type): Player(color, generator, kingGenerator, type) {
+    initPieces();
+}
+
+RedPlayer::RedPlayer(char color,
+        const MoveGenerator & generator,
+        const MoveGenerator & kingGenerator,
+        Network & network,
+        PlayerType type): Player(color, generator, kingGenerator, network, type) {
     initPieces();
 }
 
@@ -204,7 +272,7 @@ bool RedPlayer::isInitialSpace(int space) const {
 
 bool RedPlayer::shouldBeCrowned(const Piece & piece) const {
     if (not piece.isKing){
-      return piece.space >= TOTAL_NUM_SPACES - NUM_PIECES_IN_ROW;
+        return piece.space >= TOTAL_NUM_SPACES - NUM_PIECES_IN_ROW;
     }
 
     return false;
@@ -222,4 +290,16 @@ shared_ptr<Player> ai::getPlayer(const string & color, JsonToStlConverter conver
     auto blackGenerator = getGeneratorFor("black", converter);
 
     return make_shared<BlackPlayer>('b', blackGenerator, kingGenerator, Settings::BLACK_PLAYER_TYPE);
+}
+shared_ptr<Player> ai::getNetworkedPlayer(const string & color, JsonToStlConverter converter, uint network_id){
+    auto kingGenerator = getKingGenerator(converter);
+    Network network = Network(network_id);
+    if (color == "red") {
+        auto redGenerator = getGeneratorFor("red", converter);
+        return make_shared<RedPlayer>('r', redGenerator, kingGenerator, network, Settings::RED_PLAYER_TYPE);
+    }
+
+    auto blackGenerator = getGeneratorFor("black", converter);
+
+    return make_shared<BlackPlayer>('b', blackGenerator, kingGenerator, network, Settings::BLACK_PLAYER_TYPE);
 }

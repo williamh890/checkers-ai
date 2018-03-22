@@ -11,9 +11,9 @@ using ai::Seeder;
 using ai::SRandSeeder;
 using ai::getSeeder;
 
-#include "headers/minimax.h"
-using ai::minimaxJump;
-using ai::minimaxMove;
+#include "headers/search.h"
+using ai::getBestJump;
+using ai::getBestMove;
 
 #include "headers/board.h"
 using ai::getBoard;
@@ -24,6 +24,7 @@ using ai::Player;
 using ai::RedPlayer;
 using ai::BlackPlayer;
 using ai::getPlayer;
+using ai::getNetworkedPlayer;
 
 #include "headers/json-to-stl.h"
 
@@ -38,10 +39,13 @@ using ai::Jump;
 using ai::Position;
 using ai::Piece;
 
+#include "headers/game-state.h"
+using ai::GameState;
+
 #include "headers/consts.h"
 using ai::TOTAL_NUM_SPACES;
 using ai::INIT_NUM_PIECES;
-using ai::MINIMAX_SEARCH_DEPTH;
+using ai::MOVE_LIMIT;
 
 #include "headers/table-types.h"
 using ai::MoveTableType;
@@ -69,9 +73,8 @@ using std::length_error;
 using std::random_device;
 using std::mt19937;
 using std::uniform_int_distribution;
-#include <climits>
 
-int CheckersGame::MINIMAX_SEARCH_DEPTH = 4;
+int CheckersGame::SEARCH_DEPTH = 6;
 
 CheckersGame ai::getCheckersGame() {
     auto table = loadMoveTableFrom("move-table.json");
@@ -86,13 +89,47 @@ CheckersGame ai::getCheckersGame() {
     return CheckersGame(board, red, black, seeder);
 }
 
+CheckersGame ai::getNetworkedCheckersGame(unsigned int red_id, unsigned int black_id){
+    auto table = loadMoveTableFrom("move-table.json");
+    auto converter = JsonToStlConverter{table};
+
+    auto red = getNetworkedPlayer("red", converter, red_id);
+    auto black = getNetworkedPlayer("black", converter, black_id);
+
+    auto board = getBoard();
+    auto seeder = getSeeder();
+
+    return CheckersGame(board, red, black, seeder);
+}
+
+CheckersGame ai::getNetworkVPieceCountCheckersGame(unsigned int network_id, char networked_player){
+  auto table = loadMoveTableFrom("move-table.json");
+  auto converter = JsonToStlConverter{table};
+
+  auto red = (networked_player == 'r') ? getNetworkedPlayer("red", converter, network_id) :
+                                         getPlayer("red", converter);
+  auto black = (networked_player == 'b') ? getNetworkedPlayer("black", converter, network_id) :
+                                           getPlayer("black", converter);
+
+  auto board = getBoard();
+  auto seeder = getSeeder();
+
+  return CheckersGame(board, red, black, seeder);
+}
+
 CheckersGame::CheckersGame() { };
 
 CheckersGame::CheckersGame(
         const Board & board,
         PlayerPtr red,
         PlayerPtr black,
-        SeederPtr & seeder): board(board), red(red), black(black), activePlayer(black), inactivePlayer(red) {
+        SeederPtr & seeder):
+    board(board),
+    red(red),
+    black(black),
+    activePlayer(black),
+    inactivePlayer(red)
+{
 
     generator = mt19937(seeder->get());
 
@@ -100,19 +137,12 @@ CheckersGame::CheckersGame(
     this->board.addPiecesFor(black);
 }
 
-void CheckersGame::play() {
-    while (moveCounter++ < 100) {
+const char CheckersGame::play() {
+    while (++moveCounter < MOVE_LIMIT && (areMoves() || areJumps())) {
         cout << toString() << endl;
 
-        MovePackage move = make_pair(-1, -1);
-        JumpPackage jump = make_pair(-1, Jump(-1, -1));
-
         try {
-            if (areJumps()) {
-                jump = getJumpFromActivePlayer();
-            } else {
-                move = getMoveFromActivePlayer();
-            }
+            turn();
         }
         catch(length_error & e) {
             break;
@@ -120,43 +150,58 @@ void CheckersGame::play() {
         catch(runtime_error & e) {
             continue;
         }
-
-        if (move.first == -1) {
-            board.make(jump);
-            reactTo(jump);
-
-            auto validJumps = getValidJumpsAt(jump.second.to);
-
-
-            while (validJumps.size()) {
-                cout << board.toString() << endl;
-                auto jump = make_pair(-1, Jump(-1, -1));
-
-                try {
-                    jump = getJumpFromActivePlayer();
-                }
-                catch(runtime_error & e) {
-                    continue;
-                }
-
-                board.make(jump);
-                reactTo(jump);
-
-                validJumps = getValidJumpsAt(jump.second.to);
-            }
-        }
-        else {
-            board.make(move);
-            reactTo(move);
-        }
-
-        swapPlayers();
     }
-
+    cout << toString() << endl;
     cout << "moves in game " << moveCounter << endl;
+
+    return getInactivePlayerColor();
 }
 
-void CheckersGame::swapPlayers(){
+void CheckersGame::turn() {
+    MovePackage move = make_pair(-1, -1);
+    JumpPackage jump = make_pair(-1, Jump(-1, -1));
+
+    if (areJumps()) {
+        jump = getJumpFromActivePlayer();
+    } else {
+        move = getMoveFromActivePlayer();
+    }
+
+    if (move.first == -1) {
+        board.make(jump);
+        reactTo(jump);
+
+        makeAnyMultiJumps(jump.second.to);
+    }
+    else {
+        board.make(move);
+        reactTo(move);
+    }
+
+    swapPlayers();
+}
+
+void CheckersGame::makeAnyMultiJumps(int space) {
+    auto validJumps = getValidJumpsAt(space);
+
+    while (validJumps.size()) {
+        auto jump = make_pair(-1, Jump(-1, -1));
+
+        try {
+            jump = getBestJump();
+        }
+        catch(runtime_error & e) {
+            continue;
+        }
+
+        board.make(jump);
+        reactTo(jump);
+
+        validJumps = getValidJumpsAt(jump.second.to);
+    }
+}
+
+void CheckersGame::swapPlayers() {
     swap(activePlayer, inactivePlayer);
 }
 
@@ -169,22 +214,16 @@ bool CheckersGame::areMoves(){
 }
 
 JumpPackage CheckersGame::getJumpFromActivePlayer() {
-    if (activePlayer->getColor() == 'r') {
-        return getMinimaxJump();
-    }
-
-    return getRandomValidJump();
+    return this->getBestJump();
 }
 
-MovePackage CheckersGame::getMinimaxMove() {
-    return minimaxMove(*this, MINIMAX_SEARCH_DEPTH);
+MovePackage CheckersGame::getBestMove() {
+    return ai::getBestMove(*this, SEARCH_DEPTH);
 }
 
-
-JumpPackage CheckersGame::getMinimaxJump(int space) {
-    return minimaxJump(*this, MINIMAX_SEARCH_DEPTH, space);
+JumpPackage CheckersGame::getBestJump(int space) {
+    return ai::getBestJump(*this, SEARCH_DEPTH, space);
 }
-
 
 JumpPackage CheckersGame::getRandomValidJump() {
     auto jumps = getValidJumps();
@@ -196,32 +235,8 @@ JumpPackage CheckersGame::getRandomValidJump() {
     return jumps[rngVal];
 }
 
-JumpPackage CheckersGame::getJumpFromUser() {
-    auto inputJump = parseUserInput();
-
-    return getJumpFrom(inputJump);
-}
-
-JumpPackage CheckersGame::getJumpFrom(const MovePackage & inputJump) {
-    auto validJumps = getValidJumps();
-
-    for (const auto & checkJump: validJumps) {
-        if (checkJump.first == inputJump.first and
-                checkJump.second.to == inputJump.second) {
-
-            return checkJump;
-        }
-    }
-
-    throw runtime_error("invalid jump input.");
-}
-
 MovePackage CheckersGame::getMoveFromActivePlayer() {
-    if (activePlayer->getColor() == 'r') {
-        return getMinimaxMove();
-    }
-
-    return getRandomValidMove();
+    return getBestMove();
 }
 
 MovePackage CheckersGame::getRandomValidMove() {
@@ -236,36 +251,6 @@ MovePackage CheckersGame::getRandomValidMove() {
     auto rngVal = distribution(generator);
 
     return moves[rngVal];
-}
-
-MovePackage CheckersGame::parseUserInput() {
-
-    string in;
-    getline(cin, in);
-    istringstream iss(in);
-
-    int startRow, startCol, endRow, endCol;
-    iss >> startRow >> startCol >> endRow >> endCol;
-
-    auto startPos = Position(startRow, startCol);
-    auto endPos = Position(endRow, endCol);
-
-    auto start = positionToSpace(startPos);
-    auto end = positionToSpace(endPos);
-
-    return make_pair(start, end);
-}
-
-MovePackage CheckersGame::getMoveFromUser() {
-    auto move = parseUserInput();
-
-    for (auto piece : activePlayer->getPieces()) {
-        if (piece.space == move.second) {
-            throw runtime_error("cannot move over own piece.");
-        }
-    }
-
-    return move;
 }
 
 bool CheckersGame::isInvalid(const MovePackage & move) {
@@ -304,16 +289,6 @@ vector<JumpPackage> CheckersGame::getValidJumps() {
     return validJumps;
 }
 
-vector<JumpPackage> CheckersGame::getOpponentValidJumps(){
-    auto validJumps = board.getValidJumpsFor(inactivePlayer);
-
-    return validJumps;
-}
-vector<MovePackage> CheckersGame::getOpponentValidMoves(){
-    auto validMoves = board.getValidMovesFor(inactivePlayer);
-
-    return validMoves;
-}
 vector<JumpPackage> CheckersGame::getValidJumpsAt(int space) {
     auto validJumps = board.getValidJumpsFor(activePlayer);
     auto jumpsAtSpace = vector<JumpPackage>{};
@@ -335,70 +310,41 @@ const char CheckersGame::getInactivePlayerColor(){
     return inactivePlayer->getColor();
 }
 
-void CheckersGame::reactTo(const JumpPackage & jump) {
-    activePlayer->updatePieces(jump, board);
+bool CheckersGame::reactTo(const JumpPackage & jump) {
+    auto wasPieceCrowned =
+        activePlayer->updatePieces(jump, board);
+
     inactivePlayer->removePieceAt(jump.second.through);
+
+    return wasPieceCrowned;
 }
 
-void CheckersGame::reactTo(const MovePackage & move) {
-    activePlayer->updatePieces(move, board);
+bool CheckersGame::reactTo(const MovePackage & move) {
+    auto wasPieceCrowned =
+        activePlayer->updatePieces(move, board);
+
+    return wasPieceCrowned;
 }
 
 string CheckersGame::toString() {
     return board.toString();
 }
 
-
-void CheckersGame::makeJump(const JumpPackage & jump){
-        board.make(jump);
-        reactTo(jump);
-        cout<<toString()<<endl;
-        vector<int> move = {jump.first, jump.second.through, jump.second.to};
-        game_record.push_back(move);
-        if (not areJumps()){
-            swapPlayers();
-            if (areJumps()){
-              JumpPackage jump = getMinimaxJump();
-              board.make(jump);
-              reactTo(jump);
-              while(getValidJumpsAt(jump.second.to).size()){
-                  jump = getMinimaxJump();
-                  board.make(jump);
-                  reactTo(jump);
-              }
-            }
-            else{
-              auto move = getMinimaxMove();
-              board.make(move);
-              reactTo(move);
-            }
-            swapPlayers();
-    }
+GameState CheckersGame::getState() {
+    return GameState(
+            board.getBoardState(),
+            red->getPieces(),
+            black->getPieces(),
+            activePlayer->getColor()
+            );
 }
 
-void CheckersGame::makeMove(const MovePackage & move){
-    board.make(move);
-    reactTo(move);
-    cout<<toString()<<endl;
-    vector<int> vec_move = {move.first, move.second};
-    game_record.push_back(vec_move);
-    swapPlayers();
-    if (areJumps()){
-      JumpPackage jump = getMinimaxJump();
-      board.make(jump);
-      reactTo(jump);
-      while(getValidJumpsAt(jump.second.to).size()){
-          jump = getMinimaxJump(jump.second.to);
-          board.make(jump);
-          reactTo(jump);
-      }
-    }
-    else{
-      auto move = getMinimaxMove();
-      board.make(move);
-      reactTo(move);
-    }
-    swapPlayers();
+void CheckersGame::setState(GameState & state) {
+    board.setBoardState(state.boardState);
+    red->setPieces(state.redPieces);
+    black->setPieces(state.blackPieces);
+    activePlayer = state.activePlayerColor == 'r' ? red : black;
+    inactivePlayer = state.activePlayerColor == 'r' ? black : red;
 }
 
 void CheckersGame::makeRandomValidAction(){
@@ -406,8 +352,6 @@ void CheckersGame::makeRandomValidAction(){
         auto jump = getRandomValidJump();
         board.make(jump);
         reactTo(jump);
-        vector<int> move = {jump.first, jump.second.through, jump.second.to};
-        game_record.push_back(move);
 
         if (areJumps()){
             makeRandomValidAction();
@@ -419,27 +363,8 @@ void CheckersGame::makeRandomValidAction(){
     auto move = getRandomValidMove();
     board.make(move);
     reactTo(move);
-    vector<int> vec_move = {move.first, move.second};
-    game_record.push_back(vec_move);
 }
 
-void CheckersGame::replayJump(const JumpPackage & jump){
-    board.make(jump);
-    reactTo(jump);
-    if (not areJumps()){
-        swapPlayers();
-    }
-}
-
-void CheckersGame::replayMove(const MovePackage & move){
-    board.make(move);
-    reactTo(move);
-    swapPlayers();
-}
-
-vector<std::vector<int>> CheckersGame::getGame(){
-    return game_record;
-}
 
 int CheckersGame::getNumPiecesFor(char color) {
     return (color == 'r') ? red->getPieces().size() : black->getPieces().size();

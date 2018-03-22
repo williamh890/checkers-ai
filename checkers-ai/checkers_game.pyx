@@ -28,9 +28,10 @@ ctypedef pair[int, Jump] jump_type
 
 cdef class PyCheckersGame:
   cdef GuiCppInterface checkers_game
-
+  cdef int move_counter
   def __cinit__(self):
-    self.checkers_game = GuiCppInterface(getCheckersGame())
+    self.checkers_game = GuiCppInterface(getNetworkVPieceCountCheckersGame(3, b'r'))
+    self.move_counter = 0
 
   def get_board(self):
     board = self.checkers_game.getBoard()
@@ -41,7 +42,11 @@ cdef class PyCheckersGame:
     return char_board
 
   def play(self):
-    self.checkers_game.play()
+    if self.move_counter < 100:
+      self.checkers_game.play()
+      self.move_counter += 1
+    else:
+      raise Exception("Exceed Move Limit")
 
   def is_jump_invalid(self, int start, int to, int through):
     cdef Jump jump
@@ -135,10 +140,14 @@ class PyBoard():
 #********** GUI SETUP AND RUNNING **********#
     def run(self):
       while True:
-        board = self.game.get_board()
-        self.compare_and_update_board(board)
-        self.window.update_idletasks()
-        self.window.update()
+        try:
+          board = self.game.get_board()
+          self.compare_and_update_board(board)
+          self.window.update_idletasks()
+          self.window.update()
+        except Exception as e:
+          print(str(e))
+          self.run_end_game()
 
     def run_without_interface(self):
       while True:
