@@ -32,11 +32,16 @@ int main(int argc, char *argv[]) {
     const auto STORE_PERFORMANCES = '1';
     const auto EVOLVE_NETWORKS_ALL = '2';
     const auto EVOLVE_USER_NETWORKS = '3';
-    //NetworkTestingNamechange testing;
-    cout << "Username: " << getUsername() << endl;
+
+    cout << "Username: " << getUsername() << endl << endl;
 
     if (argc == 1) {
-        cout << "You called me without any input" << endl;
+        cout << "manager.out [0|1|2|3]" << endl
+             << "  0 -> Setup Networks" << endl
+             << "  1 -> Store Performances" << endl
+             << "  2 -> Evolve All Networks" << endl
+             << "  3 -> Evolve User Networks" << endl
+             << endl;
         return -1;
     }
     string username(getUsername());
