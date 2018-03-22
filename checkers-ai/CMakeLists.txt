@@ -1,4 +1,3 @@
-
 cmake_minimum_required(VERSION 2.8.9)
 project(CheckersAi)
 
@@ -36,7 +35,7 @@ add_library(stdc++fs UNKNOWN IMPORTED)
 
 include(libstdcppfsPath.txt)
 # this file looks like
-
+#
 #       set(LIBSTDCPPFS_PATH "/usr/lib/gcc/x86_64-linux-gnu/7/libstdc++fs.a")
 #                                  (Your path may vary...)
 
@@ -64,4 +63,3 @@ target_link_libraries(test.out Catch)
 
 enable_testing()
 add_test(NAME MyAwesomeTest COMMAND test.out)
-

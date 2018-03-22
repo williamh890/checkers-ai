@@ -189,7 +189,7 @@ int main(int argc, char *argv[]) {
         // TODO: Move best networks from other folders into myNetworks
         int leftovers = NETWORKPOPSIZE % networkPathsContainer.size();
         int numMyNetworksToKeep = leftovers + (NETWORKPOPSIZE/networkPathsContainer.size());
-        int numNetworksToSteal = (NETWORKPOPSIZE-leftovers)/networkPathsContainer.size();
+        unsigned int numNetworksToSteal = (NETWORKPOPSIZE-leftovers)/networkPathsContainer.size();
         cout << "Leftovers: " << leftovers << endl;
         cout << "Networks to keep: " << numMyNetworksToKeep << endl;
         cout << "Networks to steal: " << numNetworksToSteal << endl;
@@ -235,7 +235,7 @@ int main(int argc, char *argv[]) {
         sort(myNetworks.begin(), myNetworks.end(), [](Network first, Network second) {return first > second;});
 
         for (size_t i = 0; i < NETWORKPOPSIZE; ++i){
-            cout<<myNetworks[i].getPerformance()<<" ";  
+            cout<<myNetworks[i].getPerformance()<<" ";
         }
         for (unsigned int i = 0; i < NETWORKPOPSIZE/2; ++i) {
             myNetworks[i+NETWORKPOPSIZE/2].evolveUsingNetwork(myNetworks[i]);

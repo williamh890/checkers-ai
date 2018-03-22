@@ -24,7 +24,7 @@ namespace ai {
     static const int DEBUG = false;
     static const int MOVE_LIMIT = 100;
 
-    static const int NETWORKPOPSIZE = blondiePopulation;
+    static const unsigned int NETWORKPOPSIZE = blondiePopulation;
 
     const float INF = FLT_MAX;
 
