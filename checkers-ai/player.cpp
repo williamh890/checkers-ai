@@ -64,6 +64,7 @@ Player::Player(
     kingGenerator(kingGenerator)
 {
     this->baseCase = [&](SearchHelper & helper)->int{
+        ++SearchHelper::leafNodes;
         auto numPieces = helper.game.getNumPiecesFor(helper.maximizingPlayer);
 
         char opponentColor = (helper.maximizingPlayer == 'r') ? 'b' : 'r';

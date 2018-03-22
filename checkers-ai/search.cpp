@@ -32,6 +32,7 @@ using BoardState = vector<char>;
 
 int SearchHelper::totalNodes = 0;
 int SearchHelper::prunedNodes = 0;
+int SearchHelper::leafNodes = 0;
 
 CheckersGame::MovePackage ai::getBestMove(CheckersGame & game, int depth) {
     EvaluationType bestMoveVal = -INF;
@@ -114,11 +115,9 @@ EvaluationType SearchHelper::recurse(
         EvaluationType alpha,
         EvaluationType beta) {
     ++totalNodes;
-    auto stateBeforeMove = getCurrentGameState();
 
-    auto postJumpInfo = changeGameState(jump);
-    auto wasPieceCrowned = postJumpInfo.wasPieceCrowned;
-    auto jumpDestination = postJumpInfo.spaceJumpedTo;
+    auto stateBeforeMove = getCurrentGameState();
+    auto jmpInfo = changeGameState(jump);
 
     game.swapPlayers();
     if (isBaseCase(depth)) {
@@ -131,8 +130,8 @@ EvaluationType SearchHelper::recurse(
 
     EvaluationType bestOverallValue;
 
-    auto multiJumps = game.getValidJumpsAt(jumpDestination);
-    if (!wasPieceCrowned && multiJumps.size() > 0) {
+    auto multiJumps = game.getValidJumpsAt(jmpInfo.spaceJumpedTo);
+    if (!jmpInfo.wasPieceCrowned && multiJumps.size() > 0) {
         bestOverallValue = recurseMultiJumpCase(multiJumps, depth, alpha, beta);
     }
     else {
@@ -162,18 +161,21 @@ EvaluationType SearchHelper::recurse(
         }                                                                            \
     }                                                                                \
 
+#define SEARCH_BASED_ON_MAXIMIZING_PLAYER(actions, depthExpression)                  \
+    if (isMaximizingPlayer) {                                                        \
+        SEARCH_ACTIONS(actions, depthExpression, max, alpha);                        \
+    } else {                                                                         \
+        SEARCH_ACTIONS(actions, depthExpression, min, beta);                         \
+    }                                                                                \
+
 EvaluationType SearchHelper::recurseMultiJumpCase(
         const vector<JumpPackage> & multiJumps,
         int depth,
         EvaluationType alpha,
         EvaluationType beta) {
-    SETUP_SEACH_VARIABLES()
 
-    if (isMaximizingPlayer) {
-        SEARCH_ACTIONS(multiJumps, depth, max, alpha);
-    } else {
-        SEARCH_ACTIONS(multiJumps, depth, min, beta);
-    }
+    SETUP_SEACH_VARIABLES()
+    SEARCH_BASED_ON_MAXIMIZING_PLAYER(multiJumps, depth)
 
     return bestOverallVal;
 }
@@ -182,30 +184,19 @@ EvaluationType SearchHelper::recursiveCase(
         int depth,
         EvaluationType alpha,
         EvaluationType beta) {
-    SETUP_SEACH_VARIABLES()
 
+    SETUP_SEACH_VARIABLES()
     auto jumps = game.getValidJumps();
 
     if (jumps.size() != 0) {
-        if (isMaximizingPlayer) {
-            SEARCH_ACTIONS(jumps, depth, max, alpha);
-        } else {
-            SEARCH_ACTIONS(jumps, depth, min, beta);
-        }
-    }
-    else {
+        SEARCH_BASED_ON_MAXIMIZING_PLAYER(jumps, depth)
+    } else {
         auto moves = game.getValidMoves();
-
-        if (isMaximizingPlayer) {
-            SEARCH_ACTIONS(moves, depth-1, max, alpha);
-        } else {
-            SEARCH_ACTIONS(moves, depth-1, min, beta);
-        }
+        SEARCH_BASED_ON_MAXIMIZING_PLAYER(moves, depth-1)
     }
 
     return bestOverallVal;
 }
-
 
 GameState SearchHelper::getCurrentGameState() {
     return game.getState();
