@@ -1,2 +1,2 @@
 cmake .
-make -f Makefile -j 8
+cmake --build . -- -j 8
