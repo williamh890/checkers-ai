@@ -328,20 +328,20 @@ bool ai::operator== (const Network &lhs, const Network &rhs) {
 }
 
 void ai::setupNetworks(const vector<unsigned int> & dimensions, int numberOfNetworks) { //numberOfNetworks = 100
-    cout << "You are about to setup a new set of networks. This operation will overwrite previous networks. \n" <<
-        "Are you sure you want to continue? (y,n) ";
-    if (cin.get() == 'n') {
-        cout << "Not overwriting files" << endl;
-        cin.ignore();
-        return;
-    }
+    //cout << "You are about to setup a new set of networks. This operation will overwrite previous networks. \n" <<
+        //"Are you sure you want to continue? (y,n) ";
+    //if (cin.get() == 'n') {
+        //cout << "Not overwriting files" << endl;
+        //cin.ignore();
+        //return;
+    //}
 
     auto seeder = getSeeder();
     for (auto index = 0; index < numberOfNetworks; ++index) {
         Network(index, dimensions, seeder);
     }
 
-    cin.ignore();
+    //cin.ignore();
 }
 
 NetworkWeightType ai::getGaussianNumberFromZeroToOne(std::mt19937 & randomNumGenerator) {

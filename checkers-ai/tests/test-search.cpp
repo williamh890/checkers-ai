@@ -229,9 +229,9 @@ TEST_CASE("networked checkers game") {
     game.swapPlayers();
     auto crowningSetupMove = make_pair(0, 5);
 
-    REQUIRE(search(crowningSetupMove, 3, 'b', game));
+    REQUIRE_NOTHROW(search(crowningSetupMove, 3, 'b', game));
     auto helper = SearchHelper('b', game);
-    REQUIRE(game.activePlayer->baseCase(helper) != 0);
+    REQUIRE_NOTHROW(game.activePlayer->baseCase(helper));
 }
 
 TEST_CASE ("minimax wrapper functions behave") {
@@ -248,6 +248,7 @@ void runSearch(CheckersGame & game, int depth) {
     const int ITERATIONS = 1;
 
     SearchHelper::totalNodes = 0;
+    SearchHelper::leafNodes = 0;
     SearchHelper::prunedNodes = 0;
     CheckersGame::SEARCH_DEPTH = depth;
     auto start = getTime();
@@ -255,10 +256,10 @@ void runSearch(CheckersGame & game, int depth) {
     auto end = getTime();
 
     auto total = (end - start);
-    cout << "Nodes evaluated: " << SearchHelper::totalNodes << " nodes" << endl;
+    cout << "Nodes evaluated (depth " << depth << "): " << SearchHelper::totalNodes << " nodes" << endl;
     cout << "Nodes with pruning: " << SearchHelper::prunedNodes << " nodes" << endl;
+    cout << "Leaf Nodes: " << SearchHelper::leafNodes << endl;
     cout << "Total time taken: " << total <<  " secs" << endl;
-    cout << "Time per node: " << SearchHelper::totalNodes / total << " nodes / sec" << endl;
     cout << endl;
 }
 
@@ -268,7 +269,7 @@ TEST_CASE ("timing search at different depths", "[search],[timing]") {
 
     auto game = getCheckersGame();
 
-    for (size_t d = 2; d <= 8; ++d) {
+    for (size_t d = 2; d <= 10; ++d) {
         runSearch(game, d);
     }
 

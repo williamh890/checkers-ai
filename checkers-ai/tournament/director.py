@@ -1,10 +1,9 @@
-# manager of tournament
 import options
 import children
 import subprocess
 from random import sample
 import os
-from time import sleep as wait
+import time
 
 
 def list_to_str(list):
@@ -15,50 +14,81 @@ class Director:
     def __init__(self):
         self.options = options.Options()
         self.children = children.Children(self.options)
-        self.networks = [0 for x in range(self.options.network_count)]
+        self.networks = list(range(self.options.network_count))
+        self.generations = 0
+
+    def idle(self):
+        self.children.get_children()
+
+        while True:
+            self.run_generation()
+
+    def run_generation(self):
+        print(" directing a tournament")
+        self.run()
+        print(" finished that tournament")
+        print(" storing performances and evolving")
+        self.store_performances()
+        self.evolve_networks()
+        self.options.check_run()
+        print("run is {}".format(self.options.run))
+        print(" looping")
+
+        self.generations += 1
+
+    def run(self):
+        ids = range(self.options.network_count)
+        matchups = self.get_matchups(ids)
+
+        results = self.children.run(matchups)
+
+        for game in results:
+            winner = game['winner']
+            if winner is None:
+                continue
+
+            self.networks[winner] += 1
+
+        self.wins = list_to_str(self.networks)
+        print("performance string is {}".format(self.wins))
+
+        log_str = "session gen {}: {} \n".format(self.generations, self.wins)
+        with open("tournements.log", "a") as f:
+            f.write(log_str)
+
+        self.networks = list(range(self.options.network_count))
+
+    def get_matchups(self, ids):
+        matchups = []
+        for id in ids:
+            opponent_ids = sample(ids, k=3)
+
+            network_matchups = [
+                (self.options.checkers_game, id, opponent_id)
+                for opponent_id in opponent_ids
+            ]
+
+            matchups += network_matchups
+
+        return matchups
 
     def store_performances(self):
         os.chdir(os.path.dirname(self.options.network_manager))
         run_str = "{} {} {}".format(self.options.network_manager, 1, self.wins)
         result = subprocess.getstatusoutput(run_str)
         print(result[1])
-        print("\n result was: {}".format(result[0]))
+        print("result was: {}".format(result[0]))
 
     def evolve_networks(self):
         run_str = "{} {}".format(self.options.network_manager, 3)
         result = subprocess.getstatusoutput(run_str)
         print(result[1])
-        print("\n result was: {}".format(result[0]))
-
-    def run(self):
-        for id in range(self.options.network_count):
-            opponent_ids = sample(range(self.options.network_count), k=3)
-            match_results = self.children.run(id, opponent_ids)
-
-            for game in match_results:
-                winner = game['winner']
-                if winner is None:
-                    continue
-
-                self.networks[winner] += 1
-        self.wins = list_to_str(self.networks)
-        print("performance string is {}".format(self.wins))
-        self.networks = [0 for x in range(self.options.network_count)]
-
-    def idle(self):
-        self.children.get_children()
-        while self.options.run == 1:
-            print(" directing a tournament \n")
-            self.run()
-            print(" finished that tournament \n")
-            print(" storing performances and evolving \n")
-            self.store_performances()
-            self.evolve_networks()
-            self.options.check_run()
-            print("run is {} \n".format(self.options.run))
-            print(" looping \n")
+        print("result was: {}".format(result[0]))
 
 
 if __name__ == "__main__":
     director = Director()
+    start = time.time()
     director.idle()
+    end = time.time()
+    print("total runtime time was {}".format(end - start))

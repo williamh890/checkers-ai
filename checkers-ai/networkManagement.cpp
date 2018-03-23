@@ -32,11 +32,16 @@ int main(int argc, char *argv[]) {
     const auto STORE_PERFORMANCES = '1';
     const auto EVOLVE_NETWORKS_ALL = '2';
     const auto EVOLVE_USER_NETWORKS = '3';
-    //NetworkTestingNamechange testing;
-    cout << "Username: " << getUsername() << endl;
+
+    cout << "Username: " << getUsername() << endl << endl;
 
     if (argc == 1) {
-        cout << "You called me without any input" << endl;
+        cout << "manager.out [0|1|2|3]" << endl
+             << "  0 -> Setup Networks" << endl
+             << "  1 -> Store Performances" << endl
+             << "  2 -> Evolve All Networks" << endl
+             << "  3 -> Evolve User Networks" << endl
+             << endl;
         return -1;
     }
     string username(getUsername());
@@ -189,7 +194,7 @@ int main(int argc, char *argv[]) {
         // TODO: Move best networks from other folders into myNetworks
         int leftovers = NETWORKPOPSIZE % networkPathsContainer.size();
         int numMyNetworksToKeep = leftovers + (NETWORKPOPSIZE/networkPathsContainer.size());
-        int numNetworksToSteal = (NETWORKPOPSIZE-leftovers)/networkPathsContainer.size();
+        unsigned int numNetworksToSteal = (NETWORKPOPSIZE-leftovers)/networkPathsContainer.size();
         cout << "Leftovers: " << leftovers << endl;
         cout << "Networks to keep: " << numMyNetworksToKeep << endl;
         cout << "Networks to steal: " << numNetworksToSteal << endl;
@@ -235,7 +240,7 @@ int main(int argc, char *argv[]) {
         sort(myNetworks.begin(), myNetworks.end(), [](Network first, Network second) {return first > second;});
 
         for (size_t i = 0; i < NETWORKPOPSIZE; ++i){
-            cout<<myNetworks[i].getPerformance()<<" ";  
+            cout<<myNetworks[i].getPerformance()<<" ";
         }
         for (unsigned int i = 0; i < NETWORKPOPSIZE/2; ++i) {
             myNetworks[i+NETWORKPOPSIZE/2].evolveUsingNetwork(myNetworks[i]);
