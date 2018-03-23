@@ -97,7 +97,6 @@ if __name__ == "__main__":
     director = Director()
     ensure_generation_cfg(director.options.networks_config)
     start = time.time()
-    director.network_git.update_config()
-    # director.idle()
+    director.idle()
     end = time.time()
     print("total runtime time was {}".format(end - start))
