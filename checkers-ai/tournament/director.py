@@ -6,6 +6,7 @@ import subprocess
 from random import sample
 import os
 import time
+import json
 
 
 def list_to_str(list):
@@ -22,8 +23,9 @@ class Director:
                                                   self.options.git_password,
                                                   self.options.repo_url)
         self.children = children.Children(self.options)
-        self.networks = list(range(self.options.network_count))
         self.generations = self.network_git.current_generation
+
+        self.reset_network_wins()
 
     def idle(self):
         self.children.get_children()
@@ -58,16 +60,22 @@ class Director:
             if winner is None:
                 continue
 
-            self.networks[winner] += 1
+            self.networks_wins[winner] += 1
 
-        self.wins = list_to_str(self.networks)
+        self.wins = list_to_str(self.networks_wins)
         print("performance string is {}".format(self.wins))
 
         log_str = "session gen {}: {} \n".format(self.generations, self.wins)
         with open("tournements.log", "a") as f:
+            f.write(json.dumps(results, indent=4))
             f.write(log_str)
 
-        self.networks = list(range(self.options.network_count))
+        self.reset_network_wins()
+
+    def reset_network_wins(self):
+        self.networks_wins = [
+            0 for _ in range(self.options.network_count)
+        ]
 
     def get_matchups(self, ids):
         matchups = []
