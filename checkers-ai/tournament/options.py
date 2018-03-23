@@ -3,19 +3,20 @@
 from configparser import SafeConfigParser
 import os
 
+USER_PATH = "../user.me"
+
 
 class Options:
     def __init__(self):
         self.config_file = os.path.join(
             os.path.dirname(__file__), "tournament.cfg")
-        print(self.config_file)
         self.config = SafeConfigParser()
         self.config.read(self.config_file)
         self.get_options()
 
     def get_options(self):
         self.run = int(self.config.get('general', 'run'))
-        self.user = (self.config.get('general', 'user'))
+        self.get_user()  # (self.config.get('general', 'user'))
 
         self.git_user = self.config.get('git', 'username')
         self.git_password = self.config.get('git', 'password')
@@ -34,6 +35,10 @@ class Options:
         self.network_manager = os.path.join(self.checkers_path,
                                             network_manager)
         self.max_processes = int(self.config.get('processes', 'max_processes'))
+
+    def get_user(self):
+        with open(USER_PATH, 'r') as user_file:
+            self.user = str(user_file.read()).rstrip('\n')
 
     def check_run(self):
         self.config.read(self.config_file)

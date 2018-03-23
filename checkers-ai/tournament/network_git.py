@@ -9,11 +9,9 @@ class NetworkGit:
         self.user = user
         self.networks_config = networks_config
         self.generations = ConfigParser()
-        self.generations.read(self.networks_config)
-        self.current_generation = int(self.generations.get("generations",
-                                                           "count"))
-        self.current_generation = int(self.generations.get("generations",
-                                                           "count"))
+        self.generations.read(ap(self.networks_config))
+        self.current_generation = int(self.generations.get('generations',
+                                                           'count'))
         self.network_repo = Repo(dn(dn(self.networks_config)))
 
     def get_push_command(self, user, password, url):
@@ -23,10 +21,15 @@ class NetworkGit:
         print(self.push_command)
 
     def update_remote(self):
-        self.network_repo.git.add("-A")
+        self.network_repo.git.add(all=True)
         self.network_repo.git.commit("-m generation {} of user {} ".format(
             self.current_generation, self.user))
-        self.network_repo.git.push(self.push_command)
+        print("pushing, push command is {}".format(self.push_command))
+        options = {"repo": self.push_command, "all": True}
+        self.network_repo.git.push(porcelain=True,
+                                   as_process=True,
+                                   universal_newlines=True,
+                                   **options)
 
     def update_config(self):
         self.current_generation += 1

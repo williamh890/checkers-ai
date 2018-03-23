@@ -26,7 +26,6 @@ int main(int argc, char** argv) {
     const char winner = game.play();
 
     cout << "gameover" << endl;
-    cout << "winner was " << winner << endl;
 
     if (game.moveCounter >= MOVE_LIMIT) {
         cout<<"we have a draw"<<endl;

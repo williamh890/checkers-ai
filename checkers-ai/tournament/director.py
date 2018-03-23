@@ -15,6 +15,7 @@ def list_to_str(list):
 class Director:
     def __init__(self):
         self.options = options.Options()
+        print(self.options.networks_config)
         self.network_git = network_git.NetworkGit(self.options.networks_config,
                                                   self.options.user,
                                                   self.options.git_user,

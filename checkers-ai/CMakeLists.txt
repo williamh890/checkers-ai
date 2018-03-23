@@ -36,7 +36,7 @@ add_library(stdc++fs UNKNOWN IMPORTED)
 include(libstdcppfsPath.txt)
 # this file looks like
 #
-#       set(LIBSTDCPPFS_PATH "/usr/lib/gcc/x86_64-linux-gnu/7/libstdc++fs.a")
+#       set(LIBSTDCPPFS_PATH "/usr/lib/gcc/x86_64-linux-gnu/5/libstdc++fs.a")
 #                                  (Your path may vary...)
 
 set_property(TARGET stdc++fs PROPERTY IMPORTED_LOCATION ${LIBSTDCPPFS_PATH})
