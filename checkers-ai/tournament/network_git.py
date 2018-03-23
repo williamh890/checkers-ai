@@ -26,11 +26,12 @@ class NetworkGit:
         self.network_repo.git.add("-A")
         self.network_repo.git.commit("-m generation {} of user {} ".format(
             self.current_generation, self.user))
-        self.network_repo.push(self.push_command)
+        self.network_repo.git.push(self.push_command)
 
     def update_config(self):
+        self.current_generation += 1
         with open(self.networks_config, 'w') as network_config:
             self.generations.set("generations",
                                  "count",
-                                 str(self.current_generation + 1))
+                                 str(self.current_generation))
             self.generations.write(network_config)

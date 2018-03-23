@@ -22,7 +22,7 @@ class Director:
                                                   self.options.repo_url)
         self.children = children.Children(self.options)
         self.networks = list(range(self.options.network_count))
-        self.generations = 0
+        self.generations = self.network_git.current_generation
 
     def idle(self):
         self.children.get_children()
@@ -37,6 +37,9 @@ class Director:
         print(" storing performances and evolving")
         self.store_performances()
         self.evolve_networks()
+
+        self.network_git.update_remote()
+        self.network_git.update_config()
         self.options.check_run()
         print("run is {}".format(self.options.run))
         print(" looping")
