@@ -1,5 +1,7 @@
 import options
 import children
+import network_git
+from utils import ensure_generation_cfg
 import subprocess
 from random import sample
 import os
@@ -13,6 +15,11 @@ def list_to_str(list):
 class Director:
     def __init__(self):
         self.options = options.Options()
+        self.network_git = network_git.NetworkGit(self.options.networks_config,
+                                                  self.options.user,
+                                                  self.options.git_user,
+                                                  self.options.git_password,
+                                                  self.options.repo_url)
         self.children = children.Children(self.options)
         self.networks = list(range(self.options.network_count))
         self.generations = 0
@@ -20,7 +27,7 @@ class Director:
     def idle(self):
         self.children.get_children()
 
-        while True:
+        while self.options.run:
             self.run_generation()
 
     def run_generation(self):
@@ -88,7 +95,9 @@ class Director:
 
 if __name__ == "__main__":
     director = Director()
+    ensure_generation_cfg(director.options.networks_config)
     start = time.time()
-    director.idle()
+    director.network_git.update_config()
+    # director.idle()
     end = time.time()
     print("total runtime time was {}".format(end - start))
