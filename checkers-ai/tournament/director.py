@@ -1,5 +1,7 @@
 import options
 import children
+import network_git
+from utils import ensure_generation_cfg
 import subprocess
 from random import sample
 import os
@@ -14,15 +16,20 @@ def list_to_str(list):
 class Director:
     def __init__(self):
         self.options = options.Options()
+        self.network_git = network_git.NetworkGit(self.options.networks_config,
+                                                  self.options.user,
+                                                  self.options.git_user,
+                                                  self.options.git_password,
+                                                  self.options.repo_url)
         self.children = children.Children(self.options)
-        self.generations = 0
+        self.generations = self.network_git.current_generation
 
         self.reset_network_wins()
 
     def idle(self):
         self.children.get_children()
 
-        while True:
+        while self.options.run:
             self.run_generation()
 
     def run_generation(self):
@@ -32,6 +39,9 @@ class Director:
         print(" storing performances and evolving")
         self.store_performances()
         self.evolve_networks()
+
+        self.network_git.update_remote()
+        self.network_git.update_config()
         self.options.check_run()
         print("run is {}".format(self.options.run))
         print(" looping")
@@ -96,6 +106,7 @@ class Director:
 
 if __name__ == "__main__":
     director = Director()
+    ensure_generation_cfg(director.options.networks_config)
     start = time.time()
     director.idle()
     end = time.time()

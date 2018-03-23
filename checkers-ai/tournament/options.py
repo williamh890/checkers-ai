@@ -15,7 +15,16 @@ class Options:
 
     def get_options(self):
         self.run = int(self.config.get('general', 'run'))
+        self.user = (self.config.get('general', 'user'))
+
+        self.git_user = self.config.get('git', 'username')
+        self.git_password = self.config.get('git', 'password')
+        self.repo_url = self.config.get('git', 'url')
+
         self.network_path = self.config.get('paths', 'network_path')
+        self.networks_config = os.path.abspath(
+            os.path.join(self.network_path, self.user, "generations.cfg"))
+
         self.checkers_path = self.config.get('paths', 'checkers_path')
         checkers = self.config.get('functions', 'checkers_game')
         self.checkers_game = os.path.join(self.checkers_path,

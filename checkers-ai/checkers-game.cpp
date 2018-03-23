@@ -350,7 +350,7 @@ void CheckersGame::makeRandomValidAction(){
         board.make(jump);
         reactTo(jump);
 
-        if (areJumps()){
+        if (getValidJumpsAt(jump.second.to).size()){
             makeRandomValidAction();
         }
 
