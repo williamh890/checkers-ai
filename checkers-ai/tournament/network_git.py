@@ -1,6 +1,6 @@
 from git import Repo
 from configparser import ConfigParser
-from os.path import join, dirname as dn, abspath as ap
+from os.path import dirname as dn, abspath as ap
 
 
 class NetworkGit:
@@ -22,17 +22,15 @@ class NetworkGit:
 
     def update_remote(self):
         self.network_repo.git.add(all=True)
+
         self.network_repo.git.commit("-m generation {} of user {} ".format(
             self.current_generation, self.user))
-        print("pushing, push command is {}".format(self.push_command))
-        options = {"repo": self.push_command, "all": True}
-        self.network_repo.git.push(porcelain=True,
-                                   as_process=True,
-                                   universal_newlines=True,
-                                   **options)
+
+        self.network_repo.git.push(self.push_command, "master")
 
     def update_config(self):
         self.current_generation += 1
+
         with open(self.networks_config, 'w') as network_config:
             self.generations.set("generations",
                                  "count",
