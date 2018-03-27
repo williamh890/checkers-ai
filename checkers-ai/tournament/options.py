@@ -24,12 +24,14 @@ class Options:
 
         self.network_path = self.config.get('paths', 'network_path')
         self.networks_config = os.path.abspath(
-            os.path.join(self.network_path, self.user, "generations.cfg"))
+            os.path.join(self.network_path, self.user, "generations.cfg")
+            )
 
         self.checkers_path = self.config.get('paths', 'checkers_path')
         checkers = self.config.get('functions', 'checkers_game')
         self.checkers_game = os.path.join(self.checkers_path,
                                           checkers)
+
         network_manager = self.config.get('functions', 'network_manager')
         self.network_count = int(self.config.get('functions', 'network_count'))
         self.network_manager = os.path.join(self.checkers_path,
