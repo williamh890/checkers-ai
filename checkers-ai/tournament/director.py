@@ -35,7 +35,7 @@ class Director:
             self.run_generation()
 
     def run_generation(self):
-        print(" directing a tournament")
+        print(" directing a tournament for generation {}".format(self.generations))
         self.run()
         print(" finished that tournament")
         print(" storing performances and evolving")
@@ -64,7 +64,7 @@ class Director:
             self.networks_wins[winner] += 1
 
         self.wins = list_to_str(self.networks_wins)
-        print("performance string is {}".format(self.wins))
+        #print("performance string is {}".format(self.wins))
 
         log_str = "session gen {}: {} \n".format(self.generations, self.wins)
         with open("tournements.log", "a") as f:
