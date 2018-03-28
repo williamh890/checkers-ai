@@ -29,10 +29,13 @@ def run_child(args):
 
     winner, program_output = subprocess.getstatusoutput(run_str)
     print(program_output)
+    if winner == 139:
+        print("game segfaulted")
 
     game_result = {
         1: redId,
         0: None,
+        139: None,
         255: blackId
     }[winner]
 
