@@ -22,6 +22,7 @@ class Director:
                                                   self.options.git_user,
                                                   self.options.git_password,
                                                   self.options.repo_url)
+
         self.children = children.Children(self.options)
         self.generations = self.network_git.current_generation
 
