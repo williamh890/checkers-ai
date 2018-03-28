@@ -31,11 +31,12 @@ def run_child(args):
     print(program_output)
     if winner == 139:
         print("game segfaulted")
+        print("network {} or {} may be corrupted".format(redId, blackId))
+        raise
 
     game_result = {
         1: redId,
         0: None,
-        139: None,
         255: blackId
     }[winner]
 
