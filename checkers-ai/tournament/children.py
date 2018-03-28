@@ -29,10 +29,11 @@ def run_child(args):
 
     winner, program_output = subprocess.getstatusoutput(run_str)
     print(program_output)
+
     if winner == 139:
         print("game segfaulted")
         print("network {} or {} may be corrupted".format(redId, blackId))
-        raise
+        raise Exception("Segmentation Fault in checkers.out")
 
     game_result = {
         1: redId,
