@@ -7,6 +7,9 @@ using ai::getNetworkedCheckersGame;
 using ai::Network;
 using ai::weightChangeOut;
 
+#include "headers/utils.h"
+using ai::getTime;
+
 #include "headers/consts.h"
 using ai::MOVE_LIMIT;
 
@@ -19,24 +22,24 @@ using std::string;
 using std::stoi;
 
 int main(int argc, char** argv) {
+    auto start = getTime();
+
     unsigned int red_id = stoi(argv[1]);
     unsigned int black_id = stoi(argv[2]);
 
     auto game = getNetworkedCheckersGame(red_id, black_id);
     const char winner = game.play();
 
-    cout << "gameover" << endl;
+    auto end = getTime();
 
+    cout << "game: " << end - start << endl;
     if (game.moveCounter >= MOVE_LIMIT) {
-        cout<<"we have a draw"<<endl;
         return 0;
     }
 
     if (winner == 'r'){
-        cout<<"winner was red"<<endl;
         return 1;
     } else  {
-        cout<<"winner was black"<<endl;
         return 255;
     }
 }

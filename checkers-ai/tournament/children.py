@@ -1,7 +1,7 @@
-# manager of individual games using multiprocessing
-from multiprocessing import Pool, Process
+from multiprocessing import Pool
 import os
 import subprocess
+from logger import parse_game
 
 
 class Children:
@@ -28,7 +28,7 @@ def run_child(args):
     print(run_str)
 
     winner, program_output = subprocess.getstatusoutput(run_str)
-    print(program_output)
+    game_stats = parse_game(program_output)
 
     game_result = {
         1: redId,
@@ -39,5 +39,6 @@ def run_child(args):
     return {
         "red": redId,
         "black": blackId,
-        "winner": game_result
+        "winner": game_result,
+        "timings": game_stats
     }

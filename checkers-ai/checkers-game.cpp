@@ -33,6 +33,7 @@ using ai::getGeneratorFor;
 using ai::MoveGenerator;
 
 #include "headers/utils.h"
+using ai::getTime;
 
 #include "headers/models.h"
 using ai::Jump;
@@ -74,7 +75,7 @@ using std::random_device;
 using std::mt19937;
 using std::uniform_int_distribution;
 
-int CheckersGame::SEARCH_DEPTH = 6;
+int CheckersGame::SEARCH_DEPTH = 3;
 
 CheckersGame ai::getCheckersGame() {
     auto table = loadMoveTableFrom("move-table.json");
@@ -141,7 +142,11 @@ const char CheckersGame::play() {
     while (++moveCounter < MOVE_LIMIT && (areMoves() || areJumps())) {
 
         try {
+            auto start = getTime();
             turn();
+            auto end = getTime();
+
+            cout << "move: " << end - start << endl;
         }
         catch(length_error & e) {
             break;

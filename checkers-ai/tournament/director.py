@@ -2,11 +2,12 @@ import options
 import children
 import network_git
 from utils import ensure_generation_cfg
+from logger import write_to_log
+
 import subprocess
 from random import sample
 import os
 import time
-import json
 
 
 def list_to_str(list):
@@ -61,20 +62,20 @@ class Director:
             if winner is None:
                 continue
 
-            self.networks_wins[winner] += 1
+            loser = game['black'] if winner == game['red'] else game['black']
 
-        self.wins = list_to_str(self.networks_wins)
+            self.network_wins[loser] -= 2
+            self.network_wins[winner] += 1
+
+        write_to_log(self.generations, results, self.network_wins)
+
+        self.wins = list_to_str(self.network_wins)
         print("performance string is {}".format(self.wins))
-
-        log_str = "session gen {}: {} \n".format(self.generations, self.wins)
-        with open("tournements.log", "a") as f:
-            f.write(json.dumps(results, indent=4))
-            f.write(log_str)
 
         self.reset_network_wins()
 
     def reset_network_wins(self):
-        self.networks_wins = [
+        self.network_wins = [
             0 for _ in range(self.options.network_count)
         ]
 
