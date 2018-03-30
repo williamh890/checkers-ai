@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
 
         vector<int> performances;
         string input(argv[2]);
-        // cout<<"input was "<<input<<endl;
+        cout<<"input was "<<input<<endl;
         stringstream iss (input);
 
         int temp;
