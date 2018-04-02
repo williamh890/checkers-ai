@@ -1,5 +1,3 @@
-# options file for tournament
-# Author: Hal DiMarchi
 from configparser import SafeConfigParser
 import os
 
@@ -25,7 +23,7 @@ class Options:
         self.network_path = self.config.get('paths', 'network_path')
         self.networks_config = os.path.abspath(
             os.path.join(self.network_path, self.user, "generations.cfg")
-            )
+        )
 
         self.checkers_path = self.config.get('paths', 'checkers_path')
         checkers = self.config.get('functions', 'checkers_game')

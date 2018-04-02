@@ -1,7 +1,3 @@
-
-//#include "headers/network.h"
-// using ai::Network;
-
 #include "headers/search.h"
 using ai::SearchHelper;
 
