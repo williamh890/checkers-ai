@@ -1,5 +1,3 @@
-# options file for tournament
-# Author: Hal DiMarchi
 from configparser import SafeConfigParser
 import os
 
@@ -25,7 +23,7 @@ class Options:
         self.network_path = self.config.get('paths', 'network_path')
         self.networks_config = os.path.abspath(
             os.path.join(self.network_path, self.user, "generations.cfg")
-            )
+        )
 
         self.checkers_path = self.config.get('paths', 'checkers_path')
         checkers = self.config.get('functions', 'checkers_game')
@@ -37,6 +35,14 @@ class Options:
         self.network_manager = os.path.join(self.checkers_path,
                                             network_manager)
         self.max_processes = int(self.config.get('processes', 'max_processes'))
+        try:
+            self.games_per_match = int(
+                self.config.get('match', 'games_per_match'))
+        except Exception:
+            print("matches_per_game not found in config file...")
+            print("--- try running setup.py to add it ---")
+            print("")
+            print("")
 
     def get_user(self):
         with open(USER_PATH, 'r') as user_file:

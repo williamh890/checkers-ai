@@ -1,1 +1,1 @@
-checkers_game_obj.cpp json-to-stl.cpp move-generator.cpp checkers-game.cpp board.cpp utils.cpp player.cpp seeder.cpp network-file-reader.cpp network-file-writer.cpp network.cpp gui-cpp-interface.cpp search.cpp game-state.cpp
+checkers_game_obj.cpp src/json-to-stl.cpp src/move-generator.cpp src/checkers-game.cpp src/board.cpp src/utils.cpp src/player.cpp src/seeder.cpp src/network-file-reader.cpp src/network-file-writer.cpp src/network.cpp src/gui-cpp-interface.cpp src/search.cpp src/game-state.cpp

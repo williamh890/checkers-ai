@@ -51,6 +51,12 @@ def setup_networks(checkers_path, network_path):
         gens.write(f)
 
 
+def clone_networks_repo(network_path):
+    os.system('git clone https://www.github.com/{repo} {path}'.format(
+        repo=REPO_URL, path=network_path
+    ))
+
+
 if __name__ == "__main__":
     pip.main(['install', '-r' 'requirements.txt'])
 
@@ -85,24 +91,45 @@ if __name__ == "__main__":
                        'checkers_path': checkers_path}
 
     print('networks')
+    shoule_clone_networks = input("  clone networks repo(y/n): ")
+    if shoule_clone_networks == 'y':
+        clone_networks_repo(network_path)
+
     new_networks = input("  setup new networks(y/n): ")
 
     if new_networks == 'y':
         setup_networks(checkers_path, network_path)
 
+    while True:
+        games_per_match = input("  games per match (default 3): ")
+        if games_per_match == "":
+            games_per_match = 3
+        try:
+            config["match"] = {
+                "games_per_match": int(games_per_match)
+            }
+        except:
+            print("  enter a number...")
+        else:
+            break
+
     print("git")
     git_username = input("  username: ")
     git_password = input("  password: ")
 
-    config["git"] = {'username': git_username,
-                     'password': git_password,
-                     'url': REPO_URL}
+    config["git"] = {
+        'username': git_username,
+        'password': git_password,
+        'url': REPO_URL
+    }
 
     print("processes")
     while True:
         processes = input("  number of concurrent games to run: ")
         try:
-            config["processes"] = {"max_processes": int(processes)}
+            config["processes"] = {
+                "max_processes": int(processes)
+            }
         except Exception as e:
             print(e)
         else:
