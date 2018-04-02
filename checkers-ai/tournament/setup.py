@@ -2,6 +2,7 @@ from configparser import SafeConfigParser
 import subprocess
 import pip
 import os
+import getpass
 
 NETWORK_MANAGER = "./manager.out"
 TOURNAMENT_CFG = "tournament.cfg"
@@ -122,7 +123,7 @@ if __name__ == "__main__":
 
     print("git")
     git_username = input("  username: ")
-    git_password = input("  password: ")
+    git_password = getpass.getpass("  password: ")
 
     config["git"] = {
         'username': git_username,
