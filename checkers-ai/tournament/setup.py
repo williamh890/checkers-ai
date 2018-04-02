@@ -105,13 +105,20 @@ if __name__ == "__main__":
         if games_per_match == "":
             games_per_match = 3
         try:
-            config["match"] = {
-                "games_per_match": int(games_per_match)
-            }
+            games_per_match = int(games_per_match)
         except:
             print("  enter a number...")
         else:
             break
+
+    search_depth = input(" search depth (default 6): ")
+    if search_depth == "":
+        search_depth = 3
+
+    config["match"] = {
+        "games_per_match": int(games_per_match),
+        "search_depth": int(search_depth)
+    }
 
     print("git")
     git_username = input("  username: ")
