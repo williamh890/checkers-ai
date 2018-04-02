@@ -1,10 +1,10 @@
-#include "headers/seeder.h"
+#include "seeder.h"
 using ai::Seeder;
 using ai::SRandSeeder;
 using ai::RandomDeviceSeeder;
 using ai::getSeeder;
 
-#include "headers/consts.h"
+#include "consts.h"
 using ai::Settings::SEEDING_METHOD;
 
 #include <memory>

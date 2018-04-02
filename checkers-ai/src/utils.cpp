@@ -1,6 +1,6 @@
-#include "headers/utils.h"
+#include "utils.h"
 
-#include "headers/models.h"
+#include "models.h"
 using ai::Position;
 
 #include <string>

@@ -1,16 +1,16 @@
-#include "headers/checkers-game.h"
+#include "checkers-game.h"
 using ai::CheckersGame;
 using ai::getCheckersGame;
 using ai::getNetworkedCheckersGame;
 
-#include "headers/network.h"
+#include "network.h"
 using ai::Network;
 using ai::weightChangeOut;
 
-#include "headers/utils.h"
+#include "utils.h"
 using ai::getTime;
 
-#include "headers/consts.h"
+#include "consts.h"
 using ai::MOVE_LIMIT;
 
 #include <iostream>

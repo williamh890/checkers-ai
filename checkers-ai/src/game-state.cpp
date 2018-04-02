@@ -1,5 +1,5 @@
 
-#include "headers/game-state.h"
+#include "game-state.h"
 using ai::GameState;
 
 GameState::GameState(

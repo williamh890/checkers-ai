@@ -1,15 +1,15 @@
-#include "headers/minimax.h"
+#include "minimax.h"
 using ai::MiniMaxReturnType;
 using ai::minimax;
 using ai::MiniMaxHelper;
 using ai::GameState;
 
-#include "headers/models.h"
+#include "models.h"
 using ai::Piece;
 using ai::Jump;
 using ai::PostJumpInformation;
 
-#include "headers/checkers-game.h"
+#include "checkers-game.h"
 using ai::CheckersGame;
 using JumpPackage = CheckersGame::JumpPackage;
 using MovePackage = CheckersGame::MovePackage;

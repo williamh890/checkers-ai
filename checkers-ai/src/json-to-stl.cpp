@@ -1,14 +1,14 @@
-#include "headers/table-types.h"
+#include "table-types.h"
 using ai::MoveTableType;
 using ai::JumpTableType;
 
-#include "headers/models.h"
+#include "models.h"
 using ai::Jump;
 
-#include "headers/json-to-stl.h"
+#include "json-to-stl.h"
 using ai::JsonToStlConverter;
 
-#include "headers/json.hpp"
+#include "json.hpp"
 using json = nlohmann::json;
 
 #include <fstream>
