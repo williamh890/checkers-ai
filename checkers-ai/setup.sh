@@ -15,6 +15,7 @@ else
     echo looking for python in /usr/include/python$1m
     echo building gui
     g++ -I/usr/include/python$1m                                     \
+        -Iheaders                                                    \
         -o gui-checkers.out                                          \
         $(cat gui-cpp-files.txt)                                     \
         -lpython$1m -std=c++14 -fpermissive -fopenmp

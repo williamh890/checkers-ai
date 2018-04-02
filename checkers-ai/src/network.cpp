@@ -1,18 +1,18 @@
-#include "headers/seeder.h"
+#include "seeder.h"
 using ai::getSeeder;
 using ai::Seeder;
 
-#include "headers/utils.h"
+#include "utils.h"
 using ai::idToFilename;
 
-#include "headers/network.h"
+#include "network.h"
 using ai::Network;
 
-#include "headers/network-file-io.h"
+#include "network-file-io.h"
 using ai::NetworkFileWriter;
 using ai::NetworkFileReader;
 
-#include "headers/consts.h"
+#include "consts.h"
 using ai::DEBUG;
 using NetworkWeightType = ai::Settings::NetworkWeightType;
 

@@ -1,7 +1,7 @@
-#include "headers/network.h"
+#include "network.h"
 using ai::setupNetworks;
 using ai::Network;
-#include "headers/consts.h"
+#include "consts.h"
 using ai::NETWORK_DIMENSIONS;
 using ai::NETWORKPOPSIZE;
 #include <iostream>
@@ -15,7 +15,7 @@ using std::experimental::filesystem::remove;
 using std::experimental::filesystem::recursive_directory_iterator;
 #include <string>
 using std::string;
-#include "headers/utils.h"
+#include "utils.h"
 using ai::getUsername;
 using ai::NetworkTestingNamechange;
 #include <vector>
@@ -244,11 +244,11 @@ int main(int argc, char *argv[]) {
         //     cout<<myNetworks[i].getPerformance()<<" ";
         // }
         // cout << endl;
-        
+
         int counter = 0;
         for (unsigned int i = 0; i < NETWORKPOPSIZE/2; ++i) {
             myNetworks[i+NETWORKPOPSIZE/2].evolveUsingNetwork(myNetworks[i]);
-            if (myNetworks[i].getID() > 14) 
+            if (myNetworks[i].getID() > 14)
                 counter++;
             Network::save(i, myNetworks[i]);
             Network::save(i+NETWORKPOPSIZE/2, myNetworks[i+NETWORKPOPSIZE/2]);

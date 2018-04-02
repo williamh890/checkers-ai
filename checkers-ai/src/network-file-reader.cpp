@@ -1,15 +1,15 @@
-#include "headers/consts.h"
+#include "consts.h"
 using ai::DEBUG;
-#include "headers/network-file-io.h"
+#include "network-file-io.h"
 using  ai::NetworkFileReader;
 
-#include "headers/network.h"
+#include "network.h"
 using ai::Network;
 
-#include "headers/utils.h"
+#include "utils.h"
 using ai::idToFilename;
 
-#include "headers/consts.h"
+#include "consts.h"
 using NetworkWeightType = ai::Settings::NetworkWeightType;
 
 #include <vector>

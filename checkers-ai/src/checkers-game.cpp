@@ -1,54 +1,54 @@
-#include "headers/checkers-game.h"
+#include "checkers-game.h"
 using ai::CheckersGame;
 using PlayerPtr = CheckersGame::PlayerPtr;
 using MovePackage = CheckersGame::MovePackage;
 using JumpPackage = CheckersGame::JumpPackage;
 using SeederPtr = CheckersGame::SeederPtr;
 
-#include "headers/seeder.h"
+#include "seeder.h"
 using ai::getSeeder;
 using ai::RandomDeviceSeeder;
 using ai::Seeder;
 using ai::SRandSeeder;
 
-#include "headers/search.h"
+#include "search.h"
 using ai::getBestJump;
 using ai::getBestMove;
 
-#include "headers/board.h"
+#include "board.h"
 using ai::Board;
 using ai::getBoard;
 
-#include "headers/player.h"
+#include "player.h"
 using ai::BlackPlayer;
 using ai::getNetworkedPlayer;
 using ai::getPlayer;
 using ai::Player;
 using ai::RedPlayer;
 
-#include "headers/json-to-stl.h"
+#include "json-to-stl.h"
 
-#include "headers/move-generator.h"
+#include "move-generator.h"
 using ai::getGeneratorFor;
 using ai::MoveGenerator;
 
-#include "headers/utils.h"
+#include "utils.h"
 using ai::getTime;
 
-#include "headers/models.h"
+#include "models.h"
 using ai::Jump;
 using ai::Piece;
 using ai::Position;
 
-#include "headers/game-state.h"
+#include "game-state.h"
 using ai::GameState;
 
-#include "headers/consts.h"
+#include "consts.h"
 using ai::INIT_NUM_PIECES;
 using ai::MOVE_LIMIT;
 using ai::TOTAL_NUM_SPACES;
 
-#include "headers/table-types.h"
+#include "table-types.h"
 using ai::MoveTableType;
 
 #include <string>

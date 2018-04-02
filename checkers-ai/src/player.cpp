@@ -1,7 +1,7 @@
-#include "headers/search.h"
+#include "search.h"
 using ai::SearchHelper;
 
-#include "headers/player.h"
+#include "player.h"
 using ai::BlackPlayer;
 using ai::getNetworkedPlayer;
 using ai::getPlayer;
@@ -9,24 +9,24 @@ using ai::Player;
 using ai::PlayerType;
 using ai::RedPlayer;
 
-#include "headers/json-to-stl.h"
+#include "json-to-stl.h"
 using ai::JsonToStlConverter;
 
-#include "headers/move-generator.h"
+#include "move-generator.h"
 using ai::getGeneratorFor;
 using ai::getKingGenerator;
 
-#include "headers/utils.h"
+#include "utils.h"
 using ai::spaceToPosition;
 
-#include "headers/table-types.h"
+#include "table-types.h"
 using ai::MoveTableType;
 
-#include "headers/models.h"
+#include "models.h"
 using ai::Jump;
 using ai::Piece;
 
-#include "headers/consts.h"
+#include "consts.h"
 using ai::INIT_NUM_PIECES;
 using ai::NUM_PIECES_IN_ROW;
 using ai::TOTAL_NUM_SPACES;

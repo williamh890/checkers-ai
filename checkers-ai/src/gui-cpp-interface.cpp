@@ -1,12 +1,12 @@
-#include "headers/gui-cpp-interface.h"
+#include "gui-cpp-interface.h"
 using ai::GuiCppInterface;
 
-#include "headers/checkers-game.h"
+#include "checkers-game.h"
 using ai::CheckersGame;
 using MovePackage = CheckersGame::MovePackage;
 using JumpPackage = CheckersGame::JumpPackage;
 
-#include "headers/board.h"
+#include "board.h"
 using ai::Board;
 
 #include <unistd.h>

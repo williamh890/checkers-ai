@@ -1,17 +1,17 @@
-#include "headers/board.h"
+#include "board.h"
 using ai::Board;
 
-#include "headers/player.h"
+#include "player.h"
 using ai::Player;
 
-#include "headers/table-types.h"
+#include "table-types.h"
 using ai::MoveTableType;
 
-#include "headers/utils.h"
+#include "utils.h"
 using ai::spaceToPosition;
 using ai::positionToSpace;
 
-#include "headers/models.h"
+#include "models.h"
 using ai::Jump;
 
 #include <vector>

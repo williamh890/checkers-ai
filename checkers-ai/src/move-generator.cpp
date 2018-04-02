@@ -1,21 +1,21 @@
-#include "headers/move-generator.h"
+#include "move-generator.h"
 using ai::MoveGenerator;
 using ai::getGeneratorFor;
 
-#include "headers/checkers-game.h"
+#include "checkers-game.h"
 using ai::CheckersGame;
 using ai::getCheckersGame;
 
-#include "headers/json-to-stl.h"
+#include "json-to-stl.h"
 using ai::loadMoveTableFrom;
 using ai::JsonToStlConverter;
 
-#include "headers/models.h"
+#include "models.h"
 using ai::Position;
 using ai::Piece;
 using ai::Jump;
 
-#include "headers/table-types.h"
+#include "table-types.h"
 using ai::MoveTableType;
 using ai::JumpTableType;
 
