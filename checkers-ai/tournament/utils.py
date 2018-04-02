@@ -1,4 +1,4 @@
-from os.path import join, exists, abspath as ap
+from os.path import exists, abspath as ap
 
 
 def ensure_generation_cfg(cfg_file):

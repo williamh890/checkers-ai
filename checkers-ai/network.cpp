@@ -217,7 +217,7 @@ void Network::evolveUsingNetwork(Network & rhs) {
     _sigmas = rhs._sigmas;
     this->evolve();
     this->resetPerformance();
-    rhs.resetPerformance();
+    //rhs.resetPerformance();
     save(_ID, *this);
 }
 
@@ -266,6 +266,10 @@ void Network::evolveWeights() {
 
 NetworkWeightType inline Network::evolveWeightAt(size_t i, size_t ii) {
     return _weights[i][ii] + _sigmas[i][ii] * getGaussianNumberFromZeroToOne(randomNumGenerator);
+}
+
+unsigned int Network::getID() const {
+    return _ID;
 }
 
 void Network::outputCreationDebug() const {

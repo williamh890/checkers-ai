@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
     const auto EVOLVE_NETWORKS_ALL = '2';
     const auto EVOLVE_USER_NETWORKS = '3';
 
-    cout << "Username: " << getUsername() << endl << endl;
+    cout << "Username: " << getUsername() << endl;
 
     if (argc == 1) {
         cout << "manager.out [0|1|2|3]" << endl
@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
 
         vector<int> performances;
         string input(argv[2]);
-        cout<<"input was "<<input<<endl;
+        // cout<<"input was "<<input<<endl;
         stringstream iss (input);
 
         int temp;
@@ -239,15 +239,27 @@ int main(int argc, char *argv[]) {
 
         sort(myNetworks.begin(), myNetworks.end(), [](Network first, Network second) {return first > second;});
 
-        for (size_t i = 0; i < NETWORKPOPSIZE; ++i){
-            cout<<myNetworks[i].getPerformance()<<" ";
-        }
+        // cout << "Sorted Performances: " << endl;
+        // for (size_t i = 0; i < NETWORKPOPSIZE; ++i){
+        //     cout<<myNetworks[i].getPerformance()<<" ";
+        // }
+        // cout << endl;
+        
+        int counter = 0;
         for (unsigned int i = 0; i < NETWORKPOPSIZE/2; ++i) {
             myNetworks[i+NETWORKPOPSIZE/2].evolveUsingNetwork(myNetworks[i]);
+            if (myNetworks[i].getID() > 14) 
+                counter++;
             Network::save(i, myNetworks[i]);
             Network::save(i+NETWORKPOPSIZE/2, myNetworks[i+NETWORKPOPSIZE/2]);
-            cout << "Done" << endl;
+            //cout << "Done" << endl;
         }
+        // cout << "---- Performances reloaded ----" << endl;
+        // for (unsigned int i = 0; i < NETWORKPOPSIZE; ++i) {
+        //     Network getPer(i);
+        //     cout << getPer.getPerformance() << " ";
+        // }
+        cout << "Number of children reproducing: " << counter << endl;
     }
     return 0;
 }// end of main

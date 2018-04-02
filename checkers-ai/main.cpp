@@ -18,8 +18,8 @@ using std::cout;
 using std::endl;
 
 #include <string>
-using std::string;
 using std::stoi;
+using std::string;
 
 int main(int argc, char** argv) {
     auto start = getTime();
@@ -28,6 +28,7 @@ int main(int argc, char** argv) {
     unsigned int black_id = stoi(argv[2]);
 
     auto game = getNetworkedCheckersGame(red_id, black_id);
+
     const char winner = game.play();
 
     auto end = getTime();

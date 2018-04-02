@@ -26,6 +26,8 @@ class NetworkGit:
         self.network_repo.git.commit("-m generation {} of user {} ".format(
             self.current_generation, self.user))
 
+        self.network_repo.git.pull()
+
         self.network_repo.git.push(self.push_command, "master")
 
     def update_config(self):

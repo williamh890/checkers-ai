@@ -25,9 +25,9 @@ def run_child(args):
     prog_name, redId, blackId = args
 
     run_str = "{} {} {}".format(prog_name, redId, blackId)
-    print(run_str)
 
     winner, program_output = subprocess.getstatusoutput(run_str)
+
     game_stats = parse_game(program_output)
 
     game_result = {
