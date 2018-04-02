@@ -87,7 +87,12 @@ class Director:
             )
 
             network_matchups = [
-                (self.options.checkers_game, black_network_id, opponent_id)
+                (
+                    self.options.checkers_game,
+                    black_network_id,
+                    opponent_id,
+                    self.options.search_depth
+                )
                 for opponent_id in opponent_ids
             ]
 

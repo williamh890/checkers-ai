@@ -26,6 +26,7 @@ int main(int argc, char** argv) {
 
     unsigned int red_id = stoi(argv[1]);
     unsigned int black_id = stoi(argv[2]);
+    CheckersGame::SEARCH_DEPTH = stoi(argv[3]);
 
     auto game = getNetworkedCheckersGame(red_id, black_id);
 

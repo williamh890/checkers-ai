@@ -18,7 +18,6 @@ class NetworkGit:
         self.push_command = "https://{}:{}@github.com/{}".format(user,
                                                                  password,
                                                                  url)
-        print(self.push_command)
 
     def update_remote(self):
         self.network_repo.git.add(all=True)
