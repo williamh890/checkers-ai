@@ -35,6 +35,14 @@ class Options:
         self.network_manager = os.path.join(self.checkers_path,
                                             network_manager)
         self.max_processes = int(self.config.get('processes', 'max_processes'))
+        try:
+            self.games_per_match = int(
+                self.config.get('match', 'games_per_match'))
+        except Exception:
+            print("matches_per_game not found in config file...")
+            print("--- try running setup.py to add it ---")
+            print("")
+            print("")
 
     def get_user(self):
         with open(USER_PATH, 'r') as user_file:

@@ -81,17 +81,26 @@ class Director:
 
     def get_matchups(self, ids):
         matchups = []
-        for id in ids:
-            opponent_ids = sample(ids, k=3)
+        for black_network_id in ids:
+            opponent_ids = self.get_matchups_for_network(
+                ids, black_network_id
+            )
 
             network_matchups = [
-                (self.options.checkers_game, id, opponent_id)
+                (self.options.checkers_game, black_network_id, opponent_id)
                 for opponent_id in opponent_ids
             ]
 
             matchups += network_matchups
 
         return matchups
+
+    def get_matchups_for_network(self, ids, current_id):
+        while True:
+            opponent_ids = sample(ids, k=self.options.games_per_match)
+
+            if current_id not in opponent_ids:
+                return opponent_ids
 
     def store_performances(self):
         os.chdir(os.path.dirname(self.options.network_manager))
