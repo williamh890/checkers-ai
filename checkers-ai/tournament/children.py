@@ -1,32 +1,7 @@
-# manager of individual games using multiprocessing
-from multiprocessing import Pool, Process
+from multiprocessing import Pool
 import os
 import subprocess
-
-
-def run_child(args):
-    os.chdir(os.path.dirname(args[0]))
-    prog_name, redId, blackId = args
-
-    run_str = "{} {} {}".format(prog_name, redId, blackId)
-    print(run_str)
-    result = subprocess.getstatusoutput(run_str)
-    prog_output, winner = result[:2]
-
-    print(result[0])
-    game_result = {
-        1: redId,
-        0: None,
-        255: blackId
-    }[result[0]]
-
-    print(result[1])
-
-    return {
-        "red": redId,
-        "black": blackId,
-        "winner": game_result
-    }
+from logger import parse_game
 
 
 class Children:
@@ -44,6 +19,26 @@ class Children:
 
         return match_results.get()
 
-    def destroy_children(self):
-        self.children.close()
-        self.children.join()
+
+def run_child(args):
+    os.chdir(os.path.dirname(args[0]))
+    prog_name, redId, blackId = args
+
+    run_str = "{} {} {}".format(prog_name, redId, blackId)
+
+    winner, program_output = subprocess.getstatusoutput(run_str)
+
+    game_stats = parse_game(program_output)
+
+    game_result = {
+        1: redId,
+        0: None,
+        255: blackId
+    }[winner]
+
+    return {
+        "red": redId,
+        "black": blackId,
+        "winner": game_result,
+        "timings": game_stats
+    }

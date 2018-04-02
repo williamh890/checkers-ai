@@ -30,7 +30,7 @@ cdef class PyCheckersGame:
   cdef GuiCppInterface checkers_game
   cdef int move_counter
   def __cinit__(self):
-    self.checkers_game = GuiCppInterface(getNetworkVPieceCountCheckersGame(3, b'r'))
+    self.checkers_game = GuiCppInterface(getNetworkVPieceCountCheckersGame(5, b'r'))
     self.move_counter = 0
 
   def get_board(self):
@@ -286,4 +286,4 @@ if __name__ == "__main__":
     checkers = PyBoard()
     checkers.get_board(checkers.game.get_board())
     checkers.make_board()
-    checkers.run_without_interface()
+    checkers.run()
