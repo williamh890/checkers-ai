@@ -35,6 +35,7 @@ class Options:
         self.network_manager = os.path.join(self.checkers_path,
                                             network_manager)
         self.max_processes = int(self.config.get('processes', 'max_processes'))
+        self.games_per_match = int(self.config.get('match', 'games_per_match'))
 
     def get_user(self):
         with open(USER_PATH, 'r') as user_file:

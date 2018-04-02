@@ -97,7 +97,7 @@ class Director:
 
     def get_matchups_for_network(self, ids, current_id):
         while True:
-            opponent_ids = sample(ids, k=3)
+            opponent_ids = sample(ids, k=self.options.games_per_match)
 
             if current_id not in opponent_ids:
                 return opponent_ids

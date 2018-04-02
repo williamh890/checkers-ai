@@ -100,19 +100,36 @@ if __name__ == "__main__":
     if new_networks == 'y':
         setup_networks(checkers_path, network_path)
 
+    while True:
+        games_per_match = input("  games per match (default 3): ")
+        if games_per_match == "":
+            games_per_match = 3
+        try:
+            config["match"] = {
+                "games_per_match": int(games_per_match)
+            }
+        except:
+            print("  enter a number...")
+        else:
+            break
+
     print("git")
     git_username = input("  username: ")
     git_password = input("  password: ")
 
-    config["git"] = {'username': git_username,
-                     'password': git_password,
-                     'url': REPO_URL}
+    config["git"] = {
+        'username': git_username,
+        'password': git_password,
+        'url': REPO_URL
+    }
 
     print("processes")
     while True:
         processes = input("  number of concurrent games to run: ")
         try:
-            config["processes"] = {"max_processes": int(processes)}
+            config["processes"] = {
+                "max_processes": int(processes)
+            }
         except Exception as e:
             print(e)
         else:
