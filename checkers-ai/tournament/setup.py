@@ -51,6 +51,12 @@ def setup_networks(checkers_path, network_path):
         gens.write(f)
 
 
+def clone_networks_repo(network_path):
+    os.system('git clone https://www.github.com/{repo} {path}'.format(
+        repo=REPO_URL, path=network_path
+    ))
+
+
 if __name__ == "__main__":
     pip.main(['install', '-r' 'requirements.txt'])
 
@@ -85,6 +91,10 @@ if __name__ == "__main__":
                        'checkers_path': checkers_path}
 
     print('networks')
+    shoule_clone_networks = input("  clone networks repo(y/n): ")
+    if shoule_clone_networks == 'y':
+        clone_networks_repo(network_path)
+
     new_networks = input("  setup new networks(y/n): ")
 
     if new_networks == 'y':
