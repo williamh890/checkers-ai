@@ -9,5 +9,5 @@ setup(name="cython_checkers",
            "checkers_game.pyx",                 # our Cython source
            sources=sources,
            language="c++",
-           extra_compile_args=["-std=c++14","-Iheaders", "-fopenmp"],
+           extra_compile_args=["-std=c++14", "-Iheaders", "-fopenmp"],
       )))
