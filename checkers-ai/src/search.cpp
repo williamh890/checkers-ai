@@ -16,6 +16,9 @@ using ai::CheckersGame;
 using JumpPackage = CheckersGame::JumpPackage;
 using MovePackage = CheckersGame::MovePackage;
 
+#include "utils.h"
+using ai::getTime;
+
 #include <algorithm>
 using std::max;
 using std::min;
@@ -26,6 +29,7 @@ using std::endl;
 using std::vector;
 #include <exception>
 using std::invalid_argument;
+using std::out_of_range;
 
 using Pieces = vector<Piece>;
 using BoardState = vector<char>;
@@ -33,6 +37,52 @@ using BoardState = vector<char>;
 int SearchHelper::totalNodes = 0;
 int SearchHelper::prunedNodes = 0;
 int SearchHelper::leafNodes = 0;
+double SearchHelper::searchStartTime = 0.;
+
+CheckersGame::MovePackage ai::getBestMoveIDS(CheckersGame & game) {
+    int depth = 3;
+    CheckersGame::MovePackage bestMove;
+    SearchHelper::searchStartTime = getTime();
+
+    auto stateBeforeSearch = game.getState();
+
+    while (depth++) {
+        try {
+            bestMove = ai::getBestMove(game, depth);
+        } catch(...) {
+            cout << "done" << endl;
+            break;
+        }
+        cout << "iterating: " << depth << endl;
+    }
+
+    game.setState(stateBeforeSearch);
+
+    return bestMove;
+}
+
+CheckersGame::JumpPackage ai::getBestJumpIDS(CheckersGame & game, int space) {
+    SearchHelper::searchStartTime = 0.;
+    int depth = 3;
+    CheckersGame::JumpPackage bestJump;
+    SearchHelper::searchStartTime = getTime();
+
+    auto stateBeforeSearch = game.getState();
+    while (depth++ && depth < 100) {
+        try {
+            bestJump = ai::getBestJump(game, depth, space);
+        } catch(out_of_range & err) {
+            cout << "done" << endl;
+            break;
+        }
+        cout << "iterating: " << depth << endl;
+    }
+
+    game.setState(stateBeforeSearch);
+
+    return bestJump;
+}
+
 
 CheckersGame::MovePackage ai::getBestMove(CheckersGame & game, int depth) {
     EvaluationType bestMoveVal = -INF;
@@ -96,6 +146,11 @@ EvaluationType SearchHelper::recurse(
         EvaluationType alpha,
         EvaluationType beta) {
     ++totalNodes;
+
+    if (isOutOfTime()) {
+        throw out_of_range("out of time!");
+    }
+
     auto stateBeforeMove = getCurrentGameState();
 
     changeGameState(move);
@@ -115,6 +170,10 @@ EvaluationType SearchHelper::recurse(
         EvaluationType alpha,
         EvaluationType beta) {
     ++totalNodes;
+
+    if (isOutOfTime()) {
+        throw out_of_range("out of time!");
+    }
 
     auto stateBeforeMove = getCurrentGameState();
     auto jmpInfo = changeGameState(jump);
@@ -141,6 +200,10 @@ EvaluationType SearchHelper::recurse(
 
     setGameState(stateBeforeMove);
     return bestOverallValue;
+}
+
+bool SearchHelper::isOutOfTime() {
+    return (getTime() - SearchHelper::searchStartTime) > 1.;
 }
 
 #define SETUP_SEACH_VARIABLES()                                                      \

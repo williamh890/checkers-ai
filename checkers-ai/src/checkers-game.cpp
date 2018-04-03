@@ -12,8 +12,8 @@ using ai::Seeder;
 using ai::SRandSeeder;
 
 #include "search.h"
-using ai::getBestJump;
-using ai::getBestMove;
+using ai::getBestJumpIDS;
+using ai::getBestMoveIDS;
 
 #include "board.h"
 using ai::Board;
@@ -137,13 +137,12 @@ CheckersGame::CheckersGame(const Board &board, PlayerPtr red, PlayerPtr black,
 
 const char CheckersGame::play() {
     while (++moveCounter < MOVE_LIMIT && (areMoves() || areJumps())) {
-
         try {
             auto start = getTime();
             turn();
             auto end = getTime();
 
-            cout << "move: " << end - start << endl;
+            cout << "turn: " << end - start << endl;
         }
         catch(length_error & e) {
             break;
@@ -210,11 +209,11 @@ JumpPackage CheckersGame::getJumpFromActivePlayer() {
 }
 
 MovePackage CheckersGame::getBestMove() {
-  return ai::getBestMove(*this, SEARCH_DEPTH);
+  return ai::getBestMoveIDS(*this);
 }
 
 JumpPackage CheckersGame::getBestJump(int space) {
-  return ai::getBestJump(*this, SEARCH_DEPTH, space);
+  return ai::getBestJumpIDS(*this, space);
 }
 
 JumpPackage CheckersGame::getRandomValidJump() {
