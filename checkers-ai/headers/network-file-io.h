@@ -15,9 +15,6 @@
 // std::vector
 
 namespace ai {
-    // namespace Settings {
-    //   using NetworkWeightType = double;
-    // }
     class Network;
 
     class NetworkFileReader {

@@ -270,7 +270,7 @@ int main(int argc, char *argv[]) {
     }
 
     else if (*argv[1] == '4') {
-        ai::validateNetworks(NETWORKPOPSIZE);
+        ai::validateNetworks();
     }
     return 0;
 }// end of main

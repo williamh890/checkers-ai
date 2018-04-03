@@ -98,7 +98,7 @@ namespace ai {
             friend bool nothingSimilar(const Network &, const Network &);
             friend bool operator==(const Network &, const Network &);
             friend void weightChangeOut(Network parent, Network child);
-            friend bool validateNetworks(unsigned int popsize);
+            friend bool validateNetworks();
     }; // end class AI_Network
 
     // Global operators to allow sorting of networks based on their performance
@@ -112,6 +112,6 @@ namespace ai {
     void weightChangeOut(Network parent, Network child);
     void setupNetworks (const std::vector<unsigned int> & dimensions, int numberOfNetworks = NETWORKPOPSIZE);
     Settings::NetworkWeightType getGaussianNumberFromZeroToOne(std::mt19937 &);
-    bool validateNetworks(unsigned int popsize);
+    bool validateNetworks();
 }
 #endif // NETWORK_H_INCLUDED

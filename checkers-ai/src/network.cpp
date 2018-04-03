@@ -385,8 +385,8 @@ void ai::weightChangeOut(Network parent, Network child)
     output.close();
 }
 
-bool ai::validateNetworks(unsigned int popsize) {
-    for (unsigned int i = 0; i < popsize; ++i) {
+bool ai::validateNetworks() {
+    for (unsigned int i = 0; i < ai::NETWORKPOPSIZE; ++i) {
         Network net(i);
         cout << "ID: " << net._ID << "\tNum Layers: " << net._layers.size() << endl;
         for (unsigned int index = 0; index < net._layers.size(); ++index) {
@@ -407,8 +407,7 @@ bool ai::validateNetworks(unsigned int popsize) {
             'b',   'b',   'b',   'b',
         'b',   'b',   'b',   'b'
         };
-        net.evaluateBoard(emptyBoard);
-        net.evaluateBoard(sampleBigBoard);
+        cout << "empty: " << net.evaluateBoard(emptyBoard) << "\t big: " << net.evaluateBoard(sampleBigBoard) << endl;
     }
     return false;
 }
