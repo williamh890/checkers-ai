@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
     const auto EVOLVE_NETWORKS_ALL = '2';
     const auto EVOLVE_USER_NETWORKS = '3';
 
-    cout << "Username: " << getUsername() << endl;
+    //cout << "Username: " << getUsername() << endl;
 
     if (argc == 1) {
         cout << "manager.out [0|1|2|3]" << endl
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
     }
 
     else if (*argv[1] == STORE_PERFORMANCES) {
-        cout << "You want me to store performances." << endl;
+        //cout << "You want me to store performances." << endl;
 
         if (argv[2] == nullptr) {
             cout << "You didn't give me performances!" << endl;
@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
 
         vector<int> performances;
         string input(argv[2]);
-        cout<<"input was "<<input<<endl;
+        //cout<<"input was "<<input<<endl;
         stringstream iss (input);
 
         int temp;
@@ -231,7 +231,7 @@ int main(int argc, char *argv[]) {
     } // end evolve networks
 
     else if (*argv[1] == EVOLVE_USER_NETWORKS){
-        cout << "You want me to evolve just your networks" << endl;
+        //cout << "You want me to evolve just your networks" << endl;
         vector<Network> myNetworks;
         for (unsigned int i = 0; i < NETWORKPOPSIZE; ++i) {
             myNetworks.push_back(Network(i));
@@ -259,7 +259,18 @@ int main(int argc, char *argv[]) {
         //     Network getPer(i);
         //     cout << getPer.getPerformance() << " ";
         // }
-        cout << "Number of children reproducing: " << counter << endl;
+        cout << "Number of children reproducing: " << counter;
+        if (counter ==0 && myNetworks[0].getID() != 0) {
+            cout << " new best network! ID: " << myNetworks[0].getID() << endl;
+            for (unsigned int i = 0; i < myNetworks.size()/2; ++i) {
+                cout << "i: " << i << " - " << myNetworks[i].getID() << endl;
+            }
+        }
+    
+    }
+
+    else if (*argv[1] == '4') {
+        ai::validateNetworks(NETWORKPOPSIZE);
     }
     return 0;
 }// end of main

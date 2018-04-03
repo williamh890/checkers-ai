@@ -71,13 +71,9 @@ namespace ai {
 
             Settings::NetworkWeightType getTau();
             void evolveKingWeight();
-
             void evolveSigmas();
-
             void inline evolveSigmaAt(size_t i, size_t ii, Settings::NetworkWeightType tau);
-
             void evolveWeights();
-
             Settings::NetworkWeightType
             inline evolveWeightAt(size_t i, size_t ii);
 
@@ -102,6 +98,7 @@ namespace ai {
             friend bool nothingSimilar(const Network &, const Network &);
             friend bool operator==(const Network &, const Network &);
             friend void weightChangeOut(Network parent, Network child);
+            friend bool validateNetworks(unsigned int popsize);
     }; // end class AI_Network
 
     // Global operators to allow sorting of networks based on their performance
@@ -113,7 +110,8 @@ namespace ai {
 
     bool nothingSimilar(const Network &, const Network &);
     void weightChangeOut(Network parent, Network child);
-    void setupNetworks (const std::vector<unsigned int> & dimesions, int numberOfNetworks = NETWORKPOPSIZE);
+    void setupNetworks (const std::vector<unsigned int> & dimensions, int numberOfNetworks = NETWORKPOPSIZE);
     Settings::NetworkWeightType getGaussianNumberFromZeroToOne(std::mt19937 &);
+    bool validateNetworks(unsigned int popsize);
 }
 #endif // NETWORK_H_INCLUDED
