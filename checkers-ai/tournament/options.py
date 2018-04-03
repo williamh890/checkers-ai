@@ -38,7 +38,7 @@ class Options:
         try:
             self.games_per_match = int(
                 self.config.get('match', 'games_per_match'))
-            self.search_depth = int(self.config.get('match', 'search_depth'))
+            self.search_depth = float(self.config.get('match', 'search_depth'))
         except Exception:
             print("matches_per_game or search_depth not found in config file...")
             print("--- try running setup.py again ---")
