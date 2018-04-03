@@ -37,6 +37,7 @@ namespace ai {
             static int prunedNodes;
             static int leafNodes;
             static double searchStartTime;
+            static double timeLimit;
 
             CheckersGame game;
             char maximizingPlayer;

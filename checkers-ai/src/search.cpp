@@ -38,6 +38,7 @@ int SearchHelper::totalNodes = 0;
 int SearchHelper::prunedNodes = 0;
 int SearchHelper::leafNodes = 0;
 double SearchHelper::searchStartTime = 0.;
+double SearchHelper::timeLimit = 0.;
 
 CheckersGame::MovePackage ai::getBestMoveIDS(CheckersGame & game) {
     int depth = 3;
@@ -203,7 +204,7 @@ EvaluationType SearchHelper::recurse(
 }
 
 bool SearchHelper::isOutOfTime() {
-    return (getTime() - SearchHelper::searchStartTime) > 1.;
+    return (getTime() - SearchHelper::searchStartTime) > SearchHelper::timeLimit;
 }
 
 #define SETUP_SEACH_VARIABLES()                                                      \
