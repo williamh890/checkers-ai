@@ -104,7 +104,7 @@ if __name__ == "__main__":
     while True:
         games_per_match = input("  games per match (default 3): ")
         if games_per_match == "":
-            games_per_match = 3
+            games_per_match = 1
         try:
             games_per_match = int(games_per_match)
         except:
@@ -112,13 +112,13 @@ if __name__ == "__main__":
         else:
             break
 
-    search_depth = input(" search depth (default 6): ")
+    search_depth = input(" move time limit (default 5): ")
     if search_depth == "":
-        search_depth = 3
+        search_depth = 5.
 
     config["match"] = {
         "games_per_match": int(games_per_match),
-        "search_depth": int(search_depth)
+        "search_depth": float(search_depth)
     }
 
     print("git")
