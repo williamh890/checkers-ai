@@ -10,6 +10,9 @@ using ai::weightChangeOut;
 #include "utils.h"
 using ai::getTime;
 
+#include "search.h"
+using ai::SearchHelper;
+
 #include "consts.h"
 using ai::MOVE_LIMIT;
 
@@ -19,14 +22,20 @@ using std::endl;
 
 #include <string>
 using std::stoi;
+using std::stof;
 using std::string;
+
 
 int main(int argc, char** argv) {
     auto start = getTime();
 
     unsigned int red_id = stoi(argv[1]);
     unsigned int black_id = stoi(argv[2]);
+    SearchHelper::limit = stof(argv[3]);
+
+#ifndef USE_IDS
     CheckersGame::SEARCH_DEPTH = stoi(argv[3]);
+#endif
 
     auto game = getNetworkedCheckersGame(red_id, black_id);
 
