@@ -8,6 +8,13 @@
 #include <cfloat>
 // FLT_MAX
 
+// To use IDS uncomment:
+//
+//#define USE_IDS 1
+//
+// Then run:
+//      make
+
 namespace ai {
     enum class PlayerType {
         Human, Computer

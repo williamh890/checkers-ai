@@ -12,8 +12,6 @@ using ai::Seeder;
 using ai::SRandSeeder;
 
 #include "search.h"
-using ai::getBestJumpIDS;
-using ai::getBestMoveIDS;
 
 #include "board.h"
 using ai::Board;
@@ -209,11 +207,19 @@ JumpPackage CheckersGame::getJumpFromActivePlayer() {
 }
 
 MovePackage CheckersGame::getBestMove() {
+#ifdef USE_IDS
   return ai::getBestMoveIDS(*this);
+#else
+  return ai::getBestMove(*this, CheckersGame::SEARCH_DEPTH);
+#endif
 }
 
 JumpPackage CheckersGame::getBestJump(int space) {
+#ifdef USE_IDS
   return ai::getBestJumpIDS(*this, space);
+#else
+  return ai::getBestJump(*this, CheckersGame::SEARCH_DEPTH, space);
+#endif
 }
 
 JumpPackage CheckersGame::getRandomValidJump() {
