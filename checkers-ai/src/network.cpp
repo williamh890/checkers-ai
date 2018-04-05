@@ -143,13 +143,13 @@ NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool t
             if (i == ' ' || i == 0)
                 _layers[0][index] = 0;
             else if (i == 'r')
-                _layers[0][index] = red_factor;
+                _layers[0][index] = 1;
             else if (i == 'b')
-                _layers[0][index] = -1 * red_factor;
+                _layers[0][index] = -1;
             else if (i == 'R')
-                _layers[0][index] = _kingWeight * red_factor;
+                _layers[0][index] = 1 * _kingWeight;
             else if (i == 'B')
-                _layers[0][index] = -1 * _kingWeight * red_factor;
+                _layers[0][index] = -1 * _kingWeight;
             else
                 cout << "Unrecognized character in board: " << i << endl;
             ++index;
@@ -176,7 +176,7 @@ NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool t
             }
         }
     }
-	return _layers[_layers.size() - 1][0] /*boardEvaluationOutput()*/;
+	return _layers[_layers.size() - 1][0] * red_factor /*boardEvaluationOutput()*/;
 }
 
 inline NetworkWeightType Network::activationFunction(NetworkWeightType x) {
