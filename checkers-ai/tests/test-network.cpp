@@ -22,8 +22,8 @@ using std::endl;
 ai::NetworkTestingNamechange t;
 
 TEST_CASE("Testing setupNetworks") {
-    vector<unsigned int> dimesions{32, 40, 10, 1};
-    setupNetworks(dimesions, 2);
+    vector<unsigned int> dimensions{32, 40, 10, 1};
+    setupNetworks(dimensions, 2);
 }
 
 TEST_CASE("Test saving and loading consistency") {
@@ -175,9 +175,9 @@ void writeToLogs(double timeTaken, int loopIterations, double boardsPerSec) {
 
 TEST_CASE("Testing the speed of board evaluation.", "[network-timing]") {
     const int LOOP_COUNTER = 1000;
-    vector<unsigned int> dimesionsLarge{32, 40, 10, 1};
+    vector<unsigned int> dims_over10k{32, 1000, 100, 1};
     cout << "\n\n\n\n\n**** To use blondie dimensions (which is faster), say no ****\n\n" << endl;
-    setupNetworks(dimesionsLarge, 2);
+    setupNetworks(dims_over10k, 2);
     vector<char> sampleBigBoard{
             'r',   'r',   'r',   'r',
         'r',   'r',   'r',   'r',
@@ -189,7 +189,7 @@ TEST_CASE("Testing the speed of board evaluation.", "[network-timing]") {
         'b',   'b',   'b',   'b'
     };
     Network player(0);
-
+    player.outputCreationDebug();
     cout << "\n\n\n\n****** Getting average board evaluation time.. This could take a while ******" << endl;
     double averageTime = 0;
     const unsigned int LOOPSFORAVERAGE = 1000;
