@@ -18,8 +18,11 @@ static const std::vector<char> COLORS = {'r', 'b'};
 namespace ai {
     using EvaluationType = float;
 
+    CheckersGame::MovePackage getBestMoveIDS(CheckersGame & game);
+    CheckersGame::JumpPackage getBestJumpIDS(CheckersGame & game, int space=-1);
+
     CheckersGame::MovePackage getBestMove(CheckersGame & game, int depth);
-    CheckersGame::JumpPackage getBestJump(CheckersGame & game, int depth, int space=-1);
+    CheckersGame::JumpPackage getBestJump(CheckersGame & game, int depth, int space);
 
     template<typename ActionType>
     EvaluationType search(
@@ -33,6 +36,8 @@ namespace ai {
             static int totalNodes;
             static int prunedNodes;
             static int leafNodes;
+            static double searchStartTime;
+            static double limit;
 
             CheckersGame game;
             char maximizingPlayer;
@@ -51,6 +56,7 @@ namespace ai {
                     EvaluationType alpha,
                     EvaluationType beta);
 
+            bool isOutOfTime();
             GameState getCurrentGameState();
 
             PostJumpInformation changeGameState(const CheckersGame::JumpPackage & jump);

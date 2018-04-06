@@ -38,20 +38,8 @@ namespace ai {
             Network(const Network & other) = default;
             Network(Network && other) = default;
             Network & operator= (const Network &rhs) = default;
-            // Network & operator= (const Network &rhs) {
-            //     if (this == &rhs)
-            //         return *this;
-            //     Network copy_of_rhs(rhs._ID);
-            //     networkSwap(copy_of_rhs);
-            //     return *this;
-            // }
             Network & operator= (Network && rhs) = default;
-            // Network & operator= (Network && rhs) noexcept {
-            //     if (this == &rhs) // Check for self-assignment
-            //         return *this;
-            //     networkSwap(rhs);
-            //     return *this;
-            // }
+
             ~Network();
 
             Settings::NetworkWeightType evaluateBoard(const std::vector<char> &, bool leave_Out_Activator = false, int red_factor = 1);
@@ -60,8 +48,9 @@ namespace ai {
             int getPerformance() const;
             void resetPerformance();
 
-            void evolve();
             void evolveUsingNetwork(ai::Network &);
+            void evolve();
+            unsigned int getID() const;
 
             void outputCreationDebug() const;
             void changeKingWeight(Settings::NetworkWeightType);
@@ -82,13 +71,9 @@ namespace ai {
 
             Settings::NetworkWeightType getTau();
             void evolveKingWeight();
-
             void evolveSigmas();
-
             void inline evolveSigmaAt(size_t i, size_t ii, Settings::NetworkWeightType tau);
-
             void evolveWeights();
-
             Settings::NetworkWeightType
             inline evolveWeightAt(size_t i, size_t ii);
 
@@ -113,6 +98,7 @@ namespace ai {
             friend bool nothingSimilar(const Network &, const Network &);
             friend bool operator==(const Network &, const Network &);
             friend void weightChangeOut(Network parent, Network child);
+            friend bool validateNetworks();
     }; // end class AI_Network
 
     // Global operators to allow sorting of networks based on their performance
@@ -124,7 +110,8 @@ namespace ai {
 
     bool nothingSimilar(const Network &, const Network &);
     void weightChangeOut(Network parent, Network child);
-    void setupNetworks (const std::vector<unsigned int> & dimesions, int numberOfNetworks = NETWORKPOPSIZE);
+    void setupNetworks (const std::vector<unsigned int> & dimensions, int numberOfNetworks = NETWORKPOPSIZE);
     Settings::NetworkWeightType getGaussianNumberFromZeroToOne(std::mt19937 &);
+    bool validateNetworks();
 }
 #endif // NETWORK_H_INCLUDED

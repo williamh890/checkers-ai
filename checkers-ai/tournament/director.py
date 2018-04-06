@@ -1,5 +1,9 @@
 import options
 import children
+import network_git
+from utils import ensure_generation_cfg
+from logger import write_to_log
+
 import subprocess
 from random import sample
 import os
@@ -13,21 +17,39 @@ def list_to_str(list):
 class Director:
     def __init__(self):
         self.options = options.Options()
+        print(self.options.networks_config)
+        self.network_git = network_git.NetworkGit(self.options.networks_config,
+                                                  self.options.user,
+                                                  self.options.git_user,
+                                                  self.options.git_password,
+                                                  self.options.repo_url)
+
         self.children = children.Children(self.options)
-        self.networks = [0 for x in range(self.options.network_count)]
+        self.generations = self.network_git.current_generation
+
+        self.reset_network_wins()
 
     def idle(self):
         self.children.get_children()
 
-        print(" directing a tournament")
+        while self.options.run:
+            self.run_generation()
+
+    def run_generation(self):
+        print(" directing a tournament for generation {}".format(self.generations))
         self.run()
         print(" finished that tournament")
         print(" storing performances and evolving")
         self.store_performances()
         self.evolve_networks()
+
+        self.network_git.update_remote()
+        self.network_git.update_config()
         self.options.check_run()
         print("run is {}".format(self.options.run))
         print(" looping")
+
+        self.generations += 1
 
     def run(self):
         ids = range(self.options.network_count)
@@ -40,25 +62,50 @@ class Director:
             if winner is None:
                 continue
 
-            self.networks[winner] += 1
+            loser = game['black'] if winner == game['red'] else game['black']
 
-        self.wins = list_to_str(self.networks)
+            self.network_wins[loser] -= 2
+            self.network_wins[winner] += 1
+
+        write_to_log(self.generations, results, self.network_wins)
+
+        self.wins = list_to_str(self.network_wins)
         print("performance string is {}".format(self.wins))
-        self.networks = [0 for x in range(self.options.network_count)]
+
+        self.reset_network_wins()
+
+    def reset_network_wins(self):
+        self.network_wins = [
+            0 for _ in range(self.options.network_count)
+        ]
 
     def get_matchups(self, ids):
         matchups = []
-        for id in ids:
-            opponent_ids = sample(ids, k=3)
+        for black_network_id in ids:
+            opponent_ids = self.get_matchups_for_network(
+                ids, black_network_id
+            )
 
             network_matchups = [
-                (self.options.checkers_game, id, opponent_id)
+                (
+                    self.options.checkers_game,
+                    black_network_id,
+                    opponent_id,
+                    self.options.search_depth
+                )
                 for opponent_id in opponent_ids
             ]
 
             matchups += network_matchups
-        print(matchups)
+
         return matchups
+
+    def get_matchups_for_network(self, ids, current_id):
+        while True:
+            opponent_ids = sample(ids, k=self.options.games_per_match)
+
+            if current_id not in opponent_ids:
+                return opponent_ids
 
     def store_performances(self):
         os.chdir(os.path.dirname(self.options.network_manager))
@@ -76,7 +123,8 @@ class Director:
 
 if __name__ == "__main__":
     director = Director()
+    ensure_generation_cfg(director.options.networks_config)
     start = time.time()
     director.idle()
     end = time.time()
-    print(f"total time was {end - start}")
+    print("total runtime time was {}".format(end - start))
