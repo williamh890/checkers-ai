@@ -59,6 +59,7 @@ bool Network::load(string & filename, Network & network) {
 
 Network::Network(unsigned int networkId): _ID(networkId) {
 	load(_ID, *this);
+    setupwhichLayerofNetworkToUse();
 }
 
 Network::Network(unsigned int networkId,
@@ -70,6 +71,7 @@ Network::Network(unsigned int networkId,
     setupRandomWeights(layerDimensions);
     setupKingWeight();
     setupSigmas();
+    setupwhichLayerofNetworkToUse();
 
     save(_ID, *this);
 }
@@ -114,6 +116,27 @@ void Network::setupSigmas() {
     }
 }
 
+int Network::getNumLayers() {
+    int numLayers = 0;
+    for (auto i : _layers) {
+        if (i.size() == 1)
+            ++numLayers;
+    }
+    cout << "numLayers is: " << numLayers << endl;
+    return numLayers;
+}
+
+void Network::setupwhichLayerofNetworkToUse() {
+    int numLayers = getNumLayers();
+    _whichLayerofNetworkToUse.resize(25);
+    if (numLayers == 1) {
+        for (unsigned int i = 0; i < 25; ++i) {
+            _whichLayerofNetworkToUse[i].push_back(0);
+            _whichLayerofNetworkToUse[i].push_back(_layers.size());
+        }
+    }
+}
+
 template <typename RandomNumberType>
 vector<RandomNumberType> Network::getRandomNumbersOfLength( const unsigned int length,
                                                             uniform_real_distribution<RandomNumberType> & distribution) {
@@ -134,34 +157,44 @@ Network::~Network() {
 
 // evaluateBoard returns an answer for red. Flip the sign for black.
 NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool testing, int red_factor) { // testing defaults false
+    int numPieces = 0;
+    for (const auto & ii : inputBoard) {
+        if (ii == ' ' || ii == 0)
+            continue;
+        else if (ii == 'r')
+            ++numPieces;
+        else if (ii == 'b')
+            ++numPieces;
+        else if (ii == 'R')
+            ++numPieces;
+        else if (ii == 'B')
+            ++numPieces;
+        else
+            cout << "Unrecognized character in board: " << ii << endl;
+    }
+    unsigned int layerBeginningIndex = _whichLayerofNetworkToUse[numPieces][0];
+    unsigned int layerEndingIndex = _whichLayerofNetworkToUse[numPieces][1];
+
     /*void inputBoardIntoFirstLayer(inputBoard)*/ {
         int index = 0;
-        int numPieces = 0;
         for (const auto & i : inputBoard) {
-            //if (DEBUG)
-            //	cout << "i = " << i << endl;
-
             if (i == ' ' || i == 0)
-                _layers[0][index] = 0;
-            else if (i == 'r'){
-                ++numPieces;
-                _layers[0][index] = 1;}
-            else if (i == 'b'){
-                ++numPieces;
-                _layers[0][index] = -1;}
-            else if (i == 'R'){
-                ++numPieces;
-                _layers[0][index] = 1 * _kingWeight;}
-            else if (i == 'B'){
-                ++numPieces;
-                _layers[0][index] = -1 * _kingWeight;}
+                 _layers[layerBeginningIndex][index] = 0;
+            else if (i == 'r')
+                _layers[layerBeginningIndex][index] = 1;
+            else if (i == 'b')
+                _layers[layerBeginningIndex][index] = -1;
+            else if (i == 'R')
+                _layers[layerBeginningIndex][index] = 1 * _kingWeight;
+            else if (i == 'B')
+                _layers[layerBeginningIndex][index] = -1 * _kingWeight;
             else
                 cout << "Unrecognized character in board: " << i << endl;
             ++index;
         }
     }
     /*void feedForward()*/{
-        for (unsigned int x = 1; x < _layers.size(); ++x) {
+        for (unsigned int x = layerBeginningIndex + 1; x < layerEndingIndex; ++x) {
             for (unsigned int y = 0; y < _layers[x].size(); ++y) {
                 /*calculateNode(x, y)*/ {
                     NetworkWeightType total1 = 0, total2 = 0, total3 = 0, total4 = 0;
@@ -181,7 +214,7 @@ NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool t
             }
         }
     }
-	return _layers[_layers.size() - 1][0] * red_factor /*boardEvaluationOutput()*/;
+	return _layers[layerEndingIndex - 1][0] * red_factor /*boardEvaluationOutput()*/;
 }
 
 inline NetworkWeightType Network::activationFunction(NetworkWeightType x) {
