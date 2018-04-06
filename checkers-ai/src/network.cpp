@@ -122,7 +122,7 @@ int Network::getNumLayers() {
         if (i.size() == 1)
             ++numLayers;
     }
-    cout << "numLayers is: " << numLayers << endl;
+    // cout << "numLayers is: " << numLayers << endl;
     return numLayers;
 }
 
