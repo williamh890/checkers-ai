@@ -7,7 +7,7 @@ def parse_game(game_output):
     for line in game_output.split('\n'):
         try:
             timing_type, time = line.split(':')
-        except:
+        except Exception:
             continue
 
         if timing_type == "move":
