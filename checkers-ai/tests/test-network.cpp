@@ -19,11 +19,13 @@ using std::ostringstream;
 using std::cout;
 using std::endl;
 
+#include "../headers/consts.h"
+
 ai::NetworkTestingNamechange t;
 
 TEST_CASE("Testing setupNetworks") {
-    vector<unsigned int> dimensions{32, 40, 10, 1};
-    setupNetworks(dimensions, 2);
+    vector<unsigned int> dims = {32, 1000, 100, 1, 32, 1000, 100, 1};
+    setupNetworks(dims, 2);
 }
 
 TEST_CASE("Test saving and loading consistency") {
@@ -176,7 +178,7 @@ void writeToLogs(double timeTaken, int loopIterations, double boardsPerSec) {
 TEST_CASE("Testing the speed of board evaluation.", "[network-timing]") {
     const int LOOP_COUNTER = 1000;
     vector<unsigned int> dims_over10k{32, 1000, 100, 1};
-    // Choices are ai::blondieDimensions and dims_over10k
+    // Recommended choices are ai::blondieDimensions and dims_over10k
     setupNetworks(ai::blondieDimensions, 2);
     vector<char> sampleBigBoard{
             'r',   'r',   'r',   'r',
