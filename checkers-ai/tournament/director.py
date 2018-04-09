@@ -2,11 +2,12 @@ import options
 import children
 import network_git
 from utils import ensure_generation_cfg
+from logger import write_to_log
+
 import subprocess
 from random import sample
 import os
 import time
-import json
 
 
 def list_to_str(list):
@@ -60,34 +61,51 @@ class Director:
             winner = game['winner']
             if winner is None:
                 continue
-            self.networks_wins[winner] += 1
-        self.wins = list_to_str(self.networks_wins)
 
-        log_str = "session gen {}: {} \n".format(self.generations, self.wins)
-        with open("tournements.log", "a") as f:
-            f.write(json.dumps(results, indent=4))
-            f.write(log_str)
+            loser = game['black'] if winner == game['red'] else game['black']
+
+            self.network_wins[loser] -= 2
+            self.network_wins[winner] += 1
+
+        write_to_log(self.generations, results, self.network_wins)
+
+        self.wins = list_to_str(self.network_wins)
+        print("performance string is {}".format(self.wins))
 
         self.reset_network_wins()
 
     def reset_network_wins(self):
-        self.networks_wins = [
+        self.network_wins = [
             0 for _ in range(self.options.network_count)
         ]
 
     def get_matchups(self, ids):
         matchups = []
-        for id in ids:
-            opponent_ids = sample(ids, k=3)
+        for black_network_id in ids:
+            opponent_ids = self.get_matchups_for_network(
+                ids, black_network_id
+            )
 
             network_matchups = [
-                (self.options.checkers_game, id, opponent_id)
+                (
+                    self.options.checkers_game,
+                    black_network_id,
+                    opponent_id,
+                    self.options.search_depth
+                )
                 for opponent_id in opponent_ids
             ]
 
             matchups += network_matchups
 
         return matchups
+
+    def get_matchups_for_network(self, ids, current_id):
+        while True:
+            opponent_ids = sample(ids, k=self.options.games_per_match)
+
+            if current_id not in opponent_ids:
+                return opponent_ids
 
     def store_performances(self):
         os.chdir(os.path.dirname(self.options.network_manager))

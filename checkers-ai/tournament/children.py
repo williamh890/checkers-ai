@@ -1,7 +1,7 @@
-# manager of individual games using multiprocessing
-from multiprocessing import Pool, Process
+from multiprocessing import Pool
 import os
 import subprocess
+from logger import parse_game
 
 
 class Children:
@@ -22,24 +22,26 @@ class Children:
 
 def run_child(args):
     os.chdir(os.path.dirname(args[0]))
-    prog_name, redId, blackId = args
+    prog_name, red_id, black_id, search_depth = args
 
-    run_str = "{} {} {}".format(prog_name, redId, blackId)
+    run_str = "{} {} {} {}".format(
+        prog_name, red_id, black_id, search_depth
+    )
+    print(run_str)
 
     winner, program_output = subprocess.getstatusoutput(run_str)
-    if winner == 139:
-        print("game segfaulted")
-        print("network {} or {} may be corrupted".format(redId, blackId))
-        raise Exception("Segmentation Fault in checkers.out")
+
+    game_stats = parse_game(program_output)
 
     game_result = {
-        1: redId,
+        1: red_id,
         0: None,
-        255: blackId
+        255: black_id
     }[winner]
 
     return {
-        "red": redId,
-        "black": blackId,
-        "winner": game_result
+        "red": red_id,
+        "black": black_id,
+        "winner": game_result,
+        "timings": game_stats
     }
