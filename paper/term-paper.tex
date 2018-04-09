@@ -2,6 +2,8 @@
 
 \usepackage{graphicx}
 \usepackage{refstyle}
+\usepackage{subcaption}
+
 \def\RSfigtxt{Fig.\,}%
 \def\RSfigstxt{Figs~}%
 \def\RSFigtxt{Fig.\,}%
@@ -10,7 +12,19 @@
 \begin{document}
 
 \title{Checker AI Midterm}
-\author{William Horn\\University of Alaska Fairbanks\\wbhorn@alaska.edu}
+\author{
+  William Horn\\
+  \texttt{wbhorn@alaska.edu}
+  \and
+  Hal Dimarchi\\
+  \texttt{hadimarchi@alaska.edu}
+  \and
+  Duane Shaffer\\
+  \texttt{dlshaffer@alaska.edu}
+  \and
+  Kai Davids\\
+  \texttt{kdavidsschell@alaska.edu}
+}
 \date{\today}
 \maketitle
 
@@ -42,7 +56,17 @@ and lead to more intelligent move selection.
 
 \section{Screenshots}
 
-     GAME SCREENSHOTS WITH MOVES GO HERE
+\begin{figure}
+\begin{tabular}{cc}
+  \includegraphics[width=65mm]{images/game-start.png} &   \includegraphics[width=65mm]{images/game-1.png} \\
+(a) first & (b) second \\[6pt]
+ \includegraphics[width=65mm]{images/game-2.png} &   \includegraphics[width=65mm]{images/game-3.png} \\
+(c) third & (d) fourth \\[6pt]
+ \includegraphics[width=65mm]{images/game-4.png} &   \includegraphics[width=65mm]{images/game-5.png} \\
+ (e) fifth & (f) sixth \\[6pt]
+\end{tabular}
+\caption{caption}
+\end{figure}
 
 \section{Searching}
 
@@ -63,7 +87,7 @@ reached the max depth or the game is over, it performs an evaluation of the
 state of the board and returns it. The program chooses the move that leads to
 the sub-tree with the best possible result.
 
-\subsubsection{Depth 5}
+\subsubsection{Statistics (Depth 5)}
 \begin{itemize}
 	\item Boards expanded per move: 6121.88
 	\item Board evaluation functions called: 26,518.45
@@ -82,33 +106,52 @@ than a path already explored then all children of the parent of that leaf node
 can be pruned, because the minimizer presumably will not choose that option.
 Because this means whole subtrees don’t need to be fully expanded, it allows
 for either deeper searches  or for a more computationally intensive board
-evaluation function. The graphs below show the number of nodes expanded for
+evaluation function. The graphs in \figref{ab-v-mm} show the number of nodes expanded for
 minimax with and without alpha-beta pruning at different depths.
 
-\subsubsection{Depth 5}
+\subsubsection{Statistics (Depth 5)}
 \begin{itemize}
 	\item Boards expanded per move: 1036.2
 	\item Board evaluation functions called: 1605.80
 	\item Inner vs. leaf nodes: 0.39
+    \item Nodes pruned: 29998.33 (inner and leaf)
 \end{itemize}
 
- ALPHA BETA vs MINIMAX GRAPHS HERE
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.4\linewidth}
+        \includegraphics[width=\linewidth]{images/parent-nodes-abvmm.png}
+        \caption{parent (inner) nodes evaluated in minimax vs alpha-beta}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.4\linewidth}
+        \includegraphics[width=\linewidth]{images/leaf-nodes-abvmm.png}
+        \caption{Comparing leaf nodes evaluated in minimax vs alpha-beta}
+    \end{subfigure}
+
+    \caption{Comparing minimax and alpha-beta search methods.}
+    \label{fig:ab-v-mm}
+\end{figure}
 
 \section{Implementation}
 
 To implement alpha-beta the same checkers-game class used to play a regular
-game was used to search through possible future moves and jumps. Here is the
-main macro that does the searching:
+game was used to search through possible future moves and jumps. It was implimented
+using a recursive DFS search \figref{ab-code}.
 
- ALPHA-BETA CODE GOES HERE
+\begin{figure*}
+    \includegraphics[width=\linewidth]{images/alpha-beta-code.png}
+    \caption{alpha beta c++ implimentation}
+    \label{fig:ab-code}
+\end{figure*}
 
-Preprocessor macros are used for two reasons, the best way to write the loop
+Preprocessor macros are used for two reasons (\figref{ab-code}), the best way to write the loop
 through all the action (moves/jumps) is to take the isMaximizingPlayer check
 out of the loop, which means writing it twice and because instead of recursing
 on boards, move and jumps are used to recures on. This means two very similar
 function because they are different types.
 
-In the SEARCH\\_ON\\_MAXIMIZING\\_PLAYER macro the actions is either a list of valid
+In the SEARCH\textunderscore{}ON\textunderscore{}MAXIMIZING\textunderscore{}PLAYER (\figref{ab-code})
+macro the actions is either a list of valid
 moves or jumps depending on what function the macro is expanded in. The
 depthExpression is either n or n - 1. This is done because when recursing on
 jumps or multi jumps the branch factor is low.
@@ -132,33 +175,64 @@ the layer before them. To calculate a node, multiply each of the previous layer
 nodes by their associated weights, add them together, and multiply by an
 activator function. This process is repeated for each layer, causing the values
 of each node to feed farther forward in the network culminating in a final
-value for the output.
+value for the output. The performace of the NN code is measured in board evaluations per
+second (BPS).
 
 \subsection{Timing}
 This is a section for optional dot product timing. It
 will be included for the final draft.
 
-Code segment that solves NN:
-Board evaluations per second for blondie24 sized NN (32-40-10-1): 879,833 bps
-Board evaluations per second for larger NN (32-1000-100-1): 13762.5 bps
+\subsubsection{Code segment that solves NN}
 
-The following section is related to a 3-10-1 NN This is an image of the contents of a random
-NN following the given topology.  This is an image of an offspring from the
-parent in previous image.
+\begin{figure}
+    \includegraphics[width=\linewidth]{images/nn-code.png}
+    \caption{Neural network c++ code}
+    \label{fig:nn-code}
+\end{figure}
 
-In order to show that our offspring is correct, we
-made a graph of the change in weight value between parent and offspring. The
-changes are Gaussian. The evolution process was simply following formulas
+\begin{itemize}
+    \item Blondie24 sized NN (32-40-10-1): 879,833 bps
+    \item Larger NN (32-1000-100-1): 13762.5 bps
+\end{itemize}
+
+\subsection{3-10-1 NN}
+\figref{3-10-1-before} shows the contents of a random
+NN following the given topology. \figref{3-10-1-after} shows values in the offspring from the
+parent in previous image (the evolved network).
+
+\begin{figure}
+    \includegraphics[width=\linewidth]{images/3-10-1-before.png}
+    \caption{values before}
+    \label{fig:3-10-1-before}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\linewidth]{images/3-10-1-after.png}
+    \caption{values after}
+    \label{fig:3-10-1-after}
+\end{figure}
+
+In order to show that our offspring is correct, a
+histogram was made of the change in weight value between parent and offspring. The
+changes show a model Gaussian distribution. The evolution process was simply following formulas
 given. Between graphical representation of the change in weights and visual
-confirmation of sensical values for other parameters of the network, we felt
-confident that our evolution process was happening properly.
+confirmation of viable values for other parameters of the network. This proves that
+the evolution process was happening properly.
 
- GAUSSIAN GRAPH HERE
+\begin{figure*}
+    \includegraphics[width=\linewidth]{images/gaussian-1.png}
+    \caption{histogram of Gaussian numbers used for evolution}
+    \label{fig:gaussian-1}
+\end{figure*}
 
-To prove that our Gaussian psuedo-random number generator is correct, we
-created a graph of 1000 numbers generated.
+To prove that the Gaussian pseudo-random number generator is correct, \figref{gaussian-2}
+is a histogram of 1000 numbers using the Gaussian generator.
 
- ANOTHER GAUSSIAN GRAPH HERE
+\begin{figure*}
+    \includegraphics[width=\linewidth]{images/gaussian-2.png}
+    \caption{histogram of 1000 Gaussian numbers}
+    \label{fig:gaussian-2}
+\end{figure*}
 
 \section{Evolutionary Learning}
 
