@@ -60,11 +60,8 @@ class Director:
             winner = game['winner']
             if winner is None:
                 continue
-
             self.networks_wins[winner] += 1
-
         self.wins = list_to_str(self.networks_wins)
-        #print("performance string is {}".format(self.wins))
 
         log_str = "session gen {}: {} \n".format(self.generations, self.wins)
         with open("tournements.log", "a") as f:

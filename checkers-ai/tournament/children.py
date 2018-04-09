@@ -25,11 +25,8 @@ def run_child(args):
     prog_name, redId, blackId = args
 
     run_str = "{} {} {}".format(prog_name, redId, blackId)
-    #print(run_str)
 
     winner, program_output = subprocess.getstatusoutput(run_str)
-    #print(program_output)
-
     if winner == 139:
         print("game segfaulted")
         print("network {} or {} may be corrupted".format(redId, blackId))
