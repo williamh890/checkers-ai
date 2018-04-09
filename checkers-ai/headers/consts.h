@@ -34,12 +34,16 @@ namespace ai {
     static const unsigned int NETWORKPOPSIZE = blondiePopulation;
 
     const float INF = FLT_MAX;
+    
     // Network dimensions given in the form: {single network for all phases}
     //                                    or {early/mid game network, late game network}
-    //                                    or: {eary network, mid network, late network}
+    //                                    or: {early network, mid network, late network}
     // Example 1 network form: {32, 40, 10, 1}
     // Example 2 network form: {32, 1000, 100, 1, 32, 40, 10, 1}
     // Example 3 network form: {32, 1000, 100, 1, 32, 1000, 100, 1, 32, 1000, ,100, 1}
+    // NOTE: 
+    //          - input layers are always 32 and output layers are always 1
+    //          - You can use as many as 24 layers
     static const std::vector<unsigned int> NETWORK_DIMENSIONS = {32, 1000, 1};
 
     namespace Settings {

@@ -140,7 +140,7 @@ void Network::setupwhichLayerofNetworkToUse() {
                 _whichLayerofNetworkToUse[i].push_back(layerSizes.at(1) + layerSizes.at(0));
             }
         }
-        else if (numLayers < 26) {
+        else if (numLayers < 25) {
             int vectorLocationCounter = 24;
             int layerStart = 0;
             int layerEnd = layerSizes[0];
