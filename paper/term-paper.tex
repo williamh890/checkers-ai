@@ -1,0 +1,181 @@
+\documentclass{article}
+
+\usepackage{graphicx}
+\usepackage{refstyle}
+\def\RSfigtxt{Fig.\,}%
+\def\RSfigstxt{Figs~}%
+\def\RSFigtxt{Fig.\,}%
+\def\RSFigstxt{Figs~}%
+
+\begin{document}
+
+\title{Checker AI Midterm}
+\author{William Horn\\University of Alaska Fairbanks\\wbhorn@alaska.edu}
+\date{\today}
+\maketitle
+
+\section{Introduction}
+
+Introduction will be written for the final draft. Inside here we set up the
+abbreviation of NN as neural network.
+
+\section{Checkers}
+
+For the beginning of the project, we created a program by making a
+move generator and a random move selector. The move generator was used to get
+valid moves on an 8x8 checkers board at any point in the game. Internally this
+corresponded to a list of characters of size 32 because half of the 64 spaces
+can never be visited. The move selector takes moves from the generator, if a
+jump is present it must be taken. This left us with creating players that could
+use the board and move generator to play a checkers game.
+
+The game itself has two players, red and black. The players keep track of their pieces and what
+those pieces can do. The move generators gives hypothetically valid moves that
+the player class uses when selecting a move, initially the moves were picked at
+random. Further improvements on the checkers program were to create a piece
+count evaluator that chose moves by traversing the search tree of possible
+moves (see minimax) and picking the move that lead to the best outcome. The
+heuristic used to evaluate was to sum up the pieces on the board for each
+player, giving a larger weight to kings, and taking the difference between the
+two players. This ended up being quite a good heuristic for evaluating moves
+and lead to more intelligent move selection.
+
+\section{Screenshots}
+
+     GAME SCREENSHOTS WITH MOVES GO HERE
+
+\section{Searching}
+
+Searching is done to select the move that will have the highest chance of
+leading to a win for the searching player.  This can be done using either a
+breadth first search (BFS) or a depth first search (DFS). To save on memory
+we used a DFS.
+
+\subsection{Minimax}
+
+In minimax searching the program starts with all moves currently available to
+it, and expands them, by assuming they have been taken, and then recursing on
+the resulting available moves to a chosen depth. The search alternates between
+choosing the move that will result in the best case scenario for the searching
+player, and the move that will result in the worst case scenario for the
+searching player (assuming that the enemy will choose those moves). Once it has
+reached the max depth or the game is over, it performs an evaluation of the
+state of the board and returns it. The program chooses the move that leads to
+the sub-tree with the best possible result.
+
+\subsubsection{Depth 5}
+\begin{itemize}
+	\item Boards expanded per move: 6121.88
+	\item Board evaluation functions called: 26,518.45
+	\item Inner vs. leaf nodes: 0.19
+\end{itemize}
+
+\subsection{Alpha-Beta}
+
+Alpha-beta pruning is an improvement on the minimax searching algorithm that
+removes branches that are unlikely to be useful. It does so by keeping track of
+2 values, alpha, the best explored path to the root for the maximiser, and
+beta, the best explored path to the root for the minimizer. When expanding
+nodes and looking at paths for the maximizer, if the program finds an option
+that will allow the maximizer to achieve a higher value path back to the root
+than a path already explored then all children of the parent of that leaf node
+can be pruned, because the minimizer presumably will not choose that option.
+Because this means whole subtrees don’t need to be fully expanded, it allows
+for either deeper searches  or for a more computationally intensive board
+evaluation function. The graphs below show the number of nodes expanded for
+minimax with and without alpha-beta pruning at different depths.
+
+\subsubsection{Depth 5}
+\begin{itemize}
+	\item Boards expanded per move: 1036.2
+	\item Board evaluation functions called: 1605.80
+	\item Inner vs. leaf nodes: 0.39
+\end{itemize}
+
+ ALPHA BETA vs MINIMAX GRAPHS HERE
+
+\section{Implementation}
+
+To implement alpha-beta the same checkers-game class used to play a regular
+game was used to search through possible future moves and jumps. Here is the
+main macro that does the searching:
+
+ ALPHA-BETA CODE GOES HERE
+
+Preprocessor macros are used for two reasons, the best way to write the loop
+through all the action (moves/jumps) is to take the isMaximizingPlayer check
+out of the loop, which means writing it twice and because instead of recursing
+on boards, move and jumps are used to recures on. This means two very similar
+function because they are different types.
+
+In the SEARCH\\_ON\\_MAXIMIZING\\_PLAYER macro the actions is either a list of valid
+moves or jumps depending on what function the macro is expanded in. The
+depthExpression is either n or n - 1. This is done because when recursing on
+jumps or multi jumps the branch factor is low.
+
+Time permitting this version
+will be switched to a version that recuses on boards so that iterative
+deepening search is easier to implement. Currently when a piece makes a
+multijump this search is called multiple times for each jump, instead of once
+for the whole jump. Recusing on a board would negate this because the entire
+multijump would be counted as one move.
+
+\section{Neural Networks}
+
+A basic feed forward neural network (NN) consists of an input layer
+with a variable amount of hidden layers and an output layer. All of the layers
+consist of nodes and these nodes are connected from layer to layer. The input
+layer consists of the data being given to the network that has been formatted
+to numbers. Each node in the next layer has an amount of weights equal to the
+number of input nodes. Further nodes have a number of weights equal the size of
+the layer before them. To calculate a node, multiply each of the previous layer
+nodes by their associated weights, add them together, and multiply by an
+activator function. This process is repeated for each layer, causing the values
+of each node to feed farther forward in the network culminating in a final
+value for the output.
+
+\subsection{Timing}
+This is a section for optional dot product timing. It
+will be included for the final draft.
+
+Code segment that solves NN:
+Board evaluations per second for blondie24 sized NN (32-40-10-1): 879,833 bps
+Board evaluations per second for larger NN (32-1000-100-1): 13762.5 bps
+
+The following section is related to a 3-10-1 NN This is an image of the contents of a random
+NN following the given topology.  This is an image of an offspring from the
+parent in previous image.
+
+In order to show that our offspring is correct, we
+made a graph of the change in weight value between parent and offspring. The
+changes are Gaussian. The evolution process was simply following formulas
+given. Between graphical representation of the change in weights and visual
+confirmation of sensical values for other parameters of the network, we felt
+confident that our evolution process was happening properly.
+
+ GAUSSIAN GRAPH HERE
+
+To prove that our Gaussian psuedo-random number generator is correct, we
+created a graph of 1000 numbers generated.
+
+ ANOTHER GAUSSIAN GRAPH HERE
+
+\section{Evolutionary Learning}
+
+There are several design considerations for evolutionary
+learning that varies between the members of our group. For the trial section of
+our project, we just used elements from blondie24’s experiment. This includes a
+NN topology of 32-40-10-1, a population size of 30, and a survival of the
+fittest method of evolution where the best half of the networks create
+offspring, evolve, and replace the lower half of the networks. Not all of our
+members have decided on the topology they want to evolve but one experimental
+topology is 32-1000-1 with a population size of 100. All networks follow the
+blondie24 method of evolution.
+
+Networks are matched up against each other with
+every network playing 5 games as red side versus a random network on black
+side. Winners get one point and losers lose 2. Nothing happens to a NNs
+performance when a draw occurs. These games compose a points based tournament
+that allows networks to be sorted based on their performance.
+
+\end{document}
