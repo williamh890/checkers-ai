@@ -16,6 +16,7 @@
 #include <vector>
 // std::vector
 #include <string>
+// std::string
 
 namespace ai {
     class NetworkFileReader;
@@ -60,6 +61,7 @@ namespace ai {
             std::vector<NetworkWeights> _weights;
             std::vector<NetworkWeights> _sigmas;
             Settings::NetworkWeightType _kingWeight;
+            std::vector<std::vector<unsigned int>> _whichLayerofNetworkToUse;
             int _performance;
             bool _gameCompleted = false;
             std::mt19937 randomNumGenerator;
@@ -68,6 +70,8 @@ namespace ai {
             void setupRandomWeights(const std::vector<unsigned int> & LayerDimensions);
             void setupKingWeight();
             void setupSigmas();
+            int getNumLayers();
+            void setupwhichLayerofNetworkToUse();
 
             Settings::NetworkWeightType getTau();
             void evolveKingWeight();
