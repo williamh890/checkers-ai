@@ -3,6 +3,7 @@
 \usepackage{graphicx}
 \usepackage{refstyle}
 \usepackage{subcaption}
+\usepackage[table,xcdraw]{xcolor}
 
 \def\RSfigtxt{Fig.\,}%
 \def\RSfigstxt{Figs~}%
@@ -11,7 +12,7 @@
 
 \begin{document}
 
-\title{Checker AI Midterm}
+\title{Intro to AI -- Final Paper Draft}
 \author{
   William Horn\\
   \texttt{wbhorn@alaska.edu}
@@ -27,11 +28,6 @@
 }
 \date{\today}
 \maketitle
-
-\section{Introduction}
-
-Introduction will be written for the final draft. Inside here we set up the
-abbreviation of NN as neural network.
 
 \section{Checkers}
 
@@ -54,19 +50,9 @@ player, giving a larger weight to kings, and taking the difference between the
 two players. This ended up being quite a good heuristic for evaluating moves
 and lead to more intelligent move selection.
 
-\section{Screenshots}
-
-\begin{figure}
-\begin{tabular}{cc}
-  \includegraphics[width=65mm]{images/game-start.png} &   \includegraphics[width=65mm]{images/game-1.png} \\
-(a) first & (b) second \\[6pt]
- \includegraphics[width=65mm]{images/game-2.png} &   \includegraphics[width=65mm]{images/game-3.png} \\
-(c) third & (d) fourth \\[6pt]
- \includegraphics[width=65mm]{images/game-4.png} &   \includegraphics[width=65mm]{images/game-5.png} \\
- (e) fifth & (f) sixth \\[6pt]
-\end{tabular}
-\caption{caption}
-\end{figure}
+\figref{game} and Table \ref{table:moves-jumps}. show the checkers game running along with the GUI.
+The table shows all the valid possible moves and jumps at the point of the
+screenshot. The numbers in the table correspond to the location in \figref{board-key}.
 
 \section{Searching}
 
@@ -117,7 +103,7 @@ minimax with and without alpha-beta pruning at different depths.
     \item Nodes pruned: 29998.33 (inner and leaf)
 \end{itemize}
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
     \centering
     \begin{subfigure}[b]{0.4\linewidth}
         \includegraphics[width=\linewidth]{images/parent-nodes-abvmm.png}
@@ -132,7 +118,7 @@ minimax with and without alpha-beta pruning at different depths.
     \label{fig:ab-v-mm}
 \end{figure}
 
-\section{Implementation}
+\subsection{Implementation}
 
 To implement alpha-beta the same checkers-game class used to play a regular
 game was used to search through possible future moves and jumps. It was implimented
@@ -175,14 +161,9 @@ the layer before them. To calculate a node, multiply each of the previous layer
 nodes by their associated weights, add them together, and multiply by an
 activator function. This process is repeated for each layer, causing the values
 of each node to feed farther forward in the network culminating in a final
-value for the output. The performace of the NN code is measured in board evaluations per
+value for the output. \figref{nn-code} shows the c++ that impliments this technique.
+The performance of the NN code is measured in board evaluations per
 second (BPS).
-
-\subsection{Timing}
-This is a section for optional dot product timing. It
-will be included for the final draft.
-
-\subsubsection{Code segment that solves NN}
 
 \begin{figure}
     \includegraphics[width=\linewidth]{images/nn-code.png}
@@ -190,15 +171,113 @@ will be included for the final draft.
     \label{fig:nn-code}
 \end{figure}
 
+\subsection{Timing}
+
 \begin{itemize}
-    \item Blondie24 sized NN (32-40-10-1): 879,833 bps
-    \item Larger NN (32-1000-100-1): 13762.5 bps
+    \item Blondie24 (32-40-10-1)   : 879,833 bps
+    \item Larger    (32-1000-100-1): 13762.5 bps
 \end{itemize}
 
-\subsection{3-10-1 NN}
+\subsection{Evolution (3-10-1 Topology)}
+
 \figref{3-10-1-before} shows the contents of a random
 NN following the given topology. \figref{3-10-1-after} shows values in the offspring from the
 parent in previous image (the evolved network).
+
+In order to show that our offspring is correct, a
+histogram was made of the change in weight value between parent and offspring. The
+changes show a model Gaussian distribution. The evolution process was simply following formulas
+given. Between graphical representation of the change in weights and visual
+confirmation of viable values for other parameters of the network. This proves that
+the evolution process was happening properly.
+
+To prove that the Gaussian pseudo-random number generator is absolutely correct, \figref{gaussian-2}
+a histogram of 1000 numbers was made and this confirmed that our generator was in fact Gaussian.
+
+\section{Evolutionary Learning}
+
+There are several design considerations for evolutionary
+learning that varies between the members of our group. For the trial section of
+our project, we just used elements from Blondie24’s experiment. This includes a
+NN topology of 32-40-10-1, a population size of 30, and a survival of the
+fittest method of evolution where the best half of the networks create
+offspring, evolve, and replace the lower half of the networks. Not all of our
+members have decided on the topology they want to evolve but one experimental
+topology is 32-1000-1 with a population size of 100. All networks follow the
+Blondie24 method of evolution.
+
+Networks are matched up against each other with
+every network playing 5 games as red side versus a random network on black
+side. Winners get one point and losers lose 2. Nothing happens to a NNs
+performance when a draw occurs. These games compose a points based tournament
+that allows networks to be sorted based on their performance.
+
+\subsection{Statistics}
+
+One of the testing topologies used was a 32-200-20 NN. For this tourament we only
+played 3 games per match and ran at a alpha-beta search depth of 6. The tournaments
+were run on a Digital Ocean cloud server running with 2 vCPUs. Threading was done
+on a per game level so generations could be done faster. The time below is normalized for
+1 vCPU and does not taken into account the time benefits from threading at a generation
+level.
+
+\begin{itemize}
+    \item Time For a Game       : 13.53 seconds
+    \item Time For a Generation : 1217.04 seconds
+    \item Generations Per Day   : 71.00 gpd
+\end{itemize}
+
+\begin{figure}
+    \includegraphics[width=\linewidth]{images/board-key.png}
+    \caption{Numbering system used to store board states internally.}
+    \label{fig:board-key}
+\end{figure}
+
+\begin{figure}
+\begin{tabular}{cc}
+  \includegraphics[width=65mm]{images/game-start.png} &   \includegraphics[width=65mm]{images/game-1.png} \\
+(a) beginning & (b) midgame \\[6pt]
+ \includegraphics[width=65mm]{images/game-2.png} &   \includegraphics[width=65mm]{images/game-3.png} \\
+(c) midgame & (d) midgame \\[6pt]
+ \includegraphics[width=65mm]{images/game-4.png} &   \includegraphics[width=65mm]{images/game-5.png} \\
+ (e) midgame & (f) endgame \\[6pt]
+\end{tabular}
+\caption{Screenshots of the GUI at different stages in the game.}
+\label{fig:game}
+\end{figure}
+
+\begin{table}[]
+\centering
+\caption{All possible valid moves and jumps for the gui screenshots in \figref{game}}
+\label{table:moves-jumps}
+\begin{tabular}{|lllllllll|}
+\hline
+\multicolumn{9}{|l|}{\textbf{Move/Jump Generator Output For Black}}                                                                                                                                                                                                                                                                                                  \\ \hline
+\multicolumn{3}{|l|}{\textbf{Fig 1a.}}                                                                                 & \multicolumn{3}{l|}{\textbf{Fig 1b.}}                                                                                       & \multicolumn{3}{l|}{\textbf{Fig 1c.}}                                                                         \\ \hline
+\multicolumn{1}{|l|}{\textbf{Moves}}           & \multicolumn{1}{l|}{\textbf{From}} & \multicolumn{1}{l|}{\textbf{To}} & \multicolumn{1}{l|}{\textbf{Moves}}           & \multicolumn{1}{l|}{\textbf{From}} & \multicolumn{1}{l|}{\textbf{To}}       & \multicolumn{1}{l|}{\textbf{Jumps}}           & \multicolumn{1}{l|}{\textbf{From}} & \textbf{Thru, To}        \\ \hline
+\multicolumn{1}{|l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{20}            & \multicolumn{1}{l|}{16}          & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{16}            & \multicolumn{1}{l|}{13}                & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{18}            & (14, 9)                  \\ \cline{7-9}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{21}            & \multicolumn{1}{l|}{16, 17}      & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{22}            & \multicolumn{1}{l|}{17, 18}            & \multicolumn{1}{l|}{\textbf{Moves}}           & \multicolumn{1}{l|}{\textbf{From}} & \textbf{To}              \\ \cline{7-9}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{22}            & \multicolumn{1}{l|}{17, 18}      & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{23}            & \multicolumn{1}{l|}{18, 19}            & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{16}            & 12, 13                   \\
+\multicolumn{1}{|l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{23}            & \multicolumn{1}{l|}{18, 19}      & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{24}            & \multicolumn{1}{l|}{21}                & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{18}            & 15                       \\ \cline{2-3}
+\cellcolor[HTML]{C0C0C0}                       & \cellcolor[HTML]{C0C0C0}           & \cellcolor[HTML]{C0C0C0}         & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{25}            & \multicolumn{1}{l|}{21}                & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{23}            & 19                       \\ \cline{5-6}
+\cellcolor[HTML]{C0C0C0}                       & \cellcolor[HTML]{C0C0C0}           & \cellcolor[HTML]{C0C0C0}         & \cellcolor[HTML]{C0C0C0}                      & \cellcolor[HTML]{C0C0C0}           & \cellcolor[HTML]{C0C0C0}               & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{24}            & 21                       \\
+\cellcolor[HTML]{C0C0C0}                       & \cellcolor[HTML]{C0C0C0}           & \cellcolor[HTML]{C0C0C0}         & \cellcolor[HTML]{C0C0C0}                      & \cellcolor[HTML]{C0C0C0}           & \cellcolor[HTML]{C0C0C0}               & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{26}            & 22                       \\
+\cellcolor[HTML]{C0C0C0}                       & \cellcolor[HTML]{C0C0C0}           & \cellcolor[HTML]{C0C0C0}         & \cellcolor[HTML]{C0C0C0}                      & \cellcolor[HTML]{C0C0C0}           & \cellcolor[HTML]{C0C0C0}               & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{29}            & 25                       \\
+\cellcolor[HTML]{C0C0C0}                       & \cellcolor[HTML]{C0C0C0}           & \cellcolor[HTML]{C0C0C0}         & \cellcolor[HTML]{C0C0C0}                      & \cellcolor[HTML]{C0C0C0}           & \cellcolor[HTML]{C0C0C0}               & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{30}            & 25                       \\ \hline
+\multicolumn{3}{|l|}{\textbf{Fig 1d.}}                                                                                 & \multicolumn{3}{l|}{\textbf{Fig 1e.}}                                                                                       & \multicolumn{3}{l|}{\textbf{Fig 1f.}}                                                                         \\ \hline
+\multicolumn{1}{|l|}{\textbf{Moves}}           & \multicolumn{1}{l|}{\textbf{From}} & \multicolumn{1}{l|}{\textbf{To}} & \multicolumn{1}{l|}{\textbf{Jumps}}           & \multicolumn{1}{l|}{\textbf{From}} & \multicolumn{1}{l|}{\textbf{Thru, To}} & \multicolumn{1}{l|}{\textbf{Moves}}           & \multicolumn{1}{l|}{\textbf{From}} & \textbf{To}              \\ \hline
+\multicolumn{1}{|l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{18}            & \multicolumn{1}{l|}{14, 15}      & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{18}            & \multicolumn{1}{l|}{(15, 11)}          & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{2}             & 6, 7                     \\ \cline{4-6}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{20}            & \multicolumn{1}{l|}{16}          & \multicolumn{1}{l|}{\textbf{Moves}}           & \multicolumn{1}{l|}{\textbf{From}} & \multicolumn{1}{l|}{\textbf{To}}       & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{20}            & 16                       \\ \cline{4-6}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{21}            & \multicolumn{1}{l|}{16, 17}      & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & 17                                 & \multicolumn{1}{l|}{13, 14}            & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{27}            & 23                       \\
+\multicolumn{1}{|l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{22}            & \multicolumn{1}{l|}{17}          & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & 18                                 & \multicolumn{1}{l|}{14, 22, 23}        & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{30}            & 25, 26                   \\ \cline{8-9}
+\multicolumn{1}{|l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{27}            & \multicolumn{1}{l|}{23}          & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & 20                                 & \multicolumn{1}{l|}{16}                & \cellcolor[HTML]{C0C0C0}                      & \cellcolor[HTML]{C0C0C0}           & \cellcolor[HTML]{C0C0C0} \\
+\multicolumn{1}{|l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{28}            & \multicolumn{1}{l|}{24}          & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & 21                                 & \multicolumn{1}{l|}{16}                & \cellcolor[HTML]{C0C0C0}                      & \cellcolor[HTML]{C0C0C0}           & \cellcolor[HTML]{C0C0C0} \\
+\multicolumn{1}{|l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{29}            & \multicolumn{1}{l|}{24, 25}      & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & 27                                 & \multicolumn{1}{l|}{23}                & \cellcolor[HTML]{C0C0C0}                      & \cellcolor[HTML]{C0C0C0}           & \cellcolor[HTML]{C0C0C0} \\
+\multicolumn{1}{|l|}{\cellcolor[HTML]{C0C0C0}} & \multicolumn{1}{l|}{30}            & \multicolumn{1}{l|}{25, 26}      & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & 28                                 & \multicolumn{1}{l|}{24}                & \cellcolor[HTML]{C0C0C0}                      & \cellcolor[HTML]{C0C0C0}           & \cellcolor[HTML]{C0C0C0} \\ \cline{2-3}
+\cellcolor[HTML]{C0C0C0}                       & \cellcolor[HTML]{C0C0C0}           & \cellcolor[HTML]{C0C0C0}         & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & 29                                 & \multicolumn{1}{l|}{24, 25}            & \cellcolor[HTML]{C0C0C0}                      & \cellcolor[HTML]{C0C0C0}           & \cellcolor[HTML]{C0C0C0} \\
+\cellcolor[HTML]{C0C0C0}                       & \cellcolor[HTML]{C0C0C0}           & \cellcolor[HTML]{C0C0C0}         & \multicolumn{1}{l|}{\cellcolor[HTML]{C0C0C0}} & 30                                 & \multicolumn{1}{l|}{25, 26}            & \cellcolor[HTML]{C0C0C0}                      & \cellcolor[HTML]{C0C0C0}           & \cellcolor[HTML]{C0C0C0} \\ \hline
+\end{tabular}
+\end{table}
 
 \begin{figure}
     \includegraphics[width=\linewidth]{images/3-10-1-before.png}
@@ -212,44 +291,18 @@ parent in previous image (the evolved network).
     \label{fig:3-10-1-after}
 \end{figure}
 
-In order to show that our offspring is correct, a
-histogram was made of the change in weight value between parent and offspring. The
-changes show a model Gaussian distribution. The evolution process was simply following formulas
-given. Between graphical representation of the change in weights and visual
-confirmation of viable values for other parameters of the network. This proves that
-the evolution process was happening properly.
 
-\begin{figure*}
+\begin{figure}
     \includegraphics[width=\linewidth]{images/gaussian-1.png}
     \caption{histogram of Gaussian numbers used for evolution}
     \label{fig:gaussian-1}
-\end{figure*}
+\end{figure}
 
-To prove that the Gaussian pseudo-random number generator is correct, \figref{gaussian-2}
-is a histogram of 1000 numbers using the Gaussian generator.
-
-\begin{figure*}
+\begin{figure}
     \includegraphics[width=\linewidth]{images/gaussian-2.png}
     \caption{histogram of 1000 Gaussian numbers}
     \label{fig:gaussian-2}
-\end{figure*}
+\end{figure}
 
-\section{Evolutionary Learning}
-
-There are several design considerations for evolutionary
-learning that varies between the members of our group. For the trial section of
-our project, we just used elements from blondie24’s experiment. This includes a
-NN topology of 32-40-10-1, a population size of 30, and a survival of the
-fittest method of evolution where the best half of the networks create
-offspring, evolve, and replace the lower half of the networks. Not all of our
-members have decided on the topology they want to evolve but one experimental
-topology is 32-1000-1 with a population size of 100. All networks follow the
-blondie24 method of evolution.
-
-Networks are matched up against each other with
-every network playing 5 games as red side versus a random network on black
-side. Winners get one point and losers lose 2. Nothing happens to a NNs
-performance when a draw occurs. These games compose a points based tournament
-that allows networks to be sorted based on their performance.
 
 \end{document}

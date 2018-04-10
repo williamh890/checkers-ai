@@ -1,12 +1,12 @@
-#include "gui-cpp-interface.h"
+#include "../headers/gui-cpp-interface.h"
 using ai::GuiCppInterface;
 
-#include "checkers-game.h"
+#include "../headers/checkers-game.h"
 using ai::CheckersGame;
 using MovePackage = CheckersGame::MovePackage;
 using JumpPackage = CheckersGame::JumpPackage;
 
-#include "board.h"
+#include "../headers/board.h"
 using ai::Board;
 
 #include <unistd.h>
@@ -87,9 +87,9 @@ void GuiCppInterface::makeJump(const CheckersGame::JumpPackage &jump) {
   game_record.push_back(move);
   if (not game.getValidJumpsAt(jump.second.to).size()) {
     game.swapPlayers();
-    cout << game.activePlayer->jumpsToString() << endl;
-    cout << game.activePlayer->movesToString() << endl;
     if (game.areJumps()) {
+      cout << game.validJumpsToString() << endl;
+      cout << game.validMovesToString() << endl;
       JumpPackage jump = game.getBestJump();
       game.board.make(jump);
       game.reactTo(jump);
@@ -99,16 +99,17 @@ void GuiCppInterface::makeJump(const CheckersGame::JumpPackage &jump) {
         game.reactTo(jump);
       }
     } else {
+      cout << game.validMovesToString() << endl;
       auto move = game.getBestMove();
       game.board.make(move);
       game.reactTo(move);
     }
     game.swapPlayers();
-    cout << game.activePlayer->jumpsToString() << endl;
-    cout << game.activePlayer->movesToString() << endl;
+    if (game.areJumps()) {
+      cout << game.validJumpsToString() << endl;
+    }
+    cout << game.validMovesToString() << endl;
   }
-  cout << " done with jump, active player is " << game.getActivePlayerColor()
-       << endl;
 }
 
 void GuiCppInterface::makeMove(const CheckersGame::MovePackage &move) {
@@ -118,9 +119,9 @@ void GuiCppInterface::makeMove(const CheckersGame::MovePackage &move) {
   vector<int> vec_move = {move.first, move.second};
   game_record.push_back(vec_move);
   game.swapPlayers();
-  cout << game.activePlayer->jumpsToString() << endl;
-  cout << game.activePlayer->movesToString() << endl;
   if (areJumps()) {
+    cout << game.validJumpsToString() << endl;
+    cout << game.validMovesToString() << endl;
     JumpPackage jump = game.getBestJump();
     game.board.make(jump);
     game.reactTo(jump);
@@ -130,17 +131,18 @@ void GuiCppInterface::makeMove(const CheckersGame::MovePackage &move) {
       game.reactTo(jump);
     }
   } else {
+    cout << game.validMovesToString() << endl;
+
     auto move = game.getBestMove();
     game.board.make(move);
     game.reactTo(move);
   }
 
   game.swapPlayers();
-
-  cout << " done with move, active player is " << game.getActivePlayerColor()
-       << endl;
-  cout << game.activePlayer->jumpsToString() << endl;
-  cout << game.activePlayer->movesToString() << endl;
+  if (game.areJumps()) {
+    cout << game.validJumpsToString() << endl;
+  }
+  cout << game.validMovesToString() << endl;
 }
 
 bool GuiCppInterface::areJumps() { return game.areJumps(); }
