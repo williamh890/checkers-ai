@@ -12,7 +12,7 @@
 
 \begin{document}
 
-\title{Checker AI Midterm}
+\title{Intro to AI -- Final Paper Draft}
 \author{
   William Horn\\
   \texttt{wbhorn@alaska.edu}
@@ -118,7 +118,7 @@ minimax with and without alpha-beta pruning at different depths.
     \label{fig:ab-v-mm}
 \end{figure}
 
-\section{Implementation}
+\subsection{Implementation}
 
 To implement alpha-beta the same checkers-game class used to play a regular
 game was used to search through possible future moves and jumps. It was implimented
@@ -178,7 +178,7 @@ second (BPS).
     \item Larger    (32-1000-100-1): 13762.5 bps
 \end{itemize}
 
-\subsection{3-10-1 NN}
+\subsection{Evolution (3-10-1 Topology)}
 
 \figref{3-10-1-before} shows the contents of a random
 NN following the given topology. \figref{3-10-1-after} shows values in the offspring from the
@@ -191,8 +191,8 @@ given. Between graphical representation of the change in weights and visual
 confirmation of viable values for other parameters of the network. This proves that
 the evolution process was happening properly.
 
-To prove that the Gaussian pseudo-random number generator is correct, \figref{gaussian-2}
-is a histogram of 1000 numbers using the Gaussian generator.
+To prove that the Gaussian pseudo-random number generator is absolutely correct, \figref{gaussian-2}
+a histogram of 1000 numbers was made and this confirmed that our generator was in fact Gaussian.
 
 \section{Evolutionary Learning}
 
