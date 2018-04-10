@@ -213,10 +213,18 @@ performance when a draw occurs. These games compose a points based tournament
 that allows networks to be sorted based on their performance.
 
 \subsection{Statistics}
+
+One of the testing topologies used was a 32-200-20 NN. For this tourament we only
+played 3 games per match and ran at a alpha-beta search depth of 6. The tournaments
+were run on a Digital Ocean cloud server running with 2 vCPUs. Threading was done
+on a per game level so generations could be done faster. The time below is normalized for
+1 vCPU and does not taken into account the time benefits from threading at a generation
+level.
+
 \begin{itemize}
-    \item Time For a Game       :
-    \item Time For to Evolve    :
-    \item Time For a Generation :
+    \item Time For a Game       : 13.53 seconds
+    \item Time For a Generation : 1217.04 seconds
+    \item Generations Per Day   : 71.00 gpd
 \end{itemize}
 
 \begin{figure}

@@ -192,6 +192,7 @@ TEST_CASE("Testing the speed of board evaluation.", "[network-timing]") {
     cout << "\n\n\n\n****** Getting average board evaluation time.. This could take a while ******" << endl;
     double averageTime = 0;
     const unsigned int LOOPSFORAVERAGE = 1000;
+
     for (volatile unsigned int index = 0; index < LOOPSFORAVERAGE; ++index){
         double evaluationStart = getTime();
         for (volatile int i = 0; i < LOOP_COUNTER; ++i) {

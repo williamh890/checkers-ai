@@ -10,7 +10,7 @@
 
 // To use IDS uncomment:
 //
-//#define USE_IDS 1
+// #define USE_IDS 1
 //
 // Then run:
 //      make
