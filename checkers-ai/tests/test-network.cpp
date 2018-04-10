@@ -44,6 +44,7 @@ TEST_CASE("Test saving and loading consistency") {
     }
 
     SECTION ("Loading an unavailable network fails") {
+        cout << "There should be one error: ";
         ai::Network failLoadTest(0);
 
         REQUIRE_FALSE(Network::load(101, failLoadTest));
@@ -209,7 +210,7 @@ TEST_CASE("Testing the speed of board evaluation.", "[network-timing]") {
         'b',   'b',   'b',   'b'
     };
     Network player(0);
-    cout << "\n\n\n\n****** Getting average board evaluation time.. This could take a while ******" << endl;
+    cout << "\n****** Getting average board evaluation time.. This could take a while ******" << endl;
     double averageTime = 0;
     const unsigned int LOOPSFORAVERAGE = 1000;
     for (volatile unsigned int index = 0; index < LOOPSFORAVERAGE; ++index){
