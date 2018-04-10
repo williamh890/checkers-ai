@@ -35,9 +35,9 @@ namespace ai {
 
     const float INF = FLT_MAX;
     
-    // Network dimensions given in the form: {single network for all phases}
-    //                                    or {early/mid game network, late game network}
-    //                                    or: {early network, mid network, late network}
+    // Network dimensions given in the form: {single network for all phases (24-0)}
+    //                                    or {early/mid game network (24-8), late game network (8-0)}
+    //                                    or: {early network (24-16), mid network (16-8), late network (8-0)}
     // Example 1 network form: {32, 40, 10, 1}
     // Example 2 network form: {32, 1000, 100, 1, 32, 40, 10, 1}
     // Example 3 network form: {32, 1000, 100, 1, 32, 1000, 100, 1, 32, 1000, ,100, 1}
