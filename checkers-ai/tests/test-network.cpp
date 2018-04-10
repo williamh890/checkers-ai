@@ -24,7 +24,7 @@ using std::endl;
 ai::NetworkTestingNamechange t;
 
 TEST_CASE("Testing setupNetworks") {
-    vector<unsigned int> dims = {32, 1000, 100, 1, 32, 1000, 100, 1};
+    vector<unsigned int> dims = {32, 1000, 100, 1, 32, 1000, 100, 1, 32, 1000, 100, 1};
     setupNetworks(dims, 2);
 }
 
@@ -146,6 +146,27 @@ TEST_CASE("Test Network Evaluation", "[network]") {
         auto withOutActivation = player.evaluateBoard(sampleBigBoard);
 
         REQUIRE(withActivation - withOutActivation != Approx(0));
+    }
+
+    SECTION("Testing evaluation of 0-24 piece boards.") {
+        vector<char> board{
+        'r',   'r',   'r',   'r',
+    'r',   'r',   'r',   'r',
+        'r',   'r',   'r',   'r',
+    'b',   'b',   'b',   'b',
+        'b',   'b',   'b',   'b',
+    'b',   'b',   'b',   'b',
+        ' ',   ' ',   ' ',   ' ',
+    ' ',   ' ',   ' ',   ' '
+    };
+    Network player(0);
+    cout << "I: ";
+        for (auto i = 0; i <= 24; ++i) {
+            cout << i;
+            player.evaluateBoard(board);
+            board[i] = ' ';
+        }
+    cout << endl;
     }
 }
 
