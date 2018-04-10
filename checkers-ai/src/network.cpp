@@ -209,6 +209,7 @@ Network::~Network() {
 
 // evaluateBoard returns an answer for red. Flip the sign for black.
 NetworkWeightType Network::evaluateBoard(const vector<char> & inputBoard, bool testing, int red_factor) { // testing defaults false
+    // Determine number of pieces in the input board
     int numPieces = 0;
     for (const auto & ii : inputBoard) {
         if (ii == ' ' || ii == 0)
