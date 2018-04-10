@@ -270,7 +270,7 @@ TEST_CASE ("timing search at different depths", "[search],[timing]") {
     auto game = getCheckersGame();
 
     for (size_t d = 2; d <= 10; ++d) {
-        runSearch(game, d);
+        //runSearch(game, d);
     }
 
 }

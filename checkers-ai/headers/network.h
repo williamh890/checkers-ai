@@ -70,8 +70,9 @@ namespace ai {
             void setupRandomWeights(const std::vector<unsigned int> & LayerDimensions);
             void setupKingWeight();
             void setupSigmas();
-            int getNumLayers();
             void setupwhichLayerofNetworkToUse();
+            int getNumLayers();
+            void getLayerSizes(std::vector<int> &);
 
             Settings::NetworkWeightType getTau();
             void evolveKingWeight();
