@@ -116,6 +116,52 @@ void Network::setupSigmas() {
     }
 }
 
+void Network::setupwhichLayerofNetworkToUse() {
+    vector<int> layerSizes;
+    int numLayers = getNumLayers();
+    if (numLayers > 1){
+        getLayerSizes(layerSizes);
+        }
+
+    _whichLayerofNetworkToUse.resize(25);
+    if (numLayers == 1) {
+            for (unsigned int i = 0; i < 25; ++i) {
+                _whichLayerofNetworkToUse[i].push_back(0);
+                _whichLayerofNetworkToUse[i].push_back(_layers.size());
+            }
+        }
+        else if (numLayers == 2) {
+            for (unsigned int i = 9; i < 25; ++i) {
+                _whichLayerofNetworkToUse[i].push_back(0);
+                _whichLayerofNetworkToUse[i].push_back(layerSizes.at(0));
+            }
+            for (unsigned int i = 0; i < 9; ++i) {
+                _whichLayerofNetworkToUse[i].push_back(layerSizes.at(0));
+                _whichLayerofNetworkToUse[i].push_back(layerSizes.at(1) + layerSizes.at(0));
+            }
+        }
+        else if (numLayers < 25) {
+            int vectorLocationCounter = 24;
+            int layerStart = 0;
+            int layerEnd = layerSizes[0];
+            for (int i = 0; i < numLayers; ++i) {
+                for (int ii = 0; ii < 25/numLayers; ++ii) {
+                    _whichLayerofNetworkToUse[vectorLocationCounter].push_back(layerStart);
+                    _whichLayerofNetworkToUse[vectorLocationCounter].push_back(layerEnd);
+                    --vectorLocationCounter;
+                }
+                layerStart += layerSizes[i];
+                layerEnd = layerStart + layerSizes[i+1];
+            }
+            while (vectorLocationCounter != -1) {
+                _whichLayerofNetworkToUse[vectorLocationCounter] = _whichLayerofNetworkToUse[vectorLocationCounter+1];
+                --vectorLocationCounter;
+            }
+        }
+        else { 
+            cout << "I don't handle more than 25 networks" << endl;}
+}
+
 int Network::getNumLayers() {
     int numLayers = 0;
     for (auto i : _layers) {
@@ -126,15 +172,21 @@ int Network::getNumLayers() {
     return numLayers;
 }
 
-void Network::setupwhichLayerofNetworkToUse() {
-    int numLayers = getNumLayers();
-    _whichLayerofNetworkToUse.resize(25);
-    if (numLayers == 1) {
-        for (unsigned int i = 0; i < 25; ++i) {
-            _whichLayerofNetworkToUse[i].push_back(0);
-            _whichLayerofNetworkToUse[i].push_back(_layers.size());
+void Network::getLayerSizes(vector<int> & layerSizes) {
+    int counter = 0;
+    int check = 0;
+    for (auto i : _layers) {
+        ++counter;
+        if (i.size() == 1) {
+            if (counter < 3){
+                cout << "The counter gave an invalid value" << endl;}
+            layerSizes.push_back(counter);
+            check += counter;
+            counter = 0;
         }
     }
+    if (check != (int)_layers.size())
+        cout << "Layer sizes don't matchup in getLayerSizes!" << endl;
 }
 
 template <typename RandomNumberType>
