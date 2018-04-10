@@ -1,12 +1,12 @@
-#include "gui-cpp-interface.h"
+#include "../headers/gui-cpp-interface.h"
 using ai::GuiCppInterface;
 
-#include "checkers-game.h"
+#include "../headers/checkers-game.h"
 using ai::CheckersGame;
 using MovePackage = CheckersGame::MovePackage;
 using JumpPackage = CheckersGame::JumpPackage;
 
-#include "board.h"
+#include "../headers/board.h"
 using ai::Board;
 
 #include <unistd.h>
@@ -89,6 +89,7 @@ void GuiCppInterface::makeJump(const CheckersGame::JumpPackage &jump) {
     game.swapPlayers();
     if (game.areJumps()) {
       cout << game.validJumpsToString() << endl;
+      cout << game.validMovesToString() << endl;
       JumpPackage jump = game.getBestJump();
       game.board.make(jump);
       game.reactTo(jump);
@@ -120,6 +121,7 @@ void GuiCppInterface::makeMove(const CheckersGame::MovePackage &move) {
   game.swapPlayers();
   if (areJumps()) {
     cout << game.validJumpsToString() << endl;
+    cout << game.validMovesToString() << endl;
     JumpPackage jump = game.getBestJump();
     game.board.make(jump);
     game.reactTo(jump);
