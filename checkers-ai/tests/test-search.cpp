@@ -243,6 +243,23 @@ TEST_CASE ("minimax wrapper functions behave") {
     }
 }
 
+void tableDivider () {
+    cout << "|-------|---------------|-----------------------"
+         << "|---------------|---------------|" << endl;
+}
+
+void runSearchHeader () {
+    tableDivider();
+    cout << "|Depth\t|Nodes evaluated|Nodes with pruning\t|Leaf Nodes\t|Total time (s)\t|" << endl;
+    tableDivider();
+}
+
+void outputWithTabs(int numOut) {
+    cout << numOut;
+    if (numOut < 999999)
+        cout << "\t";
+}
+
 vector<MovePackage> moves;
 void runSearch(CheckersGame & game, int depth) {
     const int ITERATIONS = 1;
@@ -256,21 +273,26 @@ void runSearch(CheckersGame & game, int depth) {
     auto end = getTime();
 
     auto total = (end - start);
-    cout << "Nodes evaluated (depth " << depth << "): " << SearchHelper::totalNodes << " nodes" << endl;
-    cout << "Nodes with pruning: " << SearchHelper::prunedNodes << " nodes" << endl;
-    cout << "Leaf Nodes: " << SearchHelper::leafNodes << endl;
-    cout << "Total time taken: " << total <<  " secs" << endl;
-    cout << endl;
+    cout << "|" << depth << "\t|";
+    // Nodes Evaluated
+    outputWithTabs(SearchHelper::totalNodes);
+    // Nodes with pruning
+    cout << "\t|" << SearchHelper::prunedNodes << "\t\t\t|";
+    // Leaf nodes
+    outputWithTabs(SearchHelper::leafNodes);
+    // Total time
+    cout << "\t|" << total <<  "\t|" << endl;
+    tableDivider();
 }
 
 TEST_CASE ("timing search at different depths", "[search],[timing]") {
-    cout << endl << "search timing: " << endl;
-    cout << "----------------------------------" << endl;
+    cout << endl << "search timing: \n" << endl;
 
     auto game = getCheckersGame();
 
+    runSearchHeader();
     for (size_t d = 2; d <= 10; ++d) {
-        //runSearch(game, d);
+        runSearch(game, d);
     }
 
 }
