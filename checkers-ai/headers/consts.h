@@ -19,7 +19,7 @@ namespace ai {
     enum class PlayerType {
         Human, Computer
     };
-    static int blondiePopulation = 30;
+    // static int blondiePopulation = 30;
     static std::vector<unsigned int> blondieDimensions{32, 40, 10, 1};
 
     static const int INIT_NUM_PIECES = 12;
@@ -31,7 +31,7 @@ namespace ai {
     static const int DEBUG = false;
     static const int MOVE_LIMIT = 100;
 
-    static const unsigned int NETWORKPOPSIZE = blondiePopulation;
+    static const unsigned int NETWORKPOPSIZE = 100;
 
     const float INF = FLT_MAX;
     
