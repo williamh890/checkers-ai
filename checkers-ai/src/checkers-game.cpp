@@ -1,58 +1,60 @@
-#include "checkers-game.h"
+#include "../headers/checkers-game.h"
 using ai::CheckersGame;
 using PlayerPtr = CheckersGame::PlayerPtr;
 using MovePackage = CheckersGame::MovePackage;
 using JumpPackage = CheckersGame::JumpPackage;
 using SeederPtr = CheckersGame::SeederPtr;
 
-#include "seeder.h"
+#include "../headers/seeder.h"
 using ai::getSeeder;
 using ai::RandomDeviceSeeder;
 using ai::Seeder;
 using ai::SRandSeeder;
 
-#include "search.h"
+#include "../headers/search.h"
 
-#include "board.h"
+#include "../headers/board.h"
 using ai::Board;
 using ai::getBoard;
 
-#include "player.h"
+#include "../headers/player.h"
 using ai::BlackPlayer;
 using ai::getNetworkedPlayer;
 using ai::getPlayer;
 using ai::Player;
 using ai::RedPlayer;
 
-#include "json-to-stl.h"
+#include "../headers/json-to-stl.h"
 
-#include "move-generator.h"
+#include "../headers/move-generator.h"
 using ai::getGeneratorFor;
 using ai::MoveGenerator;
 
-#include "utils.h"
+#include "../headers/utils.h"
 using ai::getTime;
 
-#include "models.h"
+#include "../headers/models.h"
 using ai::Jump;
 using ai::Piece;
 using ai::Position;
 
-#include "game-state.h"
+#include "../headers/game-state.h"
 using ai::GameState;
 
-#include "consts.h"
+#include "../headers/consts.h"
 using ai::INIT_NUM_PIECES;
 using ai::MOVE_LIMIT;
 using ai::TOTAL_NUM_SPACES;
 
-#include "table-types.h"
+#include "../headers/table-types.h"
 using ai::MoveTableType;
 
+#include <algorithm>
+using std::sort;
 #include <string>
 using std::string;
 #include <sstream>
-using std::istringstream;
+using std::stringstream;
 #include <iostream>
 using std::cin;
 using std::cout;
@@ -134,22 +136,19 @@ CheckersGame::CheckersGame(const Board &board, PlayerPtr red, PlayerPtr black,
 }
 
 const char CheckersGame::play() {
-    while (++moveCounter < MOVE_LIMIT && (areMoves() || areJumps())) {
-        try {
-            auto start = getTime();
-            turn();
-            auto end = getTime();
+  while (++moveCounter < MOVE_LIMIT && (areMoves() || areJumps())) {
+    try {
+      auto start = getTime();
+      turn();
+      auto end = getTime();
 
-            cout << "turn: " << end - start << endl;
-        }
-        catch(length_error & e) {
-            break;
-        }
-        catch(runtime_error & e) {
-            continue;
-        }
+      cout << "turn: " << end - start << endl;
+    } catch (length_error &e) {
+      break;
+    } catch (runtime_error &e) {
+      continue;
     }
-
+  }
 
   return getInactivePlayerColor();
 }
@@ -297,6 +296,46 @@ vector<JumpPackage> CheckersGame::getValidJumpsAt(int space) {
   return jumpsAtSpace;
 }
 
+string CheckersGame::validMovesToString() {
+  stringstream ss;
+  auto validMoves = getValidMoves();
+  sort(validMoves.begin(), validMoves.end());
+  int from = validMoves[0].first;
+  ss << activePlayer->getColor() << " Moves: "
+     << "\n"
+     << from << ": [";
+
+  for (const auto move : validMoves) {
+    if (from != move.first) {
+      from = move.first;
+      ss << "]\n";
+      ss << from << ": [";
+    }
+    ss << move.second << " ";
+  }
+  ss << "]\n";
+  return ss.str();
+}
+
+string CheckersGame::validJumpsToString() {
+  stringstream ss;
+  auto validJumps = getValidJumps();
+  sort(validJumps.begin(), validJumps.end(),
+       [&](auto jump1, auto jump2) { return jump1.first < jump2.first; });
+  int from = validJumps[0].first;
+  ss << activePlayer->getColor() << " Jumps: \n" << from << ": [";
+
+  for (const auto jump : validJumps) {
+    if (from != jump.first) {
+      from = jump.first;
+      ss << "]\n";
+      ss << jump.first << ": [ ";
+    }
+    ss << "(" << jump.second.through << ", " << jump.second.to << ") ";
+  }
+
+  return ss.str();
+}
 const char CheckersGame::getActivePlayerColor() {
   return activePlayer->getColor();
 }

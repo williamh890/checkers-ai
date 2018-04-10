@@ -18,6 +18,8 @@
 #include <iostream>
 // std::cout;
 // std::endl;
+#include <string>
+// std::string;
 #include <memory>
 // std::shared_ptr
 #include <vector>
@@ -28,78 +30,79 @@
 // std::mt19937
 
 namespace ai {
-    class CheckersGame {
-        public:
-            using MovePackage = std::pair<int, int>;
-            using JumpPackage = std::pair<int, Jump>;
-            using PlayerPtr = std::shared_ptr<Player>;
-            using SeederPtr = std::shared_ptr<Seeder>;
+class CheckersGame {
+public:
+  using MovePackage = std::pair<int, int>;
+  using JumpPackage = std::pair<int, Jump>;
+  using PlayerPtr = std::shared_ptr<Player>;
+  using SeederPtr = std::shared_ptr<Seeder>;
 
-            static int SEARCH_DEPTH;
-            int moveCounter = 0;
+  static int SEARCH_DEPTH;
+  int moveCounter = 0;
 
-            Board board;
+  Board board;
 
-            PlayerPtr red;
-            PlayerPtr black;
+  PlayerPtr red;
+  PlayerPtr black;
 
-            PlayerPtr activePlayer;
-            PlayerPtr inactivePlayer;
+  PlayerPtr activePlayer;
+  PlayerPtr inactivePlayer;
 
-            std::mt19937 generator;
+  std::mt19937 generator;
 
-        public:
-            CheckersGame();
-            CheckersGame(
-                    const Board & board,
-                    PlayerPtr red,
-                    PlayerPtr black,
-                    SeederPtr & seeder
-                    );
+public:
+  CheckersGame();
+  CheckersGame(const Board &board, PlayerPtr red, PlayerPtr black,
+               SeederPtr &seeder);
 
-            const char play();
-            void turn();
-            void makeAnyMultiJumps(int space);
+  const char play();
+  void turn();
+  void makeAnyMultiJumps(int space);
 
-            void makeRandomValidAction();
+  void makeRandomValidAction();
 
-            bool isInvalid(const MovePackage & move);
-            bool isInvalid(const JumpPackage & jump);
+  bool isInvalid(const MovePackage &move);
+  bool isInvalid(const JumpPackage &jump);
 
-            const char getActivePlayerColor();
-            const char getInactivePlayerColor();
+  const char getActivePlayerColor();
+  const char getInactivePlayerColor();
 
-            void swapPlayers();
-            bool areJumps();
-            bool areMoves();
+  void swapPlayers();
+  bool areJumps();
+  bool areMoves();
 
-            std::vector<MovePackage> getValidMoves();
-            std::vector<JumpPackage> getValidJumps();
-            std::vector<JumpPackage> getValidJumpsAt(int space);
+  std::vector<MovePackage> getValidMoves();
+  std::vector<JumpPackage> getValidJumps();
+  std::vector<JumpPackage> getValidJumpsAt(int space);
 
-            GameState getState();
-            void setState(GameState & state);
+  std::string validMovesToString();
+  std::string validJumpsToString();
 
-            MovePackage getMoveFromActivePlayer();
+  GameState getState();
+  void setState(GameState &state);
 
-            MovePackage getRandomValidMove();
-            MovePackage getBestMove();
+  MovePackage getMoveFromActivePlayer();
 
-            JumpPackage getJumpFromActivePlayer();
+  MovePackage getRandomValidMove();
+  MovePackage getBestMove();
 
-            JumpPackage getRandomValidJump();
-            JumpPackage getBestJump(int space=-1);
+  JumpPackage getJumpFromActivePlayer();
 
-            bool reactTo(const MovePackage & move);
-            bool reactTo(const JumpPackage & jump);
+  JumpPackage getRandomValidJump();
+  JumpPackage getBestJump(int space = -1);
 
-            std::string toString();
+  bool reactTo(const MovePackage &move);
+  bool reactTo(const JumpPackage &jump);
 
-            int getNumPiecesFor(char color);
-    };
+  std::string toString();
 
-    CheckersGame getCheckersGame();
-    CheckersGame getNetworkedCheckersGame(unsigned int red_id, unsigned int black_id);
-    CheckersGame getNetworkVPieceCountCheckersGame(unsigned int network_id, char networked_player);
-}
+  int getNumPiecesFor(char color);
+};
+
+CheckersGame getCheckersGame();
+CheckersGame getNetworkedCheckersGame(unsigned int red_id,
+                                      unsigned int black_id);
+CheckersGame getNetworkVPieceCountCheckersGame(unsigned int network_id,
+                                               char networked_player);
+} // namespace ai
 #endif
