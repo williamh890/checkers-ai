@@ -1,23 +1,23 @@
 #include "move-generator.h"
-using ai::MoveGenerator;
 using ai::getGeneratorFor;
+using ai::MoveGenerator;
 
 #include "checkers-game.h"
 using ai::CheckersGame;
 using ai::getCheckersGame;
 
 #include "json-to-stl.h"
-using ai::loadMoveTableFrom;
 using ai::JsonToStlConverter;
+using ai::loadMoveTableFrom;
 
 #include "models.h"
-using ai::Position;
-using ai::Piece;
 using ai::Jump;
+using ai::Piece;
+using ai::Position;
 
 #include "table-types.h"
-using ai::MoveTableType;
 using ai::JumpTableType;
+using ai::MoveTableType;
 
 #include <vector>
 using std::vector;
@@ -27,57 +27,57 @@ using std::endl;
 #include <string>
 using std::string;
 #include <utility>
-using std::pair;
 using std::make_pair;
+using std::pair;
 #include <stdio.h>
 
-MoveGenerator::MoveGenerator(
-        const MoveTableType & moves,
-        const JumpTableType & jumps): moves(moves), jumps(jumps) {
-}
+MoveGenerator::MoveGenerator(const MoveTableType &moves,
+                             const JumpTableType &jumps)
+    : moves(moves), jumps(jumps) {}
 // MoveGenerator::~MoveGenerator(){};
 
 vector<int> MoveGenerator::getMoves(int space) const {
-    return this->moves[ space ];
+  return this->moves[space];
 }
 
 vector<Jump> MoveGenerator::getJumps(int space) const {
-    return this->jumps[ space ];
+  return this->jumps[space];
 }
 
-MoveGenerator ai::getGeneratorFor(const string & color, const JsonToStlConverter & converter) {
-    auto moves = converter.getMovesFor(color);
-    auto jumps = converter.getJumpsFor(color);
+MoveGenerator ai::getGeneratorFor(const string &color,
+                                  const JsonToStlConverter &converter) {
+  auto moves = converter.getMovesFor(color);
+  auto jumps = converter.getJumpsFor(color);
 
-    return MoveGenerator(moves, jumps);
+  return MoveGenerator(moves, jumps);
 }
 
-MoveGenerator ai::getKingGenerator(const JsonToStlConverter & converter) {
-    auto redMoves = converter.getMovesFor("red");
-    auto blackMoves = converter.getMovesFor("black");
+MoveGenerator ai::getKingGenerator(const JsonToStlConverter &converter) {
+  auto redMoves = converter.getMovesFor("red");
+  auto blackMoves = converter.getMovesFor("black");
 
-    MoveTableType moves;
-    for (auto i = 0; i < (int)redMoves.size(); ++i) {
-        auto r = redMoves[i];
-        auto b = blackMoves[i];
+  MoveTableType moves;
+  for (auto i = 0; i < (int)redMoves.size(); ++i) {
+    auto r = redMoves[i];
+    auto b = blackMoves[i];
 
-        r.insert( r.end(), b.begin(), b.end() );
+    r.insert(r.end(), b.begin(), b.end());
 
-        moves.push_back(r);
-    }
+    moves.push_back(r);
+  }
 
-    auto redJumps = converter.getJumpsFor("red");
-    auto blackJumps = converter.getJumpsFor("black");
+  auto redJumps = converter.getJumpsFor("red");
+  auto blackJumps = converter.getJumpsFor("black");
 
-    JumpTableType jumps;
-    for (auto i = 0; i < (int)redMoves.size(); ++i) {
-        auto r = redJumps[i];
-        auto b = blackJumps[i];
+  JumpTableType jumps;
+  for (auto i = 0; i < (int)redMoves.size(); ++i) {
+    auto r = redJumps[i];
+    auto b = blackJumps[i];
 
-        r.insert( r.end(), b.begin(), b.end() );
+    r.insert(r.end(), b.begin(), b.end());
 
-        jumps.push_back(r);
-    }
+    jumps.push_back(r);
+  }
 
-    return MoveGenerator(moves, jumps);
+  return MoveGenerator(moves, jumps);
 }

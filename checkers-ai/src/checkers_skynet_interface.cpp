@@ -1,10 +1,10 @@
 
 #include "checkers_skynet_interface.h"
-using ai::SkynetCheckersGame;
+using ai::CheckersSkynetInterface;
 
 #include "checkers-game.h"
 
-SkynetCheckersGame::SkynetCheckersGame(
+CheckersSkynetInterface::CheckersSkynetInterface(
         const std::string & serverUrl,
         const std::string & gameName,
         ai::CheckersGame & game)

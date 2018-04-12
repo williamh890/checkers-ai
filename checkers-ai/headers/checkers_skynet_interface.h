@@ -5,21 +5,24 @@
 // ai::CheckersGame
 #include "json.hpp"
 
+#include "../../skynet/include/jsoncpp/json.h"
 #include "../../skynet/src/skynet/checkers.hpp"
 #include "../../skynet/src/skynet/checkers_client.hpp"
 
 namespace ai {
-    class SkynetCheckersGame {
-        std::string serverUrl;
-        std::string gameName;
+    class CheckersSkynetInterface {
+        private:
+            std::string serverUrl;
+            std::string gameName;
 
-        ai::CheckersGame game;
+            ai::CheckersGame game;
 
-        SkynetCheckersGame(
-            const std::string & serverName,
-            const std::string & gameName,
-            ai::CheckersGame & game
-        );
+        public:
+            CheckersSkynetInterface (
+                const std::string & serverName,
+                const std::string & gameName,
+                ai::CheckersGame & game
+            );
     };
 } // namespace ai
 #endif

@@ -1,43 +1,35 @@
 #include "seeder.h"
+using ai::getSeeder;
+using ai::RandomDeviceSeeder;
 using ai::Seeder;
 using ai::SRandSeeder;
-using ai::RandomDeviceSeeder;
-using ai::getSeeder;
 
 #include "consts.h"
 using ai::Settings::SEEDING_METHOD;
 
 #include <memory>
-using std::shared_ptr;
 using std::make_shared;
+using std::shared_ptr;
 
-Seeder::Seeder() {
- }
+Seeder::Seeder() {}
 
-SRandSeeder::SRandSeeder(): Seeder() {
-    srand(time(NULL));
-}
+SRandSeeder::SRandSeeder() : Seeder() { srand(time(NULL)); }
 
-RandomDeviceSeeder::RandomDeviceSeeder(): Seeder(){
-}
+RandomDeviceSeeder::RandomDeviceSeeder() : Seeder() {}
 
-unsigned int SRandSeeder::get() {
-    return rand();
-}
+unsigned int SRandSeeder::get() { return rand(); }
 
-unsigned int RandomDeviceSeeder::get() {
-    return (unsigned int)device();
-}
+unsigned int RandomDeviceSeeder::get() { return (unsigned int)device(); }
 
 shared_ptr<Seeder> ai::getSeeder() {
-    shared_ptr<Seeder> seeder;
+  shared_ptr<Seeder> seeder;
 
-    if (SEEDING_METHOD == "random_device") {
-        seeder = make_shared<RandomDeviceSeeder>();
-    }
-    if (SEEDING_METHOD == "time") {
-        seeder = make_shared<SRandSeeder>();
-    }
+  if (SEEDING_METHOD == "random_device") {
+    seeder = make_shared<RandomDeviceSeeder>();
+  }
+  if (SEEDING_METHOD == "time") {
+    seeder = make_shared<SRandSeeder>();
+  }
 
-    return seeder;
+  return seeder;
 }
