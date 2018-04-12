@@ -1,4 +1,5 @@
 networks
+gameinfo.txt
 
 checkers_game_obj
 checkers_game_obj.cpp

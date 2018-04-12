@@ -6,9 +6,11 @@ set(CMAKE_CXX_FLAGS "-O3 -Wall")
 set (CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(HEADERS_DIR "headers")
-set(SRC_DIR "src")
 add_library(CheckersMain INTERFACE)
+
+set(SRC_DIR "src")
+
+set(HEADERS_DIR "headers")
 include_directories(${HEADERS_DIR})
 
 #Can manually add the sources using the set command as follows:
@@ -41,11 +43,24 @@ set(HEADERS
     ${HEADERS_DIR}/game-state.h
 )
 
+set(SKYNET_INCLUDE_DIR ../skynet/)
+add_library(Skynet INTERFACE)
+target_include_directories(Skynet INTERFACE ${SKYNET_INCLUDE_DIR})
 add_executable(checkers.out
     ${HEADERS}
+    ${SRC_DIR}/checkers_skynet_interface.cpp
+    ${HEADERS_DIR}/checkers_skynet_interface.h
     ${SRC_DIR}/main.cpp
     ${SOURCES}
 )
+
+add_executable(skynet-game.out
+    ${HEADERS}
+    ${SRC_DIR}/skynet-game.cpp
+    ${SOURCES}
+)
+
+target_link_libraries(checkers.out Skynet)
 
 set(MANAGER_SOURCES
     ${SRC_DIR}/networkManagement.cpp
@@ -81,9 +96,11 @@ set(TEST_SOURCES
 
 add_library(Catch INTERFACE)
 target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
-
 add_executable(test.out ${TEST_SOURCES} ${SOURCES})
 target_link_libraries(test.out Catch)
+
+
+
 
 enable_testing()
 add_test(NAME MyAwesomeTest COMMAND test.out)

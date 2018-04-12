@@ -7,9 +7,14 @@
 // ai::MoveTableType
 #include "models.h"
 // ai::pos
+// ai::Piece
 
 #include <vector>
 // std::vector
+#include <map>
+// std::map
+#include <string>
+// std::string
 #include <memory>
 // std::shared_ptr
 #include <utility>
@@ -29,6 +34,7 @@ namespace ai {
 
         public:
             Board();
+            std::map<std::string, std::vector<Piece>> getPieces();
             void addPiecesFor(const std::shared_ptr<Player> & player);
             void updatePiece(const int & index, const char & newVal);
 
@@ -46,6 +52,7 @@ namespace ai {
 
         public:
             std::string toString();
+            std::string skynetStr();
             char operator[](const int & index) const;
             int pieceCount(char color);
 
