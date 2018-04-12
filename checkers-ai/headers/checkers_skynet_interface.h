@@ -19,10 +19,13 @@ private:
   std::string serverUrl;
 
 public:
-  CheckersSkynetInterface(const std::string &serverName,
+  CheckersSkynetInterface(const std::string &serverUrl,
+                          const std::string &gameName);
+  CheckersSkynetInterface(const std::string &serverUrl,
                           const std::string &gameName, ai::CheckersGame &game);
-
-  CheckersSkynetInterface(CheckersGame &game, std::string game_name);
+  CheckersSkynetInterface(const std::string &serverUrl,
+                          const std::string &gameName, unsigned int network_id,
+                          const char team);
 };
 } // namespace ai
 #endif
