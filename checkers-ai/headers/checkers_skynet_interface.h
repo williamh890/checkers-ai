@@ -14,12 +14,8 @@
 namespace ai {
 class CheckersSkynetInterface {
 private:
-  std::string serverUrl;
-  std::string gameName;
-
-private:
   CheckersGame game;
-  std::string GameName;
+  std::string gameName;
   std::string serverUrl;
 
 public:
@@ -27,6 +23,6 @@ public:
                           const std::string &gameName, ai::CheckersGame &game);
 
   CheckersSkynetInterface(CheckersGame &game, std::string game_name);
-
+};
 } // namespace ai
 #endif

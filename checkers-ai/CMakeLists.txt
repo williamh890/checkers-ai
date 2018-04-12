@@ -45,11 +45,15 @@ set(HEADERS
     ${HEADERS_DIR}/checkers_skynet_interface.h
 )
 
+set(SKYNET_INCLUDE_DIR ../skynet/)
+add_library(Skynet INTERFACE)
+target_include_directories(Skynet INTERFACE ${SKYNET_INCLUDE_DIR})
 add_executable(checkers.out
     ${HEADERS}
     ${SRC_DIR}/main.cpp
     ${SOURCES}
 )
+target_link_libraries(checkers.out Skynet)
 
 set(MANAGER_SOURCES
     ${SRC_DIR}/networkManagement.cpp
@@ -85,9 +89,11 @@ set(TEST_SOURCES
 
 add_library(Catch INTERFACE)
 target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
-
 add_executable(test.out ${TEST_SOURCES} ${SOURCES})
 target_link_libraries(test.out Catch)
+
+
+
 
 enable_testing()
 add_test(NAME MyAwesomeTest COMMAND test.out)
