@@ -75,7 +75,7 @@ using std::mt19937;
 using std::random_device;
 using std::uniform_int_distribution;
 
-int CheckersGame::SEARCH_DEPTH = 3;
+int CheckersGame::SEARCH_DEPTH = 5;
 
 CheckersGame ai::getCheckersGame() {
   auto table = loadMoveTableFrom("move-table.json");
@@ -108,6 +108,7 @@ CheckersGame ai::getNetworkVPieceCountCheckersGame(unsigned int network_id,
                                                    char networked_player) {
   auto table = loadMoveTableFrom("move-table.json");
   auto converter = JsonToStlConverter{table};
+  cout << "networked_player was " << networked_player << endl;
 
   auto red = (networked_player == 'r')
                  ? getNetworkedPlayer("red", converter, network_id)
