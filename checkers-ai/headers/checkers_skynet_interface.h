@@ -12,6 +12,9 @@
 // ai::CheckersGame
 #include "json.hpp"
 
+#include <string>
+// std::string
+
 namespace ai {
 class CheckersSkynetInterface {
 public:
@@ -19,12 +22,13 @@ public:
 
 private:
   CheckersGame game;
+  std::string game_name;
 
 public:
   CheckersSkynetInterface() = default;
   ~CheckersSkynetInterface() = default;
 
-  CheckersSkynetInterface(CheckersGame &game);
+  CheckersSkynetInterface(CheckersGame &game, std::string game_name);
 
   void sendBoard();
   void receiveBoard();
