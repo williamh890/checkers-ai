@@ -23,6 +23,13 @@ private:
 public:
   CheckersSkynetInterface() = default;
   ~CheckersSkynetInterface() = default;
+
+  CheckersSkynetInterface(CheckersGame &game);
+
+  void sendBoard();
+  void receiveBoard();
+
+private:
 };
 } // namespace ai
 #endif
