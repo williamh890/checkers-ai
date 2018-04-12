@@ -9,7 +9,11 @@ using ai::SearchHelper;
 #include <fstream>
 #include <iostream>
 
-const std::string server = " --server http://localhost:8080 ";
+// Command line args are
+//      ./skynet-game.out <game-name> <player-color> <network-id> <search-depth-limit>
+
+const std::string server_local = " --server http://localhost:8080 ";
+const std::string server = " --server http://skynet.cs.uaf.edu ";
 
 struct GameInfo {
     std::string turn;
@@ -83,15 +87,12 @@ void skynetPlay(const std::string & gameName, const char playerColor, ai::Checke
     }
 }
 
-// Command line args are
-//      ./skynet-game.out <game-name> <player-color> <network-id> <search-depth-limit>
 int main(int argc, char **argv) {
 
     std::string gameName = argv[1];
     const char playerColor = std::string(argv[2])[0];
     unsigned int network_id = std::stoi(argv[3]);
-    unsigned int player = std::stoi(argv[4]);
-    SearchHelper::limit = std::stof(argv[5]);
+    SearchHelper::limit = std::stof(argv[4]);
 
     auto game = (playerColor == 'r') ?
         ai::getNetworkedCheckersGame(network_id, 0):
