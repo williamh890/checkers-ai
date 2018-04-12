@@ -141,6 +141,7 @@ const char CheckersGame::play() {
         try {
             auto start = getTime();
             turn();
+            swapPlayers();
             auto end = getTime();
 
             cout << "turn: " << end - start << endl;
@@ -166,15 +167,15 @@ void CheckersGame::turn() {
 
     if (move.first == -1) {
         board.make(jump);
-        reactTo(jump);
+        auto wasPieceCrowned = reactTo(jump);
 
-        makeAnyMultiJumps(jump.second.to);
+        if (!wasPieceCrowned) {
+            makeAnyMultiJumps(jump.second.to);
+        }
     } else {
         board.make(move);
         reactTo(move);
     }
-
-    swapPlayers();
 }
 
 void CheckersGame::makeAnyMultiJumps(int space) {
@@ -190,7 +191,11 @@ void CheckersGame::makeAnyMultiJumps(int space) {
         }
 
         board.make(jump);
-        reactTo(jump);
+        auto wasPieceCrowned = reactTo(jump);
+
+        if (wasPieceCrowned) {
+            break;
+        }
 
         validJumps = getValidJumpsAt(jump.second.to);
     }

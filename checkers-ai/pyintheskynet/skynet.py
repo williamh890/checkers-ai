@@ -56,6 +56,8 @@ def main():
         if len(boards) == 0:
             return
 
+        color = "black" if "black" in info['status'] else "red"
+        print(color)
         print(boards[-1])
 
     if args.endpoint == 'play_game':

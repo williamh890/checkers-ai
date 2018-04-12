@@ -9,22 +9,44 @@ using ai::SearchHelper;
 #include <fstream>
 #include <iostream>
 
-std::string getGameInfo(const std::string & game) {
+// Command line args are
+//      ./skynet-game.out <game-name> <player-color> <network-id> <search-depth-limit>
+
+const std::string server_local = " --server http://localhost:8080 ";
+const std::string server = " --server http://skynet.cs.uaf.edu ";
+
+struct GameInfo {
+    std::string turn;
+    std::string board;
+    GameInfo() = default;
+    GameInfo(
+        const std::string & turn,
+        const std::string & board
+    ) : turn(turn), board(board) {}
+};
+
+void sendTurn(const std::string & gameName, const std::string & board) {
+    std::string sendCmd = "python3 pyintheskynet/skynet.py play_game --game " + gameName + " --board " + board;
+    sendCmd += server;
+    auto ret = system(sendCmd.c_str());
+}
+
+GameInfo getGameInfo(const std::string & game) {
     auto cmdOutfile = "gameinfo.txt";
     std::string listCmd = "python3 pyintheskynet/skynet.py game_info --game " + game + " > " + cmdOutfile;
+    listCmd += server;
     auto ret = system(listCmd.c_str());
 
     std::ifstream boardFile(cmdOutfile);
-    std::string gameState = "", x = "";
+    std::string boardStr = "", turn = "";
 
-    while (boardFile >> x) {
-        gameState  += x;
-    }
+    boardFile >> turn >> boardStr;
 
-    return gameState;
+    return GameInfo(turn, boardStr);
 }
 
-std::string formatBoard(std::string board) {
+
+std::string formatBoard(std::string board, const char playerColor) {
     for (auto & c : board) {
         if (c == '_') {
             c = ' ';
@@ -36,48 +58,51 @@ std::string formatBoard(std::string board) {
 
 std::string getNextBoardState(
         const std::string & gameName,
-        const std::string & localState) {
-    std::string stateFromServer;
+        const char playerColor) {
+    GameInfo stateFromServer;
     size_t timeout = 0;
 
     do {
         stateFromServer = getGameInfo(gameName);
+
         if (timeout++ > 10000) {
             std::cout << "Gametimed out..." << std::endl;
             exit(-1);
         }
-    } while (stateFromServer == localState);
+    } while (stateFromServer.turn[0] != playerColor);
 
-    return formatBoard(stateFromServer);
+    return formatBoard(stateFromServer.board, playerColor);
 }
 
-void skynetPlay(const std::string & gameName, ai::CheckersGame & game) {
+
+void skynetPlay(const std::string & gameName, const char playerColor, ai::CheckersGame & game) {
     while (game.moveCounter++ < 100) {
         auto localState = game.getSkynetBoardStr();
 
-        auto newBoard = getNextBoardState(gameName, localState);
+        auto newBoard = getNextBoardState(gameName, playerColor);
         game.setState(newBoard);
+        game.turn();
 
-        std::cout << newBoard << std::endl;
-
-        break;
+        sendTurn(gameName, game.getSkynetBoardStr());
     }
-
-    std::cout << "game-state: " << game.getSkynetBoardStr() << std::endl;
-    std::cout << getGameInfo(gameName) << std::endl;
 }
 
-// Command line args are
-//      ./skynet-game.out <game-name> <network-id> <search-depth-limit>
 int main(int argc, char **argv) {
 
     std::string gameName = argv[1];
-    unsigned int red_id = std::stoi(argv[2]);
-    SearchHelper::limit = std::stof(argv[3]);
+    const char playerColor = std::string(argv[2])[0];
+    unsigned int network_id = std::stoi(argv[3]);
+    SearchHelper::limit = std::stof(argv[4]);
 
-    auto game = ai::getNetworkedCheckersGame(red_id, 0);
+    auto game = (playerColor == 'r') ?
+        ai::getNetworkedCheckersGame(network_id, 0):
+        ai::getNetworkedCheckersGame(0, network_id);
 
-    skynetPlay(gameName, game);
+    if (game.getActivePlayerColor() != playerColor) {
+        game.swapPlayers();
+    }
+
+    skynetPlay(gameName, playerColor, game);
 
     return 0;
 }
