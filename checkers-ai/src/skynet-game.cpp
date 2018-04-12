@@ -9,6 +9,11 @@ using ai::SearchHelper;
 #include <fstream>
 #include <iostream>
 
+void sendTurn(const std::string & gameName, const std::string & board) {
+    std::string sendCmd = "python3 pyintheskynet/skynet.py play_game --game " + gameName + " --board " + board;
+    auto ret = system(sendCmd.c_str());
+}
+
 std::string getGameInfo(const std::string & game) {
     auto cmdOutfile = "gameinfo.txt";
     std::string listCmd = "python3 pyintheskynet/skynet.py game_info --game " + game + " > " + cmdOutfile;
@@ -23,6 +28,7 @@ std::string getGameInfo(const std::string & game) {
 
     return gameState;
 }
+
 
 std::string formatBoard(std::string board) {
     for (auto & c : board) {
@@ -42,6 +48,7 @@ std::string getNextBoardState(
 
     do {
         stateFromServer = getGameInfo(gameName);
+
         if (timeout++ > 10000) {
             std::cout << "Gametimed out..." << std::endl;
             exit(-1);
@@ -51,14 +58,16 @@ std::string getNextBoardState(
     return formatBoard(stateFromServer);
 }
 
+
 void skynetPlay(const std::string & gameName, ai::CheckersGame & game) {
     while (game.moveCounter++ < 100) {
         auto localState = game.getSkynetBoardStr();
 
         auto newBoard = getNextBoardState(gameName, localState);
         game.setState(newBoard);
+        game.turn();
 
-        std::cout << newBoard << std::endl;
+        sendTurn(gameName, game.getSkynetBoardStr());
 
         break;
     }
