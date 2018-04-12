@@ -6,9 +6,11 @@ set(CMAKE_CXX_FLAGS "-O3 -Wall")
 set (CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(HEADERS_DIR "headers")
-set(SRC_DIR "src")
 add_library(CheckersMain INTERFACE)
+
+set(SRC_DIR "src")
+
+set(HEADERS_DIR "headers")
 include_directories(${HEADERS_DIR})
 
 #Can manually add the sources using the set command as follows:
@@ -25,6 +27,7 @@ set(SOURCES
     ${SRC_DIR}/network-file-writer.cpp
     ${SRC_DIR}/search.cpp
     ${SRC_DIR}/game-state.cpp
+    ${SRC_DIR}/checkers_skynet_interface.cpp
 )
 
 set(HEADERS
@@ -39,6 +42,7 @@ set(HEADERS
     ${HEADERS_DIR}/network-file-io.h
     ${HEADERS_DIR}/search.h
     ${HEADERS_DIR}/game-state.h
+    ${HEADERS_DIR}/checkers_skynet_interface.h
 )
 
 add_executable(checkers.out
