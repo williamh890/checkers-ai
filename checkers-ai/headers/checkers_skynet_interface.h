@@ -23,6 +23,11 @@ namespace ai {
                 const std::string & gameName,
                 ai::CheckersGame & game
             );
+
+          void sendBoard();
+          void receiveBoard();
     };
+
+
 } // namespace ai
 #endif
