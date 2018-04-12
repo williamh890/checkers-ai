@@ -25,6 +25,7 @@ set(SOURCES
     ${SRC_DIR}/network-file-writer.cpp
     ${SRC_DIR}/search.cpp
     ${SRC_DIR}/game-state.cpp
+    ${SRC_DIR}/checkers_skynet_interface.cpp
 )
 
 set(HEADERS
@@ -39,6 +40,7 @@ set(HEADERS
     ${HEADERS_DIR}/network-file-io.h
     ${HEADERS_DIR}/search.h
     ${HEADERS_DIR}/game-state.h
+    ${HEADERS_DIR}/checkers_skynet_interface.h
 )
 
 add_executable(checkers.out

@@ -16,41 +16,44 @@ using ai::SearchHelper;
 #include "consts.h"
 using ai::MOVE_LIMIT;
 
+#include "checkers_skynet_interface.h"
+using ai::CheckersSkynetInterface;
+
 #include <iostream>
 using std::cout;
 using std::endl;
 
 #include <string>
-using std::stoi;
 using std::stof;
+using std::stoi;
 using std::string;
 
+int main(int argc, char **argv) {
+  auto interface = CheckersSkynetInterface();
+  auto start = getTime();
 
-int main(int argc, char** argv) {
-    auto start = getTime();
-
-    unsigned int red_id = stoi(argv[1]);
-    unsigned int black_id = stoi(argv[2]);
-    SearchHelper::limit = stof(argv[3]);
+  unsigned int red_id = stoi(argv[1]);
+  unsigned int black_id = stoi(argv[2]);
+  SearchHelper::limit = stof(argv[3]);
 
 #ifndef USE_IDS
-    CheckersGame::SEARCH_DEPTH = stoi(argv[3]);
+  CheckersGame::SEARCH_DEPTH = stoi(argv[3]);
 #endif
 
-    auto game = getNetworkedCheckersGame(red_id, black_id);
+  auto game = getNetworkedCheckersGame(red_id, black_id);
 
-    const char winner = game.play();
+  const char winner = game.play();
 
-    auto end = getTime();
+  auto end = getTime();
 
-    cout << "game: " << end - start << endl;
-    if (game.moveCounter >= MOVE_LIMIT) {
-        return 0;
-    }
+  cout << "game: " << end - start << endl;
+  if (game.moveCounter >= MOVE_LIMIT) {
+    return 0;
+  }
 
-    if (winner == 'r'){
-        return 1;
-    } else  {
-        return 255;
-    }
+  if (winner == 'r') {
+    return 1;
+  } else {
+    return 255;
+  }
 }

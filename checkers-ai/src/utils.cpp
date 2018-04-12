@@ -1,6 +1,6 @@
-#include "utils.h"
+#include "../headers/utils.h"
 
-#include "models.h"
+#include "../headers/models.h"
 using ai::Position;
 
 #include <string>
@@ -10,12 +10,12 @@ using std::to_string;
 #include <chrono>
 
 #include <fstream>
-using std::ofstream;
 using std::ifstream;
+using std::ofstream;
 #include <iostream>
+using std::cin;
 using std::cout;
 using std::endl;
-using std::cin;
 using std::ios;
 
 /*         0   1   2   3   4   5   6   7
@@ -39,70 +39,73 @@ using std::ios;
 */
 
 Position ai::spaceToPosition(int space) {
-    auto row = space / 4;
-    auto col = space % 4;
+  auto row = space / 4;
+  auto col = space % 4;
 
-    auto offset = (row % 2 == 1) ? 0 : 1;
+  auto offset = (row % 2 == 1) ? 0 : 1;
 
-    return Position(row, (2 * col) + offset);
+  return Position(row, (2 * col) + offset);
 }
 
+int ai::positionToSpace(const Position &pos) {
+  int space = 0;
 
-int ai::positionToSpace(const Position & pos) {
-    int space = 0;
+  space += pos.row * 4;
+  space += (pos.col / 2);
 
-    space += pos.row * 4;
-    space += (pos.col / 2);
-
-    return space;
+  return space;
 }
 
-string ai::getUsername () {
-    ifstream usernameFile;
+string ai::getUsername() {
+  ifstream usernameFile;
+  usernameFile.open("user.me", ios::out | ios::binary);
+  if (!usernameFile) {
+    ofstream placingUsernameFile;
+    placingUsernameFile.open("user.me", ios::out | ios::binary);
+    cout << "Give me your username: ";
+    char inputName[25];
+    std::cin.getline(inputName, 25);
+    placingUsernameFile << inputName;
+    placingUsernameFile.close();
+    usernameFile.clear();
     usernameFile.open("user.me", ios::out | ios::binary);
-    if(!usernameFile) {
-        ofstream placingUsernameFile;
-        placingUsernameFile.open("user.me", ios::out | ios::binary);
-        cout << "Give me your username: ";
-        char inputName[25];
-        std::cin.getline(inputName, 25);
-        placingUsernameFile << inputName;
-        placingUsernameFile.close();
-        usernameFile.clear();
-        usernameFile.open("user.me", ios::out | ios::binary);
-    }
-    string nameOut;
-    usernameFile >> nameOut;
-    return nameOut;
+  }
+  string nameOut;
+  usernameFile >> nameOut;
+  return nameOut;
 }
 
 string ai::idToFilename(int ID) {
-	//string filename = to_string(ID) + ".network";
-	// The following implementation will be used once we begin to get the network integrated.
-	string filename = "./networks/" + getUsername() + "/" + to_string(ID) + ".network"; //creates filenames that scope to a folder called networks
-	return filename;
+  // string filename = to_string(ID) + ".network";
+  // The following implementation will be used once we begin to get the network
+  // integrated.
+  string filename =
+      "./networks/" + getUsername() + "/" + to_string(ID) +
+      ".network"; // creates filenames that scope to a folder called networks
+  return filename;
 }
 
 double ai::getTime() {
-    return 1.0e-9*std::chrono::duration_cast<std::chrono::nanoseconds>(
-            std::chrono::high_resolution_clock::now().time_since_epoch()
-            ).count();
+  return 1.0e-9 *
+         std::chrono::duration_cast<std::chrono::nanoseconds>(
+             std::chrono::high_resolution_clock::now().time_since_epoch())
+             .count();
 }
 
 ai::NetworkTestingNamechange::NetworkTestingNamechange() {
-    _previousName = getUsername();
-    changeUsername("TestingNetworks");
-    cout << "Username Changed" << endl;
+  _previousName = getUsername();
+  changeUsername("TestingNetworks");
+  cout << "Username Changed" << endl;
 }
 
-ai::NetworkTestingNamechange::~NetworkTestingNamechange () {
-    changeUsername(_previousName);
-    cout << "NTNC OBJ destroyed. Current name: " << getUsername() << endl;
+ai::NetworkTestingNamechange::~NetworkTestingNamechange() {
+  changeUsername(_previousName);
+  cout << "NTNC OBJ destroyed. Current name: " << getUsername() << endl;
 }
 
-void ai::NetworkTestingNamechange::changeUsername(const std::string & s) {
-    ofstream placingUsernameFile;
-    placingUsernameFile.open("user.me", ios::out | ios::binary);
-    placingUsernameFile << s;
-    placingUsernameFile.close();
+void ai::NetworkTestingNamechange::changeUsername(const std::string &s) {
+  ofstream placingUsernameFile;
+  placingUsernameFile.open("user.me", ios::out | ios::binary);
+  placingUsernameFile << s;
+  placingUsernameFile.close();
 }

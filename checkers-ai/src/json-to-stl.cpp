@@ -1,6 +1,6 @@
 #include "table-types.h"
-using ai::MoveTableType;
 using ai::JumpTableType;
+using ai::MoveTableType;
 
 #include "models.h"
 using ai::Jump;
@@ -23,86 +23,88 @@ using std::vector;
 using std::cout;
 using std::endl;
 
-json ai::loadMoveTableFrom(const string & moveTableFilename) {
-    ifstream jsonIn(moveTableFilename);
-    json moveTableJson;
-    jsonIn >> moveTableJson;
+json ai::loadMoveTableFrom(const string &moveTableFilename) {
+  ifstream jsonIn(moveTableFilename);
+  json moveTableJson;
+  jsonIn >> moveTableJson;
 
-    return moveTableJson;
+  return moveTableJson;
 }
 
-JsonToStlConverter::JsonToStlConverter(json table): moveTable(table) {
+JsonToStlConverter::JsonToStlConverter(json table) : moveTable(table) {}
+
+MoveTableType JsonToStlConverter::getMovesFor(const string &color) const {
+  auto movesJson = this->moveTable[color]["moves"];
+
+  auto moveTableStl = movesToStlContainer(movesJson);
+
+  return moveTableStl;
 }
 
-MoveTableType JsonToStlConverter::getMovesFor(const string & color) const {
-    auto movesJson = this->moveTable[color]["moves"];
+JumpTableType JsonToStlConverter::getJumpsFor(const string &color) const {
+  auto jumpsJson = this->moveTable[color]["jumps"];
+  auto jumpTableStl = jumpsToStlContainer(jumpsJson);
 
-    auto moveTableStl = movesToStlContainer(movesJson);
-
-    return moveTableStl;
+  return jumpTableStl;
 }
 
-JumpTableType JsonToStlConverter::getJumpsFor(const string & color) const {
-    auto jumpsJson = this->moveTable[color]["jumps"];
-    auto jumpTableStl = jumpsToStlContainer(jumpsJson);
+MoveTableType
+JsonToStlConverter::movesToStlContainer(const json &movesJson) const {
+  MoveTableType moveTableStl{32};
 
+  auto end = movesJson.end();
+  for (auto it = movesJson.begin(); it != end; ++it) {
+    auto moves = getMovesFromJson(it.value());
 
-    return jumpTableStl;
+    auto space = strToInt(it.key());
+    moveTableStl[space] = moves;
+  }
+  return moveTableStl;
 }
 
-MoveTableType JsonToStlConverter::movesToStlContainer(const json & movesJson) const {
-    MoveTableType moveTableStl{32};
+JumpTableType
+JsonToStlConverter::jumpsToStlContainer(const json &jumpsJson) const {
+  JumpTableType jumpTableStl{32};
 
-    auto end = movesJson.end();
-    for (auto it = movesJson.begin(); it != end; ++it) {
-        auto moves = getMovesFromJson(it.value());
+  auto end = jumpsJson.end();
+  for (auto it = jumpsJson.begin(); it != end; ++it) {
 
-        auto space = strToInt(it.key());
-        moveTableStl[space] = moves;
-    }
-    return moveTableStl;
+    auto space = strToInt(it.key());
+    auto jumps = getJumpsFromJson(it.value());
+
+    jumpTableStl[space] = jumps;
+  }
+
+  return jumpTableStl;
 }
 
-JumpTableType JsonToStlConverter::jumpsToStlContainer(const json & jumpsJson) const {
-    JumpTableType jumpTableStl{32};
+vector<Jump>
+JsonToStlConverter::getJumpsFromJson(const json &jumpsForSpace) const {
+  vector<Jump> jumps;
 
-    auto end = jumpsJson.end();
-    for (auto it = jumpsJson.begin(); it != end; ++it) {
+  for (auto &j : jumpsForSpace) {
+    auto jump = Jump(j[0], j[1]);
+    jumps.push_back(jump);
+  }
 
-        auto space = strToInt(it.key());
-        auto jumps = getJumpsFromJson(it.value());
-
-        jumpTableStl[space] = jumps;
-    }
-
-    return jumpTableStl;
+  return jumps;
 }
 
-vector<Jump> JsonToStlConverter::getJumpsFromJson(const json & jumpsForSpace) const {
-    vector<Jump> jumps;
+vector<int>
+JsonToStlConverter::getMovesFromJson(const json &movesForSpace) const {
+  vector<int> moves;
 
-    for (auto & j: jumpsForSpace) {
-        auto jump = Jump(j[0], j[1]);
-        jumps.push_back(jump);
-    }
+  for (auto &move : movesForSpace) {
+    moves.push_back(move);
+  }
 
-    return jumps;
+  return moves;
 }
 
-vector<int> JsonToStlConverter::getMovesFromJson(const json & movesForSpace) const {
-    vector<int> moves;
+int JsonToStlConverter::strToInt(const string &s) const {
+  stringstream ss(s);
+  int key = 0;
+  ss >> key;
 
-    for (auto & move: movesForSpace) {
-        moves.push_back(move);
-    }
-
-    return moves;
-}
-
-int JsonToStlConverter::strToInt(const string & s) const {
-    stringstream ss(s);
-    int key = 0;
-    ss >> key;
-
-    return key;
+  return key;
 }

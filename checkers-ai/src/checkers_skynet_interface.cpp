@@ -1,3 +1,13 @@
+#include "../../skynet/include/jsoncpp/json.h"
+#include "../../skynet/src/json/json.hpp"
+#include "../../skynet/src/skynet/checkers.hpp"
+#include "../../skynet/src/skynet/checkers_client.hpp"
+// skynet::checkers::play_game
+// skynet::checkers::print_game
+// skynet::checkers::game_info
+// skynet::checkers::game_info_t
 #include "../headers/checkers_skynet_interface.h"
-
-int main() { return 0; }
+#include "../headers/json.hpp"
+using ai::CheckersSkynetInterface;
+#include "../headers/checkers-game.h"
+using ai::CheckersGame;
