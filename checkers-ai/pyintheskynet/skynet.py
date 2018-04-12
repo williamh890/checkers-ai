@@ -1,6 +1,60 @@
 import requests
 import sys
 import json
+import argparse
+
+endpoints = [
+    'play_game',
+    'game_info'
+]
+
+local_url = "http://localhost:8080"
+skynet_url = "http://skynet.cs.uaf.edu"
+
+first_move = "rrrrrrrr_rrrr_______bbbbbbbbbbbb"
+
+parser = argparse.ArgumentParser(
+    description='python interface for making calls to skynet api'
+)
+
+parser.add_argument(
+    'endpoint',
+    help='the skynet endpoint to be called [{}]'.format('|'.join(endpoints))
+)
+
+parser.add_argument(
+    '--game', help='name of the skynet game',
+    dest='game'
+)
+
+parser.add_argument(
+    '--board', help='board string in skynet format',
+    dest='board'
+)
+
+parser.add_argument(
+    '--server',
+    dest='server',
+    default=local_url,
+    help='url of the skynet server'
+)
+
+
+def main():
+    args = parser.parse_args()
+    net = Skynet(args.server)
+
+    if not args.endpoint in endpoints:
+        print("invalid endpoint {}".format(args.endpoint))
+        exit()
+
+    if args.endpoint == 'game_info':
+        info = net.game_info(args.game)
+        print(info)
+
+    if args.endpoint == 'play_game':
+        output = net.play_game(args.game, args.board)
+        print(output)
 
 
 class Skynet:
@@ -38,13 +92,4 @@ class Skynet:
 
 
 if __name__ == "__main__":
-    local_url = "http://localhost:8080"
-    skynet_url = "http://skynet.cs.uaf.edu"
-
-    first_move = "rrrrrrrr_rrrr_______bbbbbbbbbbbb"
-
-    net = Skynet(local_url)
-
-    name = sys.argv[1]
-
-    print(net.play_game(name, first_move))
+    main()
