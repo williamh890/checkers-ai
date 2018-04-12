@@ -50,17 +50,17 @@ def main():
 
     if args.endpoint == 'game_info':
         info = net.game_info(args.game)
-        print(info)
 
-    if args.endpoint == 'play_game':
-        output = net.play_game(args.game, args.board)
-        boards = output.get('boards', [])
+        boards = info.get('boards', [])
 
         if len(boards) == 0:
             return
 
-        print(output['status'])
         print(boards[-1])
+
+    if args.endpoint == 'play_game':
+        output = net.play_game(args.game, args.board)
+        print(output)
 
 
 class Skynet:

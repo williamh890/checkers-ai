@@ -80,6 +80,7 @@ public:
 
   GameState getState();
   std::string getSkynetBoardStr();
+  void setState(const std::string & board);
   void setState(GameState &state);
 
   MovePackage getMoveFromActivePlayer();

@@ -24,8 +24,47 @@ std::string getGameInfo(const std::string & game) {
     return gameState;
 }
 
-void skynetPlay(ai::CheckersGame & game) {
+std::string formatBoard(std::string board) {
+    for (auto & c : board) {
+        if (c == '_') {
+            c = ' ';
+        }
+    }
 
+    return board;
+}
+
+std::string getNextBoardState(
+        const std::string & gameName,
+        const std::string & localState) {
+    std::string stateFromServer;
+    size_t timeout = 0;
+
+    do {
+        stateFromServer = getGameInfo(gameName);
+        if (timeout++ > 10000) {
+            std::cout << "Gametimed out..." << std::endl;
+            exit(-1);
+        }
+    } while (stateFromServer == localState);
+
+    return formatBoard(stateFromServer);
+}
+
+void skynetPlay(const std::string & gameName, ai::CheckersGame & game) {
+    while (game.moveCounter++ < 100) {
+        auto localState = game.getSkynetBoardStr();
+
+        auto newBoard = getNextBoardState(gameName, localState);
+        game.setState(newBoard);
+
+        std::cout << newBoard << std::endl;
+
+        break;
+    }
+
+    std::cout << "game-state: " << game.getSkynetBoardStr() << std::endl;
+    std::cout << getGameInfo(gameName) << std::endl;
 }
 
 // Command line args are
@@ -37,8 +76,8 @@ int main(int argc, char **argv) {
     SearchHelper::limit = std::stof(argv[3]);
 
     auto game = ai::getNetworkedCheckersGame(red_id, 0);
-    std::cout << "game-state: " << game.getSkynetBoardStr() << std::endl;
-    std::cout << getGameInfo(gameName) << std::endl;
+
+    skynetPlay(gameName, game);
 
     return 0;
 }

@@ -13,6 +13,7 @@ using ai::spaceToPosition;
 
 #include "models.h"
 using ai::Jump;
+using ai::Piece;
 
 #include <vector>
 using std::vector;
@@ -30,6 +31,9 @@ using std::make_pair;
 using std::pair;
 #include <algorithm>
 using std::swap;
+#include <map>
+using std::map;
+#include <cctype>
 
 Board::Board() : boardState(vector<char>(32, ' ')){};
 
@@ -38,6 +42,31 @@ void Board::addPiecesFor(const shared_ptr<Player> &player) {
     boardState[piece.space] = piece.color;
   }
 }
+
+map<string, vector<Piece>> Board::getPieces() {
+    map<string, vector<Piece>> pieces {
+        {"red", {}},
+        {"black", {}}
+    };
+
+    for (size_t space = 0; space < boardState.size(); ++space) {
+        auto p = boardState[space];
+        if (p == ' ') {
+            continue;
+        }
+
+        auto color = (tolower(p) == 'r') ? "red" : "black";
+        auto newPiece = Piece(tolower(p), space);
+        newPiece.isKing = isupper(p);
+
+        pieces.at(color).push_back(
+            newPiece
+        );
+    }
+
+    return pieces;
+}
+
 
 bool Board::hasPieceAt(int space) const { return boardState[space] != ' '; }
 
