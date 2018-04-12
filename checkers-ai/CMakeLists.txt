@@ -27,7 +27,6 @@ set(SOURCES
     ${SRC_DIR}/network-file-writer.cpp
     ${SRC_DIR}/search.cpp
     ${SRC_DIR}/game-state.cpp
-    ${SRC_DIR}/checkers_skynet_interface.cpp
 )
 
 set(HEADERS
@@ -42,7 +41,6 @@ set(HEADERS
     ${HEADERS_DIR}/network-file-io.h
     ${HEADERS_DIR}/search.h
     ${HEADERS_DIR}/game-state.h
-    ${HEADERS_DIR}/checkers_skynet_interface.h
 )
 
 set(SKYNET_INCLUDE_DIR ../skynet/)
@@ -50,9 +48,18 @@ add_library(Skynet INTERFACE)
 target_include_directories(Skynet INTERFACE ${SKYNET_INCLUDE_DIR})
 add_executable(checkers.out
     ${HEADERS}
+    ${SRC_DIR}/checkers_skynet_interface.cpp
+    ${HEADERS_DIR}/checkers_skynet_interface.h
     ${SRC_DIR}/main.cpp
     ${SOURCES}
 )
+
+add_executable(turn.out
+    ${HEADERS}
+    ${SRC_DIR}/turn-main.cpp
+    ${SOURCES}
+)
+
 target_link_libraries(checkers.out Skynet)
 
 set(MANAGER_SOURCES
