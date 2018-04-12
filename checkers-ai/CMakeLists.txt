@@ -6,9 +6,11 @@ set(CMAKE_CXX_FLAGS "-O3 -Wall")
 set (CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(HEADERS_DIR "headers")
-set(SRC_DIR "src")
 add_library(CheckersMain INTERFACE)
+
+set(SRC_DIR "src")
+
+set(HEADERS_DIR "headers")
 include_directories(${HEADERS_DIR})
 
 #Can manually add the sources using the set command as follows:

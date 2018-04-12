@@ -5,13 +5,14 @@ using skynet::checkers::play_game;
 using skynet::checkers::print_game;
 #include "checkers_skynet_interface.h"
 using ai::CheckersSkynetInterface;
+
 #include "checkers-game.h"
 using ai::CheckersGame;
-#include "json.hpp"
 
 #include <string>
 using std::string;
 
-CheckersSkynetInterface::CheckersSkynetInterface(CheckersGame &game,
-                                                 string game_name)
-    : game(game), game_name(game_name) {}
+CheckersSkynetInterface::CheckersSkynetInterface(const string &serverUrl,
+                                                 const string &gameName,
+                                                 CheckersGame &game)
+    : serverUrl(serverUrl), gameName(gameName), game(game) {}

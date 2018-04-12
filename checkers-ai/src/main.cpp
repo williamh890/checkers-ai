@@ -29,7 +29,7 @@ using std::stoi;
 using std::string;
 
 int main(int argc, char **argv) {
-  auto interface = CheckersSkynetInterface();
+
   auto start = getTime();
 
   unsigned int red_id = stoi(argv[1]);
@@ -40,7 +40,9 @@ int main(int argc, char **argv) {
   CheckersGame::SEARCH_DEPTH = stoi(argv[3]);
 #endif
 
+
   auto game = getNetworkedCheckersGame(red_id, black_id);
+  auto interface = CheckersSkynetInterface("localhost:8080", "test", game);
 
   const char winner = game.play();
 
