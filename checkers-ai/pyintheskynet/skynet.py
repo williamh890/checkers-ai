@@ -54,7 +54,13 @@ def main():
 
     if args.endpoint == 'play_game':
         output = net.play_game(args.game, args.board)
-        print(output)
+        boards = output.get('boards', [])
+
+        if len(boards) == 0:
+            return
+
+        print(output['status'])
+        print(boards[-1])
 
 
 class Skynet:

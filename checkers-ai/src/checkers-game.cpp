@@ -366,6 +366,10 @@ GameState CheckersGame::getState() {
                    activePlayer->getColor());
 }
 
+string CheckersGame::getSkynetBoardStr() {
+  return board.skynetStr();
+}
+
 void CheckersGame::setState(GameState &state) {
   board.setBoardState(state.boardState);
   red->setPieces(state.redPieces);

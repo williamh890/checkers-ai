@@ -54,9 +54,9 @@ add_executable(checkers.out
     ${SOURCES}
 )
 
-add_executable(turn.out
+add_executable(skynet-game.out
     ${HEADERS}
-    ${SRC_DIR}/turn-main.cpp
+    ${SRC_DIR}/skynet-game.cpp
     ${SOURCES}
 )
 

@@ -79,6 +79,7 @@ public:
   std::string validJumpsToString();
 
   GameState getState();
+  std::string getSkynetBoardStr();
   void setState(GameState &state);
 
   MovePackage getMoveFromActivePlayer();

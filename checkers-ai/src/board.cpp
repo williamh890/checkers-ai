@@ -102,6 +102,20 @@ void Board::make(const pair<int, Jump> &jump) {
   boardState[jump.second.through] = ' ';
 }
 
+std::string Board::skynetStr() {
+    std::string board = "";
+
+    for (const auto & c : boardState) {
+        if (c == ' ') {
+            board += '_';
+            continue;
+        }
+
+        board += c;
+    }
+    return board;
+}
+
 string Board::toString() {
   auto spaces = getEmptyBoard();
 

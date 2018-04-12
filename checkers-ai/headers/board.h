@@ -46,6 +46,7 @@ namespace ai {
 
         public:
             std::string toString();
+            std::string skynetStr();
             char operator[](const int & index) const;
             int pieceCount(char color);
 
