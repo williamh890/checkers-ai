@@ -167,9 +167,11 @@ void CheckersGame::turn() {
 
     if (move.first == -1) {
         board.make(jump);
-        reactTo(jump);
+        auto wasPieceCrowned = reactTo(jump);
 
-        makeAnyMultiJumps(jump.second.to);
+        if (!wasPieceCrowned) {
+            makeAnyMultiJumps(jump.second.to);
+        }
     } else {
         board.make(move);
         reactTo(move);
@@ -189,7 +191,11 @@ void CheckersGame::makeAnyMultiJumps(int space) {
         }
 
         board.make(jump);
-        reactTo(jump);
+        auto wasPieceCrowned = reactTo(jump);
+
+        if (wasPieceCrowned) {
+            break;
+        }
 
         validJumps = getValidJumpsAt(jump.second.to);
     }
