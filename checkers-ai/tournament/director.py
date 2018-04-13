@@ -18,6 +18,8 @@ class Director:
     def __init__(self):
         self.options = options.Options()
         print(self.options.networks_config)
+        ensure_generation_cfg(self.options.networks_config)
+
         self.network_git = network_git.NetworkGit(self.options.networks_config,
                                                   self.options.user,
                                                   self.options.git_user,
@@ -123,7 +125,6 @@ class Director:
 
 if __name__ == "__main__":
     director = Director()
-    ensure_generation_cfg(director.options.networks_config)
     start = time.time()
     director.idle()
     end = time.time()

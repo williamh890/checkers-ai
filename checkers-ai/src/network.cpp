@@ -216,18 +216,24 @@ Network::evaluateBoard(const vector<char> &inputBoard, bool testing,
                        int red_factor) { // testing defaults false
   // Determine number of pieces in the input board
   int numPieces = 0;
+  int pieceCount = 0;
   for (const auto &ii : inputBoard) {
     if (ii == ' ' || ii == 0)
       continue;
-    else if (ii == 'r')
+    else if (ii == 'r') {
       ++numPieces;
-    else if (ii == 'b')
+      pieceCount = pieceCount + red_factor;
+    } else if (ii == 'b') {
       ++numPieces;
-    else if (ii == 'R')
+      pieceCount = pieceCount - red_factor;
+    } else if (ii == 'R') {
       ++numPieces;
-    else if (ii == 'B')
+      pieceCount = pieceCount + 2 * red_factor;
+
+    } else if (ii == 'B') {
       ++numPieces;
-    else
+      pieceCount = pieceCount - 2 * red_factor;
+    } else
       cout << "Unrecognized character in board: " << ii << endl;
   }
   unsigned int layerBeginningIndex = _whichLayerofNetworkToUse[numPieces][0];
