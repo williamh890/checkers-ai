@@ -28,6 +28,7 @@ void NetworkFileWriter::save(const string &filename,
 
   savePerformance(networkToSave._performance);
   saveKingWeight(networkToSave._kingWeight);
+  saveKingWeight(networkToSave._pieceCountWeight);
   saveDimensions(networkToSave._layers);
 
   for (size_t i = 0; i < networkToSave._weights.size(); ++i) {

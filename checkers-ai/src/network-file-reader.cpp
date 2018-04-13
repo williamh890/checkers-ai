@@ -34,6 +34,7 @@ bool NetworkFileReader::load(const string &filename,
 
   networkRecievingData._performance = loadPerformanceFrom();
   networkRecievingData._kingWeight = loadKingWeightFrom();
+  networkRecievingData._pieceCountWeight = loadKingWeightFrom();
 
   auto dimensions = loadDimension();
   auto nodes = getNodesFromDimensions(dimensions);
