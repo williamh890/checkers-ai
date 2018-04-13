@@ -106,6 +106,7 @@ void Network::setupRandomWeights(const vector<unsigned int> &layerDimensions) {
 void Network::setupKingWeight() {
   uniform_real_distribution<NetworkWeightType> distribution(1, 3);
   _kingWeight = distribution(randomNumGenerator);
+  _pieceCountWeight = distribution(randomNumGenerator);
 }
 
 void Network::setupSigmas() {
@@ -325,6 +326,7 @@ void Network::evolve() {
 void Network::evolveKingWeight() {
   uniform_real_distribution<NetworkWeightType> distribution(-1, 1);
   _kingWeight += distribution(randomNumGenerator);
+  _pieceCountWeight += distribution(randomNumGenerator);
 }
 
 NetworkWeightType Network::getTau() {
