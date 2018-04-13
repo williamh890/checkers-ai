@@ -225,13 +225,13 @@ Network::evaluateBoard(const vector<char> &inputBoard, bool testing,
 
       ++numPieces;
       if (ii == 'r') {
-          pieceCount = pieceCount + red_factor;
+          pieceCount += red_factor;
       } else if (ii == 'b') {
-          pieceCount = pieceCount - red_factor;
+          pieceCount -= red_factor;
       } else if (ii == 'R') {
-          pieceCount = pieceCount + _kingWeight * red_factor;
+          pieceCount += _kingWeight * red_factor;
       } else if (ii == 'B') {
-          pieceCount = pieceCount - _kingWeight * red_factor;
+          pieceCount -= _kingWeight * red_factor;
       } else {
           throw "ERROR in Network::evaluateBoard!!!";
       }
