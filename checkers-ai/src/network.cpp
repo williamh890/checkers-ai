@@ -317,6 +317,7 @@ void Network::evolveUsingNetwork(Network &rhs) {
     _kingWeight = rhs._kingWeight;
     _weights = rhs._weights;
     _sigmas = rhs._sigmas;
+    _pieceCountWeight = rhs._pieceCountWeight;
     this->evolve();
     this->resetPerformance();
     // rhs.resetPerformance();
