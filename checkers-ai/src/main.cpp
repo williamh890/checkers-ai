@@ -16,9 +16,6 @@ using ai::SearchHelper;
 #include "consts.h"
 using ai::MOVE_LIMIT;
 
-#include "checkers_skynet_interface.h"
-using ai::CheckersSkynetInterface;
-
 #include <iostream>
 using std::cout;
 using std::endl;
@@ -40,9 +37,7 @@ int main(int argc, char **argv) {
   CheckersGame::SEARCH_DEPTH = stoi(argv[3]);
 #endif
 
-
   auto game = getNetworkedCheckersGame(red_id, black_id);
-  //auto interface = CheckersSkynetInterface("localhost:8080", "test", game);
 
   const char winner = game.play();
 

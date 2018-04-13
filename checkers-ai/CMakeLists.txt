@@ -48,8 +48,6 @@ add_library(Skynet INTERFACE)
 target_include_directories(Skynet INTERFACE ${SKYNET_INCLUDE_DIR})
 add_executable(checkers.out
     ${HEADERS}
-    ${SRC_DIR}/checkers_skynet_interface.cpp
-    ${HEADERS_DIR}/checkers_skynet_interface.h
     ${SRC_DIR}/main.cpp
     ${SOURCES}
 )
