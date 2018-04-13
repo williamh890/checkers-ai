@@ -185,7 +185,7 @@ int main(int argc, char *argv[]) {
       /////////////////////////////////////////
 
       sort(networks_in_one_folder.begin(), networks_in_one_folder.end(),
-           [](Network first, Network second) { return first > second; });
+           [&](Network first, Network second) { return first > second; });
 
       ///////////////debug
       // cout << "*** This should be performances in all folders SORTED" <<
@@ -244,7 +244,7 @@ int main(int argc, char *argv[]) {
     }
 
     sort(myNetworks.begin(), myNetworks.end(),
-         [](Network first, Network second) { return first > second; });
+         [&](Network first, Network second) { return first > second; });
 
     // cout << "Sorted Performances: " << endl;
     // for (size_t i = 0; i < NETWORKPOPSIZE; ++i){
@@ -266,7 +266,7 @@ int main(int argc, char *argv[]) {
     //     Network getPer(i);
     //     cout << getPer.getPerformance() << " ";
     // }
-    cout << "Number of children reproducing: " << counter;
+    cout << "Number of children reproducing: " << counter << endl;
     if (counter == 0 && myNetworks[0].getID() != 0) {
       cout << " new best network! ID: " << myNetworks[0].getID() << endl;
       for (unsigned int i = 0; i < myNetworks.size() / 2; ++i) {

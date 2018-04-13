@@ -91,12 +91,19 @@ int main(int argc, char **argv) {
 
     std::string gameName = argv[1];
     const char playerColor = std::string(argv[2])[0];
-    unsigned int network_id = std::stoi(argv[3]);
+    int network_id = std::stoi(argv[3]);
     ai::CheckersGame::SEARCH_DEPTH = std::stof(argv[4]);
 
-    auto game = (playerColor == 'r') ?
-        ai::getNetworkedCheckersGame(network_id, 0):
-        ai::getNetworkedCheckersGame(0, network_id);
+    ai::CheckersGame game;
+    if (network_id < 0) {
+        game = (playerColor == 'r') ?
+            ai::getCheckersGame():
+            ai::getCheckersGame();
+    } else {
+        game = (playerColor == 'r') ?
+            ai::getNetworkedCheckersGame(network_id, 0):
+            ai::getNetworkedCheckersGame(0, network_id);
+    }
 
     if (game.getActivePlayerColor() != playerColor) {
         game.swapPlayers();
