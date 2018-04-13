@@ -16,6 +16,7 @@
 //      make
 
 namespace ai {
+
 enum class PlayerType { Human, Computer };
 // static int blondiePopulation = 30;
 static std::vector<unsigned int> blondieDimensions{32, 200, 200, 32, 16, 1};

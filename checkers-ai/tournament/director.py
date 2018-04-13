@@ -40,16 +40,16 @@ class Director:
     def run_generation(self):
         print(" directing a tournament for generation {}".format(self.generations))
         self.run()
-        print(" finished that tournament")
-        print(" storing performances and evolving")
+        #print(" finished that tournament")
+        #print(" storing performances and evolving")
         self.store_performances()
         self.evolve_networks()
 
         self.network_git.update_remote()
         self.network_git.update_config()
         self.options.check_run()
-        print("run is {}".format(self.options.run))
-        print(" looping")
+        #print("run is {}".format(self.options.run))
+        #print(" looping")
 
         self.generations += 1
 
@@ -72,7 +72,7 @@ class Director:
         write_to_log(self.generations, results, self.network_wins)
 
         self.wins = list_to_str(self.network_wins)
-        print("performance string is {}".format(self.wins))
+        #print("performance string is {}".format(self.wins))
 
         self.reset_network_wins()
 
@@ -113,14 +113,14 @@ class Director:
         os.chdir(os.path.dirname(self.options.network_manager))
         run_str = "{} {} {}".format(self.options.network_manager, 1, self.wins)
         result = subprocess.getstatusoutput(run_str)
-        print(result[1])
-        print("result was: {}".format(result[0]))
+        #print(result[1])
+        #print("result was: {}".format(result[0]))
 
     def evolve_networks(self):
         run_str = "{} {}".format(self.options.network_manager, 3)
         result = subprocess.getstatusoutput(run_str)
         print(result[1])
-        print("result was: {}".format(result[0]))
+        #print("result was: {}".format(result[0]))
 
 
 if __name__ == "__main__":
