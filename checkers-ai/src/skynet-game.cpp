@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
     std::string gameName = argv[1];
     const char playerColor = std::string(argv[2])[0];
     unsigned int network_id = std::stoi(argv[3]);
-    SearchHelper::limit = std::stof(argv[4]);
+    ai::CheckersGame::SEARCH_DEPTH = std::stof(argv[4]);
 
     auto game = (playerColor == 'r') ?
         ai::getNetworkedCheckersGame(network_id, 0):
