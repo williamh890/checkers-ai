@@ -379,6 +379,7 @@ unsigned int Network::getID() const { return _ID; }
 
 void Network::outputCreationDebug() const {
     cout << "Weight for the king: " << _kingWeight << endl;
+    cout << "Weight for num pieces: " << _pieceCountWeight << endl;
     cout << "Number of layers: " << _layers.size() << endl;
 
     for (unsigned int index = 0; index < _layers.size(); ++index) {
