@@ -221,21 +221,19 @@ Network::evaluateBoard(const vector<char> &inputBoard, bool testing,
   for (const auto &ii : inputBoard) {
     if (ii == ' ' || ii == 0)
       continue;
-    else if (ii == 'r') {
+
       ++numPieces;
+    else if (ii == 'r') {
       pieceCount = pieceCount + red_factor;
     } else if (ii == 'b') {
-      ++numPieces;
       pieceCount = pieceCount - red_factor;
     } else if (ii == 'R') {
-      ++numPieces;
-      pieceCount = pieceCount + 2 * red_factor;
-
+      pieceCount = pieceCount + _kingWeight * red_factor;
     } else if (ii == 'B') {
-      ++numPieces;
-      pieceCount = pieceCount - 2 * red_factor;
-    } else
-      cout << "Unrecognized character in board: " << ii << endl;
+      pieceCount = pieceCount - _kingWeight * red_factor;
+    } else {
+      throw "ERROR!!!"
+    }
   }
   unsigned int layerBeginningIndex = _whichLayerofNetworkToUse[numPieces][0];
   unsigned int layerEndingIndex = _whichLayerofNetworkToUse[numPieces][1];
