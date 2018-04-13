@@ -69,7 +69,7 @@ if __name__ == "__main__":
     config['general'] = {'run': 1}
     config['functions'] = {'checkers_game': 'checkers.out',
                            'network_manager': 'manager.out',
-                           'network_count': 30}
+                           'network_count': 100}
 
     checkers_path = '/' + os.path.join(*os.getcwd().split('/')[:-1])
     network_path = os.path.join(checkers_path, 'networks')
