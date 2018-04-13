@@ -61,6 +61,7 @@ namespace ai {
             std::vector<NetworkWeights> _weights;
             std::vector<NetworkWeights> _sigmas;
             Settings::NetworkWeightType _kingWeight;
+            Settings::NetworkWeightType _pieceCountWeight;
             std::vector<std::vector<unsigned int>> _whichLayerofNetworkToUse;
             int _performance;
             bool _gameCompleted = false;
