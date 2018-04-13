@@ -282,8 +282,9 @@ Network::evaluateBoard(const vector<char> &inputBoard, bool testing,
       }
     }
   }
-  return _layers[layerEndingIndex - 1][0] *
-         red_factor /*boardEvaluationOutput()*/;
+  return _layers[layerEndingIndex - 1][0] * red_factor * pieceCount *
+         _pieceCountWeight; /*boardEvaluationOutput()*/
+  ;
 }
 
 inline NetworkWeightType Network::activationFunction(NetworkWeightType x) {
