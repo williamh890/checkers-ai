@@ -282,8 +282,7 @@ Network::evaluateBoard(const vector<char> &inputBoard, bool testing,
           }
       }
   }
-  return _layers[layerEndingIndex - 1][0] * red_factor * pieceCount *
-      _pieceCountWeight; /*boardEvaluationOutput()*/
+  return (_layers[layerEndingIndex - 1][0] + _pieceCountWeight * pieceCount) * red_factor /*boardEvaluationOutput()*/
   ;
 }
 

@@ -109,6 +109,7 @@ int main(int argc, char **argv) {
         game.swapPlayers();
     }
 
+    ai::CheckersGame::SEARCH_DEPTH = std::stoi(argv[4]);
     skynetPlay(gameName, playerColor, game);
 
     return 0;
