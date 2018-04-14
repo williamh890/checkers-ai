@@ -19,7 +19,7 @@ namespace ai {
 
 enum class PlayerType { Human, Computer };
 // static int blondiePopulation = 30;
-static std::vector<unsigned int> blondieDimensions{32, 200, 200, 32, 16, 1};
+static std::vector<unsigned int> blondieDimensions{32, 40, 10, 1};
 
 static const int INIT_NUM_PIECES = 12;
 static const int TOTAL_NUM_SPACES = 32;
