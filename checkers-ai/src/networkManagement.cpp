@@ -273,7 +273,7 @@ int main(int argc, char *argv[]) {
         cout << "i: " << i << " - " << myNetworks[i].getID() << endl;
       }
     }
-
+    cout << "Evolving Done. " << endl;
   }
 
   else if (*argv[1] == '4') {
