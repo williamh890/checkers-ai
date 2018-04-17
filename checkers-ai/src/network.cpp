@@ -434,6 +434,21 @@ bool ai::operator==(const Network &lhs, const Network &rhs) {
         (lhs._whichLayerofNetworkToUse == rhs._whichLayerofNetworkToUse);
 }
 
+void validateNetworkDimensions () {
+    int numBeginnings = 0;
+    int numEndings = 0;
+    for (auto i : ai::NETWORK_DIMENSIONS) {
+        if (i ==32)
+            ++numBeginnings;
+        if (i ==1) 
+            ++numEndings;
+    }
+    if (numBeginnings != numEndings)
+        throw "Mismatch of network beginning sizes and ending sizes\nEvery 32 should have a corresponding 1";
+    if (numBeginnings == 0)
+        throw "No input layer";
+}
+
 void ai::setupNetworks(const vector<unsigned int> &dimensions,
         int numberOfNetworks) { // numberOfNetworks = 100
     // cout << "You are about to setup a new set of networks. This operation will
@@ -444,6 +459,8 @@ void ai::setupNetworks(const vector<unsigned int> &dimensions,
     // cin.ignore();
     // return;
     //}
+
+    validateNetworkDimensions();
 
     auto seeder = getSeeder();
     for (auto index = 0; index < numberOfNetworks; ++index) {
