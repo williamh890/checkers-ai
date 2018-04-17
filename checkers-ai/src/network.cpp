@@ -429,7 +429,9 @@ bool ai::operator>=(const Network &lhs, const Network &rhs) {
 bool ai::operator==(const Network &lhs, const Network &rhs) {
     return (lhs._ID == rhs._ID) && (lhs._kingWeight == rhs._kingWeight) &&
         (lhs._performance == rhs._performance) &&
-        (lhs._layers == rhs._layers) && (lhs._weights == rhs._weights);
+        (lhs._layers == rhs._layers) && (lhs._weights == rhs._weights) &&
+        (lhs._pieceCountWeight == rhs._pieceCountWeight) && 
+        (lhs._whichLayerofNetworkToUse == rhs._whichLayerofNetworkToUse);
 }
 
 void ai::setupNetworks(const vector<unsigned int> &dimensions,
@@ -468,6 +470,9 @@ bool ai::nothingSimilar(const Network &lhs, const Network &rhs) {
         val = false;
     } else if (lhs._ID == rhs._ID) {
         cout << "ID's were the same" << endl;
+        val = false;
+    } else if (lhs._pieceCountWeight == rhs._pieceCountWeight) {
+        cout << "Piece Count Weights were the same" << endl;
         val = false;
     }
     return val;

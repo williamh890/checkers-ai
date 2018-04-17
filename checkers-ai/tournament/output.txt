@@ -1,6 +1,0 @@
-/home/hal/Documents/school/checkers_ai/checkers-ai/networks/hadimarchi/generations.cfg
-https://hadimarchi:Strength101@github.com/williamh890/checkers-ai-networks.git
-/home/hal/Documents/school/checkers_ai/checkers-ai/checkers.out 2 10
- directing a tournament
-/home/hal/Documents/school/checkers_ai/checkers-ai/checkers.out 5 18
-/home/hal/Documents/school/checkers_ai/checkers-ai/checkers.out 0 5

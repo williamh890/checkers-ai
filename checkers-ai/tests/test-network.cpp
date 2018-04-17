@@ -24,7 +24,7 @@ using std::endl;
 ai::NetworkTestingNamechange t;
 
 TEST_CASE("Testing setupNetworks") {
-    vector<unsigned int> dims = {32, 1000, 100, 1, 32, 1000, 100, 1, 32, 1000, 100, 1};
+    vector<unsigned int> dims = {ai::blondieDimensions};
     setupNetworks(dims, 2);
 }
 
