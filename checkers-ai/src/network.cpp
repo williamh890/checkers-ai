@@ -433,7 +433,7 @@ bool ai::operator==(const Network &lhs, const Network &rhs) {
     return (lhs._ID == rhs._ID) && (lhs._kingWeight == rhs._kingWeight) &&
         (lhs._performance == rhs._performance) &&
         (lhs._layers == rhs._layers) && (lhs._weights == rhs._weights) &&
-        (lhs._pieceCountWeight == rhs._pieceCountWeight) && 
+        (lhs._pieceCountWeight == rhs._pieceCountWeight) &&
         (lhs._whichLayerofNetworkToUse == rhs._whichLayerofNetworkToUse);
 }
 

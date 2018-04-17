@@ -27,11 +27,11 @@ def run_child(args):
     run_str = "{} {} {} {}".format(
         prog_name, red_id, black_id, search_depth
     )
-    #print(run_str)
+    # print(run_str)
 
     winner, program_output = subprocess.getstatusoutput(run_str)
 
-    game_stats = parse_game(program_output)
+    game_stats = {}
 
     game_result = {
         1: red_id,

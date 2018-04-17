@@ -2,10 +2,6 @@
 using ai::getGeneratorFor;
 using ai::MoveGenerator;
 
-#include "checkers-game.h"
-using ai::CheckersGame;
-using ai::getCheckersGame;
-
 #include "json-to-stl.h"
 using ai::JsonToStlConverter;
 using ai::loadMoveTableFrom;

@@ -3,21 +3,13 @@
 
 #include "board.h"
 // ai::Board
-#include "move-generator.h"
-// ai::MoveGenerator
 #include "seeder.h"
 // ai::Seeder
 #include "player.h"
 // ai::Player
-#include "models.h"
-// ai::Piece
-// ai::Position
 #include "game-state.h"
 // ai::GameState
 
-#include <iostream>
-// std::cout;
-// std::endl;
 #include <string>
 // std::string;
 #include <memory>
@@ -101,10 +93,5 @@ public:
   int getNumPiecesFor(char color);
 };
 
-CheckersGame getCheckersGame();
-CheckersGame getNetworkedCheckersGame(unsigned int red_id,
-                                      unsigned int black_id);
-CheckersGame getNetworkVPieceCountCheckersGame(unsigned int network_id,
-                                               char networked_player);
 } // namespace ai
 #endif

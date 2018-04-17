@@ -5,10 +5,12 @@ using ai::search;
 using ai::SearchHelper;
 
 #include "../headers/checkers-game.h"
-using ai::getCheckersGame;
-using ai::getNetworkedCheckersGame;
 using ai::CheckersGame;
 using MovePackage = CheckersGame::MovePackage;
+
+#include "get-checkers-game.h"
+using ai::getCheckersGame;
+using ai::getNetworkedCheckersGame;
 
 #include "../headers/models.h"
 using ai::Piece;
