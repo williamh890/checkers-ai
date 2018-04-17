@@ -266,7 +266,8 @@ Network::evaluateBoard(const vector<char> &inputBoard, bool testing,
               /*calculateNode(x, y)*/ {
                   NetworkWeightType total1 = 0, total2 = 0, total3 = 0, total4 = 0;
                   unsigned int previousLayerSize = _layers[x - 1].size();
-
+                  
+                  // Loop unrolling for calculating a node
                   for (unsigned int i = 0; i < previousLayerSize; i += 4) {
                       total1 +=
                           _weights[x][y * previousLayerSize + i] * _layers[x - 1][i];
