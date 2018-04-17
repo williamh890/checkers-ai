@@ -88,7 +88,6 @@ void skynetPlay(const std::string & gameName, const char playerColor, ai::Checke
 }
 
 int main(int argc, char **argv) {
-
     std::string gameName = argv[1];
     const char playerColor = std::string(argv[2])[0];
     int network_id = std::stoi(argv[3]);

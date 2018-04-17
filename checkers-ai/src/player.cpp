@@ -63,7 +63,6 @@ Player::Player(char color, const MoveGenerator &generator,
 
     return numPieces - numEnemyPieces;
   };
-
 }
 
 Player::Player(char color, const MoveGenerator &generator,
@@ -72,13 +71,12 @@ Player::Player(char color, const MoveGenerator &generator,
     : playerType(type), color(color), network(network), generator(generator),
       kingGenerator(kingGenerator) {
 
-  this->base_case_color_factor = (color == 'r') ? 1 : -1;
-  cout << "color was " << color << " and color factor was "
-       << this->base_case_color_factor << endl;
   this->baseCase = [&](SearchHelper &helper) -> float {
     const vector<char> board = helper.game.board.getBoardState();
+    int colorFactor = (helper.maximizingPlayer == 'r') ? 1 : -1;
+
     float value =
-        this->network.evaluateBoard(board, false, this->base_case_color_factor);
+        this->network.evaluateBoard(board, false, colorFactor);
 
     return value;
   };
