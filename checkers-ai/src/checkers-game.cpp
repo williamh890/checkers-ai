@@ -142,7 +142,6 @@ const char CheckersGame::play() {
         makeRandomValidAction();
         swapPlayers();
     }
-    cout << toString() << endl;
 
     while (++moveCounter < MOVE_LIMIT && (areMoves() || areJumps())) {
         try {
@@ -151,7 +150,7 @@ const char CheckersGame::play() {
             swapPlayers();
             auto end = getTime();
 
-            //cout << "turn: " << end - start << endl;
+            cout << "turn: " << end - start << endl;
         } catch (length_error &e) {
             break;
         } catch (runtime_error &e) {
