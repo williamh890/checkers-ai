@@ -38,6 +38,9 @@ using std::shared_ptr;
 #include <string>
 using std::string;
 
+#include <cmath>
+using std::abs;
+
 void Network::save(size_t networkId, Network &network) {
   auto filename = idToFilename(networkId);
   NetworkFileWriter writer;
@@ -332,7 +335,7 @@ void Network::evolve() {
 void Network::evolveKingWeight() {
     uniform_real_distribution<NetworkWeightType> distribution(-1, 1);
     _kingWeight += distribution(randomNumGenerator);
-    _pieceCountWeight += distribution(randomNumGenerator);
+    _pieceCountWeight = abs( _pieceCountWeight + distribution(randomNumGenerator));
 }
 
 NetworkWeightType Network::getTau() {
