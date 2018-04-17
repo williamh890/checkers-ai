@@ -30,7 +30,7 @@ static const int MINIMAX_SEARCH_DEPTH = 6;
 static const int DEBUG = false;
 static const int MOVE_LIMIT = 100;
 
-static const unsigned int NETWORKPOPSIZE = 100;
+static const unsigned int NETWORKPOPSIZE = 30;
 
 const float INF = FLT_MAX;
 
@@ -45,7 +45,7 @@ const float INF = FLT_MAX;
 // 1} NOTE:
 //          - input layers are always 32 and output layers are always 1
 //          - You can use as many as 24 layers
-static const std::vector<unsigned int> NETWORK_DIMENSIONS = {32, 1000, 1, 32, 1000, 1, 32, 60, 5, 1};
+static const std::vector<unsigned int> NETWORK_DIMENSIONS = {32, 40, 10, 1};
 
 namespace Settings {
 static const std::string SEEDING_METHOD =

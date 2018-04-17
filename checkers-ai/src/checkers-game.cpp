@@ -5,30 +5,10 @@ using MovePackage = CheckersGame::MovePackage;
 using JumpPackage = CheckersGame::JumpPackage;
 using SeederPtr = CheckersGame::SeederPtr;
 
-#include "../headers/seeder.h"
-using ai::getSeeder;
-using ai::RandomDeviceSeeder;
-using ai::Seeder;
-using ai::SRandSeeder;
-
 #include "../headers/search.h"
 
 #include "../headers/board.h"
 using ai::Board;
-using ai::getBoard;
-
-#include "../headers/player.h"
-using ai::BlackPlayer;
-using ai::getNetworkedPlayer;
-using ai::getPlayer;
-using ai::Player;
-using ai::RedPlayer;
-
-#include "../headers/json-to-stl.h"
-
-#include "../headers/move-generator.h"
-using ai::getGeneratorFor;
-using ai::MoveGenerator;
 
 #include "../headers/utils.h"
 using ai::getTime;
@@ -42,86 +22,27 @@ using ai::Position;
 using ai::GameState;
 
 #include "../headers/consts.h"
-using ai::INIT_NUM_PIECES;
 using ai::MOVE_LIMIT;
-using ai::TOTAL_NUM_SPACES;
 
-#include "../headers/table-types.h"
-using ai::MoveTableType;
-
-#include <algorithm>
-using std::sort;
 #include <string>
 using std::string;
 #include <sstream>
 using std::stringstream;
 #include <iostream>
-using std::cin;
 using std::cout;
 using std::endl;
 #include <vector>
 using std::vector;
 #include <utility>
 using std::make_pair;
-using std::pair;
-#include <memory>
-using std::make_shared;
-using std::shared_ptr;
 #include <exception>
 using std::length_error;
 using std::runtime_error;
 #include <random>
 using std::mt19937;
-using std::random_device;
 using std::uniform_int_distribution;
 
 int CheckersGame::SEARCH_DEPTH = 5;
-
-CheckersGame ai::getCheckersGame() {
-    auto table = loadMoveTableFrom("move-table.json");
-    auto converter = JsonToStlConverter{table};
-
-    auto red = getPlayer("red", converter);
-    auto black = getPlayer("black", converter);
-    auto board = getBoard();
-
-    auto seeder = getSeeder();
-
-    return CheckersGame(board, red, black, seeder);
-}
-
-CheckersGame ai::getNetworkedCheckersGame(unsigned int red_id,
-        unsigned int black_id) {
-    auto table = loadMoveTableFrom("move-table.json");
-    auto converter = JsonToStlConverter{table};
-
-    auto red = getNetworkedPlayer("red", converter, red_id);
-    auto black = getNetworkedPlayer("black", converter, black_id);
-
-    auto board = getBoard();
-    auto seeder = getSeeder();
-
-    return CheckersGame(board, red, black, seeder);
-}
-
-CheckersGame ai::getNetworkVPieceCountCheckersGame(unsigned int network_id,
-        char networked_player) {
-    auto table = loadMoveTableFrom("move-table.json");
-    auto converter = JsonToStlConverter{table};
-    cout << "networked_player was " << networked_player << endl;
-
-    auto red = (networked_player == 'r')
-        ? getNetworkedPlayer("red", converter, network_id)
-        : getPlayer("red", converter);
-    auto black = (networked_player == 'b')
-        ? getNetworkedPlayer("black", converter, network_id)
-        : getPlayer("black", converter);
-
-    auto board = getBoard();
-    auto seeder = getSeeder();
-
-    return CheckersGame(board, red, black, seeder);
-}
 
 CheckersGame::CheckersGame(){};
 

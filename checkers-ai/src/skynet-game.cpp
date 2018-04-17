@@ -1,5 +1,6 @@
 
 #include "checkers-game.h"
+#include "get-checkers-game.h"
 
 #include "search.h"
 using ai::SearchHelper;

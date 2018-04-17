@@ -13,7 +13,7 @@ set(SRC_DIR "src")
 set(HEADERS_DIR "headers")
 include_directories(${HEADERS_DIR})
 
-#Can manually add the sources using the set command as follows:
+# Can manually add the sources using the set command as follows:
 set(SOURCES
     ${SRC_DIR}/move-generator.cpp
     ${SRC_DIR}/json-to-stl.cpp
@@ -27,6 +27,7 @@ set(SOURCES
     ${SRC_DIR}/network-file-writer.cpp
     ${SRC_DIR}/search.cpp
     ${SRC_DIR}/game-state.cpp
+    ${SRC_DIR}/get-checkers-game.cpp
 )
 
 set(HEADERS
@@ -41,6 +42,7 @@ set(HEADERS
     ${HEADERS_DIR}/network-file-io.h
     ${HEADERS_DIR}/search.h
     ${HEADERS_DIR}/game-state.h
+    ${HEADERS_DIR}/get-checkers-game.h
 )
 
 set(SKYNET_INCLUDE_DIR ../skynet/)
