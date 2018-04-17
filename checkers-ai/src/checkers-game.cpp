@@ -44,7 +44,7 @@ using std::uniform_int_distribution;
 
 int CheckersGame::SEARCH_DEPTH = 5;
 
-CheckersGame::CheckersGame(){};
+CheckersGame::CheckersGame() = default;
 
 CheckersGame::CheckersGame(const Board &board, PlayerPtr red, PlayerPtr black,
         SeederPtr &seeder)
@@ -60,6 +60,7 @@ CheckersGame::CheckersGame(const Board &board, PlayerPtr red, PlayerPtr black,
 const char CheckersGame::play() {
     const size_t NUM_RAND_TURNS = 3;
     for (size_t i = 0; i < NUM_RAND_TURNS; ++i) {
+        cout << getSkynetBoardStr() << endl;
         makeRandomValidAction();
         swapPlayers();
     }
@@ -67,11 +68,11 @@ const char CheckersGame::play() {
     while (++moveCounter < MOVE_LIMIT && (areMoves() || areJumps())) {
         try {
             auto start = getTime();
+            cout << getSkynetBoardStr() << endl;
             turn();
             swapPlayers();
             auto end = getTime();
 
-            cout << "turn: " << end - start << endl;
         } catch (length_error &e) {
             break;
         } catch (runtime_error &e) {
@@ -79,6 +80,7 @@ const char CheckersGame::play() {
         }
     }
 
+    cout << getSkynetBoardStr() << endl;
     return getInactivePlayerColor();
 }
 
