@@ -201,7 +201,9 @@ void CheckersGame::makeAnyMultiJumps(int space) {
     }
 }
 
-void CheckersGame::swapPlayers() { swap(activePlayer, inactivePlayer); }
+void CheckersGame::swapPlayers() {
+    swap(activePlayer, inactivePlayer);
+}
 
 bool CheckersGame::areJumps() { return getValidJumps().size() > 0; }
 

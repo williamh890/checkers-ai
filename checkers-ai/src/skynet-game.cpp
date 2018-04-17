@@ -12,7 +12,7 @@ using ai::SearchHelper;
 // Command line args are
 //      ./skynet-game.out <game-name> <player-color> <network-id> <search-depth-limit>
 
-const std::string server_local = " --server http://localhost:8080 ";
+const std::string server_ = " --server http://localhost:8080 ";
 const std::string server = " --server http://skynet.cs.uaf.edu ";
 
 struct GameInfo {
@@ -92,8 +92,7 @@ int main(int argc, char **argv) {
     std::string gameName = argv[1];
     const char playerColor = std::string(argv[2])[0];
     int network_id = std::stoi(argv[3]);
-    ai::CheckersGame::SEARCH_DEPTH = std::stof(argv[4]);
-
+    ai::CheckersGame::SEARCH_DEPTH = std::stoi(argv[4]);
     ai::CheckersGame game;
     if (network_id < 0) {
         game = (playerColor == 'r') ?
@@ -109,7 +108,6 @@ int main(int argc, char **argv) {
         game.swapPlayers();
     }
 
-    ai::CheckersGame::SEARCH_DEPTH = std::stoi(argv[4]);
     skynetPlay(gameName, playerColor, game);
 
     return 0;

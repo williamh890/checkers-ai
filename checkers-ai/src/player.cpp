@@ -53,6 +53,7 @@ Player::Player(char color, const MoveGenerator &generator,
                PlayerType type = PlayerType::Computer)
     : playerType(type), color(color), generator(generator),
       kingGenerator(kingGenerator) {
+
   this->baseCase = [&](SearchHelper &helper) -> int {
     ++SearchHelper::leafNodes;
     auto numPieces = helper.game.getNumPiecesFor(helper.maximizingPlayer);
@@ -62,6 +63,7 @@ Player::Player(char color, const MoveGenerator &generator,
 
     return numPieces - numEnemyPieces;
   };
+
 }
 
 Player::Player(char color, const MoveGenerator &generator,
@@ -69,6 +71,7 @@ Player::Player(char color, const MoveGenerator &generator,
                PlayerType type = PlayerType::Computer)
     : playerType(type), color(color), network(network), generator(generator),
       kingGenerator(kingGenerator) {
+
   this->base_case_color_factor = (color == 'r') ? 1 : -1;
   cout << "color was " << color << " and color factor was "
        << this->base_case_color_factor << endl;
