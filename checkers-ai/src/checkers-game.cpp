@@ -137,6 +137,13 @@ CheckersGame::CheckersGame(const Board &board, PlayerPtr red, PlayerPtr black,
     }
 
 const char CheckersGame::play() {
+    const size_t NUM_RAND_TURNS = 3;
+    for (size_t i = 0; i < NUM_RAND_TURNS; ++i) {
+        makeRandomValidAction();
+        swapPlayers();
+    }
+    cout << toString() << endl;
+
     while (++moveCounter < MOVE_LIMIT && (areMoves() || areJumps())) {
         try {
             auto start = getTime();
@@ -144,7 +151,7 @@ const char CheckersGame::play() {
             swapPlayers();
             auto end = getTime();
 
-            cout << "turn: " << end - start << endl;
+            //cout << "turn: " << end - start << endl;
         } catch (length_error &e) {
             break;
         } catch (runtime_error &e) {
