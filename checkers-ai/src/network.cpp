@@ -332,7 +332,7 @@ void Network::evolve() {
 void Network::evolveKingWeight() {
     uniform_real_distribution<NetworkWeightType> distribution(-1, 1);
     _kingWeight += distribution(randomNumGenerator);
-    _pieceCountWeight += distribution(randomNumGenerator);
+    _pieceCountWeight = abs(_pieceCountWeight + distribution(randomNumGenerator));
 }
 
 NetworkWeightType Network::getTau() {
@@ -493,6 +493,7 @@ bool ai::validateNetworks() {
     for (unsigned int i = 0; i < ai::NETWORKPOPSIZE; ++i) {
         Network net(i);
         cout << "ID: " << net._ID << "\tNum Layers: " << net._layers.size() << endl;
+        cout << "PieceCtWeight: " << net._pieceCountWeight << "\t KingWt: " << net._kingWeight << endl;
         for (unsigned int index = 0; index < net._layers.size(); ++index) {
             cout << "Size of layer " << index << " = " << net._layers[index].size()
                 << endl;
