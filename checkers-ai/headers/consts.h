@@ -45,11 +45,8 @@ const float INF = FLT_MAX;
 // 1} NOTE:
 //          - input layers are always 32 and output layers are always 1
 //          - You can use as many as 24 layers
-<<<<<<< HEAD
-static const std::vector<unsigned int> NETWORK_DIMENSIONS = {32, 200, 20, 1, 32, 200, 20, 1, 32, 60, 5, 1};
-=======
-static const std::vector<unsigned int> NETWORK_DIMENSIONS = {32, 40, 10, 1};
->>>>>>> af3821068c0735962200698ccad409bf1fd55bc1
+static const std::vector<unsigned int> NETWORK_DIMENSIONS = {32, 256, 256,
+                                                             32, 16,  1};
 
 namespace Settings {
 static const std::string SEEDING_METHOD =
