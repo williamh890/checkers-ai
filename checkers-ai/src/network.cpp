@@ -41,6 +41,8 @@ using std::string;
 #include <cmath>
 using std::abs;
 
+#include <stdexcept>
+
 void Network::save(size_t networkId, Network &network) {
   auto filename = idToFilename(networkId);
   NetworkFileWriter writer;
@@ -443,15 +445,15 @@ void validateNetworkDimensions () {
     int numBeginnings = 0;
     int numEndings = 0;
     for (auto i : ai::NETWORK_DIMENSIONS) {
-        if (i ==32)
+        if (i == 32)
             ++numBeginnings;
-        if (i ==1) 
+        if (i == 1) 
             ++numEndings;
     }
-    if (numBeginnings != numEndings)
-        throw "Mismatch of network beginning sizes and ending sizes\nEvery 32 should have a corresponding 1";
-    if (numBeginnings == 0)
-        throw "No input layer";
+    if (numBeginnings < numEndings)
+        std::logic_error("Not enough input layers for output layers");
+    if (ai::NETWORK_DIMENSIONS[0] != 32)
+        std::logic_error("No initial input layer");
 }
 
 void ai::setupNetworks(const vector<unsigned int> &dimensions,
@@ -464,8 +466,12 @@ void ai::setupNetworks(const vector<unsigned int> &dimensions,
     // cin.ignore();
     // return;
     //}
-
-    validateNetworkDimensions();
+    try {
+        validateNetworkDimensions();
+    } catch (const std::exception& e) {
+        cout << e.what() << endl;
+        throw;
+    }
 
     auto seeder = getSeeder();
     for (auto index = 0; index < numberOfNetworks; ++index) {
