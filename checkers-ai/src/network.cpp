@@ -441,19 +441,19 @@ bool ai::operator==(const Network &lhs, const Network &rhs) {
         (lhs._whichLayerofNetworkToUse == rhs._whichLayerofNetworkToUse);
 }
 
-void validateNetworkDimensions () {
+void validateNetworkDimensions (const vector<unsigned int>& dimensionsToCheck) {
     int numBeginnings = 0;
     int numEndings = 0;
-    for (auto i : ai::NETWORK_DIMENSIONS) {
-        if (i == 32)
-            ++numBeginnings;
-        if (i == 1) 
-            ++numEndings;
+    for (auto i : dimensionsToCheck) {
+        if (i == 32){
+            ++numBeginnings;}
+        if (i == 1) {
+            ++numEndings;}
     }
-    if (numBeginnings < numEndings)
-        std::logic_error("Not enough input layers for output layers");
-    if (ai::NETWORK_DIMENSIONS[0] != 32)
-        std::logic_error("No initial input layer");
+    if (numBeginnings < numEndings){
+        throw std::invalid_argument("Not enough input layers for output layers");}
+    if (dimensionsToCheck[0] != 32){
+        throw std::invalid_argument("No initial input layer");}
 }
 
 void ai::setupNetworks(const vector<unsigned int> &dimensions,
@@ -467,8 +467,9 @@ void ai::setupNetworks(const vector<unsigned int> &dimensions,
     // return;
     //}
     try {
-        validateNetworkDimensions();
-    } catch (const std::exception& e) {
+        validateNetworkDimensions(dimensions);
+    } 
+    catch (const std::exception& e) {
         cout << e.what() << endl;
         throw;
     }
