@@ -519,19 +519,17 @@ void ai::weightChangeOut(Network parent, Network child) {
 }
 
 bool ai::validateNetworks() {
+    bool bAreBasicAttributesSame = true;
+    vector<Network> allNets;
+    for (unsigned int i = 0; i < ai::NETWORKPOPSIZE; ++i) {
+        Network net(i);
+        allNets.push_back(std::move (net));
+    }
     for (unsigned int i = 0; i < ai::NETWORKPOPSIZE; ++i) {
         Network net(i);
         cout << "ID: " << net._ID << "\tNum Layers: " << net._layers.size() << endl;
         cout << "PieceCtWeight: " << net._pieceCountWeight << "\t KingWt: " << net._kingWeight << endl;
-        for (unsigned int index = 0; index < net._layers.size(); ++index) {
-            cout << "Size of layer " << index << " = " << net._layers[index].size()
-                << endl;
-        }
-        cout << "size of weights vector: " << net._weights.size() << endl;
-        for (unsigned int index = 0; index < net._weights.size(); ++index) {
-            cout << "Size of weight layer " << index << " = "
-                << net._weights[index].size() << endl;
-        }
+        
         vector<char> emptyBoard(32);
         vector<char> sampleBigBoard{'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r',
             ' ', 'r', 'r', 'r', ' ', ' ', 'r', ' ',
@@ -539,6 +537,20 @@ bool ai::validateNetworks() {
             'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'};
         cout << "empty: " << net.evaluateBoard(emptyBoard)
             << "\t big: " << net.evaluateBoard(sampleBigBoard) << endl;
+    }
+    if (bAreBasicAttributesSame) {
+        for (unsigned int index = 0; index < allNets[0]._layers.size(); ++index) {
+            cout << "Size of layer " << index << " = " << allNets[0]._layers[index].size()
+                << endl;
+        }
+        cout << "size of weights vector: " << allNets[0]._weights.size() << endl;
+        for (unsigned int index = 0; index < allNets[0]._weights.size(); ++index) {
+            cout << "Size of weight layer " << index << " = "
+                << allNets[0]._weights[index].size() << endl;
+        }
+    }
+    else {
+        cout << "There's different network sizes in this folder" << endl;
     }
     return false;
 }
