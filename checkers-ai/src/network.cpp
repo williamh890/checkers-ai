@@ -363,15 +363,15 @@ void Network::evolveSigmas() {
 }
 
 void inline Network::evolveSigmaAt(size_t i, size_t ii, NetworkWeightType tau) {
-    _sigmas[i][ii] =
+    _sigmas[i][ii] = abs(
         _sigmas[i][ii] *
-        exp(tau * getGaussianNumberFromZeroToOne(randomNumGenerator));
+        exp(tau * getGaussianNumberFromZeroToOne(randomNumGenerator)));
 }
 
 void Network::evolveWeights() {
     for (size_t i = 0; i < _weights.size(); ++i) {
         for (size_t ii = 0; ii < _weights[i].size(); ++ii) {
-            _weights[i][ii] = evolveWeightAt(i, ii);
+            _weights[i][ii] = abs(evolveWeightAt(i, ii));
         }
     }
 }
@@ -524,11 +524,12 @@ bool ai::validateNetworks() {
         Network net(i);
         allNets.push_back(std::move (net));
     }
+    allNets[0].outputCreationDebug();
     vector<char> emptyBoard(32);
     vector<char> sampleBigBoard{
         'r',   'r',   'r',   'r',
     'r',   'r',   'r',   'r',
-        ' ',   'r',   'r',   'r',
+        'r',   ' ',   'r',   'r',
     ' ',   ' ',   'r',   ' ',
         ' ',   ' ',   'b',   ' ',
     'b',   'b',   ' ',   'b',
@@ -543,15 +544,13 @@ bool ai::validateNetworks() {
 
     // Check for similarities between networks such that things can be printed once
     for (auto i : allNets) {
-        if (bAreSmallEvaluationsSame && i.evaluateBoard(emptyBoard) != emptyEval) {
+        if (bAreSmallEvaluationsSame && i.evaluateBoard(emptyBoard) != emptyEval)
             bAreSmallEvaluationsSame = false;
-        }
-        if (bAreBigEvaluationsSame && i.evaluateBoard(sampleBigBoard) != bigEval) {
+        if (bAreBigEvaluationsSame && i.evaluateBoard(sampleBigBoard) != bigEval)
             bAreBigEvaluationsSame = false;
-        }
-        if (bAreBasicAttributesSame == false) {
+        if (bAreBasicAttributesSame == false)
             break;
-        }
+
         for (unsigned int index = 0; index < allNets[0]._layers.size(); ++index) {
             if (allNets[0]._layers[index].size() != i._layers[index].size()) {
                 bAreBasicAttributesSame = false;
@@ -578,18 +577,27 @@ bool ai::validateNetworks() {
     //         << "\t big: " << net.evaluateBoard(sampleBigBoard) << endl;
     // }
     if (bAreBasicAttributesSame) {
+        cout << "For all networks: " << endl;
+        cout << "size of layers and weights vector: " << allNets[0]._weights.size() << endl;
         for (unsigned int index = 0; index < allNets[0]._layers.size(); ++index) {
             cout << "Size of layer " << index << " = " << allNets[0]._layers[index].size()
+                << "\tSize of weight layer " << index << " = " << allNets[0]._weights[index].size() 
                 << endl;
         }
-        cout << "size of weights vector: " << allNets[0]._weights.size() << endl;
-        for (unsigned int index = 0; index < allNets[0]._weights.size(); ++index) {
-            cout << "Size of weight layer " << index << " = "
-                << allNets[0]._weights[index].size() << endl;
-        }
-    }
-    else {
+    } else {
         cout << "There's different network sizes in this folder" << endl;
     }
-    return false;
+
+    if (bAreSmallEvaluationsSame) {
+        cout << "All networks have empty board output as: " << emptyEval << endl;
+    } else {
+        cout << "They evaluate empty boards differently" << endl;
+    }
+
+    if (bAreBigEvaluationsSame) {
+        cout << "All networks have full board output as: " <<  bigEval << endl;
+    } else {
+        cout << "They evaluate full boards differently" << endl;
+    }
+    return true;
 }
