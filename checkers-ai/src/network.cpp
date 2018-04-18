@@ -519,25 +519,64 @@ void ai::weightChangeOut(Network parent, Network child) {
 }
 
 bool ai::validateNetworks() {
-    bool bAreBasicAttributesSame = true;
     vector<Network> allNets;
     for (unsigned int i = 0; i < ai::NETWORKPOPSIZE; ++i) {
         Network net(i);
         allNets.push_back(std::move (net));
     }
-    for (unsigned int i = 0; i < ai::NETWORKPOPSIZE; ++i) {
-        Network net(i);
-        cout << "ID: " << net._ID << "\tNum Layers: " << net._layers.size() << endl;
-        cout << "PieceCtWeight: " << net._pieceCountWeight << "\t KingWt: " << net._kingWeight << endl;
-        
-        vector<char> emptyBoard(32);
-        vector<char> sampleBigBoard{'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r',
-            ' ', 'r', 'r', 'r', ' ', ' ', 'r', ' ',
-            ' ', ' ', 'b', ' ', 'b', 'b', ' ', 'b',
-            'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'};
-        cout << "empty: " << net.evaluateBoard(emptyBoard)
-            << "\t big: " << net.evaluateBoard(sampleBigBoard) << endl;
+    vector<char> emptyBoard(32);
+    vector<char> sampleBigBoard{
+        'r',   'r',   'r',   'r',
+    'r',   'r',   'r',   'r',
+        ' ',   'r',   'r',   'r',
+    ' ',   ' ',   'r',   ' ',
+        ' ',   ' ',   'b',   ' ',
+    'b',   'b',   ' ',   'b',
+        'b',   'b',   'b',   'b',
+    'b',   'b',   'b',   'b'
+    };
+    bool bAreBasicAttributesSame = true;
+    bool bAreSmallEvaluationsSame = true;
+    ai::Settings::NetworkWeightType emptyEval = allNets[0].evaluateBoard(emptyBoard);
+    bool bAreBigEvaluationsSame = true;
+    ai::Settings::NetworkWeightType bigEval = allNets[0].evaluateBoard(sampleBigBoard);
+
+    // Check for similarities between networks such that things can be printed once
+    for (auto i : allNets) {
+        if (bAreSmallEvaluationsSame && i.evaluateBoard(emptyBoard) != emptyEval) {
+            bAreSmallEvaluationsSame = false;
+        }
+        if (bAreBigEvaluationsSame && i.evaluateBoard(sampleBigBoard) != bigEval) {
+            bAreBigEvaluationsSame = false;
+        }
+        if (bAreBasicAttributesSame == false) {
+            break;
+        }
+        for (unsigned int index = 0; index < allNets[0]._layers.size(); ++index) {
+            if (allNets[0]._layers[index].size() != i._layers[index].size()) {
+                bAreBasicAttributesSame = false;
+                break;
+            }
+        }
+        if (allNets[0]._weights.size() != i._weights.size()) {
+            bAreBasicAttributesSame = false;
+        }
+        for (unsigned int index = 0; index < i._weights.size(); ++index) {
+            if (allNets[0]._weights[index].size() != i._weights[index].size()) {
+                bAreBasicAttributesSame = false;
+                break;
+            }
+        }
     }
+    // for (unsigned int i = 0; i < ai::NETWORKPOPSIZE; ++i) {
+    //     Network net(i);
+    //     cout << "ID: " << net._ID << "\tNum Layers: " << net._layers.size() << endl;
+    //     cout << "PieceCtWeight: " << net._pieceCountWeight << "\t KingWt: " << net._kingWeight << endl;
+        
+
+    //     cout << "empty: " << net.evaluateBoard(emptyBoard)
+    //         << "\t big: " << net.evaluateBoard(sampleBigBoard) << endl;
+    // }
     if (bAreBasicAttributesSame) {
         for (unsigned int index = 0; index < allNets[0]._layers.size(); ++index) {
             cout << "Size of layer " << index << " = " << allNets[0]._layers[index].size()
