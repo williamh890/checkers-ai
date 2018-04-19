@@ -283,7 +283,7 @@ Network::evaluateBoard(const vector<char> &inputBoard, bool testing,
 
                   auto total = total1 + total2 + total3 + total4;
 
-                  _layers[x][y] = (!testing) ? total / (1 + abs(total)) : total;
+                  _layers[x][y] = (!testing) ? std::tanh(total) : total;
               }
           }
       }
@@ -338,6 +338,10 @@ void Network::evolve() {
 void Network::evolveKingWeight() {
     uniform_real_distribution<NetworkWeightType> distribution(-0.1, 0.1);
     _kingWeight += distribution(randomNumGenerator);
+    if (_kingWeight < 1)
+        _kingWeight = 1;
+    else if (_kingWeight > 3) 
+        _kingWeight = 3;
     _pieceCountWeight += distribution(randomNumGenerator);
     _pieceCountWeight = abs(_pieceCountWeight);
 }
