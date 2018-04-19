@@ -336,7 +336,7 @@ void Network::evolve() {
 }
 
 void Network::evolveKingWeight() {
-    uniform_real_distribution<NetworkWeightType> distribution(-1, 1);
+    uniform_real_distribution<NetworkWeightType> distribution(-0.1, 0.1);
     _kingWeight += distribution(randomNumGenerator);
     _pieceCountWeight += distribution(randomNumGenerator);
     _pieceCountWeight = abs(_pieceCountWeight);
