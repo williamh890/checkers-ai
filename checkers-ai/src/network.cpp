@@ -338,10 +338,11 @@ void Network::evolve() {
 void Network::evolveKingWeight() {
     uniform_real_distribution<NetworkWeightType> distribution(-0.1, 0.1);
     _kingWeight += distribution(randomNumGenerator);
-    if (_kingWeight < 1)
+    if (_kingWeight < 1){
         _kingWeight = 1;
-    else if (_kingWeight > 3) 
+    } else if (_kingWeight > 3){ 
         _kingWeight = 3;
+    }
     _pieceCountWeight += distribution(randomNumGenerator);
     _pieceCountWeight = abs(_pieceCountWeight);
 }
