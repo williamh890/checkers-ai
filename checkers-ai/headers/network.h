@@ -117,7 +117,7 @@ namespace ai {
     bool nothingSimilar(const Network &, const Network &);
     void weightChangeOut(Network parent, Network child);
     void setupNetworks (const std::vector<unsigned int> & dimensions, int numberOfNetworks = NETWORKPOPSIZE);
-    Settings::NetworkWeightType getGaussianNumberFromZeroToOne(std::mt19937 &);
+    Settings::NetworkWeightType getGaussianNumber(std::mt19937 &);
     bool validateNetworks();
 }
 #endif // NETWORK_H_INCLUDED

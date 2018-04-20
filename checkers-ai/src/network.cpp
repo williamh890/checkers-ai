@@ -284,13 +284,13 @@ Network::evaluateBoard(const vector<char> &inputBoard, bool testing,
 
                   auto total = total1 + total2 + total3 + total4;
 
-                  _layers[x][y] = (!testing) ? std::tanh(total) : total;
+                  _layers[x][y] = (!testing) ? total / (1 + abs(total)) : total;
               }
           }
       }
   }
-  return (_layers[layerEndingIndex - 1][0] + _pieceCountWeight * pieceCount) * red_factor /*boardEvaluationOutput()*/
-  ;
+  /*boardEvaluationOutput()*/
+  return activationFunction((_layers[layerEndingIndex - 1][0] + pieceCount)) * red_factor;
 }
 
 inline NetworkWeightType Network::activationFunction(NetworkWeightType x) {
@@ -371,22 +371,20 @@ void Network::evolveSigmas() {
 }
 
 void inline Network::evolveSigmaAt(size_t i, size_t ii, NetworkWeightType tau) {
-    _sigmas[i][ii] = abs(
-        _sigmas[i][ii] *
-        exp(tau * getGaussianNumberFromZeroToOne(randomNumGenerator)));
+    _sigmas[i][ii] = _sigmas[i][ii] * exp(tau * getGaussianNumber(randomNumGenerator));
 }
 
 void Network::evolveWeights() {
     for (size_t i = 0; i < _weights.size(); ++i) {
         for (size_t ii = 0; ii < _weights[i].size(); ++ii) {
-            _weights[i][ii] = abs(evolveWeightAt(i, ii));
+            _weights[i][ii] = evolveWeightAt(i, ii);
         }
     }
 }
 
 NetworkWeightType inline Network::evolveWeightAt(size_t i, size_t ii) {
     return _weights[i][ii] +
-        _sigmas[i][ii] * getGaussianNumberFromZeroToOne(randomNumGenerator);
+        _sigmas[i][ii] * getGaussianNumber(randomNumGenerator);
 }
 
 unsigned int Network::getID() const { return _ID; }
@@ -431,7 +429,9 @@ bool ai::operator<(const Network &lhs, const Network &rhs) {
     return lhs.getPerformance() < rhs.getPerformance();
 }
 
-bool ai::operator>(const Network &lhs, const Network &rhs) { return rhs < lhs; }
+bool ai::operator>(const Network &lhs, const Network &rhs) {
+    return rhs < lhs;
+}
 
 bool ai::operator<=(const Network &lhs, const Network &rhs) {
     return !(lhs > rhs);
@@ -464,34 +464,25 @@ void validateNetworkDimensions (const vector<unsigned int>& dimensionsToCheck) {
         throw std::invalid_argument("No initial input layer");}
 }
 
-void ai::setupNetworks(const vector<unsigned int> &dimensions,
-        int numberOfNetworks) { // numberOfNetworks = 100
-    // cout << "You are about to setup a new set of networks. This operation will
-    // overwrite previous networks. \n" << "Are you sure you want to continue?
-    //(y,n) ";
-    // if (cin.get() == 'n') {
-    // cout << "Not overwriting files" << endl;
-    // cin.ignore();
-    // return;
-    //}
+void ai::setupNetworks(
+        const vector<unsigned int> &dimensions,
+        int numberOfNetworks) {
     try {
         validateNetworkDimensions(dimensions);
     }
     catch (const std::exception& e) {
         cout << e.what() << endl;
-        throw;
+        throw e;
     }
 
     auto seeder = getSeeder();
     for (auto index = 0; index < numberOfNetworks; ++index) {
         Network(index, dimensions, seeder);
     }
-
-    // cin.ignore();
 }
 
 NetworkWeightType
-ai::getGaussianNumberFromZeroToOne(std::mt19937 &randomNumGenerator) {
+ai::getGaussianNumber(std::mt19937 &randomNumGenerator) {
     normal_distribution<NetworkWeightType> distribution(0, 1);
 
     return distribution(randomNumGenerator);
@@ -575,15 +566,7 @@ bool ai::validateNetworks() {
             }
         }
     }
-    // for (unsigned int i = 0; i < ai::NETWORKPOPSIZE; ++i) {
-    //     Network net(i);
-    //     cout << "ID: " << net._ID << "\tNum Layers: " << net._layers.size() << endl;
-    //     cout << "PieceCtWeight: " << net._pieceCountWeight << "\t KingWt: " << net._kingWeight << endl;
 
-
-    //     cout << "empty: " << net.evaluateBoard(emptyBoard)
-    //         << "\t big: " << net.evaluateBoard(sampleBigBoard) << endl;
-    // }
     if (bAreBasicAttributesSame) {
         cout << "For all networks: " << endl;
         cout << "size of layers and weights vector: " << allNets[0]._weights.size() << endl;
