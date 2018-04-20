@@ -284,13 +284,13 @@ Network::evaluateBoard(const vector<char> &inputBoard, bool testing,
 
                   auto total = total1 + total2 + total3 + total4;
 
-                  _layers[x][y] = (!testing) ? std::tanh(total) : total;
+                  _layers[x][y] = (!testing) ? total / (1 + abs(total)) : total;
               }
           }
       }
   }
-  return (_layers[layerEndingIndex - 1][0] + _pieceCountWeight * pieceCount) * red_factor /*boardEvaluationOutput()*/
-  ;
+  /*boardEvaluationOutput()*/
+  return activationFunction((_layers[layerEndingIndex - 1][0] + pieceCount)) * red_factor;
 }
 
 inline NetworkWeightType Network::activationFunction(NetworkWeightType x) {
@@ -371,15 +371,13 @@ void Network::evolveSigmas() {
 }
 
 void inline Network::evolveSigmaAt(size_t i, size_t ii, NetworkWeightType tau) {
-    _sigmas[i][ii] = abs(
-        _sigmas[i][ii] *
-        exp(tau * getGaussianNumber(randomNumGenerator)));
+    _sigmas[i][ii] = _sigmas[i][ii] * exp(tau * getGaussianNumber(randomNumGenerator));
 }
 
 void Network::evolveWeights() {
     for (size_t i = 0; i < _weights.size(); ++i) {
         for (size_t ii = 0; ii < _weights[i].size(); ++ii) {
-            _weights[i][ii] = abs(evolveWeightAt(i, ii));
+            _weights[i][ii] = evolveWeightAt(i, ii);
         }
     }
 }
