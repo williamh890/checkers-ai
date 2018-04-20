@@ -41,6 +41,7 @@ int main(int argc, char *argv[]) {
          << "  1 -> Store Performances" << endl
          << "  2 -> Evolve All Networks" << endl
          << "  3 -> Evolve User Networks" << endl
+         << "  4 -> Validate Networks" << endl
          << endl;
     return -1;
   }

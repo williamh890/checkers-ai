@@ -28,6 +28,11 @@ TEST_CASE("Testing setupNetworks") {
     setupNetworks(dims, 2);
 }
 
+TEST_CASE ("Invalid network setup") {
+        vector<unsigned int> badDims = {32, 1, 32, 1, 1};
+        REQUIRE_THROWS(setupNetworks(badDims, 2));
+    }
+
 TEST_CASE("Test saving and loading consistency") {
     ai::Network player(0);
     ai::Network playerAgain(0);
@@ -159,7 +164,7 @@ TEST_CASE("Test Network Evaluation", "[network]") {
             'b',   'b',   'b',   'b',
                 ' ',   ' ',   ' ',   ' ',
             ' ',   ' ',   ' ',   ' '    };
-            
+
         Network player(0);
         for (auto i = 0; i <= 24; ++i) {
                 player.evaluateBoard(board);
@@ -171,11 +176,13 @@ TEST_CASE("Test Network Evaluation", "[network]") {
 TEST_CASE("Testing evolution") {
     ai::Network player(0);
     ai::Network playerZeroEvolved(1);
+    Network ensurePlayerDidntChange(0);
 
     playerZeroEvolved.evolveUsingNetwork(player);
     // player.outputCreationDebug();
     // playerZeroEvolved.outputCreationDebug();
     REQUIRE(nothingSimilar(player, playerZeroEvolved));
+    REQUIRE(ensurePlayerDidntChange == player);
 }
 
 void writeToLogs(double timeTaken, int loopIterations, double boardsPerSec) {

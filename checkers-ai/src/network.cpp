@@ -16,6 +16,7 @@ using ai::NetworkFileWriter;
 using ai::DEBUG;
 using NetworkWeightType = ai::Settings::NetworkWeightType;
 
+#include <algorithm>
 #include <vector>
 using std::vector;
 
@@ -268,7 +269,7 @@ Network::evaluateBoard(const vector<char> &inputBoard, bool testing,
               /*calculateNode(x, y)*/ {
                   NetworkWeightType total1 = 0, total2 = 0, total3 = 0, total4 = 0;
                   unsigned int previousLayerSize = _layers[x - 1].size();
-                  
+
                   // Loop unrolling for calculating a node
                   for (unsigned int i = 0; i < previousLayerSize; i += 4) {
                       total1 +=
@@ -283,7 +284,7 @@ Network::evaluateBoard(const vector<char> &inputBoard, bool testing,
 
                   auto total = total1 + total2 + total3 + total4;
 
-                  _layers[x][y] = (!testing) ? total / (1 + abs(total)) : total;
+                  _layers[x][y] = (!testing) ? std::tanh(total) : total;
               }
           }
       }
@@ -335,9 +336,16 @@ void Network::evolve() {
     evolveWeights();
 }
 
+NetworkWeightType clamp(NetworkWeightType val, NetworkWeightType lower, NetworkWeightType upper) {
+    return std::max(lower, std::min(val, upper));
+}
+
 void Network::evolveKingWeight() {
-    uniform_real_distribution<NetworkWeightType> distribution(-1, 1);
+    uniform_real_distribution<NetworkWeightType> distribution(-0.1, 0.1);
     _kingWeight += distribution(randomNumGenerator);
+
+    _kingWeight = clamp(_kingWeight, 1, 3);
+
     _pieceCountWeight += distribution(randomNumGenerator);
     _pieceCountWeight = abs(_pieceCountWeight);
 }
@@ -363,15 +371,15 @@ void Network::evolveSigmas() {
 }
 
 void inline Network::evolveSigmaAt(size_t i, size_t ii, NetworkWeightType tau) {
-    _sigmas[i][ii] =
+    _sigmas[i][ii] = abs(
         _sigmas[i][ii] *
-        exp(tau * getGaussianNumberFromZeroToOne(randomNumGenerator));
+        exp(tau * getGaussianNumberFromZeroToOne(randomNumGenerator)));
 }
 
 void Network::evolveWeights() {
     for (size_t i = 0; i < _weights.size(); ++i) {
         for (size_t ii = 0; ii < _weights[i].size(); ++ii) {
-            _weights[i][ii] = evolveWeightAt(i, ii);
+            _weights[i][ii] = abs(evolveWeightAt(i, ii));
         }
     }
 }
@@ -441,19 +449,19 @@ bool ai::operator==(const Network &lhs, const Network &rhs) {
         (lhs._whichLayerofNetworkToUse == rhs._whichLayerofNetworkToUse);
 }
 
-void validateNetworkDimensions () {
+void validateNetworkDimensions (const vector<unsigned int>& dimensionsToCheck) {
     int numBeginnings = 0;
     int numEndings = 0;
-    for (auto i : ai::NETWORK_DIMENSIONS) {
-        if (i == 32)
-            ++numBeginnings;
-        if (i == 1) 
-            ++numEndings;
+    for (auto i : dimensionsToCheck) {
+        if (i == 32){
+            ++numBeginnings;}
+        if (i == 1) {
+            ++numEndings;}
     }
-    if (numBeginnings < numEndings)
-        std::logic_error("Not enough input layers for output layers");
-    if (ai::NETWORK_DIMENSIONS[0] != 32)
-        std::logic_error("No initial input layer");
+    if (numBeginnings < numEndings){
+        throw std::invalid_argument("Not enough input layers for output layers");}
+    if (dimensionsToCheck[0] != 32){
+        throw std::invalid_argument("No initial input layer");}
 }
 
 void ai::setupNetworks(const vector<unsigned int> &dimensions,
@@ -467,8 +475,9 @@ void ai::setupNetworks(const vector<unsigned int> &dimensions,
     // return;
     //}
     try {
-        validateNetworkDimensions();
-    } catch (const std::exception& e) {
+        validateNetworkDimensions(dimensions);
+    }
+    catch (const std::exception& e) {
         cout << e.what() << endl;
         throw;
     }
@@ -518,26 +527,85 @@ void ai::weightChangeOut(Network parent, Network child) {
 }
 
 bool ai::validateNetworks() {
+    vector<Network> allNets;
     for (unsigned int i = 0; i < ai::NETWORKPOPSIZE; ++i) {
         Network net(i);
-        cout << "ID: " << net._ID << "\tNum Layers: " << net._layers.size() << endl;
-        cout << "PieceCtWeight: " << net._pieceCountWeight << "\t KingWt: " << net._kingWeight << endl;
-        for (unsigned int index = 0; index < net._layers.size(); ++index) {
-            cout << "Size of layer " << index << " = " << net._layers[index].size()
+        allNets.push_back(std::move (net));
+    }
+    allNets[0].outputCreationDebug();
+    vector<char> emptyBoard(32);
+    vector<char> sampleBigBoard{
+        'r',   'r',   'r',   'r',
+    'r',   'r',   'r',   'r',
+        'r',   ' ',   'r',   'r',
+    ' ',   ' ',   'r',   ' ',
+        ' ',   ' ',   'b',   ' ',
+    'b',   'b',   ' ',   'b',
+        'b',   'b',   'b',   'b',
+    'b',   'b',   'b',   'b'
+    };
+    bool bAreBasicAttributesSame = true;
+    bool bAreSmallEvaluationsSame = true;
+    ai::Settings::NetworkWeightType emptyEval = allNets[0].evaluateBoard(emptyBoard);
+    bool bAreBigEvaluationsSame = true;
+    ai::Settings::NetworkWeightType bigEval = allNets[0].evaluateBoard(sampleBigBoard);
+
+    // Check for similarities between networks such that things can be printed once
+    for (auto i : allNets) {
+        if (bAreSmallEvaluationsSame && i.evaluateBoard(emptyBoard) != emptyEval)
+            bAreSmallEvaluationsSame = false;
+        if (bAreBigEvaluationsSame && i.evaluateBoard(sampleBigBoard) != bigEval)
+            bAreBigEvaluationsSame = false;
+        if (bAreBasicAttributesSame == false)
+            break;
+
+        for (unsigned int index = 0; index < allNets[0]._layers.size(); ++index) {
+            if (allNets[0]._layers[index].size() != i._layers[index].size()) {
+                bAreBasicAttributesSame = false;
+                break;
+            }
+        }
+        if (allNets[0]._weights.size() != i._weights.size()) {
+            bAreBasicAttributesSame = false;
+        }
+        for (unsigned int index = 0; index < i._weights.size(); ++index) {
+            if (allNets[0]._weights[index].size() != i._weights[index].size()) {
+                bAreBasicAttributesSame = false;
+                break;
+            }
+        }
+    }
+    // for (unsigned int i = 0; i < ai::NETWORKPOPSIZE; ++i) {
+    //     Network net(i);
+    //     cout << "ID: " << net._ID << "\tNum Layers: " << net._layers.size() << endl;
+    //     cout << "PieceCtWeight: " << net._pieceCountWeight << "\t KingWt: " << net._kingWeight << endl;
+
+
+    //     cout << "empty: " << net.evaluateBoard(emptyBoard)
+    //         << "\t big: " << net.evaluateBoard(sampleBigBoard) << endl;
+    // }
+    if (bAreBasicAttributesSame) {
+        cout << "For all networks: " << endl;
+        cout << "size of layers and weights vector: " << allNets[0]._weights.size() << endl;
+        for (unsigned int index = 0; index < allNets[0]._layers.size(); ++index) {
+            cout << "Size of layer " << index << " = " << allNets[0]._layers[index].size()
+                << "\tSize of weight layer " << index << " = " << allNets[0]._weights[index].size()
                 << endl;
         }
-        cout << "size of weights vector: " << net._weights.size() << endl;
-        for (unsigned int index = 0; index < net._weights.size(); ++index) {
-            cout << "Size of weight layer " << index << " = "
-                << net._weights[index].size() << endl;
-        }
-        vector<char> emptyBoard(32);
-        vector<char> sampleBigBoard{'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r',
-            ' ', 'r', 'r', 'r', ' ', ' ', 'r', ' ',
-            ' ', ' ', 'b', ' ', 'b', 'b', ' ', 'b',
-            'b', 'b', 'b', 'b', 'b', 'b', 'b', 'b'};
-        cout << "empty: " << net.evaluateBoard(emptyBoard)
-            << "\t big: " << net.evaluateBoard(sampleBigBoard) << endl;
+    } else {
+        cout << "There's different network sizes in this folder" << endl;
     }
-    return false;
+
+    if (bAreSmallEvaluationsSame) {
+        cout << "All networks have empty board output as: " << emptyEval << endl;
+    } else {
+        cout << "They evaluate empty boards differently" << endl;
+    }
+
+    if (bAreBigEvaluationsSame) {
+        cout << "All networks have full board output as: " <<  bigEval << endl;
+    } else {
+        cout << "They evaluate full boards differently" << endl;
+    }
+    return true;
 }
