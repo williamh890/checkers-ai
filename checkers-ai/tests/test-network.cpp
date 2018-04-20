@@ -164,7 +164,7 @@ TEST_CASE("Test Network Evaluation", "[network]") {
             'b',   'b',   'b',   'b',
                 ' ',   ' ',   ' ',   ' ',
             ' ',   ' ',   ' ',   ' '    };
-            
+
         Network player(0);
         for (auto i = 0; i <= 24; ++i) {
                 player.evaluateBoard(board);

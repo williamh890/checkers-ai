@@ -16,6 +16,7 @@ using ai::NetworkFileWriter;
 using ai::DEBUG;
 using NetworkWeightType = ai::Settings::NetworkWeightType;
 
+#include <algorithm>
 #include <vector>
 using std::vector;
 
@@ -268,7 +269,7 @@ Network::evaluateBoard(const vector<char> &inputBoard, bool testing,
               /*calculateNode(x, y)*/ {
                   NetworkWeightType total1 = 0, total2 = 0, total3 = 0, total4 = 0;
                   unsigned int previousLayerSize = _layers[x - 1].size();
-                  
+
                   // Loop unrolling for calculating a node
                   for (unsigned int i = 0; i < previousLayerSize; i += 4) {
                       total1 +=
@@ -335,14 +336,16 @@ void Network::evolve() {
     evolveWeights();
 }
 
+NetworkWeightType clamp(NetworkWeightType val, NetworkWeightType lower, NetworkWeightType upper) {
+    return std::max(lower, std::min(val, upper));
+}
+
 void Network::evolveKingWeight() {
     uniform_real_distribution<NetworkWeightType> distribution(-0.1, 0.1);
     _kingWeight += distribution(randomNumGenerator);
-    if (_kingWeight < 1){
-        _kingWeight = 1;
-    } else if (_kingWeight > 3){ 
-        _kingWeight = 3;
-    }
+
+    _kingWeight = clamp(_kingWeight, 1, 3);
+
     _pieceCountWeight += distribution(randomNumGenerator);
     _pieceCountWeight = abs(_pieceCountWeight);
 }
@@ -473,7 +476,7 @@ void ai::setupNetworks(const vector<unsigned int> &dimensions,
     //}
     try {
         validateNetworkDimensions(dimensions);
-    } 
+    }
     catch (const std::exception& e) {
         cout << e.what() << endl;
         throw;
@@ -576,7 +579,7 @@ bool ai::validateNetworks() {
     //     Network net(i);
     //     cout << "ID: " << net._ID << "\tNum Layers: " << net._layers.size() << endl;
     //     cout << "PieceCtWeight: " << net._pieceCountWeight << "\t KingWt: " << net._kingWeight << endl;
-        
+
 
     //     cout << "empty: " << net.evaluateBoard(emptyBoard)
     //         << "\t big: " << net.evaluateBoard(sampleBigBoard) << endl;
@@ -586,7 +589,7 @@ bool ai::validateNetworks() {
         cout << "size of layers and weights vector: " << allNets[0]._weights.size() << endl;
         for (unsigned int index = 0; index < allNets[0]._layers.size(); ++index) {
             cout << "Size of layer " << index << " = " << allNets[0]._layers[index].size()
-                << "\tSize of weight layer " << index << " = " << allNets[0]._weights[index].size() 
+                << "\tSize of weight layer " << index << " = " << allNets[0]._weights[index].size()
                 << endl;
         }
     } else {
