@@ -164,7 +164,7 @@ TEST_CASE("Test Network Evaluation", "[network]") {
             'b',   'b',   'b',   'b',
                 ' ',   ' ',   ' ',   ' ',
             ' ',   ' ',   ' ',   ' '    };
-            
+
         Network player(0);
         for (auto i = 0; i <= 24; ++i) {
                 player.evaluateBoard(board);
@@ -176,11 +176,13 @@ TEST_CASE("Test Network Evaluation", "[network]") {
 TEST_CASE("Testing evolution") {
     ai::Network player(0);
     ai::Network playerZeroEvolved(1);
+    Network ensurePlayerDidntChange(0);
 
     playerZeroEvolved.evolveUsingNetwork(player);
     // player.outputCreationDebug();
     // playerZeroEvolved.outputCreationDebug();
     REQUIRE(nothingSimilar(player, playerZeroEvolved));
+    REQUIRE(ensurePlayerDidntChange == player);
 }
 
 void writeToLogs(double timeTaken, int loopIterations, double boardsPerSec) {
