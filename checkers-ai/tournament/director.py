@@ -66,8 +66,8 @@ class Director:
 
             loser = game['black'] if winner == game['red'] else game['black']
 
-            self.network_wins[loser] -= 1
-            self.network_wins[winner] += 2
+            self.network_wins[loser] -= 2
+            self.network_wins[winner] += 1
 
         write_to_log(self.generations, results, self.network_wins)
 
