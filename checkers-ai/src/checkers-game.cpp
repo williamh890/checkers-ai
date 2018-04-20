@@ -67,12 +67,9 @@ const char CheckersGame::play() {
 
     while (++moveCounter < MOVE_LIMIT && (areMoves() || areJumps())) {
         try {
-            auto start = getTime();
             cout << getSkynetBoardStr() << endl;
             turn();
             swapPlayers();
-            auto end = getTime();
-
         } catch (length_error &e) {
             break;
         } catch (runtime_error &e) {
