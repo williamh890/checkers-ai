@@ -377,7 +377,7 @@ void inline Network::evolveSigmaAt(size_t i, size_t ii, NetworkWeightType tau) {
 void Network::evolveWeights() {
     for (size_t i = 0; i < _weights.size(); ++i) {
         for (size_t ii = 0; ii < _weights[i].size(); ++ii) {
-            _weights[i][ii] = evolveWeightAt(i, ii);
+            _weights[i][ii] = abs(evolveWeightAt(i, ii));
         }
     }
 }
