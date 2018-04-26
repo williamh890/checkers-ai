@@ -14,7 +14,7 @@ RUN \
 
 ENV HOME /root
 
-RUN git clone https://www.github.com/williamh890/checkers-ai
+COPY . checkers-ai/checkers-ai
 WORKDIR /checkers-ai/checkers-ai
 
 # Build checker-ai
@@ -25,7 +25,7 @@ RUN \
 
 # Setup networks
 RUN \
-    git clone -b tournament https://www.github.com/williamh890/networks     && \
+    git clone https://www.github.com/williamh890/networks                   && \
     apt-get install -y uuid                                                 && \
     echo $(uuid) > user.me                                                  && \
     cd networks && git checkout -b $(cat ../user.me) && cd ..               && \
