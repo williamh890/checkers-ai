@@ -10,7 +10,7 @@ RUN \
     apt-get install -y byobu curl git htop man unzip vim wget && \
     rm -rf /var/lib/apt/lists/*                               && \
     apt-get update -y && apt-get upgrade -y                   && \
-    apt-get install -y cmake
+    apt-get install -y cmake python3-pip uuid
 
 ENV HOME /root
 
@@ -26,7 +26,6 @@ RUN \
 # Setup networks
 RUN \
     git clone https://www.github.com/williamh890/networks                   && \
-    apt-get install -y uuid                                                 && \
     echo $(uuid) > user.me                                                  && \
     cd networks && git checkout -b $(cat ../user.me) && cd ..               && \
     ./manager.out 0
@@ -36,10 +35,7 @@ WORKDIR /checkers-ai/checkers-ai/tournament
 COPY docker-tounament.cfg tournament.cfg
 
 RUN \
-    apt-get install python3-pip -y && \
-    pip3 install -r requirements.txt
-
-RUN \
+    pip3 install -r requirements.txt && \
     echo "[user]\n    email = wbhorn@alaska.edu\n    name = William Horn" > ~/.gitconfig
 
 CMD ["python3", "director.py"]
