@@ -26,9 +26,9 @@ RUN \
 # Setup networks
 RUN \
     git clone -b tournament https://www.github.com/williamh890/networks     && \
-    apt-get install -y uuid                                   && \
-    echo $(uuid) > user.me                                    && \
-    cd networks && git checkout -b $(cat ../user.me) && cd .. && \
+    apt-get install -y uuid                                                 && \
+    echo $(uuid) > user.me                                                  && \
+    cd networks && git checkout -b $(cat ../user.me) && cd ..               && \
     ./manager.out 0
 
 # Setup tournament
