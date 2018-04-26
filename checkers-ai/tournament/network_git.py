@@ -22,13 +22,16 @@ class NetworkGit:
     def update_remote(self):
         self.network_repo.git.add(all=True)
 
-        if self.current_generation % 5 == 0:
-            self.network_repo.git.commit("-m generation {} of user {} ".format(
-                self.current_generation, self.user))
+        commit_msg = "generation {} of user {}".format(
+            self.current_generation,
+            self.user
+        )
+        self.network_repo.git.commit("-m {}".format(commit_msg))
 
-        #self.network_repo.git.pull()
+        with open("user.me", "r") as f:
+            branch = f.read().strip()
 
-        #self.network_repo.git.push(self.push_command, "master")
+        self.network_repo.git.push(self.push_command, branch)
 
     def update_config(self):
         self.current_generation += 1
