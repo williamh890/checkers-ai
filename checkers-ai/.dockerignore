@@ -1,5 +1,4 @@
 networks
-*.sh
 
 .git
 
@@ -14,7 +13,6 @@ board*.json
 cy_director
 *.network
 tournament/tournament.cfg
-docker-tounament.cfg
 user.me
 log.txt
 
