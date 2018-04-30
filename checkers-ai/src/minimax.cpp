@@ -103,7 +103,9 @@ MiniMaxHelper::MiniMaxHelper(char maximizingPlayer, CheckersGame &game)
 
 GameState::GameState(const BoardState &board, const Pieces &red,
                      const Pieces &black, char activePlayerColor)
-    : boardState(board), redPieces(red), blackPieces(black),
+    : boardState(board),
+      redPieces(red),
+      blackPieces(black),
       activePlayerColor(activePlayerColor) {}
 
 MiniMaxReturnType MiniMaxHelper::recurse(const MovePackage &move, int depth) {
@@ -152,9 +154,8 @@ MiniMaxReturnType MiniMaxHelper::recurse(const JumpPackage &jump, int depth) {
   return bestNumPieces;
 }
 
-MiniMaxReturnType
-MiniMaxHelper::recurseMultiJumpCase(const vector<JumpPackage> &multiJumps,
-                                    int depth) {
+MiniMaxReturnType MiniMaxHelper::recurseMultiJumpCase(
+    const vector<JumpPackage> &multiJumps, int depth) {
   auto isMaximizingPlayer = game.activePlayer->getColor() == maximizingPlayer;
   MiniMaxReturnType bestNumPieces = (isMaximizingPlayer) ? -FLT_MAX : FLT_MAX;
   MiniMaxReturnType jumpVal;

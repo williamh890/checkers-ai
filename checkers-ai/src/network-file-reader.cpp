@@ -76,7 +76,8 @@ int NetworkFileReader::loadPerformanceFrom() {
 
 NetworkWeightType NetworkFileReader::loadKingWeightFrom() {
   NetworkWeightType kingWeight = 0.;
-  networkFile.read(reinterpret_cast<char *>(&kingWeight), sizeof(NetworkWeightType));
+  networkFile.read(reinterpret_cast<char *>(&kingWeight),
+                   sizeof(NetworkWeightType));
 
   return kingWeight;
 }
@@ -96,8 +97,8 @@ vector<size_t> NetworkFileReader::loadDimension() {
   return dimensions;
 }
 
-vector<vector<NetworkWeightType>>
-NetworkFileReader::getNodesFromDimensions(const vector<size_t> &dimensions) {
+vector<vector<NetworkWeightType>> NetworkFileReader::getNodesFromDimensions(
+    const vector<size_t> &dimensions) {
   vector<vector<NetworkWeightType>> nodes;
 
   for (auto size : dimensions) {
@@ -108,13 +109,14 @@ NetworkFileReader::getNodesFromDimensions(const vector<size_t> &dimensions) {
   return nodes;
 }
 
-vector<NetworkWeightType>
-NetworkFileReader::loadVector(size_t currLayerDimension) {
+vector<NetworkWeightType> NetworkFileReader::loadVector(
+    size_t currLayerDimension) {
   vector<NetworkWeightType> layerWeights;
 
   for (size_t i = 0; i < currLayerDimension; ++i) {
     NetworkWeightType weight = 0;
-    networkFile.read(reinterpret_cast<char *>(&weight), sizeof(NetworkWeightType));
+    networkFile.read(reinterpret_cast<char *>(&weight),
+                     sizeof(NetworkWeightType));
     layerWeights.push_back(weight);
   }
 

@@ -23,7 +23,7 @@
 
 namespace ai {
 class CheckersGame {
-public:
+ public:
   using MovePackage = std::pair<int, int>;
   using JumpPackage = std::pair<int, Jump>;
   using PlayerPtr = std::shared_ptr<Player>;
@@ -42,7 +42,7 @@ public:
 
   std::mt19937 generator;
 
-public:
+ public:
   CheckersGame();
   CheckersGame(const Board &board, PlayerPtr red, PlayerPtr black,
                SeederPtr &seeder);
@@ -72,7 +72,7 @@ public:
 
   GameState getState();
   std::string getSkynetBoardStr();
-  void setState(const std::string & boardStr);
+  void setState(const std::string &boardStr);
   void setState(GameState &state);
 
   MovePackage getMoveFromActivePlayer();
@@ -93,5 +93,5 @@ public:
   int getNumPiecesFor(char color);
 };
 
-} // namespace ai
-#endif // CHECKERS_GAME_H
+}  // namespace ai
+#endif  // CHECKERS_GAME_H

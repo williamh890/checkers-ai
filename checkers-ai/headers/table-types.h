@@ -7,8 +7,8 @@
 // std::vector
 
 namespace ai {
-    using MoveTableType = std::vector<std::vector<int>>;
-    using JumpTableType = std::vector<std::vector<ai::Jump>>;
-} // namespace ai
+using MoveTableType = std::vector<std::vector<int>>;
+using JumpTableType = std::vector<std::vector<ai::Jump>>;
+}  // namespace ai
 
-#endif // TABLE_TYPES_H
+#endif  // TABLE_TYPES_H

@@ -7,30 +7,30 @@
 #include <string>
 // std::string
 
-
 namespace ai {
-    Position spaceToPosition(int space);
+Position spaceToPosition(int space);
 
-    int positionToSpace(const Position & pos);
+int positionToSpace(const Position& pos);
 
-    std::string getUsername ();
+std::string getUsername();
 
-    std::string idToFilename(int ID);
+std::string idToFilename(int ID);
 
-    double getTime();
+double getTime();
 
 // class NetworkTestingNamechange
 // Simple object to handle changing username for testing.
 // Changes name back when it goes out of scope.
-    class NetworkTestingNamechange {
-        public:
-        NetworkTestingNamechange ();
-        ~NetworkTestingNamechange ();
-        private: 
-        std::string _previousName;
+class NetworkTestingNamechange {
+ public:
+  NetworkTestingNamechange();
+  ~NetworkTestingNamechange();
 
-        void changeUsername(const std::string & /*s*/);
-    };
-} // namespace ai
+ private:
+  std::string _previousName;
 
-#endif // UTILS_H
+  void changeUsername(const std::string& /*s*/);
+};
+}  // namespace ai
+
+#endif  // UTILS_H

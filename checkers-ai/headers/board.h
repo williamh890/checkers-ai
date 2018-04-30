@@ -21,49 +21,49 @@
 // std::pair
 
 namespace ai {
-    enum class Action {
-        Move, Jump
-    };
+enum class Action { Move, Jump };
 
-    class Player; //forward declaration
-    class Board {
-        public:
-            using BoardType = std::vector<char>;
-        private:
-            BoardType boardState;
+class Player;  // forward declaration
+class Board {
+ public:
+  using BoardType = std::vector<char>;
 
-        public:
-            Board();
-            std::map<std::string, std::vector<Piece>> getPieces();
-            void addPiecesFor(const std::shared_ptr<Player> & player);
-            void updatePiece(const int & index, const char & newVal);
+ private:
+  BoardType boardState;
 
-            const std::vector<std::pair<int, int>> getValidMovesFor(const std::shared_ptr<Player> & player) const;
-            const std::vector<std::pair<int, Jump>> getValidJumpsFor(const std::shared_ptr<Player> & player) const;
+ public:
+  Board();
+  std::map<std::string, std::vector<Piece>> getPieces();
+  void addPiecesFor(const std::shared_ptr<Player>& player);
+  void updatePiece(const int& index, const char& newVal);
 
-            void make(const std::pair<int, Jump> & jump);
-            void make(const std::pair<int, int> & move);
+  const std::vector<std::pair<int, int>> getValidMovesFor(
+      const std::shared_ptr<Player>& player) const;
+  const std::vector<std::pair<int, Jump>> getValidJumpsFor(
+      const std::shared_ptr<Player>& player) const;
 
-        private:
-            bool hasPieceAt(int space) const;
-            bool hasOpposingPieceAt(const Jump & jump, char color) const;
-            bool destinationIsNotEmpty(const Jump & jump) const;
+  void make(const std::pair<int, Jump>& jump);
+  void make(const std::pair<int, int>& move);
 
+ private:
+  bool hasPieceAt(int space) const;
+  bool hasOpposingPieceAt(const Jump& jump, char color) const;
+  bool destinationIsNotEmpty(const Jump& jump) const;
 
-        public:
-            std::string toString();
-            std::string skynetStr();
-            char operator[](const int & index) const;
-            int pieceCount(char color);
+ public:
+  std::string toString();
+  std::string skynetStr();
+  char operator[](const int& index) const;
+  int pieceCount(char color);
 
-            std::vector<char> getBoardState();
-            void setBoardState(const std::vector<char> & newboardState);
+  std::vector<char> getBoardState();
+  void setBoardState(const std::vector<char>& newboardState);
 
-        private:
-            std::vector<std::vector<char>> getEmptyBoard();
-    };
+ private:
+  std::vector<std::vector<char>> getEmptyBoard();
+};
 
-    Board getBoard();
-} // namespace ai
+Board getBoard();
+}  // namespace ai
 
-#endif // BOARD_H
+#endif  // BOARD_H

@@ -51,9 +51,10 @@ using std::function;
 Player::Player(char color, const MoveGenerator &generator,
                const MoveGenerator &kingGenerator,
                PlayerType type = PlayerType::Computer)
-    : playerType(type), color(color), generator(generator),
+    : playerType(type),
+      color(color),
+      generator(generator),
       kingGenerator(kingGenerator) {
-
   this->baseCase = [&](SearchHelper &helper) -> int {
     ++SearchHelper::leafNodes;
     auto numPieces = helper.game.getNumPiecesFor(helper.maximizingPlayer);
@@ -68,15 +69,16 @@ Player::Player(char color, const MoveGenerator &generator,
 Player::Player(char color, const MoveGenerator &generator,
                const MoveGenerator &kingGenerator, Network &network,
                PlayerType type = PlayerType::Computer)
-    : playerType(type), color(color), network(network), generator(generator),
+    : playerType(type),
+      color(color),
+      network(network),
+      generator(generator),
       kingGenerator(kingGenerator) {
-
   this->baseCase = [&](SearchHelper &helper) -> float {
     const vector<char> board = helper.game.board.getBoardState();
     int colorFactor = (helper.maximizingPlayer == 'r') ? 1 : -1;
 
-    float value =
-        this->network.evaluateBoard(board, false, colorFactor);
+    float value = this->network.evaluateBoard(board, false, colorFactor);
 
     return value;
   };
@@ -213,7 +215,6 @@ BlackPlayer::BlackPlayer(char color, const MoveGenerator &generator,
                          const MoveGenerator &kingGenerator, Network &network,
                          PlayerType type)
     : Player(color, generator, kingGenerator, network, type) {
-
   initPieces();
 }
 

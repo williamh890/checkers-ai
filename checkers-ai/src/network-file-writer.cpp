@@ -47,7 +47,8 @@ void NetworkFileWriter::savePerformance(int networkPerormance) {
 }
 
 void NetworkFileWriter::saveKingWeight(NetworkWeightType kingWeight) {
-  networkFile.write(reinterpret_cast<char *>(&kingWeight), sizeof(NetworkWeightType));
+  networkFile.write(reinterpret_cast<char *>(&kingWeight),
+                    sizeof(NetworkWeightType));
 }
 
 void NetworkFileWriter::saveDimensions(
@@ -75,4 +76,3 @@ void NetworkFileWriter::saveVectorSize(const vector<NetworkWeightType> &layer) {
 
   networkFile.write(reinterpret_cast<char *>(&size), sizeof(size_t));
 }
-

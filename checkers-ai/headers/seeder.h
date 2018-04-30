@@ -8,30 +8,29 @@
 #include <string>
 // std::string
 
-
 namespace ai {
-    class Seeder {
-        public:
-            Seeder();
-            virtual unsigned int get() = 0;
-    };
+class Seeder {
+ public:
+  Seeder();
+  virtual unsigned int get() = 0;
+};
 
-    class SRandSeeder : public Seeder {
-        public:
-            SRandSeeder();
-            unsigned int get() override;
-    };
+class SRandSeeder : public Seeder {
+ public:
+  SRandSeeder();
+  unsigned int get() override;
+};
 
-    class RandomDeviceSeeder : public Seeder {
-            std::random_device device;
+class RandomDeviceSeeder : public Seeder {
+  std::random_device device;
 
-        public:
-            RandomDeviceSeeder();
-            unsigned int get() override;
-            ~RandomDeviceSeeder() = default;
-    };
+ public:
+  RandomDeviceSeeder();
+  unsigned int get() override;
+  ~RandomDeviceSeeder() = default;
+};
 
-    std::shared_ptr<Seeder> getSeeder();
-} // namespace ai
+std::shared_ptr<Seeder> getSeeder();
+}  // namespace ai
 
-#endif // SEEDER_H
+#endif  // SEEDER_H

@@ -13,22 +13,23 @@
 // std::vector
 
 namespace ai {
-    class MoveGenerator {
-        private:
-            MoveTableType moves;
-            JumpTableType jumps;
+class MoveGenerator {
+ private:
+  MoveTableType moves;
+  JumpTableType jumps;
 
-        public:
-            MoveGenerator() = default;
-            MoveGenerator(const MoveTableType & moves, const JumpTableType & jumps);
-            // ~MoveGenerator();
+ public:
+  MoveGenerator() = default;
+  MoveGenerator(const MoveTableType& moves, const JumpTableType& jumps);
+  // ~MoveGenerator();
 
-            std::vector<int> getMoves(int space) const;
-            std::vector<Jump> getJumps(int space) const;
-    };
+  std::vector<int> getMoves(int space) const;
+  std::vector<Jump> getJumps(int space) const;
+};
 
-    MoveGenerator getGeneratorFor(const std::string & color, const JsonToStlConverter & converter);
-    MoveGenerator getKingGenerator(const JsonToStlConverter & converter);
-} // namespace ai
+MoveGenerator getGeneratorFor(const std::string& color,
+                              const JsonToStlConverter& converter);
+MoveGenerator getKingGenerator(const JsonToStlConverter& converter);
+}  // namespace ai
 
-#endif // MOVE_GENERATOR_H
+#endif  // MOVE_GENERATOR_H

@@ -45,19 +45,18 @@ const float INF = FLT_MAX;
 // 1} NOTE:
 //          - input layers are always 32 and output layers are always 1
 //          - You can use as many as 24 layers
-static const std::vector<unsigned int> NETWORK_DIMENSIONS = {32, 100, 10, 1, 
-                                                             32, 100, 10, 1, 
-                                                             32, 40, 10, 1};
+static const std::vector<unsigned int> NETWORK_DIMENSIONS = {
+    32, 100, 10, 1, 32, 100, 10, 1, 32, 40, 10, 1};
 
 namespace Settings {
 static const std::string SEEDING_METHOD =
-    "random_device"; // Options are random_device and time
+    "random_device";  // Options are random_device and time
 
 static const PlayerType RED_PLAYER_TYPE = PlayerType::Computer;
 static const PlayerType BLACK_PLAYER_TYPE = PlayerType::Computer;
 
 using NetworkWeightType = double;
-} // namespace Settings
-} // namespace ai
+}  // namespace Settings
+}  // namespace ai
 
-#endif // CONSTS_H
+#endif  // CONSTS_H

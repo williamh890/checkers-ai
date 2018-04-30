@@ -15,39 +15,44 @@
 // std::vector
 
 namespace ai {
-    class Network;
+class Network;
 
-    class NetworkFileReader {
-            std::ifstream networkFile;
-        public:
-            bool load(const std::string & filename, Network & networkRecievingData);
+class NetworkFileReader {
+  std::ifstream networkFile;
 
-        private:
-            std::vector<ai::Settings::NetworkWeightType> loadVector(size_t currLayerDimension);
+ public:
+  bool load(const std::string& filename, Network& networkRecievingData);
 
-            bool inline noMoreLayersInNetworkFile();
-            int loadPerformanceFrom();
-            ai::Settings::NetworkWeightType loadKingWeightFrom();
-            std::vector<size_t> loadDimension();
+ private:
+  std::vector<ai::Settings::NetworkWeightType> loadVector(
+      size_t currLayerDimension);
 
-            std::vector<std::vector<ai::Settings::NetworkWeightType>> getNodesFromDimensions(const std::vector<size_t> & dimensions);
-    };
+  bool inline noMoreLayersInNetworkFile();
+  int loadPerformanceFrom();
+  ai::Settings::NetworkWeightType loadKingWeightFrom();
+  std::vector<size_t> loadDimension();
 
-    class NetworkFileWriter {
-            std::ofstream networkFile;
+  std::vector<std::vector<ai::Settings::NetworkWeightType>>
+  getNodesFromDimensions(const std::vector<size_t>& dimensions);
+};
 
-        public:
-            void save(const std::string & filename, const Network & networkToSave);
+class NetworkFileWriter {
+  std::ofstream networkFile;
 
-        private:
-            void saveVectorSize(const std::vector<ai::Settings::NetworkWeightType> & layer);
-            void saveVector(const std::vector<ai::Settings::NetworkWeightType> & toSave);
-            void savePerformance(int networkPerormance);
-            void saveKingWeight(ai::Settings::NetworkWeightType kingWeight);
-            void saveDimensions(const std::vector<std::vector<ai::Settings::NetworkWeightType>> & layers);
-    };
-    void distribution_out(int out_num);
+ public:
+  void save(const std::string& filename, const Network& networkToSave);
 
-} // namespace ai
+ private:
+  void saveVectorSize(
+      const std::vector<ai::Settings::NetworkWeightType>& layer);
+  void saveVector(const std::vector<ai::Settings::NetworkWeightType>& toSave);
+  void savePerformance(int networkPerormance);
+  void saveKingWeight(ai::Settings::NetworkWeightType kingWeight);
+  void saveDimensions(
+      const std::vector<std::vector<ai::Settings::NetworkWeightType>>& layers);
+};
+void distribution_out(int out_num);
 
-#endif // NETWORK_FILE_IO_H
+}  // namespace ai
+
+#endif  // NETWORK_FILE_IO_H

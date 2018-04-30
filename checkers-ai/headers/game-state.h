@@ -7,22 +7,19 @@
 // std::vector
 
 namespace ai {
-    using Pieces = std::vector<Piece>;
-    using BoardState = std::vector<char>;
+using Pieces = std::vector<Piece>;
+using BoardState = std::vector<char>;
 
-    struct GameState {
-        BoardState boardState;
-        Pieces redPieces;
-        Pieces blackPieces;
-        char activePlayerColor;
+struct GameState {
+  BoardState boardState;
+  Pieces redPieces;
+  Pieces blackPieces;
+  char activePlayerColor;
 
-        GameState() = default;
-        GameState(
-            const BoardState & board,
-            const Pieces & red,
-            const Pieces & black,
+  GameState() = default;
+  GameState(const BoardState& board, const Pieces& red, const Pieces& black,
             char activePlayerColor);
-    };
-} // namespace ai
+};
+}  // namespace ai
 
-#endif // GAME_STATE_H
+#endif  // GAME_STATE_H
