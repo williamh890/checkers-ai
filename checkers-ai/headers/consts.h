@@ -55,7 +55,7 @@ static const std::string SEEDING_METHOD =
 static const PlayerType RED_PLAYER_TYPE = PlayerType::Computer;
 static const PlayerType BLACK_PLAYER_TYPE = PlayerType::Computer;
 
-using NetworkWeightType = double;
+using NetworkWeightType = float;
 }  // namespace Settings
 }  // namespace ai
 
