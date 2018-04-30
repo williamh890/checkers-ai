@@ -13,6 +13,6 @@ namespace ai {
     CheckersGame getNetworkVPieceCountCheckersGame(
             unsigned int network_id,
             char networked_player);
-}
+} // namespace ai
 
-#endif
+#endif // GET_CHECKERS_GAME_H

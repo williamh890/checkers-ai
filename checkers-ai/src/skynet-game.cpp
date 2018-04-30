@@ -5,10 +5,10 @@
 #include "search.h"
 using ai::SearchHelper;
 
-#include <string>
-#include <stdlib.h>
 #include <fstream>
 #include <iostream>
+#include <stdlib.h>
+#include <string>
 
 // Command line args are
 //      ./skynet-game.out <game-name> <player-color> <network-id> <search-depth-limit>
@@ -21,9 +21,9 @@ struct GameInfo {
     std::string board;
     GameInfo() = default;
     GameInfo(
-        const std::string & turn,
-        const std::string & board
-    ) : turn(turn), board(board) {}
+        std::string  turn,
+        std::string  board
+    ) : turn(std::move(turn)), board(std::move(board)) {}
 };
 
 void sendTurn(const std::string & gameName, const std::string & board) {
@@ -47,7 +47,7 @@ GameInfo getGameInfo(const std::string & game) {
 }
 
 
-std::string formatBoard(std::string board, const char playerColor) {
+std::string formatBoard(std::string board, const char  /*playerColor*/) {
     for (auto & c : board) {
         if (c == '_') {
             c = ' ';
@@ -88,7 +88,7 @@ void skynetPlay(const std::string & gameName, const char playerColor, ai::Checke
     }
 }
 
-int main(int argc, char **argv) {
+int main(int  /*argc*/, char **argv) {
     std::string gameName = argv[1];
     const char playerColor = std::string(argv[2])[0];
     int network_id = std::stoi(argv[3]);

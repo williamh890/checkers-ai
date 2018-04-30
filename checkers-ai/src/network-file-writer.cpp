@@ -43,22 +43,22 @@ void NetworkFileWriter::save(const string &filename,
 }
 
 void NetworkFileWriter::savePerformance(int networkPerormance) {
-  networkFile.write((char *)&networkPerormance, sizeof(int));
+  networkFile.write(reinterpret_cast<char *>(&networkPerormance), sizeof(int));
 }
 
 void NetworkFileWriter::saveKingWeight(NetworkWeightType kingWeight) {
-  networkFile.write((char *)&kingWeight, sizeof(NetworkWeightType));
+  networkFile.write(reinterpret_cast<char *>(&kingWeight), sizeof(NetworkWeightType));
 }
 
 void NetworkFileWriter::saveDimensions(
     const vector<vector<NetworkWeightType>> &layers) {
   size_t numLayers = layers.size();
-  networkFile.write((char *)&numLayers, sizeof(size_t));
+  networkFile.write(reinterpret_cast<char *>(&numLayers), sizeof(size_t));
 
   for (const auto &layer : layers) {
     size_t layerSize = layer.size();
 
-    networkFile.write((char *)&layerSize, sizeof(size_t));
+    networkFile.write(reinterpret_cast<char *>(&layerSize), sizeof(size_t));
   }
 }
 
@@ -73,6 +73,6 @@ void NetworkFileWriter::saveVector(const vector<NetworkWeightType> &toSave) {
 void NetworkFileWriter::saveVectorSize(const vector<NetworkWeightType> &layer) {
   size_t size = layer.size();
 
-  networkFile.write((char *)&size, sizeof(size_t));
+  networkFile.write(reinterpret_cast<char *>(&size), sizeof(size_t));
 }
 

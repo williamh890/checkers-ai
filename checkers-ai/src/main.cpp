@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
 
     if (winner == 'r') {
         return 1;
-    } else {
-        return 255;
-    }
+    } 
+    return 255;
+    
 }

@@ -47,7 +47,7 @@ CheckersGame::MovePackage ai::getBestMoveIDS(CheckersGame &game) {
 
     auto stateBeforeSearch = game.getState();
 
-    while (depth++) {
+    while ((depth++) != 0) {
         try {
             bestMove = ai::getBestMove(game, depth);
         } catch (...) {
@@ -69,7 +69,7 @@ CheckersGame::JumpPackage ai::getBestJumpIDS(CheckersGame &game, int space) {
     SearchHelper::searchStartTime = getTime();
 
     auto stateBeforeSearch = game.getState();
-    while (depth++ && depth < 100) {
+    while (((depth++) != 0) && depth < 100) {
         try {
             bestJump = ai::getBestJump(game, depth, space);
         } catch (out_of_range &err) {
@@ -96,8 +96,8 @@ CheckersGame::MovePackage ai::getBestMove(CheckersGame &game, int depth) {
     MovePackage move;
     EvaluationType moveVal;
 
-    for (auto i = 0; i < (int)moves.size(); ++i) {
-        move = moves[i];
+    for (auto & i : moves) {
+        move = i;
         moveVal = search(move, depth - 1, game.getActivePlayerColor(), game);
 
         if (moveVal > bestMoveVal) {
@@ -123,8 +123,8 @@ CheckersGame::JumpPackage ai::getBestJump(CheckersGame &game, int depth,
     JumpPackage jump;
     EvaluationType jumpVal;
 
-    for (auto i = 0; i < (int)jumps.size(); ++i) {
-        jump = jumps[i];
+    for (auto & i : jumps) {
+        jump = i;
         jumpVal = search(jump, depth - 1, game.getActivePlayerColor(), game);
 
         if (jumpVal > bestJumpVal) {
@@ -189,7 +189,7 @@ EvaluationType SearchHelper::recurse(const JumpPackage &jump, int depth,
     EvaluationType bestOverallValue;
 
     auto multiJumps = game.getValidJumpsAt(jmpInfo.spaceJumpedTo);
-    if (!jmpInfo.wasPieceCrowned && multiJumps.size() > 0) {
+    if (!jmpInfo.wasPieceCrowned && !multiJumps.empty()) {
         bestOverallValue = recurseMultiJumpCase(multiJumps, depth, alpha, beta);
     } else {
         game.swapPlayers();
@@ -210,11 +210,11 @@ bool SearchHelper::isOutOfTime() {
     EvaluationType bestVal;
 
 #define SEARCH_ACTIONS(actions, depthExpression, cmpFunc, toUpdate)            \
-    for (auto &action : actions) {                                               \
+    for (auto &action : (actions)) {                                               \
         bestVal = recurse(action, depthExpression, alpha, beta);                   \
         \
         bestOverallVal = cmpFunc(bestVal, bestOverallVal);                         \
-        toUpdate = cmpFunc(toUpdate, bestOverallVal);                              \
+        (toUpdate) = cmpFunc(toUpdate, bestOverallVal);                              \
         \
         if (beta <= alpha) {                                                       \
             ++prunedNodes;                                                           \
@@ -246,7 +246,7 @@ EvaluationType SearchHelper::recursiveCase(int depth, EvaluationType alpha,
     SETUP_SEACH_VARIABLES()
         auto jumps = game.getValidJumps();
 
-    if (jumps.size() != 0) {
+    if (!jumps.empty()) {
         SEARCH_BASED_ON_MAXIMIZING_PLAYER(jumps, depth)
     } else {
         auto moves = game.getValidMoves();

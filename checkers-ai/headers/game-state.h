@@ -23,6 +23,6 @@ namespace ai {
             const Pieces & black,
             char activePlayerColor);
     };
-}
+} // namespace ai
 
-#endif
+#endif // GAME_STATE_H

@@ -1,5 +1,5 @@
-#ifndef MIN_MAX_H
-#define MIN_MAX_H
+#ifndef SEARCH_H
+#define SEARCH_H
 
 #include "checkers-game.h"
 // ai::CheckersGame
@@ -78,7 +78,7 @@ namespace ai {
                     EvaluationType alpha,
                     EvaluationType beta);
 
-            void setGameState(GameState & gameState);
+            void setGameState(GameState & state);
     };
 };
 
@@ -92,6 +92,6 @@ ai::EvaluationType ai::search(
 
     EvaluationType alpha=-INFINITY, beta=INFINITY;
     return search.recurse(action, depth, alpha, beta);
-}
+} // namespace ai
 
-#endif
+#endif // SEARCH_H

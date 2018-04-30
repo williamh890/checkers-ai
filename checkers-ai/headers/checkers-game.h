@@ -72,7 +72,7 @@ public:
 
   GameState getState();
   std::string getSkynetBoardStr();
-  void setState(const std::string & board);
+  void setState(const std::string & boardStr);
   void setState(GameState &state);
 
   MovePackage getMoveFromActivePlayer();
@@ -94,4 +94,4 @@ public:
 };
 
 } // namespace ai
-#endif
+#endif // CHECKERS_GAME_H

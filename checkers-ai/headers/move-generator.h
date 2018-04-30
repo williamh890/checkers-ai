@@ -29,6 +29,6 @@ namespace ai {
 
     MoveGenerator getGeneratorFor(const std::string & color, const JsonToStlConverter & converter);
     MoveGenerator getKingGenerator(const JsonToStlConverter & converter);
-}
+} // namespace ai
 
-#endif
+#endif // MOVE_GENERATOR_H

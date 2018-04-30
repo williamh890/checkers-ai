@@ -29,8 +29,8 @@ namespace ai {
         private: 
         std::string _previousName;
 
-        void changeUsername(const std::string &);
+        void changeUsername(const std::string & /*s*/);
     };
-}
+} // namespace ai
 
-#endif
+#endif // UTILS_H

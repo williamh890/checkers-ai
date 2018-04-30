@@ -32,6 +32,6 @@ namespace ai {
     };
 
     std::shared_ptr<Seeder> getSeeder();
-}
+} // namespace ai
 
-#endif
+#endif // SEEDER_H

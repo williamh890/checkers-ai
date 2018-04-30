@@ -45,7 +45,7 @@ bool NetworkFileReader::load(const string &filename,
 
   size_t vectorSize = 0.;
   while (true) {
-    networkFile.read((char *)&vectorSize, sizeof(size_t));
+    networkFile.read(reinterpret_cast<char *>(&vectorSize), sizeof(size_t));
 
     if (noMoreLayersInNetworkFile()) {
       break;
@@ -53,7 +53,7 @@ bool NetworkFileReader::load(const string &filename,
 
     auto layerWeights = loadVector(vectorSize);
 
-    networkFile.read((char *)&vectorSize, sizeof(size_t));
+    networkFile.read(reinterpret_cast<char *>(&vectorSize), sizeof(size_t));
     auto sigmaValues = loadVector(vectorSize);
 
     weights.push_back(layerWeights);
@@ -69,26 +69,26 @@ bool NetworkFileReader::load(const string &filename,
 
 int NetworkFileReader::loadPerformanceFrom() {
   int performace = 0;
-  networkFile.read((char *)&performace, sizeof(int));
+  networkFile.read(reinterpret_cast<char *>(&performace), sizeof(int));
 
   return performace;
 }
 
 NetworkWeightType NetworkFileReader::loadKingWeightFrom() {
   NetworkWeightType kingWeight = 0.;
-  networkFile.read((char *)&kingWeight, sizeof(NetworkWeightType));
+  networkFile.read(reinterpret_cast<char *>(&kingWeight), sizeof(NetworkWeightType));
 
   return kingWeight;
 }
 
 vector<size_t> NetworkFileReader::loadDimension() {
   size_t numLayers = 0;
-  networkFile.read((char *)&numLayers, sizeof(size_t));
+  networkFile.read(reinterpret_cast<char *>(&numLayers), sizeof(size_t));
 
   vector<size_t> dimensions;
   for (size_t i = 0; i < numLayers; ++i) {
     size_t layerSize = 0;
-    networkFile.read((char *)&layerSize, sizeof(size_t));
+    networkFile.read(reinterpret_cast<char *>(&layerSize), sizeof(size_t));
 
     dimensions.push_back(layerSize);
   }
@@ -114,7 +114,7 @@ NetworkFileReader::loadVector(size_t currLayerDimension) {
 
   for (size_t i = 0; i < currLayerDimension; ++i) {
     NetworkWeightType weight = 0;
-    networkFile.read((char *)&weight, sizeof(NetworkWeightType));
+    networkFile.read(reinterpret_cast<char *>(&weight), sizeof(NetworkWeightType));
     layerWeights.push_back(weight);
   }
 

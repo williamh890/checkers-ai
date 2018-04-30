@@ -40,4 +40,4 @@ namespace ai {
     };
 }
 
-#endif
+#endif // GUI_CPP_INTERFACE

@@ -48,7 +48,7 @@ TEST_CASE("testing move generator class") {
     SECTION("Test if moves at space 3 are in correct format (\"3\": [])") {
         auto space = 3;
         auto moves = blackGenerator.getMoves(space);
-        REQUIRE(moves.size() == 0);
+        REQUIRE(moves.empty());
     }
 
     SECTION("Test if moves at space 4 are correct (\"4\": [0])") {
@@ -77,7 +77,7 @@ TEST_CASE("testing move generator class") {
         auto space = 24;
         auto jumps = redGenerator.getJumps(space);
 
-        REQUIRE(jumps.size() == 0);
+        REQUIRE(jumps.empty());
     }
 
     SECTION("Test if jumps at space 23 are in correct format \"23: [[30, 26]]\"") {

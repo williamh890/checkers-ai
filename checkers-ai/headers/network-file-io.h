@@ -1,5 +1,5 @@
-#ifndef NETWORK_FILE_IO_H_INCLUDED
-#define NETWORK_FILE_IO_H_INCLUDED
+#ifndef NETWORK_FILE_IO_H
+#define NETWORK_FILE_IO_H
 
 #include "consts.h"
 // ai::Settings::NetworkWeightType
@@ -48,6 +48,6 @@ namespace ai {
     };
     void distribution_out(int out_num);
 
-}
+} // namespace ai
 
-#endif
+#endif // NETWORK_FILE_IO_H

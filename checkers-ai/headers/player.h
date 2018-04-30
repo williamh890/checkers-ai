@@ -56,7 +56,7 @@ namespace ai {
             std::function<float(SearchHelper&)> baseCase;
 
             const std::vector<Piece> getPieces() const;
-            void setPieces(const std::vector<Piece> & pieces);
+            void setPieces(const std::vector<Piece> & newPieces);
             const char getColor() const;
             const PlayerType getPlayerType() const;
 
@@ -120,6 +120,6 @@ namespace ai {
                                                const std::string & color,
                                                JsonToStlConverter converter,
                                                uint network_id);
-}
+} // namespace ai
 
-#endif
+#endif // PLAYER_H

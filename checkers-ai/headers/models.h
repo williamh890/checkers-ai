@@ -11,7 +11,7 @@ namespace ai {
     struct Jump {
         int to;
         int through;
-        Jump(){}
+        Jump()= default;
         Jump(int to, int through): to(to), through(through) {
         }
 
@@ -62,6 +62,6 @@ namespace ai {
                 rhs.isKing == lhs.isKing;
         }
     };
-}
+} // namespace ai
 
-#endif // HEADERS_MODELS_H
+#endif // MODELS_H

@@ -5,7 +5,7 @@ using ai::Seeder;
 #include "utils.h"
 using ai::idToFilename;
 
-#include "network.h"
+#include <string>
 using ai::Network;
 
 #include "network-file-io.h"
@@ -98,7 +98,7 @@ void Network::setupRandomWeights(const vector<unsigned int> &layerDimensions) {
       getRandomNumbersOfLength(firstLayerSize, distribution);
   _weights.push_back(firstLayerWeights);
 
-  for (auto i = 0; (unsigned int)i < layerDimensions.size() - 1; ++i) {
+  for (auto i = 0; static_cast<unsigned int>(i) < layerDimensions.size() - 1; ++i) {
     auto currentLayerDim = layerDimensions.at(i);
     auto nextLayerDim = layerDimensions.at(i + 1);
 
@@ -117,9 +117,9 @@ void Network::setupKingWeight() {
 
 void Network::setupSigmas() {
   _sigmas = _weights;
-  for (unsigned int i = 0; i < _sigmas.size(); ++i) {
-    for (unsigned int ii = 0; ii < _sigmas[i].size(); ++ii) {
-      _sigmas[i][ii] = .05;
+  for (auto & _sigma : _sigmas) {
+    for (unsigned int ii = 0; ii < _sigma.size(); ++ii) {
+      _sigma[ii] = .05;
     }
   }
 }
@@ -173,8 +173,9 @@ void Network::setupwhichLayerofNetworkToUse() {
 int Network::getNumLayers() {
   int numLayers = 0;
   for (auto i : _layers) {
-    if (i.size() == 1)
+    if (i.size() == 1) {
       ++numLayers;
+}
   }
   // cout << "numLayers is: " << numLayers << endl;
   return numLayers;
@@ -194,8 +195,9 @@ void Network::getLayerSizes(vector<int> &layerSizes) {
       counter = 0;
     }
   }
-  if (check != (int)_layers.size())
+  if (check != static_cast<int>(_layers.size())) {
     cout << "Layer sizes don't matchup in getLayerSizes!" << endl;
+}
 }
 
 template <typename RandomNumberType>
@@ -203,7 +205,7 @@ vector<RandomNumberType> Network::getRandomNumbersOfLength(
     const unsigned int length,
     uniform_real_distribution<RandomNumberType> &distribution) {
   vector<RandomNumberType> rngNumbers;
-  for (auto i = 0; (unsigned int)i < length; ++i) {
+  for (auto i = 0; static_cast<unsigned int>(i) < length; ++i) {
     auto randomNumber = distribution(randomNumGenerator);
 
     rngNumbers.push_back(randomNumber);
@@ -248,18 +250,19 @@ Network::evaluateBoard(const vector<char> &inputBoard, bool testing,
   /*void inputBoardIntoFirstLayer(inputBoard)*/ {
       int index = 0;
       for (const auto &i : inputBoard) {
-          if (i == ' ' || i == 0)
+          if (i == ' ' || i == 0) {
               _layers[layerBeginningIndex][index] = 0;
-          else if (i == 'r')
+          } else if (i == 'r') {
               _layers[layerBeginningIndex][index] = 1;
-          else if (i == 'b')
+          } else if (i == 'b') {
               _layers[layerBeginningIndex][index] = -1;
-          else if (i == 'R')
+          } else if (i == 'R') {
               _layers[layerBeginningIndex][index] = 1 * _kingWeight;
-          else if (i == 'B')
+          } else if (i == 'B') {
               _layers[layerBeginningIndex][index] = -1 * _kingWeight;
-          else
+          } else {
               cout << "Unrecognized character in board: " << i << endl;
+}
           ++index;
       }
   }
@@ -309,8 +312,9 @@ void Network::calculateNode(unsigned int x, unsigned int y) {
 
     _layers[x][y] = totalNodeValue;
 
-    if (DEBUG)
+    if (DEBUG != 0) {
         cout << _layers[x][y] << endl;
+}
 }
 
 void Network::adjustPerformance(int adjustment) { _performance = adjustment; }
@@ -353,8 +357,8 @@ void Network::evolveKingWeight() {
 NetworkWeightType Network::getTau() {
     NetworkWeightType numberofWeights = 0;
 
-    for (unsigned int index = 0; index < _weights.size(); ++index) {
-        numberofWeights += _weights[index].size();
+    for (auto & _weight : _weights) {
+        numberofWeights += _weight.size();
     }
 
     NetworkWeightType tau = 1 / (sqrt(2 * sqrt(numberofWeights)));
@@ -543,12 +547,15 @@ bool ai::validateNetworks() {
 
     // Check for similarities between networks such that things can be printed once
     for (auto i : allNets) {
-        if (bAreSmallEvaluationsSame && i.evaluateBoard(emptyBoard) != emptyEval)
+        if (bAreSmallEvaluationsSame && i.evaluateBoard(emptyBoard) != emptyEval) {
             bAreSmallEvaluationsSame = false;
-        if (bAreBigEvaluationsSame && i.evaluateBoard(sampleBigBoard) != bigEval)
+}
+        if (bAreBigEvaluationsSame && i.evaluateBoard(sampleBigBoard) != bigEval) {
             bAreBigEvaluationsSame = false;
-        if (bAreBasicAttributesSame == false)
+}
+        if (!bAreBasicAttributesSame) {
             break;
+}
 
         for (unsigned int index = 0; index < allNets[0]._layers.size(); ++index) {
             if (allNets[0]._layers[index].size() != i._layers[index].size()) {

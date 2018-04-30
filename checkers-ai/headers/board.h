@@ -57,13 +57,13 @@ namespace ai {
             int pieceCount(char color);
 
             std::vector<char> getBoardState();
-            void setBoardState(const std::vector<char> & boardState);
+            void setBoardState(const std::vector<char> & newboardState);
 
         private:
             std::vector<std::vector<char>> getEmptyBoard();
     };
 
     Board getBoard();
-}
+} // namespace ai
 
-#endif
+#endif // BOARD_H

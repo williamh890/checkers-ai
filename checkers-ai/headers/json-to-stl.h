@@ -19,7 +19,7 @@ namespace ai {
             nlohmann::json moveTable;
 
         public:
-            JsonToStlConverter(nlohmann::json table);
+            explicit JsonToStlConverter(nlohmann::json table);
 
             MoveTableType getMovesFor(const std::string & color) const;
             JumpTableType getJumpsFor(const std::string & color) const;
@@ -33,6 +33,6 @@ namespace ai {
 
             int strToInt(const std::string & s) const;
     };
-}
+} // namespace ai
 
-#endif
+#endif // JSON_TO_STL_H

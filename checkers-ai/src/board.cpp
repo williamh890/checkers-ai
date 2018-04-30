@@ -57,7 +57,7 @@ map<string, vector<Piece>> Board::getPieces() {
 
         auto color = (tolower(p) == 'r') ? "red" : "black";
         auto newPiece = Piece(tolower(p), space);
-        newPiece.isKing = isupper(p);
+        newPiece.isKing = (isupper(p) != 0);
 
         pieces.at(color).push_back(
             newPiece
@@ -148,7 +148,7 @@ std::string Board::skynetStr() {
 string Board::toString() {
   auto spaces = getEmptyBoard();
 
-  for (auto i = 0; i < (int)boardState.size(); ++i) {
+  for (auto i = 0; i < static_cast<int>(boardState.size()); ++i) {
     auto pos = spaceToPosition(i);
 
     spaces[pos.row][pos.col] = boardState[i];
