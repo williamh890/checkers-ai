@@ -28,7 +28,7 @@ using std::stoi;
 using std::string;
 
 int main(int argc, char **argv) {
-    auto start = getTime();
+    //auto start = getTime();
 
     int red_id = stoi(argv[1]);
     int black_id = stoi(argv[2]);
@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
     }
 
     const char winner = game.play();
-    auto end = getTime();
+    //auto end = getTime();
 
     if (game.moveCounter >= MOVE_LIMIT) {
         return 0;
