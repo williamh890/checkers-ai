@@ -100,7 +100,7 @@ const char Player::getColor() const { return color; }
 const PlayerType Player::getPlayerType() const { return playerType; }
 
 void Player::removePieceAt(int space) {
-  for (auto s = pieces.size() - 1; s >= 0; --s) {
+  for (auto s = static_cast<int>(pieces.size()) - 1; s >= 0; --s) {
     auto piece = pieces[s];
 
     if (piece.space == space) {
