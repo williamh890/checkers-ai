@@ -5,7 +5,7 @@ using ai::Seeder;
 #include "utils.h"
 using ai::idToFilename;
 
-#include <string>
+#include "network.h"
 using ai::Network;
 
 #include "network-file-io.h"
@@ -293,7 +293,8 @@ Network::evaluateBoard(const vector<char> &inputBoard, bool testing,
       }
   }
   /*boardEvaluationOutput()*/
-  return activationFunction((_layers[layerEndingIndex - 1][0] + _pieceCountWeight * pieceCount)) * red_factor;
+  return (!testing) ? activationFunction(_layers[layerEndingIndex - 1][0] + _pieceCountWeight * pieceCount) * red_factor
+                    : (_layers[layerEndingIndex - 1][0] + _pieceCountWeight * pieceCount) * red_factor;
 }
 
 inline NetworkWeightType Network::activationFunction(NetworkWeightType x) {
