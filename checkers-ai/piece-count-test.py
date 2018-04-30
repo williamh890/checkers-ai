@@ -28,7 +28,7 @@ def run_games_vs_piece_count(network_id, games):
         else:
             parsedWinner = 'Piece Count'
 
-        print("winner is {}".format(parsedWinner))
+        #print("winner is {}".format(parsedWinner))
         if game['winner'] == network_id:
             wins += 1
         elif game['winner'] == -1:
