@@ -1,6 +1,7 @@
 networks
 gameinfo*.txt
 
+docker-tounament.cfg
 checkers_game_obj
 checkers_game_obj.cpp
 checkers_game_obj_2
