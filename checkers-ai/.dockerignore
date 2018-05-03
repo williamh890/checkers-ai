@@ -1,7 +1,7 @@
 networks
-gameinfo*.txt
 
-docker-tounament.cfg
+.git
+
 checkers_game_obj
 checkers_game_obj.cpp
 checkers_game_obj_2
@@ -13,7 +13,6 @@ board*.json
 cy_director
 *.network
 tournament/tournament.cfg
-docker-tounament.cfg
 user.me
 log.txt
 

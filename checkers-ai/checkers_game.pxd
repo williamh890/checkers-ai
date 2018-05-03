@@ -78,6 +78,8 @@ cdef extern from "headers/checkers-game.h" namespace "ai":
     bool areJumps()
     void makeMove(MovePackage & move) except +
     void makeJump(JumpPackage & jump) except +
+
+cdef extern from "headers/get-checkers-game.h" namespace "ai":
   CheckersGame getCheckersGame() except +
   CheckersGame getNetworkedCheckersGame(int red_id, int black_id) except +
   CheckersGame getNetworkVPieceCountCheckersGame(unsigned int network_id, char networked_player) except +
