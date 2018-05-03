@@ -1,5 +1,5 @@
 #ifndef TABLE_TYPES_H
-#define TABLE_TYPES_D
+#define TABLE_TYPES_H
 
 #include "models.h"
 // ai::Jump
@@ -9,6 +9,6 @@
 namespace ai {
     using MoveTableType = std::vector<std::vector<int>>;
     using JumpTableType = std::vector<std::vector<ai::Jump>>;
-}
+} // namespace ai
 
-#endif
+#endif // TABLE_TYPES_H
