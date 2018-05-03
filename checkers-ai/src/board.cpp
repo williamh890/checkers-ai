@@ -44,34 +44,28 @@ void Board::addPiecesFor(const shared_ptr<Player> &player) {
 }
 
 map<string, vector<Piece>> Board::getPieces() {
-    map<string, vector<Piece>> pieces {
-        {"red", {}},
-        {"black", {}}
-    };
+  map<string, vector<Piece>> pieces{{"red", {}}, {"black", {}}};
 
-    for (size_t space = 0; space < boardState.size(); ++space) {
-        auto p = boardState[space];
-        if (p == ' ') {
-            continue;
-        }
-
-        auto color = (tolower(p) == 'r') ? "red" : "black";
-        auto newPiece = Piece(tolower(p), space);
-        newPiece.isKing = isupper(p);
-
-        pieces.at(color).push_back(
-            newPiece
-        );
+  for (size_t space = 0; space < boardState.size(); ++space) {
+    auto p = boardState[space];
+    if (p == ' ') {
+      continue;
     }
 
-    return pieces;
-}
+    auto color = (tolower(p) == 'r') ? "red" : "black";
+    auto newPiece = Piece(tolower(p), space);
+    newPiece.isKing = (isupper(p) != 0);
 
+    pieces.at(color).push_back(newPiece);
+  }
+
+  return pieces;
+}
 
 bool Board::hasPieceAt(int space) const { return boardState[space] != ' '; }
 
-const vector<pair<int, Jump>>
-Board::getValidJumpsFor(const shared_ptr<Player> &player) const {
+const vector<pair<int, Jump>> Board::getValidJumpsFor(
+    const shared_ptr<Player> &player) const {
   vector<pair<int, Jump>> validJumps;
 
   for (const auto &piece : player->getPieces()) {
@@ -102,8 +96,8 @@ bool Board::destinationIsNotEmpty(const Jump &jump) const {
   return hasPieceAt(jump.to);
 }
 
-const vector<pair<int, int>>
-Board::getValidMovesFor(const shared_ptr<Player> &player) const {
+const vector<pair<int, int>> Board::getValidMovesFor(
+    const shared_ptr<Player> &player) const {
   vector<pair<int, int>> validMoves;
 
   for (const auto &piece : player->getPieces()) {
@@ -132,23 +126,23 @@ void Board::make(const pair<int, Jump> &jump) {
 }
 
 std::string Board::skynetStr() {
-    std::string board = "";
+  std::string board = "";
 
-    for (const auto & c : boardState) {
-        if (c == ' ') {
-            board += '_';
-            continue;
-        }
-
-        board += c;
+  for (const auto &c : boardState) {
+    if (c == ' ') {
+      board += '_';
+      continue;
     }
-    return board;
+
+    board += c;
+  }
+  return board;
 }
 
 string Board::toString() {
   auto spaces = getEmptyBoard();
 
-  for (auto i = 0; i < (int)boardState.size(); ++i) {
+  for (auto i = 0; i < static_cast<int>(boardState.size()); ++i) {
     auto pos = spaceToPosition(i);
 
     spaces[pos.row][pos.col] = boardState[i];

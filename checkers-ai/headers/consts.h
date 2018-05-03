@@ -27,7 +27,7 @@ static const int NUM_PIECES_IN_ROW = 4;
 static const int ROWS = 8;
 static const int COLS = 8;
 static const int MINIMAX_SEARCH_DEPTH = 6;
-static const int DEBUG = false;
+static const int DEBUG = 0;
 static const int MOVE_LIMIT = 100;
 
 static const unsigned int NETWORKPOPSIZE = 100;
@@ -45,18 +45,18 @@ const float INF = FLT_MAX;
 // 1} NOTE:
 //          - input layers are always 32 and output layers are always 1
 //          - You can use as many as 24 layers
-static const std::vector<unsigned int> NETWORK_DIMENSIONS = {32, 128, 256, 256,
-                                                             64, 32,  1};
+static const std::vector<unsigned int> NETWORK_DIMENSIONS = {
+    32, 100, 10, 1, 32, 100, 10, 1, 32, 40, 10, 1};
 
 namespace Settings {
 static const std::string SEEDING_METHOD =
-    "random_device"; // Options are random_device and time
+    "random_device";  // Options are random_device and time
 
 static const PlayerType RED_PLAYER_TYPE = PlayerType::Computer;
 static const PlayerType BLACK_PLAYER_TYPE = PlayerType::Computer;
 
 using NetworkWeightType = float;
-} // namespace Settings
-} // namespace ai
+}  // namespace Settings
+}  // namespace ai
 
-#endif
+#endif  // CONSTS_H

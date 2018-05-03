@@ -110,8 +110,9 @@ int main(int argc, char *argv[]) {
     std::vector<std::string> folderPaths;
     for (auto &p : recursive_directory_iterator(s)) {
       if (p.status().type() ==
-          std::experimental::filesystem::file_type::directory)
+          std::experimental::filesystem::file_type::directory) {
         folderPaths.push_back(p.path().string());
+}
     }
 
     // debug
@@ -131,8 +132,9 @@ int main(int argc, char *argv[]) {
       vector<string> networkPaths;
       for (auto &p : recursive_directory_iterator(folders)) {
         if (p.status().type() ==
-            std::experimental::filesystem::file_type::regular)
+            std::experimental::filesystem::file_type::regular) {
           networkPaths.push_back(p.path().string());
+}
       }
       networkPathsContainer.push_back(networkPaths);
     }
@@ -196,7 +198,7 @@ int main(int argc, char *argv[]) {
       ///////////////////////////////////////
       networksContainer.push_back(networks_in_one_folder);
     }
-    // TODO: Move best networks from other folders into myNetworks
+    // TODO(dlshaffer): Move best networks from other folders into myNetworks
     int leftovers = NETWORKPOPSIZE % networkPathsContainer.size();
     int numMyNetworksToKeep =
         leftovers + (NETWORKPOPSIZE / networkPathsContainer.size());
@@ -245,8 +247,9 @@ int main(int argc, char *argv[]) {
     }
 
     for (size_t i = 0; i < NETWORKPOPSIZE; ++i){
-      if (i % 25 == 0 && i != 0)
+      if (i % 25 == 0 && i != 0) {
           cout << endl;
+}
         cout<<myNetworks[i].getPerformance()<<" ";
     }
     cout << endl;
@@ -263,8 +266,9 @@ int main(int argc, char *argv[]) {
     int counter = 0;
     for (unsigned int i = 0; i < NETWORKPOPSIZE / 2; ++i) {
       myNetworks[i + NETWORKPOPSIZE / 2].evolveUsingNetwork(myNetworks[i]);
-      if (myNetworks[i].getID() > 14)
+      if (myNetworks[i].getID() > 14) {
         counter++;
+}
       Network::save(i, myNetworks[i]);
       Network::save(i + NETWORKPOPSIZE / 2, myNetworks[i + NETWORKPOPSIZE / 2]);
       // cout << "Done" << endl;

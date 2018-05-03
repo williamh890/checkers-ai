@@ -19,107 +19,89 @@
 #include <vector>
 // std::vector
 
-#include<functional>
-//std::function
-
+#include <functional>
+// std::function
 
 namespace ai {
-    class Board;
-    class Network;
-    class SearchHelper;
+class Board;
+class Network;
+class SearchHelper;
 
-    class Player {
-        private:
-            PlayerType playerType;
-            char color;
-            Network network;
-            std::vector<Piece> pieces;
-            MoveGenerator generator;
-            MoveGenerator kingGenerator;
+class Player {
+ private:
+  PlayerType playerType;
+  char color;
+  Network network;
+  std::vector<Piece> pieces;
+  MoveGenerator generator;
+  MoveGenerator kingGenerator;
 
-        public:
-            Player() = default;
+ public:
+  Player() = default;
 
-            Player(char color,
-                    const MoveGenerator & generator,
-                    const MoveGenerator & kingGenerator,
-                    PlayerType type
-                  );
+  Player(char color, const MoveGenerator& generator,
+         const MoveGenerator& kingGenerator, PlayerType type);
 
-            Player(char color,
-                    const MoveGenerator & generator,
-                    const MoveGenerator & kingGenerator,
-                    Network & network,
-                    PlayerType type
-                  );
+  Player(char color, const MoveGenerator& generator,
+         const MoveGenerator& kingGenerator, Network& network, PlayerType type);
 
-            std::function<float(SearchHelper&)> baseCase;
+  std::function<float(SearchHelper&)> baseCase;
 
-            const std::vector<Piece> getPieces() const;
-            void setPieces(const std::vector<Piece> & pieces);
-            const char getColor() const;
-            const PlayerType getPlayerType() const;
+  const std::vector<Piece> getPieces() const;
+  void setPieces(const std::vector<Piece>& newPieces);
+  const char getColor() const;
+  const PlayerType getPlayerType() const;
 
-            bool updatePieces(const std::pair<int, int> & move, ai::Board & board);
-            bool updatePieces(const std::pair<int, Jump> & jump, ai::Board & board);
-            void removePieceAt(int space);
+  bool updatePieces(const std::pair<int, int>& move, ai::Board& board);
+  bool updatePieces(const std::pair<int, Jump>& jump, ai::Board& board);
+  void removePieceAt(int space);
 
-            std::vector<Jump> getJumpsFor(const Piece & piece) const;
-            std::vector<int> getMovesFor(const Piece & piece) const;
+  std::vector<Jump> getJumpsFor(const Piece& piece) const;
+  std::vector<int> getMovesFor(const Piece& piece) const;
 
-            std::string jumpsToString() const;
-            std::string movesToString() const;
+  std::string jumpsToString() const;
+  std::string movesToString() const;
 
-        protected:
-            void initPieces();
-        private:
-            virtual bool isInitialSpace(int space) const = 0;
-            virtual bool shouldBeCrowned(const Piece & piece) const = 0;
-            void Crown(Piece & piece);
-    };
+ protected:
+  void initPieces();
 
-    class RedPlayer: public Player {
-        public:
-            RedPlayer(
-                    char color,
-                    const MoveGenerator & generator,
-                    const MoveGenerator & kingGenerator,
-                    PlayerType type);
-            RedPlayer(
-                    char color,
-                    const MoveGenerator & generator,
-                    const MoveGenerator & kingGenerator,
-                    Network & network,
-                    PlayerType type);
-        private:
-            bool isInitialSpace(int space) const override;
-            bool shouldBeCrowned(const Piece & piece) const override;
-    };
+ private:
+  virtual bool isInitialSpace(int space) const = 0;
+  virtual bool shouldBeCrowned(const Piece& piece) const = 0;
+  void Crown(Piece& piece);
+};
 
-    class BlackPlayer: public Player {
-        public:
-            BlackPlayer(
-                    char color,
-                    const MoveGenerator & generator,
-                    const MoveGenerator & kingGenerator,
-                    PlayerType type);
-            BlackPlayer(
-                    char color,
-                    const MoveGenerator & generator,
-                    const MoveGenerator & kingGenerator,
-                    Network & network,
-                    PlayerType type);
-        private:
-            bool isInitialSpace(int space) const override;
-            bool shouldBeCrowned(const Piece & piece) const override;
-    };
+class RedPlayer : public Player {
+ public:
+  RedPlayer(char color, const MoveGenerator& generator,
+            const MoveGenerator& kingGenerator, PlayerType type);
+  RedPlayer(char color, const MoveGenerator& generator,
+            const MoveGenerator& kingGenerator, Network& network,
+            PlayerType type);
 
-    std::shared_ptr<Player> getPlayer(const std::string & color,
-                                      JsonToStlConverter converter);
-    std::shared_ptr<Player> getNetworkedPlayer(
-                                               const std::string & color,
-                                               JsonToStlConverter converter,
-                                               uint network_id);
-}
+ private:
+  bool isInitialSpace(int space) const override;
+  bool shouldBeCrowned(const Piece& piece) const override;
+};
 
-#endif
+class BlackPlayer : public Player {
+ public:
+  BlackPlayer(char color, const MoveGenerator& generator,
+              const MoveGenerator& kingGenerator, PlayerType type);
+  BlackPlayer(char color, const MoveGenerator& generator,
+              const MoveGenerator& kingGenerator, Network& network,
+              PlayerType type);
+
+ private:
+  bool isInitialSpace(int space) const override;
+  bool shouldBeCrowned(const Piece& piece) const override;
+};
+
+std::shared_ptr<Player> getPlayer(const std::string& color,
+                                  JsonToStlConverter converter);
+std::shared_ptr<Player> getNetworkedPlayer(const std::string& color,
+                                           JsonToStlConverter converter,
+                                           uint network_id);
+}  // namespace ai
+
+#endif  // PLAYER_H

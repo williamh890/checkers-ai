@@ -114,7 +114,7 @@ TEST_CASE("test search function", "[search]") {
             Piece('b', 18)
         });
 
-        REQUIRE(game.getValidJumps().size() > 0);
+        REQUIRE(!game.getValidJumps().empty());
         for (auto & jump : game.getValidJumps() ) {
             REQUIRE(search(jump, 1, 'r', game) == -1);
             REQUIRE(search(jump, 1, 'b', game) == 1);
@@ -258,9 +258,10 @@ void runSearchHeader () {
 
 void outputWithTabs(int numOut) {
     cout << numOut;
-    if (numOut < 999999)
+    if (numOut < 999999) {
         cout << "\t";
-}
+
+}}
 
 vector<MovePackage> moves;
 void runSearch(CheckersGame & game, int depth) {

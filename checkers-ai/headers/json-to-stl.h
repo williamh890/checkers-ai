@@ -7,32 +7,32 @@
 #include "models.h"
 // ai::Jump
 
-#include "json.hpp"
 #include <string>
 #include <vector>
+#include "json.hpp"
 
 namespace ai {
-    nlohmann::json loadMoveTableFrom(const std::string & moveTableFilename);
+nlohmann::json loadMoveTableFrom(const std::string& moveTableFilename);
 
-    class JsonToStlConverter {
-        private:
-            nlohmann::json moveTable;
+class JsonToStlConverter {
+ private:
+  nlohmann::json moveTable;
 
-        public:
-            JsonToStlConverter(nlohmann::json table);
+ public:
+  explicit JsonToStlConverter(nlohmann::json table);
 
-            MoveTableType getMovesFor(const std::string & color) const;
-            JumpTableType getJumpsFor(const std::string & color) const;
+  MoveTableType getMovesFor(const std::string& color) const;
+  JumpTableType getJumpsFor(const std::string& color) const;
 
-        private:
-            MoveTableType movesToStlContainer(const nlohmann::json & movesJson) const;
-            JumpTableType jumpsToStlContainer(const nlohmann::json & jumpsJson) const;
+ private:
+  MoveTableType movesToStlContainer(const nlohmann::json& movesJson) const;
+  JumpTableType jumpsToStlContainer(const nlohmann::json& jumpsJson) const;
 
-            std::vector<Jump> getJumpsFromJson(const nlohmann::json & jumpsForSpace) const;
-            std::vector<int> getMovesFromJson(const nlohmann::json & movesForSpace) const;
+  std::vector<Jump> getJumpsFromJson(const nlohmann::json& jumpsForSpace) const;
+  std::vector<int> getMovesFromJson(const nlohmann::json& movesForSpace) const;
 
-            int strToInt(const std::string & s) const;
-    };
-}
+  int strToInt(const std::string& s) const;
+};
+}  // namespace ai
 
-#endif
+#endif  // JSON_TO_STL_H

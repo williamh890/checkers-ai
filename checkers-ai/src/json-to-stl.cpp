@@ -48,8 +48,8 @@ JumpTableType JsonToStlConverter::getJumpsFor(const string &color) const {
   return jumpTableStl;
 }
 
-MoveTableType
-JsonToStlConverter::movesToStlContainer(const json &movesJson) const {
+MoveTableType JsonToStlConverter::movesToStlContainer(
+    const json &movesJson) const {
   MoveTableType moveTableStl{32};
 
   auto end = movesJson.end();
@@ -62,13 +62,12 @@ JsonToStlConverter::movesToStlContainer(const json &movesJson) const {
   return moveTableStl;
 }
 
-JumpTableType
-JsonToStlConverter::jumpsToStlContainer(const json &jumpsJson) const {
+JumpTableType JsonToStlConverter::jumpsToStlContainer(
+    const json &jumpsJson) const {
   JumpTableType jumpTableStl{32};
 
   auto end = jumpsJson.end();
   for (auto it = jumpsJson.begin(); it != end; ++it) {
-
     auto space = strToInt(it.key());
     auto jumps = getJumpsFromJson(it.value());
 
@@ -78,8 +77,8 @@ JsonToStlConverter::jumpsToStlContainer(const json &jumpsJson) const {
   return jumpTableStl;
 }
 
-vector<Jump>
-JsonToStlConverter::getJumpsFromJson(const json &jumpsForSpace) const {
+vector<Jump> JsonToStlConverter::getJumpsFromJson(
+    const json &jumpsForSpace) const {
   vector<Jump> jumps;
 
   for (auto &j : jumpsForSpace) {
@@ -90,8 +89,8 @@ JsonToStlConverter::getJumpsFromJson(const json &jumpsForSpace) const {
   return jumps;
 }
 
-vector<int>
-JsonToStlConverter::getMovesFromJson(const json &movesForSpace) const {
+vector<int> JsonToStlConverter::getMovesFromJson(
+    const json &movesForSpace) const {
   vector<int> moves;
 
   for (auto &move : movesForSpace) {

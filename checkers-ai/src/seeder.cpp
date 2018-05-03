@@ -11,9 +11,9 @@ using ai::Settings::SEEDING_METHOD;
 using std::make_shared;
 using std::shared_ptr;
 
-Seeder::Seeder() {}
+Seeder::Seeder() = default;
 
-SRandSeeder::SRandSeeder() : Seeder() { srand(time(NULL)); }
+SRandSeeder::SRandSeeder() : Seeder() { srand(time(nullptr)); }
 
 RandomDeviceSeeder::RandomDeviceSeeder() : Seeder() {}
 

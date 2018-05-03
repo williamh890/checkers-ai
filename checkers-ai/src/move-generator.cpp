@@ -53,7 +53,7 @@ MoveGenerator ai::getKingGenerator(const JsonToStlConverter &converter) {
   auto blackMoves = converter.getMovesFor("black");
 
   MoveTableType moves;
-  for (auto i = 0; i < (int)redMoves.size(); ++i) {
+  for (auto i = 0; i < static_cast<int>(redMoves.size()); ++i) {
     auto r = redMoves[i];
     auto b = blackMoves[i];
 
@@ -66,7 +66,7 @@ MoveGenerator ai::getKingGenerator(const JsonToStlConverter &converter) {
   auto blackJumps = converter.getJumpsFor("black");
 
   JumpTableType jumps;
-  for (auto i = 0; i < (int)redMoves.size(); ++i) {
+  for (auto i = 0; i < static_cast<int>(redMoves.size()); ++i) {
     auto r = redJumps[i];
     auto b = blackJumps[i];
 

@@ -81,7 +81,7 @@ string ai::idToFilename(int ID) {
   // integrated.
   string filename =
       "./networks/" + getUsername() + "/" + to_string(ID) +
-      ".network"; // creates filenames that scope to a folder called networks
+      ".network";  // creates filenames that scope to a folder called networks
   return filename;
 }
 

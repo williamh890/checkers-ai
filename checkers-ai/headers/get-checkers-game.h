@@ -4,15 +4,13 @@
 #include "checkers-game.h"
 
 namespace ai {
-    CheckersGame getCheckersGame();
+CheckersGame getCheckersGame();
 
-    CheckersGame getNetworkedCheckersGame(
-            unsigned int red_id,
-            unsigned int black_id);
+CheckersGame getNetworkedCheckersGame(unsigned int red_id,
+                                      unsigned int black_id);
 
-    CheckersGame getNetworkVPieceCountCheckersGame(
-            unsigned int network_id,
-            char networked_player);
-}
+CheckersGame getNetworkVPieceCountCheckersGame(unsigned int network_id,
+                                               char networked_player);
+}  // namespace ai
 
-#endif
+#endif  // GET_CHECKERS_GAME_H
