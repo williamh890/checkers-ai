@@ -1,9 +1,16 @@
 \documentclass{article}
 
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+\usepackage{minted}
+\usemintedstyle{colorful}
+
 \usepackage{graphicx}
 \usepackage{refstyle}
 \usepackage{subcaption}
 \usepackage[table,xcdraw]{xcolor}
+\usepackage{csquotes}
 
 \def\RSfigtxt{Fig.\,}%
 \def\RSfigstxt{Figs~}%
@@ -12,7 +19,8 @@
 
 \begin{document}
 
-\title{Intro to AI -- Final Paper Draft}
+\title{\textbf{Introduction to Artificial Intelligence -- Final Paper}}
+
 \author{
   William Horn\\
   \texttt{wbhorn@alaska.edu}
@@ -31,21 +39,19 @@
 
 \section{Checkers}
 
-For the beginning of the project, we created a program by making a
-move generator and a random move selector. The move generator was used to get
-valid moves on an 8x8 checkers board at any point in the game. Internally this
-corresponded to a list of characters of size 32 because half of the 64 spaces
-can never be visited. The move selector takes moves from the generator, if a
-jump is present it must be taken. This left us with creating players that could
-use the board and move generator to play a checkers game.
+For the beginning of the project, we created a program by making a move generator and a random move selector. The move generator was used to get valid moves on an 8x8 checkers board at any point in the game. Internally this corresponded to a list of characters of size 32 encoded in the style:
+\begin{displayquote}
+``rrrrrrrrrrrr\_\_\_\_\_\_\_\_bbbbbbbbbbbb''
+\end{displayquote}
+for a starting board where each underscore represents a space character. Red checkers were represented by `r', black by `b' and kings by `R' and `B'. Empty spaces were represented by spaces -- this led to a small amount of extra work when it came to connecting with skynet, which used `\_' to represent empty spaces.The move selector takes moves from the generator, if a jump is present it must be taken. This left us with creating players that could use the board and move generator to play a checkers game.
 
 The game itself has two players, red and black. The players keep track of their pieces and what
-those pieces can do. The move generators gives hypothetically valid moves that
+those pieces can do. The move generators gives valid moves that
 the player class uses when selecting a move, initially the moves were picked at
 random. Further improvements on the checkers program were to create a piece
 count evaluator that chose moves by traversing the search tree of possible
 moves (see minimax) and picking the move that lead to the best outcome. The
-heuristic used to evaluate was to sum up the pieces on the board for each
+heuristic used to evaluate (PieceCount) was to sum up the pieces on the board for each
 player, giving a larger weight to kings, and taking the difference between the
 two players. This ended up being quite a good heuristic for evaluating moves
 and lead to more intelligent move selection.
@@ -71,14 +77,23 @@ player, and the move that will result in the worst case scenario for the
 searching player (assuming that the enemy will choose those moves). Once it has
 reached the max depth or the game is over, it performs an evaluation of the
 state of the board and returns it. The program chooses the move that leads to
-the sub-tree with the best possible result.
+the sub-tree with the best possible result. Table \ref{minimax-stats} shows the
+statistics for the amount/types of node expanded durning minimax search. This
+implimentation of minimax only counts boards expanded with moves as adding towards
+the depth of the search.
 
-\subsubsection{Statistics (Depth 5)}
-\begin{itemize}
-	\item Boards expanded per move: 6121.88
-	\item Board evaluation functions called: 26,518.45
-	\item Inner vs. leaf nodes: 0.19
-\end{itemize}
+\begin{table}[]
+\centering
+\caption{Minimax Statistics}
+\label{minimax-stats}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+& \textbf{2} & \textbf{4} & \textbf{6} & \textbf{8} \\ \hline
+\textbf{boards expanded/move}                      & 7   & 1051 & 114748 & 11237947 \\ \hline
+\multicolumn{1}{|c|}{\textbf{ evaluations}}        & 49  & 4242 & 493578 & 52875269 \\ \hline
+\multicolumn{1}{|c|}{\textbf{ inner vs leaf nodes}} & .14 & .25  & .23    & .21      \\ \hline
+\end{tabular}
+\end{table}
 
 \subsection{Alpha-Beta}
 
@@ -93,15 +108,22 @@ can be pruned, because the minimizer presumably will not choose that option.
 Because this means whole subtrees don’t need to be fully expanded, it allows
 for either deeper searches  or for a more computationally intensive board
 evaluation function. The graphs in \figref{ab-v-mm} show the number of nodes expanded for
-minimax with and without alpha-beta pruning at different depths.
+minimax with and without alpha-beta pruning at different depths. Also Table \ref{ab-v-mm}
+shows the exact number of nodes evaluated at each depth for both minimax and alpha beta
+search.
 
-\subsubsection{Statistics (Depth 5)}
-\begin{itemize}
-	\item Boards expanded per move: 1036.2
-	\item Board evaluation functions called: 1605.80
-	\item Inner vs. leaf nodes: 0.39
-    \item Nodes pruned: 29998.33 (inner and leaf)
-\end{itemize}
+\begin{table}[]
+\centering
+\caption{Statistics on alphabeta vs. minimax search algorithms}
+\label{ab-v-mm}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+& \textbf{2}    & \textbf{4}   & \textbf{6}      & \textbf{8}        \\ \hline
+\textbf{minimax}   & 56   & 5293 & 607326 & 64113216 \\ \hline
+\textbf{alphabeta} & 56   & 960  & 17471  & 245591   \\ \hline
+\textbf{pruned \%} & 0.00 & 0.82 & 0.97   & 0.99     \\ \hline
+\end{tabular}
+\end{table}
 
 \begin{figure}[ht!]
     \centering
@@ -124,30 +146,25 @@ To implement alpha-beta the same checkers-game class used to play a regular
 game was used to search through possible future moves and jumps. It was implimented
 using a recursive DFS search \figref{ab-code}.
 
-\begin{figure*}
-    \includegraphics[width=\linewidth]{images/alpha-beta-code.png}
-    \caption{alpha beta c++ implimentation}
-    \label{fig:ab-code}
-\end{figure*}
 
-Preprocessor macros are used for two reasons (\figref{ab-code}), the best way to write the loop
-through all the action (moves/jumps) is to take the isMaximizingPlayer check
+Preprocessor macros are used for two reasons (shown in Listing \ref{fig:ab-code}), the best way to write the loop
+through all the action (moves/jumps) is to take the \texttt{isMaximizingPlayer} check
 out of the loop, which means writing it twice and because instead of recursing
 on boards, move and jumps are used to recures on. This means two very similar
 function because they are different types.
 
-In the SEARCH\textunderscore{}ON\textunderscore{}MAXIMIZING\textunderscore{}PLAYER (\figref{ab-code})
+In the \texttt{SEARCH\_BASED\_ON\_MAXIMIZING\_PLAYER} (Listing \ref{fig:ab-code}, Lines 20--25)
 macro the actions is either a list of valid
 moves or jumps depending on what function the macro is expanded in. The
-depthExpression is either n or n - 1. This is done because when recursing on
+\texttt{depthExpr} is either n or n - 1. This is done because when recursing on
 jumps or multi jumps the branch factor is low.
 
 Time permitting this version
-will be switched to a version that recuses on boards so that iterative
+will be switched to a version that recurses on boards so that iterative
 deepening search is easier to implement. Currently when a piece makes a
-multijump this search is called multiple times for each jump, instead of once
-for the whole jump. Recusing on a board would negate this because the entire
-multijump would be counted as one move.
+multi--jump this search is called multiple times for each jump, instead of once
+for the whole jump. Recursing on a board would negate this because the entire
+multi--jump would be counted as one move.
 
 \section{Neural Networks}
 
@@ -161,15 +178,14 @@ the layer before them. To calculate a node, multiply each of the previous layer
 nodes by their associated weights, add them together, and multiply by an
 activator function. This process is repeated for each layer, causing the values
 of each node to feed farther forward in the network culminating in a final
-value for the output. \figref{nn-code} shows the c++ that impliments this technique.
+value for the output. Listing \ref{fig:nn-code} shows the c++ that implements this technique.
+The outermost for loop (Listing \ref{fig:nn-code}, Line 3) is used for selecting
+different NN at different stages in the game. The stage of the game is determined
+by the number of pieces on the board.
 The performance of the NN code is measured in board evaluations per
 second (BPS).
 
-\begin{figure}
-    \includegraphics[width=\linewidth]{images/nn-code.png}
-    \caption{Neural network c++ code}
-    \label{fig:nn-code}
-\end{figure}
+
 
 \subsection{Timing}
 
@@ -198,7 +214,7 @@ a histogram of 1000 numbers was made and this confirmed that our generator was i
 
 There are several design considerations for evolutionary
 learning that varies between the members of our group. For the trial section of
-our project, we just used elements from Blondie24’s experiment. This includes a
+our project, we used elements from Blondie24’s experiment. This includes a
 NN topology of 32-40-10-1, a population size of 30, and a survival of the
 fittest method of evolution where the best half of the networks create
 offspring, evolve, and replace the lower half of the networks. Not all of our
@@ -212,7 +228,10 @@ side. Winners get one point and losers lose 2. Nothing happens to a NNs
 performance when a draw occurs. These games compose a points based tournament
 that allows networks to be sorted based on their performance.
 
-\subsection{Statistics}
+We made several changes to the input of our networks over the course of its evolution. At the start we were not accounting for a piece count value, which resulted in the networks having poor performance vs a pure PieceCount player. However with the addition of the PieceCount value the networks began consistently beating pure PieceCount.
+One trend we noticed in watching our networks play games vs the networks of other teams in the class was that our networks seemed to value kings equal to regular pieces, and on checking the value we found that evolution had been pushing the value to below 1 (the value of a standard piece). This led us to implement a limit on the value, keeping it within a range from 1-3, as done in the Blondie24 experiment. For the network used in the final tournament our king value was 1.4.
+
+\subsection{Tournament Statistics}
 
 One of the testing topologies used was a 32-200-20 NN. For this tourament we only
 played 3 games per match and ran at a alpha-beta search depth of 6. The tournaments
@@ -304,5 +323,16 @@ level.
     \label{fig:gaussian-2}
 \end{figure}
 
+\begin{listing}[ht]
+    \inputminted[linenos]{cpp}{code/search.cpp}
+    \caption{alpha beta implementation using c++ preprocessor macros}
+    \label{fig:ab-code}
+\end{listing}
+
+\begin{listing}[ht]
+    \inputminted[linenos]{cpp}{code/network.cpp}
+    \caption{Neural network c++ code}
+    \label{fig:nn-code}
+\end{listing}
 
 \end{document}
