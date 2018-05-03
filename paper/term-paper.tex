@@ -37,6 +37,15 @@
 \date{\today}
 \maketitle
 
+\section{Introduction}
+
+Checkers is a good game to practice implementing artificial intelligent techniques because it strikes a good
+balance between simplicity and complexity. To create a competent checkers player a mix of basic checkers domain knowlege,
+evolutionary learning, and some computational brute force was used. While most applications of AI don't use evolutionary
+learning, its a good intro into how a neural network actually works, without having to worry too much about the complex
+mathematics behind other learning methods. Our groups implementation was fairly effective, ending up tying for \(3^{rd}\) in the class.
+The performace sensitive code was written in c++, while the orchestration and gui code was written in in python/cython.
+
 \section{Checkers}
 
 For the beginning of the project, we created a program by making a move generator and a random move selector. The move generator was used to get valid moves on an 8x8 checkers board at any point in the game. Internally this corresponded to a list of characters of size 32 encoded in the style:
