@@ -36,7 +36,6 @@ namespace ai {
             std::vector<Piece> pieces;
             MoveGenerator generator;
             MoveGenerator kingGenerator;
-            int base_case_color_factor;
 
         public:
             Player() = default;

@@ -244,9 +244,16 @@ int main(int argc, char *argv[]) {
       myNetworks.push_back(Network(i));
     }
 
-    sort(myNetworks.begin(), myNetworks.end(),
-         [&](Network first, Network second) { return first > second; });
+    for (size_t i = 0; i < NETWORKPOPSIZE; ++i){
+      if (i % 25 == 0 && i != 0)
+          cout << endl;
+        cout<<myNetworks[i].getPerformance()<<" ";
+    }
+    cout << endl;
 
+    stable_sort(myNetworks.begin(), myNetworks.end(),
+         [&](Network first, Network second) { return first > second; });
+    cout << "Sorting done, begin evolution. ";
     // cout << "Sorted Performances: " << endl;
     // for (size_t i = 0; i < NETWORKPOPSIZE; ++i){
     //     cout<<myNetworks[i].getPerformance()<<" ";
@@ -267,7 +274,7 @@ int main(int argc, char *argv[]) {
     //     Network getPer(i);
     //     cout << getPer.getPerformance() << " ";
     // }
-    cout << "Number of children reproducing: " << counter << endl;
+    cout << "Number of children reproducing: " << counter << ". ";
     if (counter == 0 && myNetworks[0].getID() != 0) {
       cout << " new best network! ID: " << myNetworks[0].getID() << endl;
       for (unsigned int i = 0; i < myNetworks.size() / 2; ++i) {

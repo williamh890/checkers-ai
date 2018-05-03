@@ -284,13 +284,13 @@ Network::evaluateBoard(const vector<char> &inputBoard, bool testing,
 
                   auto total = total1 + total2 + total3 + total4;
 
-                  _layers[x][y] = (!testing) ? total / (1 + abs(total)) : total;
+                  _layers[x][y] = (!testing) ? (total / (1 + abs(total))) : total;
               }
           }
       }
   }
   /*boardEvaluationOutput()*/
-  return activationFunction((_layers[layerEndingIndex - 1][0] + pieceCount)) * red_factor;
+  return activationFunction((_layers[layerEndingIndex - 1][0] + _pieceCountWeight * pieceCount)) * red_factor;
 }
 
 inline NetworkWeightType Network::activationFunction(NetworkWeightType x) {
