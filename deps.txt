@@ -1,2 +1,0 @@
-(json.hpp) https://raw.githubusercontent.com/nlohmann/json/develop/src/json.hpp
-(Boost.Python) https://dl.bintray.com/boostorg/release/1.66.0/source/boost_1_66_0.tar.gz
