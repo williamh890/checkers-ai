@@ -11,6 +11,8 @@ cy_board/*.c
 # C extensions
 *.so
 
+paper/_minted-term-paper/
+
 # Distribution / packaging
 .Python
 env/

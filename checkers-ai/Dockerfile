@@ -23,21 +23,14 @@ RUN \
     echo 'set(LIBSTDCPPFS_PATH "/usr/lib/gcc/x86_64-linux-gnu/5/libstdc++fs.a")' > libstdcppfsPath.txt && \
     ./fast-build.sh
 
-# Setup networks
-RUN \
-    git clone https://www.github.com/williamh890/networks                   && \
-    echo $(uuid) > user.me                                                  && \
-    cd networks && git checkout -b $(cat ../user.me) && cd ..               && \
-    ./manager.out 0
-
 # Setup tournament
 WORKDIR /checkers-ai/checkers-ai/tournament
-COPY docker-tounament.cfg tournament.cfg
+COPY docker-tournament.cfg tournament.cfg
 
 RUN \
     pip3 install -r requirements.txt && \
     echo "[user]\n    email = wbhorn@alaska.edu\n    name = William Horn" > ~/.gitconfig
 
-CMD ["python3", "director.py"]
+CMD ["./docker-run.sh"]
 
 
