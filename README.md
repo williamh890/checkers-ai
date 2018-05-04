@@ -4,8 +4,8 @@ Project repository for CS-405 (Intro to AI)
 ## Docker
 
 ### Configs
-To build the git portiion of the docker-tournament.cfg file needs to be filled in
-this is just used to store the networks out of the container.
+To build the git portiion of the `checkers-ai/docker-tournament.cfg` file needs to be filled in.
+This is used to get the networks out of the container.
 
     [git]
     username = <github username here>
