@@ -113,7 +113,7 @@ class Director:
         os.chdir(os.path.dirname(self.options.network_manager))
         run_str = "{} {} {}".format(self.options.network_manager, 1, self.wins)
         result = subprocess.getstatusoutput(run_str)
-        #print(result[1])
+        # print(result[1])
         #print("result was: {}".format(result[0]))
 
     def evolve_networks(self):
@@ -123,9 +123,13 @@ class Director:
         #print("result was: {}".format(result[0]))
 
 
-if __name__ == "__main__":
+def main():
     director = Director()
     start = time.time()
     director.idle()
     end = time.time()
     print("total runtime time was {}".format(end - start))
+
+
+if __name__ == "__main__":
+    main()
